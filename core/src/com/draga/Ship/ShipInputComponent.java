@@ -14,8 +14,7 @@ public class ShipInputComponent extends InputComponent {
 
     @Override
     public void update(float elapsed) {
-        this.shipPhysicComponent.applyXForce(Gdx.input.getAccelerometerX());
-        this.shipPhysicComponent.applyYForce(Gdx.input.getAccelerometerY());
+        this.shipPhysicComponent.applyForce(Gdx.input.getAccelerometerX(), Gdx.input.getAccelerometerY());
 
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             this.shipPhysicComponent.applyXForce(-1);
