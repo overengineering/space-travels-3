@@ -16,6 +16,7 @@ public class ShipInputComponent extends InputComponent {
     public void update(float elapsed) {
         this.shipPhysicComponent.applyForce(Gdx.input.getAccelerometerX(), Gdx.input.getAccelerometerY());
 
+        
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             this.shipPhysicComponent.applyXForce(-1);
         }
@@ -30,6 +31,15 @@ public class ShipInputComponent extends InputComponent {
 
         if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             this.shipPhysicComponent.applyYForce(-1);
+        }
+
+
+        if(Gdx.input.isKeyPressed(Input.Keys.A)) {
+            this.shipPhysicComponent.applyRotation(1);
+        }
+
+        if(Gdx.input.isKeyPressed(Input.Keys.D)) {
+            this.shipPhysicComponent.applyRotation(-1);
         }
     }
 }

@@ -47,4 +47,9 @@ public abstract class PhysicComponent {
     public float getRotation() {
         return rotation;
     }
+
+    public void applyRotation(float i)
+    {
+        rotation += i;
+    }
 }
