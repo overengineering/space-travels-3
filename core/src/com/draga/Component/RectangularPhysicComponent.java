@@ -1,15 +1,15 @@
-package com.draga;
+package com.draga.Component;
 
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Rectangle;
 
-import java.awt.*;
-
-public abstract class PhysicComponent {
+/**
+ * Created by Administrator on 03/09/2015.
+ */
+public class RectangularPhysicComponent extends PhysicComponent
+{
     protected Rectangle rectangle;
 
-    private float rotation = 0;
-
-    public PhysicComponent() {
+    public RectangularPhysicComponent() {
         rectangle = new Rectangle();
     }
 
@@ -20,8 +20,6 @@ public abstract class PhysicComponent {
     public float getY() {
         return rectangle.y;
     }
-
-    public abstract void update(float elapsed);
 
     public void applyForce(float forceX, float forceY){
         rectangle.x += forceX;
@@ -36,20 +34,15 @@ public abstract class PhysicComponent {
         this.rectangle.x += forceX;
     }
 
-    public int getHeight() {
+    public float getHeight() {
         return rectangle.height;
     }
 
-    public int getWith() {
+    public float getWith() {
         return rectangle.width;
     }
-
-    public float getRotation() {
-        return rotation;
-    }
-
-    public void applyRotation(float i)
+    @Override
+    public void update(float elapsed)
     {
-        rotation += i;
     }
 }

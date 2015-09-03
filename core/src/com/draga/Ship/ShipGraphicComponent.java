@@ -1,8 +1,8 @@
 package com.draga.Ship;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.draga.GraphicComponent;
-import com.draga.PhysicComponent;
+import com.draga.Component.GraphicComponent;
+import com.draga.Component.PhysicComponent;
 
 public class ShipGraphicComponent extends GraphicComponent
 {
