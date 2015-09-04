@@ -2,8 +2,8 @@ package com.draga.Ship;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.draga.InputComponent;
-import com.draga.PhysicComponent;
+import com.draga.Component.InputComponent;
+import com.draga.Component.PhysicComponent;
 
 public class ShipInputComponent extends InputComponent {
     private PhysicComponent shipPhysicComponent;
@@ -14,9 +14,11 @@ public class ShipInputComponent extends InputComponent {
 
     @Override
     public void update(float elapsed) {
-        this.shipPhysicComponent.applyForce(Gdx.input.getAccelerometerX(), Gdx.input.getAccelerometerY());
+        this.shipPhysicComponent.applyForce(
+            Gdx.input.getAccelerometerX(),
+            Gdx.input.getAccelerometerY());
 
-        
+
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             this.shipPhysicComponent.applyXForce(-1);
         }
