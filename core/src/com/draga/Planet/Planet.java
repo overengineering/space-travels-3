@@ -1,5 +1,9 @@
 package com.draga.Planet;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.draga.Component.CircularPhysicComponent;
+import com.draga.Component.GraphicComponent;
 import com.draga.GameEntity;
 
 /**
@@ -7,8 +11,9 @@ import com.draga.GameEntity;
  */
 public class Planet extends GameEntity
 {
-    public Planet(float mass, int diameter)
+    public Planet(float mass, int diameter, String texturePath)
     {
-        physicComponent = new PlanetPhysicComponent(mass, diameter);
+        physicComponent = new CircularPhysicComponent(mass, diameter);
+        graphicComponent = new GraphicComponent(texturePath, physicComponent);
     }
 }
