@@ -9,15 +9,10 @@ public class CircularPhysicComponent extends PhysicComponent
 {
     Circle circle;
 
-    public CircularPhysicComponent()
-    {
-        this.circle = new Circle();
-    }
-
-    public CircularPhysicComponent(float mass, int diameter)
+    public CircularPhysicComponent(float mass, int diameter, int x, int y)
     {
         this.mass = mass;
-        this.circle = new Circle(0, 0, diameter);
+        this.circle = new Circle(x, y, diameter);
     }
 
     @Override

@@ -11,9 +11,9 @@ import com.draga.GameEntity;
  */
 public class Planet extends GameEntity
 {
-    public Planet(float mass, int diameter, String texturePath)
+    public Planet(float mass, int diameter, int x, int y, String texturePath)
     {
-        physicComponent = new CircularPhysicComponent(mass, diameter);
+        physicComponent = new CircularPhysicComponent(mass, diameter, x, y);
         graphicComponent = new GraphicComponent(texturePath, physicComponent);
     }
 }
