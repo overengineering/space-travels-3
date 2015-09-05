@@ -1,0 +1,12 @@
+{
+  Ship : { texturePath : "ship64.png" }
+  Planets : [
+    {
+      texturePath : "earth.png",
+      x : 100,
+      y : 100,
+      diameter : 100,
+    }
+  ],
+  Background : { texturePath : "background4.jpg" }
+}

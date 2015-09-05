@@ -1,6 +1,6 @@
-package com.draga.Ship;
+package com.draga.ship;
 
-import com.draga.Component.RectangularPhysicComponent;
+import com.draga.component.RectangularPhysicComponent;
 
 public class ShipPhysicComponent extends RectangularPhysicComponent
 {

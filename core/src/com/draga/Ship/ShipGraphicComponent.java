@@ -1,9 +1,7 @@
-package com.draga.Ship;
+package com.draga.ship;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.draga.Component.GraphicComponent;
-import com.draga.Component.PhysicComponent;
+import com.draga.component.GraphicComponent;
+import com.draga.component.PhysicComponent;
 
 public class ShipGraphicComponent extends GraphicComponent
 {

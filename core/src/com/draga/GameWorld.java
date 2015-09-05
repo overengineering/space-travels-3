@@ -1,7 +1,7 @@
 package com.draga;
 
-import com.draga.Planet.Planet;
-import com.draga.Ship.Ship;
+import com.draga.planet.Planet;
+import com.draga.ship.Ship;
 
 public class GameWorld extends World {
     public GameWorld(String backgroundTexturePath) {

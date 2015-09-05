@@ -1,4 +1,4 @@
-package com.draga.Component;
+package com.draga.component;
 
 public abstract class InputComponent {
     public abstract void update(float elapsed);

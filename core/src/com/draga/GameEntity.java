@@ -1,9 +1,9 @@
 package com.draga;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.draga.Component.GraphicComponent;
-import com.draga.Component.InputComponent;
-import com.draga.Component.PhysicComponent;
+import com.draga.component.GraphicComponent;
+import com.draga.component.InputComponent;
+import com.draga.component.PhysicComponent;
 
 public abstract class GameEntity
 {

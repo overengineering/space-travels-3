@@ -1,4 +1,4 @@
-package com.draga.Component;
+package com.draga.component;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;

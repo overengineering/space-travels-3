@@ -1,4 +1,4 @@
-package com.draga.Ship;
+package com.draga.ship;
 
 import com.draga.GameEntity;
 
