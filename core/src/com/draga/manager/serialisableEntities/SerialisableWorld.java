@@ -1,4 +1,4 @@
-package com.draga.spaceTravels3.manager.SerialisableEntities;
+package com.draga.manager.serialisableEntities;
 
 import java.util.List;
 

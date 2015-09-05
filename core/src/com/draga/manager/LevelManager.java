@@ -1,14 +1,14 @@
-package com.draga.spaceTravels3.manager;
+package com.draga.manager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.utils.Json;
-import com.draga.spaceTravels3.SpaceTravels3;
-import com.draga.spaceTravels3.manager.SerialisableEntities.SerialisableBackground;
-import com.draga.spaceTravels3.manager.SerialisableEntities.SerialisablePlanet;
-import com.draga.spaceTravels3.manager.SerialisableEntities.SerialisableShip;
-import com.draga.spaceTravels3.manager.SerialisableEntities.SerialisableWorld;
+import com.draga.SpaceTravels3;
+import com.draga.manager.serialisableEntities.SerialisableBackground;
+import com.draga.manager.serialisableEntities.SerialisablePlanet;
+import com.draga.manager.serialisableEntities.SerialisableShip;
+import com.draga.manager.serialisableEntities.SerialisableWorld;
 
 /**
  * Created by Administrator on 05/09/2015.

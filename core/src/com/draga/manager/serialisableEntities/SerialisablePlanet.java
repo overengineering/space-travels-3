@@ -1,4 +1,4 @@
-package com.draga.spaceTravels3.manager.SerialisableEntities;
+package com.draga.manager.serialisableEntities;
 
 /**
  * Created by Administrator on 05/09/2015.
