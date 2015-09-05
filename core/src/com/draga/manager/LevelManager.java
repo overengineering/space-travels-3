@@ -2,9 +2,7 @@ package com.draga.manager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.utils.Json;
-import com.draga.SpaceTravels3;
 import com.draga.manager.serialisableEntities.SerialisableBackground;
 import com.draga.manager.serialisableEntities.SerialisablePlanet;
 import com.draga.manager.serialisableEntities.SerialisableShip;
