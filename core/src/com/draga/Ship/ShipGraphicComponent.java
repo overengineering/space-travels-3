@@ -5,8 +5,8 @@ import com.draga.component.PhysicComponent;
 
 public class ShipGraphicComponent extends GraphicComponent
 {
-    public ShipGraphicComponent(PhysicComponent shipPhysicComponent)
+    public ShipGraphicComponent(PhysicComponent shipPhysicComponent, String texturePath)
     {
-        super("ship64.png", shipPhysicComponent);
+        super(texturePath, shipPhysicComponent);
     }
 }

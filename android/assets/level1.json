@@ -1,12 +1,17 @@
 {
-  Ship : { texturePath : "ship64.png" }
-  Planets : [
+  class: SerialisableWorld
+  serialisedBackground: {
+    texturePath: background4.jpg
+  }
+  serialisedShip: {
+    texturePath: ship64.png
+  }
+  serialisedPlanets: [
     {
-      texturePath : "earth.png",
-      x : 100,
-      y : 100,
-      diameter : 100,
+      texturePath: earth.png
+      x: 100
+      y: 100
+      diameter: 100
     }
-  ],
-  Background : { texturePath : "background4.jpg" }
+  ]
 }

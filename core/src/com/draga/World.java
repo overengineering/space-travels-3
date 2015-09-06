@@ -21,6 +21,11 @@ public class World {
         batch = new SpriteBatch();
     }
 
+    public void addGameEntity(GameEntity gameEntity)
+    {
+        gameEntities.add(gameEntity);
+    }
+
     public void update(float elapsed){
         for (GameEntity gameEntity: gameEntities){
             gameEntity.update(elapsed);
