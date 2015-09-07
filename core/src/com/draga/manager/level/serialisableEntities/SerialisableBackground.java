@@ -1,4 +1,4 @@
-package com.draga.manager.serialisableEntities;
+package com.draga.manager.level.serialisableEntities;
 
 /**
  * Created by Administrator on 05/09/2015.

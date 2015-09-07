@@ -1,7 +1,8 @@
 package com.draga.manager;
 
 import com.draga.GdxTestRunner;
-import com.draga.manager.serialisableEntities.SerialisableWorld;
+import com.draga.manager.level.LevelManager;
+import com.draga.manager.level.serialisableEntities.SerialisableWorld;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,8 +33,13 @@ public class LevelManagerTest
             "    }\n" +
             "  ]\n" +
             "}\n";
+
         SerialisableWorld serialisableWorld = LevelManager.getSerialisedWord(serilisedWord);
 
         Assert.assertNotNull(serialisableWorld);
+        Assert.assertNotNull(serialisableWorld.serialisedPlanets);
+        Assert.assertNotNull(serialisableWorld.serialisedBackground);
+        Assert.assertNotNull(serialisableWorld.serialisedShip);
+        Assert.assertEquals(serialisableWorld.serialisedPlanets.size(), 1);
     }
 }

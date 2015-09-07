@@ -1,4 +1,4 @@
-package com.draga.manager.serialisableEntities;
+package com.draga.manager.level.serialisableEntities;
 
 import java.util.List;
 

@@ -1,12 +1,7 @@
-package com.draga.manager;
+package com.draga.manager.level;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
-import com.draga.manager.serialisableEntities.SerialisableBackground;
-import com.draga.manager.serialisableEntities.SerialisablePlanet;
-import com.draga.manager.serialisableEntities.SerialisableShip;
-import com.draga.manager.serialisableEntities.SerialisableWorld;
+import com.draga.manager.level.serialisableEntities.SerialisableWorld;
 
 /**
  * Created by Administrator on 05/09/2015.
