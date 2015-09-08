@@ -5,8 +5,11 @@ package com.draga.manager.level.serialisableEntities;
  */
 public class SerialisableShip
 {
+    private String texturePath;
+
     public SerialisableShip()
     {
+
     }
 
     public SerialisableShip(String texturePath)
@@ -15,5 +18,13 @@ public class SerialisableShip
         this.texturePath = texturePath;
     }
 
-    String texturePath;
+    public String getTexturePath()
+    {
+        return texturePath;
+    }
+
+    public void setTexturePath(String texturePath)
+    {
+        this.texturePath = texturePath;
+    }
 }

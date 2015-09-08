@@ -5,7 +5,17 @@ package com.draga.manager.level.serialisableEntities;
  */
 public class SerialisableBackground
 {
-    String texturePath;
+    public String getTexturePath()
+    {
+        return texturePath;
+    }
+
+    public void setTexturePath(String texturePath)
+    {
+        this.texturePath = texturePath;
+    }
+
+    private String texturePath;
 
     public SerialisableBackground()
     {
@@ -13,7 +23,6 @@ public class SerialisableBackground
 
     public SerialisableBackground(String texturePath)
     {
-
         this.texturePath = texturePath;
     }
 }
