@@ -1,8 +1,10 @@
-package com.draga.gdxTestRunner;
+package com.draga.test.gdxTestRunner;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
@@ -11,6 +13,8 @@ import org.junit.runners.model.InitializationError;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
+
+import static org.mockito.Mockito.mock;
 
 public class GdxTestRunner extends BlockJUnit4ClassRunner implements ApplicationListener
 {
@@ -23,6 +27,8 @@ public class GdxTestRunner extends BlockJUnit4ClassRunner implements Application
         HeadlessApplicationConfiguration conf = new HeadlessApplicationConfiguration();
 
         new HeadlessApplication(this, conf);
+        Gdx.gl = mock(GL20.class);
+        Gdx.gl20 = mock(GL20.class);
     }
 
     @Override

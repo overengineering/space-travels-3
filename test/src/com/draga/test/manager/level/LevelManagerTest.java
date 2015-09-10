@@ -1,12 +1,15 @@
-package com.draga.level;
+package com.draga.test.manager.level;
 
-import com.draga.gdxTestRunner.GdxTestRunner;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.draga.manager.level.LevelManager;
+import com.draga.manager.level.serialisableEntities.SerialisableWorld;
+import com.draga.test.gdxTestRunner.GdxTestRunner;
 import com.draga.World;
-import com.draga.level.level.LevelManager;
-import com.draga.level.level.serialisableEntities.SerialisableWorld;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import static org.mockito.Mockito.mock;
 
 /**
  * Created by Administrator on 05/09/2015.
@@ -18,14 +21,14 @@ public class LevelManagerTest
     public static final String SERILISED_WORD = "{\n" +
         "  class: SerialisableWorld\n" +
         "  serialisedBackground: {\n" +
-        "    texturePath: background4.jpg\n" +
+        "    texturePath: \"../android/assets/background4.jpg\"\n" +
         "  }\n" +
         "  serialisedShip: {\n" +
-        "    texturePath: ship64.png\n" +
+        "    texturePath: \"../android/assets/ship64.png\"\n" +
         "  }\n" +
         "  serialisedPlanets: [\n" +
         "    {\n" +
-        "      texturePath: earth.png\n" +
+        "      texturePath: \"../android/assets/earth.png\"\n" +
         "      x: 100\n" +
         "      y: 100\n" +
         "      diameter: 100\n" +
@@ -48,7 +51,7 @@ public class LevelManagerTest
     @Test
     public void testGetLevelWorld() throws Exception
     {
-        World world = LevelManager.getLevelWorld(SERILISED_WORD);
+        World world = LevelManager.getLevelWorld(SERILISED_WORD, mock(SpriteBatch.class));
 
         Assert.assertNotNull(world);
     }

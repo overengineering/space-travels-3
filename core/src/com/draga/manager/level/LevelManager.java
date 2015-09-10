@@ -1,7 +1,6 @@
 package com.draga.manager.level;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Json;
 import com.draga.GameWorld;
 import com.draga.World;
@@ -26,18 +25,18 @@ public abstract class LevelManager
         return serialisableWorld;
     }
 
-    public static World getLevelWorld(String jsonString)
+    public static World getLevelWorld(String jsonString, SpriteBatch spriteBatch)
     {
         SerialisableWorld serialisableWorld = LevelManager.getSerialisedWord(jsonString);
 
-        World world = LevelManager.getLevelWorld(serialisableWorld);
+        World world = LevelManager.getLevelWorld(serialisableWorld, spriteBatch);
 
         return world;
     }
 
-    private static World getLevelWorld(SerialisableWorld serialisableWorld)
+    private static World getLevelWorld(SerialisableWorld serialisableWorld, SpriteBatch spriteBatch)
     {
-        World world = new GameWorld(serialisableWorld.serialisedBackground.getTexturePath());
+        World world = new GameWorld(serialisableWorld.serialisedBackground.getTexturePath(), spriteBatch);
 
         Ship ship = new Ship(serialisableWorld.serialisedShip.getTexturePath());
         world.addGameEntity(ship);
