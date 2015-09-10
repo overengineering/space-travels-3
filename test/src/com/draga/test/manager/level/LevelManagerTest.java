@@ -19,12 +19,11 @@ import static org.mockito.Mockito.mock;
 @RunWith(GdxTestRunner.class)
 public class LevelManagerTest
 {
-
     @Test
     public void testGetSerialisedWord() throws Exception
     {
         String testLevelJson = getTestLevelJson();
-        SerialisableWorld serialisableWorld = LevelManager.getSerialisedWord(testLevelJson);
+        SerialisableWorld serialisableWorld = LevelManager.getSerialisedWorldFromString(testLevelJson);
 
         Assert.assertNotNull(serialisableWorld);
         Assert.assertNotNull(serialisableWorld.serialisedPlanets);
@@ -33,18 +32,20 @@ public class LevelManagerTest
         Assert.assertEquals(serialisableWorld.serialisedPlanets.size(), 1);
     }
 
-    private String getTestLevelJson()
-    {
-        FileHandle testLevelFileHandle = Gdx.files.internal("../android/assets/testLevel.json");
-        return testLevelFileHandle.readString();
-    }
-
     @Test
     public void testGetLevelWorld() throws Exception
     {
         String testLevelJson = getTestLevelJson();
-        World world = LevelManager.getLevelWorld(testLevelJson, mock(SpriteBatch.class));
+        World world = LevelManager.getLevelWorldFromString(testLevelJson, mock(SpriteBatch.class));
 
         Assert.assertNotNull(world);
+    }
+
+    private String getTestLevelJson()
+    {
+        FileHandle testLevelFileHandle = Gdx.files.internal("../android/assets/testLevel.json");
+        String testLevelJson = testLevelFileHandle.readString();
+
+        return testLevelJson;
     }
 }

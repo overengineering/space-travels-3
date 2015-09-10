@@ -1,5 +1,7 @@
 package com.draga.manager.level;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Json;
 import com.draga.GameWorld;
@@ -14,7 +16,20 @@ import com.draga.ship.Ship;
  */
 public abstract class LevelManager
 {
-    public static SerialisableWorld getSerialisedWord(String serialisedWord)
+    public static SerialisableWorld getSerialisedWorldFromFile(String serialisedWorldFilePath){
+        String serialisedWordString = getStringFromFile(serialisedWorldFilePath);
+        SerialisableWorld serialisableWorld = getSerialisedWorldFromString(serialisedWordString);
+
+        return serialisableWorld;
+    }
+
+    private static String getStringFromFile(String filePath)
+    {
+        FileHandle serialisedWorldFileHandle = Gdx.files.internal(filePath);
+        return serialisedWorldFileHandle.readString();
+    }
+
+    public static SerialisableWorld getSerialisedWorldFromString(String serialisedWord)
     {
         Json json = new Json();
 
@@ -25,9 +40,16 @@ public abstract class LevelManager
         return serialisableWorld;
     }
 
-    public static World getLevelWorld(String jsonString, SpriteBatch spriteBatch)
+    public static World getLevelWorldFromFile(String serialisedWorldFilePath, SpriteBatch spriteBatch){
+        String serialisedWordString = getStringFromFile(serialisedWorldFilePath);
+        World world = getLevelWorldFromString(serialisedWordString, spriteBatch);
+
+        return world;
+    }
+
+    public static World getLevelWorldFromString(String jsonString, SpriteBatch spriteBatch)
     {
-        SerialisableWorld serialisableWorld = LevelManager.getSerialisedWord(jsonString);
+        SerialisableWorld serialisableWorld = LevelManager.getSerialisedWorldFromString(jsonString);
 
         World world = LevelManager.getLevelWorld(serialisableWorld, spriteBatch);
 
