@@ -5,9 +5,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.draga.manager.level.LevelManager;
 
+import java.sql.Timestamp;
+import java.util.Date;
+
 public class SpaceTravels3 extends ApplicationAdapter {
 	private World world;
-	
+	private final float timeBetweenDebugInfoUpdate = 1f;
+	private float timeUntilDebugInfoUpdate = timeBetweenDebugInfoUpdate;
+	private final String loggingTag = "Space Travels 3";
+	private final boolean debugMode = isDebugMode();
+
 	@Override
 	public void create () {
 		world = LevelManager.getLevelWorldFromFile("level1.json", new SpriteBatch());
@@ -15,7 +22,36 @@ public class SpaceTravels3 extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-		world.update(Gdx.graphics.getDeltaTime());
+		float deltaTime = Gdx.graphics.getDeltaTime();
+
+		if(debugMode)
+		{
+			timeUntilDebugInfoUpdate -= deltaTime;
+			if (timeUntilDebugInfoUpdate <= 0f)
+			{
+				timeUntilDebugInfoUpdate = timeBetweenDebugInfoUpdate;
+				String log = String.format(
+					"%23s | FPS : %3d | Java heap : %10d | Java native heap : %10d",
+					new Timestamp(new Date().getTime()).toString(),
+					Gdx.graphics.getFramesPerSecond(),
+					Gdx.app.getJavaHeap(),
+					Gdx.app.getNativeHeap());
+				Gdx.app.log(loggingTag, log);
+			}
+		}
+
+		world.update(deltaTime);
 		world.draw();
+	}
+
+    /**
+     * https://stackoverflow.com/questions/3776204/how-to-find-out-if-debug-mode-is-enabled
+     * @return If the application is being debugged
+     */
+	public static boolean isDebugMode()
+	{
+		boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().
+			getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
+		return isDebug;
 	}
 }
