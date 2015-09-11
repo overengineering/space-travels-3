@@ -1,9 +1,9 @@
-package com.draga.Ship;
+package com.draga.ship;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.draga.Component.InputComponent;
-import com.draga.Component.PhysicComponent;
+import com.draga.component.InputComponent;
+import com.draga.component.PhysicComponent;
 
 public class ShipInputComponent extends InputComponent {
     private PhysicComponent shipPhysicComponent;

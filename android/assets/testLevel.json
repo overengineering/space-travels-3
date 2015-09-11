@@ -1,0 +1,17 @@
+{
+  "class": "SerialisableWorld",
+  "serialisedBackground": {
+    "texturePath": "../android/assets/background4.jpg"
+  },
+  "serialisedShip": {
+    "texturePath": "../android/assets/ship64.png"
+  },
+  "serialisedPlanets": [
+    {
+      "texturePath": "../android/assets/earth.png",
+      "x": 100,
+      "y": 100,
+      "diameter": 100
+    }
+  ]
+}

@@ -5,6 +5,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
 
 /**
@@ -14,11 +15,16 @@ public class World {
     private final Texture backgroundTexture;
     protected Array<GameEntity> gameEntities;SpriteBatch batch;
 
-    public World(String backgroundTexturePath) {
+    public World(String backgroundTexturePath, SpriteBatch spriteBatch) {
         FileHandle backgroundFileHandle = Gdx.files.internal(backgroundTexturePath);
         this.backgroundTexture = new Texture(backgroundFileHandle);
         gameEntities = new Array<GameEntity>();
-        batch = new SpriteBatch();
+        batch = spriteBatch;
+    }
+
+    public void addGameEntity(GameEntity gameEntity)
+    {
+        gameEntities.add(gameEntity);
     }
 
     public void update(float elapsed){

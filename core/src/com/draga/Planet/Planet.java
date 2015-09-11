@@ -1,9 +1,7 @@
-package com.draga.Planet;
+package com.draga.planet;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.draga.Component.CircularPhysicComponent;
-import com.draga.Component.GraphicComponent;
+import com.draga.component.CircularPhysicComponent;
+import com.draga.component.GraphicComponent;
 import com.draga.GameEntity;
 
 /**
