@@ -13,15 +13,17 @@ import java.util.Date;
 public class SpaceTravels3 extends ApplicationAdapter
 {
     private final float timeBetweenDebugInfoUpdate = 1f;
-    private final String loggingTag = "Space Travels 3";
+    private final String loggingTag = SpaceTravels3.class.getSimpleName();
     private final boolean debugMode = JavaUtilities.isDebugMode();
     private World world;
     private float timeUntilDebugInfoUpdate = timeBetweenDebugInfoUpdate;
+    private SpriteBatch spriteBatch;
 
     @Override
     public void create()
     {
-        world = LevelManager.getLevelWorldFromFile("level1.json", new SpriteBatch());
+        spriteBatch = new SpriteBatch();
+        world = LevelManager.getLevelWorldFromFile("level1.json", spriteBatch);
 
         if (debugMode)
         {
@@ -62,6 +64,7 @@ public class SpaceTravels3 extends ApplicationAdapter
     public void dispose()
     {
         Gdx.app.debug(loggingTag, "Dispose");
+        spriteBatch.dispose();
         super.dispose();
     }
 
