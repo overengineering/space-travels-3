@@ -44,6 +44,47 @@ public class SpaceTravels3 extends ApplicationAdapter {
 		world.draw();
 	}
 
+    @Override
+    public void dispose()
+    {
+        if (debugMode)
+        {
+            Gdx.app.log(loggingTag, "Dispose");
+        }
+        super.dispose();
+    }
+
+    @Override
+    public void pause()
+    {
+        if (debugMode)
+        {
+            Gdx.app.log(loggingTag, "Pause");
+        }
+        super.pause();
+    }
+
+    @Override
+    public void resize(int width, int height)
+    {
+        if (debugMode)
+        {
+            String log = String.format("Resize to %4d width x %4d height", width, height);
+            Gdx.app.log(loggingTag, log);
+        }
+        super.resize(width, height);
+    }
+
+    @Override
+    public void resume()
+    {
+        if (debugMode)
+        {
+            Gdx.app.log(loggingTag, "Resume");
+        }
+        super.resume();
+    }
+
     /**
      * https://stackoverflow.com/questions/3776204/how-to-find-out-if-debug-mode-is-enabled
      * @return If the application is being debugged
