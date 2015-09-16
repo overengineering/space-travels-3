@@ -11,8 +11,8 @@ public class SerialisableWorld
     {
     }
 
-    public float width;
-    public float height;
+    public int width;
+    public int height;
     public SerialisableBackground serialisedBackground;
     public SerialisableShip serialisedShip;
     public List<SerialisablePlanet> serialisedPlanets;

@@ -79,6 +79,8 @@ public class SpaceTravels3 extends ApplicationAdapter
     {
         String log = String.format("Resize to %4d width x %4d height", width, height);
         Gdx.app.debug(loggingTag, log);
+        world.resize(width, height);
+
         super.resize(width, height);
     }
 

@@ -2,11 +2,9 @@ package com.draga;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.draga.ship.Ship;
@@ -14,15 +12,18 @@ import com.draga.ship.Ship;
 /**
  * Created by Administrator on 31/08/2015.
  */
-public class World {
+public class World
+{
     private final Texture backgroundTexture;
-    protected Array<GameEntity> gameEntities;SpriteBatch batch;
+    protected Array<GameEntity> gameEntities;
+    SpriteBatch batch;
     private OrthographicCamera orthographicCamera;
     private Ship ship;
-    private float width;
-    private float height;
+    private int width;
+    private int height;
 
-    public World(String backgroundTexturePath, SpriteBatch spriteBatch, float width, float height) {
+    public World(String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height)
+    {
         FileHandle backgroundFileHandle = Gdx.files.internal(backgroundTexturePath);
         this.backgroundTexture = new Texture(backgroundFileHandle);
         this.width = width;
@@ -32,7 +33,8 @@ public class World {
         orthographicCamera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
-    public void addShip(Ship ship){
+    public void addShip(Ship ship)
+    {
         this.ship = ship;
         addGameEntity(ship);
     }
@@ -42,7 +44,8 @@ public class World {
         gameEntities.add(gameEntity);
     }
 
-    public void update(float elapsed){
+    public void update(float elapsed)
+    {
         float cameraXPosition = MathUtils.clamp(
             ship.physicComponent.getX(),
             orthographicCamera.viewportWidth / 2f,
@@ -56,12 +59,14 @@ public class World {
         orthographicCamera.update();
         batch.setProjectionMatrix(orthographicCamera.combined);
 
-        for (GameEntity gameEntity: gameEntities){
+        for (GameEntity gameEntity : gameEntities)
+        {
             gameEntity.update(elapsed);
         }
     }
 
-    public void draw(){
+    public void draw()
+    {
         batch.begin();
         batch.draw(
             backgroundTexture,
@@ -80,9 +85,16 @@ public class World {
             backgroundTexture.getHeight(),
             false,
             false);
-        for (GameEntity gameEntity: gameEntities){
+        for (GameEntity gameEntity : gameEntities)
+        {
             gameEntity.draw(batch);
         }
         batch.end();
+    }
+
+    public void resize(int width, int height)
+    {
+        orthographicCamera.viewportWidth = width;
+        orthographicCamera.viewportHeight = height;
     }
 }
