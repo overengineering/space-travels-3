@@ -5,8 +5,8 @@ import com.draga.planet.Planet;
 import com.draga.ship.Ship;
 
 public class GameWorld extends World {
-    public GameWorld(String backgroundTexturePath, SpriteBatch spriteBatch) {
-        super(backgroundTexturePath, spriteBatch);
+    public GameWorld(String backgroundTexturePath, SpriteBatch spriteBatch, float width, float height) {
+        super(backgroundTexturePath, spriteBatch, width, height);
     }
 
 }

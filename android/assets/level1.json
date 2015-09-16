@@ -1,7 +1,7 @@
 {
   "class": "SerialisableWorld",
-  "width": 800,
-  "height": 480,
+  "width": 1920,
+  "height": 1080,
   "serialisedBackground": {
     "texturePath": "background4.jpg"
   },

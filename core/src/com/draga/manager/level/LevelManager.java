@@ -58,10 +58,14 @@ public abstract class LevelManager
 
     private static World getLevelWorld(SerialisableWorld serialisableWorld, SpriteBatch spriteBatch)
     {
-        World world = new GameWorld(serialisableWorld.serialisedBackground.getTexturePath(), spriteBatch);
+        World world = new GameWorld(
+            serialisableWorld.serialisedBackground.getTexturePath(),
+            spriteBatch,
+            serialisableWorld.width,
+            serialisableWorld.height);
 
         Ship ship = new Ship(serialisableWorld.serialisedShip.getTexturePath());
-        world.addGameEntity(ship);
+        world.addShip(ship);
 
         for (SerialisablePlanet serialisablePlanet: serialisableWorld.serialisedPlanets)
         {
