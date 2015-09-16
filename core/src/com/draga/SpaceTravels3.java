@@ -5,7 +5,6 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.draga.manager.level.LevelManager;
-import com.draga.utilities.JavaUtilities;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -14,7 +13,6 @@ public class SpaceTravels3 extends ApplicationAdapter
 {
     private final float timeBetweenDebugInfoUpdate = 1f;
     private final String loggingTag = SpaceTravels3.class.getSimpleName();
-    private final boolean debugMode = JavaUtilities.isDebugMode();
     private World world;
     private float timeUntilDebugInfoUpdate = timeBetweenDebugInfoUpdate;
     private SpriteBatch spriteBatch;
@@ -25,7 +23,7 @@ public class SpaceTravels3 extends ApplicationAdapter
         spriteBatch = new SpriteBatch();
         world = LevelManager.getLevelWorldFromFile("level1.json", spriteBatch);
 
-        if (debugMode)
+        if (Constants.isDebugging)
         {
             Gdx.app.setLogLevel(Application.LOG_DEBUG);
         }
@@ -40,7 +38,7 @@ public class SpaceTravels3 extends ApplicationAdapter
     {
         float deltaTime = Gdx.graphics.getDeltaTime();
 
-        if (debugMode)
+        if (Constants.isDebugging)
         {
             timeUntilDebugInfoUpdate -= deltaTime;
             if (timeUntilDebugInfoUpdate <= 0f)
