@@ -42,14 +42,17 @@ public class GameWorld
 
     public void update(float elapsed)
     {
+        float halfWidth = orthographicCamera.viewportWidth / 2f;
+        float halfHeight = orthographicCamera.viewportHeight / 2f;
+
         float cameraXPosition = MathUtils.clamp(
             ship.physicComponent.getX(),
-            orthographicCamera.viewportWidth / 2f,
-            width - (orthographicCamera.viewportWidth / 2f));
+            halfWidth,
+            width - halfWidth);
         float cameraYPosition = MathUtils.clamp(
             ship.physicComponent.getY(),
-            orthographicCamera.viewportHeight / 2f,
-            height - (orthographicCamera.viewportHeight / 2f));
+            halfHeight,
+            height - halfHeight);
         orthographicCamera.position.x = cameraXPosition;
         orthographicCamera.position.y = cameraYPosition;
         orthographicCamera.update();

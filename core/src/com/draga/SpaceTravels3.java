@@ -46,7 +46,7 @@ public class SpaceTravels3 extends ApplicationAdapter
             {
                 timeUntilDebugInfoUpdate = timeBetweenDebugInfoUpdate;
                 String log = String.format(
-                    "%23s | FPS : %3d | Java heap : %10d | Java native heap : %10d",
+                    "%-23s | FPS : %3d | Java heap : %10d | Java native heap : %10d",
                     new Timestamp(new Date().getTime()).toString(),
                     Gdx.graphics.getFramesPerSecond(),
                     Gdx.app.getJavaHeap(),

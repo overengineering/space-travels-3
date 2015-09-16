@@ -17,6 +17,11 @@ public class ShipInputComponent extends InputComponent {
     public void update(float elapsed) {
         switch(Gdx.input.getRotation())
         {
+            case 0:
+                this.shipPhysicComponent.applyForce(
+                    Gdx.input.getAccelerometerX(),
+                    Gdx.input.getAccelerometerY());
+                break;
             case 90:
                 this.shipPhysicComponent.applyForce(
                     Gdx.input.getAccelerometerY(),
