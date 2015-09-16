@@ -14,7 +14,7 @@ public class SpaceTravels3 extends ApplicationAdapter
 {
     private final float timeBetweenDebugInfoUpdate = 1f;
     private final String loggingTag = SpaceTravels3.class.getSimpleName();
-    private World world;
+    private GameWorld world;
     private float timeUntilDebugInfoUpdate = timeBetweenDebugInfoUpdate;
     private SpriteBatch spriteBatch;
 

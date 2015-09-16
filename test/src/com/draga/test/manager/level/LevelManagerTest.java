@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.draga.manager.level.LevelManager;
 import com.draga.manager.level.serialisableEntities.SerialisableWorld;
 import com.draga.test.gdxTestRunner.GdxTestRunner;
-import com.draga.World;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

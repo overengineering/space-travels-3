@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.draga.component.InputComponent;
 import com.draga.component.PhysicComponent;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class ShipInputComponent extends InputComponent {
     private PhysicComponent shipPhysicComponent;
@@ -14,9 +15,16 @@ public class ShipInputComponent extends InputComponent {
 
     @Override
     public void update(float elapsed) {
-        this.shipPhysicComponent.applyForce(
-            Gdx.input.getAccelerometerX(),
-            Gdx.input.getAccelerometerY());
+        switch(Gdx.input.getRotation())
+        {
+            case 90:
+                this.shipPhysicComponent.applyForce(
+                    Gdx.input.getAccelerometerY(),
+                    - Gdx.input.getAccelerometerX());
+                break;
+            default:
+                throw new NotImplementedException();
+        }
 
 
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
