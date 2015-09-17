@@ -6,4 +6,6 @@ package com.draga;
 public abstract class Constants
 {
     public static final boolean isDebugging = true;
+    public static final float viewportWidth = 100f;
+    public static final float viewportHeight = 100f;
 }

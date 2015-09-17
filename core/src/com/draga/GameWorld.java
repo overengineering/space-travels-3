@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.draga.ship.Ship;
 
 public class GameWorld
@@ -15,11 +16,13 @@ public class GameWorld
     protected Array<GameEntity> gameEntities;
     SpriteBatch batch;
     private OrthographicCamera orthographicCamera;
+    private ExtendViewport extendViewport;
     private Ship ship;
     private int width;
     private int height;
 
-    public GameWorld(String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height) {
+    public GameWorld(String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height)
+    {
         FileHandle backgroundFileHandle = Gdx.files.internal(backgroundTexturePath);
         this.backgroundTexture = new Texture(backgroundFileHandle);
         this.width = width;
@@ -27,6 +30,12 @@ public class GameWorld
         gameEntities = new Array<GameEntity>();
         batch = spriteBatch;
         orthographicCamera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        extendViewport = new ExtendViewport(
+            Constants.viewportWidth,
+            Constants.viewportHeight,
+            width,
+            height,
+            orthographicCamera);
     }
 
     public void addShip(Ship ship)
@@ -67,23 +76,7 @@ public class GameWorld
     public void draw()
     {
         batch.begin();
-        batch.draw(
-            backgroundTexture,
-            0,
-            0,
-            0,
-            0,
-            width,
-            height,
-            1,
-            1,
-            0,
-            0,
-            0,
-            backgroundTexture.getWidth(),
-            backgroundTexture.getHeight(),
-            false,
-            false);
+        batch.draw(backgroundTexture, 0, 0, width, height);
         for (GameEntity gameEntity : gameEntities)
         {
             gameEntity.draw(batch);
@@ -93,7 +86,7 @@ public class GameWorld
 
     public void resize(int width, int height)
     {
-        orthographicCamera.viewportWidth = width;
-        orthographicCamera.viewportHeight = height;
+        extendViewport.update(width, height, true);
+        orthographicCamera.update();
     }
 }

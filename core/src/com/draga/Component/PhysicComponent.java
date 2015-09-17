@@ -1,13 +1,17 @@
 package com.draga.component;
 
-public abstract class PhysicComponent {
+import com.badlogic.gdx.graphics.glutils.FloatTextureData;
 
-    private float rotation = 0;
+public abstract class PhysicComponent
+{
+
     public float mass;
+    private float rotation = 0;
 
     public abstract void update(float elapsed);
 
-    public float getRotation() {
+    public float getRotation()
+    {
         return rotation;
     }
 
@@ -18,9 +22,13 @@ public abstract class PhysicComponent {
 
     public abstract float getX();
 
+    public abstract void setX(float x);
+
     public abstract float getY();
 
-    public abstract float getWith();
+    public abstract void setY(float y);
+
+    public abstract float getWidth();
 
     public abstract float getHeight();
 

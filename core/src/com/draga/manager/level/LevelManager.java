@@ -64,13 +64,15 @@ public abstract class LevelManager
             serialisableWorld.height);
 
         Ship ship = new Ship(serialisableWorld.serialisedShip.getTexturePath());
+        ship.physicComponent.setX(serialisableWorld.serialisedShip.getX());
+        ship.physicComponent.setY(serialisableWorld.serialisedShip.getY());
         world.addShip(ship);
 
         for (SerialisablePlanet serialisablePlanet: serialisableWorld.serialisedPlanets)
         {
             Planet planet = new Planet(
                 serialisablePlanet.getMass(),
-                serialisablePlanet.getDiameter(),
+                serialisablePlanet.getRadius(),
                 serialisablePlanet.getX(),
                 serialisablePlanet.getY(),
                 serialisablePlanet.getTexturePath()

@@ -9,10 +9,10 @@ public class CircularPhysicComponent extends PhysicComponent
 {
     Circle circle;
 
-    public CircularPhysicComponent(float mass, int diameter, int x, int y)
+    public CircularPhysicComponent(float mass, int radius, int x, int y)
     {
         this.mass = mass;
-        this.circle = new Circle(x, y, diameter);
+        this.circle = new Circle(x, y, radius);
     }
 
     @Override
@@ -28,13 +28,25 @@ public class CircularPhysicComponent extends PhysicComponent
     }
 
     @Override
+    public void setX(float x)
+    {
+        circle.setX(x);
+    }
+
+    @Override
     public float getY()
     {
         return circle.y;
     }
 
     @Override
-    public float getWith()
+    public void setY(float y)
+    {
+        circle.setY(y);
+    }
+
+    @Override
+    public float getWidth()
     {
         return circle.radius * 2;
     }

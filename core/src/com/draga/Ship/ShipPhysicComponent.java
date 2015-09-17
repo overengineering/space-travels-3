@@ -7,8 +7,8 @@ public class ShipPhysicComponent extends RectangularPhysicComponent
     public ShipPhysicComponent()
     {
         super();
-        this.rectangle.width = 64;
-        this.rectangle.height = 64;
+        this.rectangle.width = 10;
+        this.rectangle.height = 10;
     }
 
     @Override
