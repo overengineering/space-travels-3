@@ -6,58 +6,68 @@ import com.draga.component.InputComponent;
 import com.draga.component.PhysicComponent;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-public class ShipInputComponent extends InputComponent {
+public class ShipInputComponent extends InputComponent
+{
     private ShipPhysicComponent shipPhysicComponent;
 
-    public ShipInputComponent(ShipPhysicComponent shipPhysicComponent) {
+    public ShipInputComponent(ShipPhysicComponent shipPhysicComponent)
+    {
         this.shipPhysicComponent = shipPhysicComponent;
     }
 
     @Override
-    public void update(float elapsed) {
-        switch(Gdx.input.getRotation())
+    public void update(float elapsed)
+    {
+        float xAcceleration;
+        float yAcceleration;
+        switch (Gdx.input.getRotation())
         {
             case 0:
-                this.shipPhysicComponent.applyForce(
-                    Gdx.input.getAccelerometerX(),
-                    Gdx.input.getAccelerometerY());
+                xAcceleration = Gdx.input.getAccelerometerX();
+                yAcceleration = Gdx.input.getAccelerometerY();
                 break;
             case 90:
-                this.shipPhysicComponent.applyForce(
-                    Gdx.input.getAccelerometerY(),
-                    - Gdx.input.getAccelerometerX());
-                this.shipPhysicComponent.rotateTo(
-                    Gdx.input.getAccelerometerY(),
-                    - Gdx.input.getAccelerometerX(),
-                    elapsed);
+                xAcceleration = Gdx.input.getAccelerometerY();
+                yAcceleration = -Gdx.input.getAccelerometerX();
                 break;
             default:
                 throw new NotImplementedException();
         }
+        this.shipPhysicComponent.applyForce(xAcceleration, yAcceleration);
+        this.shipPhysicComponent.rotateTo(
+            xAcceleration,
+            yAcceleration,
+            elapsed);
 
 
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
+        {
             this.shipPhysicComponent.applyXForce(-1);
         }
 
-        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))
+        {
             this.shipPhysicComponent.applyXForce(1);
         }
 
-        if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.UP))
+        {
             this.shipPhysicComponent.applyYForce(1);
         }
 
-        if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN))
+        {
             this.shipPhysicComponent.applyYForce(-1);
         }
 
 
-        if(Gdx.input.isKeyPressed(Input.Keys.A)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.A))
+        {
             this.shipPhysicComponent.applyRotation(1);
         }
 
-        if(Gdx.input.isKeyPressed(Input.Keys.D)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.D))
+        {
             this.shipPhysicComponent.applyRotation(-1);
         }
     }

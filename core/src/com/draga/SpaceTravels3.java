@@ -24,7 +24,7 @@ public class SpaceTravels3 extends ApplicationAdapter
         spriteBatch = new SpriteBatch();
         world = LevelManager.getLevelWorldFromFile("level1.json", spriteBatch);
 
-        if (Constants.isDebugging)
+        if (Constants.IS_DEBUGGING)
         {
             Gdx.app.setLogLevel(Application.LOG_DEBUG);
         }
@@ -42,7 +42,7 @@ public class SpaceTravels3 extends ApplicationAdapter
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-        if (Constants.isDebugging)
+        if (Constants.IS_DEBUGGING)
         {
             timeUntilDebugInfoUpdate -= deltaTime;
             if (timeUntilDebugInfoUpdate <= 0f)

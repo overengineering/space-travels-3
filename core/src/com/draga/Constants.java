@@ -5,7 +5,8 @@ package com.draga;
  */
 public abstract class Constants
 {
-    public static final boolean isDebugging = true;
-    public static final float viewportWidth = 100f;
-    public static final float viewportHeight = 100f;
+    public static final boolean IS_DEBUGGING = true;
+    public static final float VIEWPORT_WIDTH = 100f;
+    public static final float VIEWPORT_HEIGHT = 100f;
+    public static final float EARTH_GRAVITY = 9.80665f;
 }
