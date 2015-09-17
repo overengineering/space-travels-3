@@ -9,38 +9,57 @@ public class RectangularPhysicComponent extends PhysicComponent
 {
     protected Rectangle rectangle;
 
-    public RectangularPhysicComponent() {
+    public RectangularPhysicComponent()
+    {
         rectangle = new Rectangle();
     }
 
-    public float getX() {
+    public float getX()
+    {
         return rectangle.x;
     }
 
-    public float getY() {
+    public void setX(float x)
+    {
+        rectangle.setX(x);
+    }
+
+    public float getY()
+    {
         return rectangle.y;
     }
 
-    public void applyForce(float forceX, float forceY){
+    public void setY(float y)
+    {
+        rectangle.setY(y);
+    }
+
+    public void applyForce(float forceX, float forceY)
+    {
         rectangle.x += forceX;
         rectangle.y += forceY;
     }
 
-    public void applyYForce(float forceY) {
+    public void applyYForce(float forceY)
+    {
         this.rectangle.y += forceY;
     }
 
-    public void applyXForce(float forceX) {
+    public void applyXForce(float forceX)
+    {
         this.rectangle.x += forceX;
     }
 
-    public float getHeight() {
+    public float getHeight()
+    {
         return rectangle.height;
     }
 
-    public float getWith() {
+    public float getWidth()
+    {
         return rectangle.width;
     }
+
     @Override
     public void update(float elapsed)
     {

@@ -11,6 +11,11 @@ public class AndroidLauncher extends AndroidApplication {
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
+		config.useCompass = false;
+		config.useAccelerometer = true;
+		config.hideStatusBar = true;
+		config.useWakelock = true;
+
 		initialize(new SpaceTravels3(), config);
 	}
 }

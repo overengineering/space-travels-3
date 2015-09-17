@@ -3,6 +3,7 @@ package com.draga;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.draga.manager.level.LevelManager;
 
@@ -13,7 +14,7 @@ public class SpaceTravels3 extends ApplicationAdapter
 {
     private final float timeBetweenDebugInfoUpdate = 1f;
     private final String loggingTag = SpaceTravels3.class.getSimpleName();
-    private World world;
+    private GameWorld world;
     private float timeUntilDebugInfoUpdate = timeBetweenDebugInfoUpdate;
     private SpriteBatch spriteBatch;
 
@@ -38,6 +39,9 @@ public class SpaceTravels3 extends ApplicationAdapter
     {
         float deltaTime = Gdx.graphics.getDeltaTime();
 
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+
         if (Constants.isDebugging)
         {
             timeUntilDebugInfoUpdate -= deltaTime;
@@ -45,7 +49,7 @@ public class SpaceTravels3 extends ApplicationAdapter
             {
                 timeUntilDebugInfoUpdate = timeBetweenDebugInfoUpdate;
                 String log = String.format(
-                    "%23s | FPS : %3d | Java heap : %10d | Java native heap : %10d",
+                    "%-23s | FPS : %3d | Java heap : %10d | Java native heap : %10d",
                     new Timestamp(new Date().getTime()).toString(),
                     Gdx.graphics.getFramesPerSecond(),
                     Gdx.app.getJavaHeap(),
@@ -78,6 +82,8 @@ public class SpaceTravels3 extends ApplicationAdapter
     {
         String log = String.format("Resize to %4d width x %4d height", width, height);
         Gdx.app.debug(loggingTag, log);
+        world.resize(width, height);
+
         super.resize(width, height);
     }
 

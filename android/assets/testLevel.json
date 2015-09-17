@@ -1,5 +1,7 @@
 {
   "class": "SerialisableWorld",
+  "width": 800,
+  "height": 480,
   "serialisedBackground": {
     "texturePath": "../android/assets/background4.jpg"
   },

@@ -9,9 +9,9 @@ import com.draga.GameEntity;
  */
 public class Planet extends GameEntity
 {
-    public Planet(float mass, int diameter, int x, int y, String texturePath)
+    public Planet(float mass, int radius, int x, int y, String texturePath)
     {
-        physicComponent = new CircularPhysicComponent(mass, diameter, x, y);
+        physicComponent = new CircularPhysicComponent(mass, radius, x, y);
         graphicComponent = new GraphicComponent(texturePath, physicComponent);
     }
 }

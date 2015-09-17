@@ -7,29 +7,29 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class GraphicComponent {
     protected Texture texture;
-    private PhysicComponent shipPhysicComponent;
+    private PhysicComponent physicComponent;
 
     public GraphicComponent(String texturePath, PhysicComponent physicComponent)
     {
         FileHandle fileHandle = Gdx.files.internal(texturePath);
 
         this.texture = new Texture(fileHandle);
-        this.shipPhysicComponent = physicComponent;
+        this.physicComponent = physicComponent;
     }
 
     public void draw(SpriteBatch spriteBatch)
     {
         spriteBatch.draw(
             texture,
-            shipPhysicComponent.getX(),
-            shipPhysicComponent.getY(),
-            shipPhysicComponent.getWith() / 2,
-            shipPhysicComponent.getHeight() / 2,
-            shipPhysicComponent.getWith(),
-            shipPhysicComponent.getHeight(),
+            physicComponent.getX() - physicComponent.getWidth() / 2,
+            physicComponent.getY() - physicComponent.getHeight() / 2,
+            0,
+            0,
+            physicComponent.getWidth(),
+            physicComponent.getHeight(),
             1,
             1,
-            shipPhysicComponent.getRotation(),
+            physicComponent.getRotation(),
             0,
             0,
             texture.getWidth(),

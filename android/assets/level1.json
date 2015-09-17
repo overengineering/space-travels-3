@@ -1,17 +1,21 @@
 {
-  class: SerialisableWorld
-  serialisedBackground: {
-    texturePath: background4.jpg
-  }
-  serialisedShip: {
-    texturePath: ship64.png
-  }
-  serialisedPlanets: [
+  "class": "SerialisableWorld",
+  "width": 200,
+  "height": 150,
+  "serialisedBackground": {
+    "texturePath": "background4.jpg"
+  },
+  "serialisedShip": {
+    "texturePath": "ship64.png",
+    "x": 5,
+    "y": 5
+  },
+  "serialisedPlanets": [
     {
-      texturePath: earth.png
-      x: 100
-      y: 100
-      diameter: 100
+      "texturePath": "earth.png",
+      "x": 50,
+      "y": 10,
+      "radius": 10
     }
   ]
 }
