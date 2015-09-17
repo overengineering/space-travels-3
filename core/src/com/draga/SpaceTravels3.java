@@ -5,6 +5,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.draga.manager.level.LevelManager;
 
 import java.sql.Timestamp;
@@ -22,7 +23,6 @@ public class SpaceTravels3 extends ApplicationAdapter
     public void create()
     {
         spriteBatch = new SpriteBatch();
-        world = LevelManager.getLevelWorldFromFile("level1.json", spriteBatch);
 
         if (Constants.IS_DEBUGGING)
         {
@@ -32,6 +32,8 @@ public class SpaceTravels3 extends ApplicationAdapter
         {
             Gdx.app.setLogLevel(Application.LOG_ERROR);
         }
+
+        world = LevelManager.getLevelWorldFromFile("level1.json", spriteBatch);
     }
 
     @Override

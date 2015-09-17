@@ -3,6 +3,7 @@ package com.draga.manager.level;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Json;
 import com.draga.GameWorld;
 import com.draga.manager.level.serialisableEntities.SerialisablePlanet;
@@ -39,7 +40,10 @@ public abstract class LevelManager
         return serialisableWorld;
     }
 
-    public static GameWorld getLevelWorldFromFile(String serialisedWorldFilePath, SpriteBatch spriteBatch){
+    public static GameWorld getLevelWorldFromFile(
+        String serialisedWorldFilePath,
+        SpriteBatch spriteBatch)
+    {
         String serialisedWordString = getStringFromFile(serialisedWorldFilePath);
         GameWorld world = getLevelWorldFromString(serialisedWordString, spriteBatch);
 
