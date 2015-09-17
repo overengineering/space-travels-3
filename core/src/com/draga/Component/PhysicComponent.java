@@ -4,9 +4,8 @@ import com.badlogic.gdx.graphics.glutils.FloatTextureData;
 
 public abstract class PhysicComponent
 {
-
-    public float mass;
-    private float rotation = 0;
+    protected float mass;
+    protected float rotation = 0;
 
     public abstract void update(float elapsed);
 

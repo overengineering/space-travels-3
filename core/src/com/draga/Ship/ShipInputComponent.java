@@ -7,9 +7,9 @@ import com.draga.component.PhysicComponent;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class ShipInputComponent extends InputComponent {
-    private PhysicComponent shipPhysicComponent;
+    private ShipPhysicComponent shipPhysicComponent;
 
-    public ShipInputComponent(PhysicComponent shipPhysicComponent) {
+    public ShipInputComponent(ShipPhysicComponent shipPhysicComponent) {
         this.shipPhysicComponent = shipPhysicComponent;
     }
 
@@ -26,6 +26,10 @@ public class ShipInputComponent extends InputComponent {
                 this.shipPhysicComponent.applyForce(
                     Gdx.input.getAccelerometerY(),
                     - Gdx.input.getAccelerometerX());
+                this.shipPhysicComponent.rotateTo(
+                    Gdx.input.getAccelerometerY(),
+                    - Gdx.input.getAccelerometerX(),
+                    elapsed);
                 break;
             default:
                 throw new NotImplementedException();
