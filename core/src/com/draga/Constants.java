@@ -1,5 +1,7 @@
 package com.draga;
 
+import com.badlogic.gdx.math.Vector2;
+
 /**
  * Created by Administrator on 16/09/2015.
  */

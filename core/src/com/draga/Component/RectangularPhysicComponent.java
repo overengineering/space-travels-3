@@ -1,6 +1,7 @@
 package com.draga.component;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 
 /**
  * Created by Administrator on 03/09/2015.
@@ -38,6 +39,11 @@ public class RectangularPhysicComponent extends PhysicComponent
     {
         rectangle.x += forceX;
         rectangle.y += forceY;
+    }
+
+    public void applyForce(Vector2 force)
+    {
+        applyForce(force.x, force.y);
     }
 
     public void applyYForce(float forceY)

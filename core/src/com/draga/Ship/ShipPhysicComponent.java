@@ -7,12 +7,14 @@ import com.draga.component.RectangularPhysicComponent;
 public class ShipPhysicComponent extends RectangularPhysicComponent
 {
     private final float rotationPerSecond = 2000f;
+    private Vector2 velocity;
 
     public ShipPhysicComponent()
     {
         super();
         this.rectangle.width = 10;
         this.rectangle.height = 10;
+        this.velocity = new Vector2();
     }
 
     @Override
@@ -21,20 +23,29 @@ public class ShipPhysicComponent extends RectangularPhysicComponent
 
     }
 
-    public void rotateTo(float x, float y, float elapsed)
+    public void applyAccelerometerForce(Vector2 accelerometerForce, float elapsed)
     {
-        // Increase the angle by 90 degrees to compensate the angle of Vector2 being calculated on the x axis
-        float forceAngle = new Vector2(y, -x).angle();
+        // If the force exceed the Earth's gravity then scale it down to it.
+        float scale = accelerometerForce.len() / Constants.EARTH_GRAVITY;
+        if (scale > 1)
+        {
+            accelerometerForce.scl(1 / scale);
+        }
+
+        applyForce(accelerometerForce);
+        rotateTo(accelerometerForce, elapsed);
+    }
+
+    public void rotateTo(Vector2 accelerometerForce, float elapsed)
+    {
+        float directionAngle = accelerometerForce.angle();
 
         // Scale the acceleration by the Earth's gravity. Moving with more strength produces faster turns.
-        // Also clamps the scale to 1 because it's possible to achieve higher accelerations by moving the device
-        // rather than just using the Earth gravity.
         // This makes it more realistic but more importantly avoids the ship flickering left and right at low speeds.
-        float scale = new Vector2(x, y).len() / Constants.EARTH_GRAVITY;
-        scale = Math.min(scale, 1);
+        float scale = accelerometerForce.len() / Constants.EARTH_GRAVITY;
 
-        double diffRotation = forceAngle - rotation;
-        // Avoid ship turning 360 when rotation close to 0 degrees
+        double diffRotation = directionAngle - rotation;
+        // Avoid the ship turning 360 when the rotation is close to 0 degrees.
         if (diffRotation < -180)
         {
             diffRotation += 360;
@@ -44,7 +55,7 @@ public class ShipPhysicComponent extends RectangularPhysicComponent
             diffRotation -= 360;
         }
 
-        // bring the rotation to the max if it's over it
+        // Bring the rotation to the max if it's over it and scales it.
         float maxTurn = rotationPerSecond * elapsed * scale;
         if (Math.abs(diffRotation) > maxTurn)
         {
@@ -52,7 +63,7 @@ public class ShipPhysicComponent extends RectangularPhysicComponent
         }
         rotation += diffRotation;
 
-        //Brings the finalRotation between 0 and 360
+        // Brings the rotation between 0 and 360
         if (rotation > 360)
         {
             rotation %= 360;

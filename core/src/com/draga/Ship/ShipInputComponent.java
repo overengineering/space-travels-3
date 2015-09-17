@@ -2,6 +2,7 @@ package com.draga.ship;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.Vector2;
 import com.draga.component.InputComponent;
 import com.draga.component.PhysicComponent;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -33,11 +34,7 @@ public class ShipInputComponent extends InputComponent
             default:
                 throw new NotImplementedException();
         }
-        this.shipPhysicComponent.applyForce(xAcceleration, yAcceleration);
-        this.shipPhysicComponent.rotateTo(
-            xAcceleration,
-            yAcceleration,
-            elapsed);
+        this.shipPhysicComponent.applyAccelerometerForce(new Vector2(xAcceleration, yAcceleration), elapsed);
 
 
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
