@@ -11,16 +11,7 @@ public abstract class GameEntity
     public PhysicComponent physicComponent = null;
     public GraphicComponent graphicComponent = null;
 
-    public void update(float elapsed)
-    {
-        if (inputComponent != null) {
-            inputComponent.update(elapsed);
-        }
-
-        if (physicComponent != null) {
-            physicComponent.update(elapsed);
-        }
-    }
+    public abstract void update(float elapsed);
 
     public void draw(SpriteBatch batch)
     {

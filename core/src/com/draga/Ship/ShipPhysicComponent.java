@@ -1,36 +1,41 @@
 package com.draga.ship;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.draga.Constants;
 import com.draga.component.RectangularPhysicComponent;
 
 public class ShipPhysicComponent extends RectangularPhysicComponent
 {
-    private static final float MAX_SPEED = 10f;
-    private final float rotationPerSecond = 2000f;
+    private static final float MAX_SPEED = 50f;
+    private static final int SHIP_WIDTH = 10;
+    private static final int SHIP_HEIGHT = 10;
+    private static final float ROTATION_PER_SECOND = 2000f;
     private Vector2 velocity;
 
     public ShipPhysicComponent()
     {
         super();
-        this.rectangle.width = 10;
-        this.rectangle.height = 10;
+        this.rectangle.width = SHIP_WIDTH;
+        this.rectangle.height = SHIP_HEIGHT;
         this.velocity = new Vector2();
     }
 
     @Override
     public void update(float elapsed)
     {
-        applyForce(velocity);
+        Vector2 timeScaledVelocity = new Vector2(velocity).scl(elapsed);
+        applyForce(timeScaledVelocity);
     }
 
     public void applyAccelerometerForce(Vector2 accelerometerForce, float elapsed)
     {
         // If the force exceed the Earth's gravity then scale it down to it.
-        accelerometerForce = accelerometerForce.clamp(0, Constants.EARTH_GRAVITY);
+        accelerometerForce.clamp(0, Constants.EARTH_GRAVITY);
 
-        velocity.add(accelerometerForce);
-        velocity = velocity.clamp(0, MAX_SPEED);
+        Vector2 timeScaledAccelerometerForce = new Vector2(accelerometerForce).scl(elapsed);
+        velocity.add(timeScaledAccelerometerForce);
+        velocity.clamp(0, MAX_SPEED);
 
         rotateTo(accelerometerForce, elapsed);
     }
@@ -55,7 +60,7 @@ public class ShipPhysicComponent extends RectangularPhysicComponent
         }
 
         // Bring the rotation to the max if it's over it and scales it.
-        float maxTurn = rotationPerSecond * elapsed * scale;
+        float maxTurn = ROTATION_PER_SECOND * elapsed * scale;
         if (Math.abs(diffRotation) > maxTurn)
         {
             diffRotation = diffRotation > 0 ? maxTurn : -maxTurn;

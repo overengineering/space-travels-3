@@ -14,4 +14,10 @@ public class Planet extends GameEntity
         physicComponent = new CircularPhysicComponent(mass, radius, x, y);
         graphicComponent = new GraphicComponent(texturePath, physicComponent);
     }
+
+    @Override
+    public void update(float elapsed)
+    {
+        physicComponent.update(elapsed);
+    }
 }
