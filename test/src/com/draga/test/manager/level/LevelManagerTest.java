@@ -3,6 +3,7 @@ package com.draga.test.manager.level;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.draga.GameWorld;
 import com.draga.manager.level.LevelManager;
 import com.draga.manager.level.serialisableEntities.SerialisableWorld;
 import com.draga.test.gdxTestRunner.GdxTestRunner;
@@ -35,9 +36,9 @@ public class LevelManagerTest
     public void testGetLevelWorld() throws Exception
     {
         String testLevelJson = getTestLevelJson();
-        World world = LevelManager.getLevelWorldFromString(testLevelJson, mock(SpriteBatch.class));
+        GameWorld gameWorld = LevelManager.getLevelWorldFromString(testLevelJson, mock(SpriteBatch.class));
 
-        Assert.assertNotNull(world);
+        Assert.assertNotNull(gameWorld);
     }
 
     private String getTestLevelJson()

@@ -31,8 +31,8 @@ public class GameWorld
         batch = spriteBatch;
         orthographicCamera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         extendViewport = new ExtendViewport(
-            Constants.viewportWidth,
-            Constants.viewportHeight,
+            Constants.VIEWPORT_WIDTH,
+            Constants.VIEWPORT_HEIGHT,
             width,
             height,
             orthographicCamera);

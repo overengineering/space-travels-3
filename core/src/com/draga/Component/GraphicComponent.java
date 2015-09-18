@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.draga.Constants;
 
 public class GraphicComponent {
     protected Texture texture;
@@ -19,12 +21,14 @@ public class GraphicComponent {
 
     public void draw(SpriteBatch spriteBatch)
     {
+        float halfWidth = physicComponent.getWidth() / 2;
+        float halfHeight = physicComponent.getHeight() / 2;
         spriteBatch.draw(
             texture,
-            physicComponent.getX() - physicComponent.getWidth() / 2,
-            physicComponent.getY() - physicComponent.getHeight() / 2,
-            0,
-            0,
+            physicComponent.getX() - halfWidth,
+            physicComponent.getY() - halfHeight,
+            halfWidth,
+            halfHeight,
             physicComponent.getWidth(),
             physicComponent.getHeight(),
             1,
