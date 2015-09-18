@@ -6,6 +6,7 @@ import com.draga.component.RectangularPhysicComponent;
 
 public class ShipPhysicComponent extends RectangularPhysicComponent
 {
+    private static final float MAX_SPEED = 10f;
     private final float rotationPerSecond = 2000f;
     private Vector2 velocity;
 
@@ -20,19 +21,17 @@ public class ShipPhysicComponent extends RectangularPhysicComponent
     @Override
     public void update(float elapsed)
     {
-
+        applyForce(velocity);
     }
 
     public void applyAccelerometerForce(Vector2 accelerometerForce, float elapsed)
     {
         // If the force exceed the Earth's gravity then scale it down to it.
-        float scale = accelerometerForce.len() / Constants.EARTH_GRAVITY;
-        if (scale > 1)
-        {
-            accelerometerForce.scl(1 / scale);
-        }
+        accelerometerForce = accelerometerForce.clamp(0, Constants.EARTH_GRAVITY);
 
-        applyForce(accelerometerForce);
+        velocity.add(accelerometerForce);
+        velocity = velocity.clamp(0, MAX_SPEED);
+
         rotateTo(accelerometerForce, elapsed);
     }
 
