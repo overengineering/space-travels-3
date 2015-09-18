@@ -3,6 +3,7 @@ package com.draga;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -39,6 +40,11 @@ public class SpaceTravels3 extends ApplicationAdapter
     @Override
     public void render()
     {
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
+        {
+            Gdx.app.exit();
+        }
+
         float deltaTime = Gdx.graphics.getDeltaTime();
 
         Gdx.gl.glClearColor(0, 0, 0, 1);

@@ -7,6 +7,9 @@ import com.draga.SpaceTravels3;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		config.width = 1920;
+		config.height = 1080;
+        config.fullscreen = true;
 		new LwjglApplication(new SpaceTravels3(), config);
 	}
 }
