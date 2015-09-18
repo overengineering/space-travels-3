@@ -1,6 +1,5 @@
 package com.draga.ship;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.draga.Constants;
 import com.draga.component.RectangularPhysicComponent;
@@ -16,9 +15,7 @@ public class ShipPhysicComponent extends RectangularPhysicComponent
 
     public ShipPhysicComponent()
     {
-        super();
-        this.rectangle.width = SHIP_WIDTH;
-        this.rectangle.height = SHIP_HEIGHT;
+        super(0, 0, SHIP_WIDTH, SHIP_HEIGHT);
         this.velocity = new Vector2();
     }
 
@@ -42,7 +39,11 @@ public class ShipPhysicComponent extends RectangularPhysicComponent
         rotateTo(accelerometerForce, elapsed);
     }
 
-    public void rotateTo(Vector2 accelerometerForce, float elapsed)
+    /**
+     * Rotate the ship towards the given vector smoothly
+     * @param accelerometerForce The force of gravity on the device, should be capped to the constant Earth gravity
+     */
+    private void rotateTo(Vector2 accelerometerForce, float elapsed)
     {
         float directionAngle = accelerometerForce.angle();
 
