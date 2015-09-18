@@ -1,5 +1,6 @@
 package com.draga.ship;
 
+import com.badlogic.gdx.math.Vector2;
 import com.draga.Constants;
 import org.junit.Assert;
 import org.junit.Test;
@@ -15,10 +16,11 @@ public class ShipPhysicComponentTest
     public void testRotateTo() throws Exception
     {
         ShipPhysicComponent shipPhysicComponent = new ShipPhysicComponent();
+        Vector2 accelerometerPointingLeft = new Vector2(-Constants.EARTH_GRAVITY, 0);
 
-        while (shipPhysicComponent.getRotation() != 180)
+        while (shipPhysicComponent.getRotation() != accelerometerPointingLeft.angle())
         {
-            shipPhysicComponent.rotateTo(0, -Constants.EARTH_GRAVITY, 1f / 60f);
+            shipPhysicComponent.rotateTo(accelerometerPointingLeft, 1f / 60f);
         }
 
         Assert.assertEquals(180f, shipPhysicComponent.getRotation(), 0);
