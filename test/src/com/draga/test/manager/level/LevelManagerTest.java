@@ -43,7 +43,7 @@ public class LevelManagerTest
 
     private String getTestLevelJson()
     {
-        FileHandle testLevelFileHandle = Gdx.files.internal("../android/assets/testLevel.json");
+        FileHandle testLevelFileHandle = Gdx.files.internal("../android/assets/level1.json");
         String testLevelJson = testLevelFileHandle.readString();
 
         return testLevelJson;

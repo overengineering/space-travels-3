@@ -3,16 +3,16 @@
   "width": 300,
   "height": 150,
   "serialisedBackground": {
-    "texturePath": "background4.jpg"
+    "texturePath": "background/background.jpg"
   },
   "serialisedShip": {
-    "texturePath": "Faction10-Spaceships-by-MillionthVector/destroyer128.png",
+    "texturePath": "spaceship/destroyer128.png",
     "x": 5,
     "y": 5
   },
   "serialisedPlanets": [
     {
-      "texturePath": "earth.png",
+      "texturePath": "earth128.png",
       "x": 50,
       "y": 10,
       "radius": 10
