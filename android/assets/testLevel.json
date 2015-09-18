@@ -1,0 +1,21 @@
+{
+  "class": "SerialisableWorld",
+  "width": 300,
+  "height": 150,
+  "serialisedBackground": {
+    "texturePath": "../android/assets/background/background.jpg"
+  },
+  "serialisedShip": {
+    "texturePath": "../android/assets/spaceship/destroyer128.png",
+    "x": 5,
+    "y": 5
+  },
+  "serialisedPlanets": [
+    {
+      "texturePath": "../android/assets/earth128.png",
+      "x": 50,
+      "y": 10,
+      "radius": 10
+    }
+  ]
+}
