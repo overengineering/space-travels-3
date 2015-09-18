@@ -12,9 +12,27 @@
   },
   "serialisedPlanets": [
     {
-      "texturePath": "earth128.png",
+      "texturePath": "planet/earth256.png",
       "x": 50,
       "y": 10,
+      "radius": 10
+    },
+    {
+      "texturePath": "planet/jupiter256.png",
+      "x": 80,
+      "y": 10,
+      "radius": 10
+    },
+    {
+      "texturePath": "planet/mars256.png",
+      "x": 50,
+      "y": 30,
+      "radius": 10
+    },
+    {
+      "texturePath": "planet/venus256.png",
+      "x": 80,
+      "y": 80,
       "radius": 10
     }
   ]
