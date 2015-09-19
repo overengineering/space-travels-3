@@ -3,6 +3,9 @@ package com.draga.ship;
 import com.badlogic.gdx.math.Vector2;
 import com.draga.Constants;
 import com.draga.component.RectangularPhysicComponent;
+import com.draga.event.GameEventBus;
+import com.draga.event.GravityEvent;
+import com.google.common.eventbus.Subscribe;
 
 public class ShipPhysicComponent extends RectangularPhysicComponent
 {
@@ -17,6 +20,8 @@ public class ShipPhysicComponent extends RectangularPhysicComponent
     {
         super(0, 0, SHIP_WIDTH, SHIP_HEIGHT);
         this.velocity = new Vector2();
+
+        GameEventBus.GravityEventBus.register(this);
     }
 
     @Override
@@ -79,5 +84,11 @@ public class ShipPhysicComponent extends RectangularPhysicComponent
         {
             rotation += 360;
         }
+    }
+
+    @Subscribe
+    public void gravity(GravityEvent gravityEvent)
+    {
+        applyForce(gravityEvent.x * gravityEvent.elapsed, gravityEvent.y * gravityEvent.elapsed);
     }
 }
