@@ -16,7 +16,7 @@ public class SerialisablePlanet
 
     }
 
-    public SerialisablePlanet(String texturePath, int x, int y, int radius)
+    public SerialisablePlanet(String texturePath, int x, int y, int radius, float mass)
     {
 
         this.texturePath = texturePath;

@@ -33,7 +33,7 @@ public class ShipPhysicComponentTest
     public void testGravity() throws Exception
     {
         ShipPhysicComponent shipPhysicComponent = new ShipPhysicComponent();
-        GravityEvent gravityEvent = new GravityEvent(100f, 100f, 1f);
+        GravityEvent gravityEvent = new GravityEvent(100f, 100f, 100f, 1f);
 
         GameEventBus.GRAVITY_EVENT_BUS.post(gravityEvent);
 

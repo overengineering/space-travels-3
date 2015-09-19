@@ -10,12 +10,14 @@ public class GravityEvent implements Pool.Poolable
     public float x;
     public float y;
     public float elapsed;
+    public float mass;
 
-    public GravityEvent(float x, float y, float elapsed)
+    public GravityEvent(float x, float y, float mass, float elapsed)
     {
         this.x = x;
         this.y = y;
         this.elapsed = elapsed;
+        this.mass = mass;
     }
 
     @Override
@@ -24,5 +26,19 @@ public class GravityEvent implements Pool.Poolable
         this.x = 0f;
         this.y = 0f;
         this.elapsed = 0f;
+        this.mass = 0f;
+    }
+
+    public GravityEvent()
+    {
+    }
+
+    public void set(float x, float y, float mass, float elapsed)
+    {
+        this.x = x;
+        this.y = y;
+        this.elapsed = elapsed;
+        this.mass = mass;
+
     }
 }
