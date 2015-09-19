@@ -20,6 +20,10 @@ public class GravityEvent implements Pool.Poolable
         this.mass = mass;
     }
 
+    public GravityEvent()
+    {
+    }
+
     @Override
     public void reset()
     {
@@ -27,10 +31,6 @@ public class GravityEvent implements Pool.Poolable
         this.y = 0f;
         this.elapsed = 0f;
         this.mass = 0f;
-    }
-
-    public GravityEvent()
-    {
     }
 
     public void set(float x, float y, float mass, float elapsed)

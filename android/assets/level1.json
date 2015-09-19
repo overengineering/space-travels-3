@@ -15,7 +15,8 @@
       "texturePath": "planet/earth256.png",
       "x": 50,
       "y": 10,
-      "radius": 10
+      "radius": 10,
+      "mass": 1000
     },
     {
       "texturePath": "planet/jupiter256.png",
