@@ -10,9 +10,9 @@ public class RectangularPhysicComponent extends PhysicComponent
 {
     protected Rectangle rectangle;
 
-    public RectangularPhysicComponent()
+    public RectangularPhysicComponent(float x, float y, int width, int height)
     {
-        rectangle = new Rectangle();
+        rectangle = new Rectangle(x, y, width, height);
     }
 
     public float getX()

@@ -6,36 +6,44 @@ import com.draga.component.RectangularPhysicComponent;
 
 public class ShipPhysicComponent extends RectangularPhysicComponent
 {
-    private static final float MAX_SPEED = 10f;
-    private final float rotationPerSecond = 2000f;
+    private static final float MAX_SPEED = 100f;
+    private static final float MAX_ACCELERATION_SECOND = MAX_SPEED * 2f;
+    private static final int SHIP_WIDTH = 10;
+    private static final int SHIP_HEIGHT = 10;
+    private static final float ROTATION_PER_SECOND = 2000f;
     private Vector2 velocity;
 
     public ShipPhysicComponent()
     {
-        super();
-        this.rectangle.width = 10;
-        this.rectangle.height = 10;
+        super(0, 0, SHIP_WIDTH, SHIP_HEIGHT);
         this.velocity = new Vector2();
     }
 
     @Override
     public void update(float elapsed)
     {
-        applyForce(velocity);
+        Vector2 timeScaledVelocity = new Vector2(velocity).scl(elapsed);
+        applyForce(timeScaledVelocity);
     }
 
     public void applyAccelerometerForce(Vector2 accelerometerForce, float elapsed)
     {
         // If the force exceed the Earth's gravity then scale it down to it.
-        accelerometerForce = accelerometerForce.clamp(0, Constants.EARTH_GRAVITY);
+        accelerometerForce.clamp(0, Constants.EARTH_GRAVITY);
 
-        velocity.add(accelerometerForce);
-        velocity = velocity.clamp(0, MAX_SPEED);
+        Vector2 acceleration = new Vector2(accelerometerForce)
+            .scl(elapsed / Constants.EARTH_GRAVITY * MAX_ACCELERATION_SECOND);
+        velocity.add(acceleration);
+        velocity.clamp(0, MAX_SPEED);
 
         rotateTo(accelerometerForce, elapsed);
     }
 
-    public void rotateTo(Vector2 accelerometerForce, float elapsed)
+    /**
+     * Rotate the ship towards the given vector smoothly
+     * @param accelerometerForce The force of gravity on the device, should be capped to the constant Earth gravity
+     */
+    private void rotateTo(Vector2 accelerometerForce, float elapsed)
     {
         float directionAngle = accelerometerForce.angle();
 
@@ -55,7 +63,7 @@ public class ShipPhysicComponent extends RectangularPhysicComponent
         }
 
         // Bring the rotation to the max if it's over it and scales it.
-        float maxTurn = rotationPerSecond * elapsed * scale;
+        float maxTurn = ROTATION_PER_SECOND * elapsed * scale;
         if (Math.abs(diffRotation) > maxTurn)
         {
             diffRotation = diffRotation > 0 ? maxTurn : -maxTurn;
