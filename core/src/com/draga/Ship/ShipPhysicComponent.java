@@ -21,7 +21,7 @@ public class ShipPhysicComponent extends RectangularPhysicComponent
         super(0, 0, SHIP_WIDTH, SHIP_HEIGHT);
         this.velocity = new Vector2();
 
-        GameEventBus.GravityEventBus.register(this);
+        GameEventBus.GRAVITY_EVENT_BUS.register(this);
     }
 
     @Override

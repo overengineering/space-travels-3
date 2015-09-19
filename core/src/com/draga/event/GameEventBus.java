@@ -7,5 +7,5 @@ import com.google.common.eventbus.EventBus;
  */
 public abstract class GameEventBus
 {
-    public static final EventBus GravityEventBus = new EventBus();
+    public static final EventBus GRAVITY_EVENT_BUS = new EventBus();
 }
