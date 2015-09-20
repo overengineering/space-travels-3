@@ -11,18 +11,15 @@ import org.junit.Test;
 /**
  * Created by Administrator on 17/09/2015.
  */
-public class ShipPhysicComponentTest
-{
+public class ShipPhysicComponentTest {
     @Test
-    public void testRotateTo() throws Exception
-    {
+    public void testRotateTo() throws Exception {
         ShipPhysicComponent shipPhysicComponent = new ShipPhysicComponent();
         Vector2 accelerometerPointingLeft = new Vector2(-Constants.EARTH_GRAVITY, 0);
         Class[] argClasses = {Vector2.class, float.class};
         Object[] args = {accelerometerPointingLeft, 1f / 60f};
 
-        while (shipPhysicComponent.getRotation() != accelerometerPointingLeft.angle())
-        {
+        while (shipPhysicComponent.getRotation() != accelerometerPointingLeft.angle()) {
             TestHelper.invokeMethod(ShipPhysicComponent.class, "rotateTo", shipPhysicComponent, argClasses, args);
         }
 
@@ -30,8 +27,7 @@ public class ShipPhysicComponentTest
     }
 
     @Test
-    public void testGravity() throws Exception
-    {
+    public void testGravity() throws Exception {
         ShipPhysicComponent shipPhysicComponent = new ShipPhysicComponent();
         GravityEvent gravityEvent = new GravityEvent(100f, 100f, 100f, 1f);
 

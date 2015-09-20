@@ -6,16 +6,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.physics.box2d.Box2D;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.draga.manager.level.LevelManager;
 
 import java.sql.Timestamp;
 import java.util.Date;
 
-public class SpaceTravels3 extends ApplicationAdapter
-{
+public class SpaceTravels3 extends ApplicationAdapter {
     private final float timeBetweenDebugInfoUpdate = 1f;
     private final String loggingTag = SpaceTravels3.class.getSimpleName();
     private GameWorld world;
@@ -23,16 +20,12 @@ public class SpaceTravels3 extends ApplicationAdapter
     private SpriteBatch spriteBatch;
 
     @Override
-    public void create()
-    {
+    public void create() {
         spriteBatch = new SpriteBatch();
 
-        if (Constants.IS_DEBUGGING)
-        {
+        if (Constants.IS_DEBUGGING) {
             Gdx.app.setLogLevel(Application.LOG_DEBUG);
-        }
-        else
-        {
+        } else {
             Gdx.app.setLogLevel(Application.LOG_ERROR);
         }
 
@@ -42,10 +35,8 @@ public class SpaceTravels3 extends ApplicationAdapter
     }
 
     @Override
-    public void render()
-    {
-        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
-        {
+    public void render() {
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit();
         }
 
@@ -54,11 +45,9 @@ public class SpaceTravels3 extends ApplicationAdapter
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-        if (Constants.IS_DEBUGGING)
-        {
+        if (Constants.IS_DEBUGGING) {
             timeUntilDebugInfoUpdate -= deltaTime;
-            if (timeUntilDebugInfoUpdate <= 0f)
-            {
+            if (timeUntilDebugInfoUpdate <= 0f) {
                 timeUntilDebugInfoUpdate = timeBetweenDebugInfoUpdate;
                 String log = String.format(
                     "%-23s | FPS : %3d | Java heap : %10d | Java native heap : %10d",
@@ -75,23 +64,20 @@ public class SpaceTravels3 extends ApplicationAdapter
     }
 
     @Override
-    public void dispose()
-    {
+    public void dispose() {
         Gdx.app.debug(loggingTag, "Dispose");
         spriteBatch.dispose();
         super.dispose();
     }
 
     @Override
-    public void pause()
-    {
+    public void pause() {
         Gdx.app.debug(loggingTag, "Pause");
         super.pause();
     }
 
     @Override
-    public void resize(int width, int height)
-    {
+    public void resize(int width, int height) {
         String log = String.format("Resize to %4d width x %4d height", width, height);
         Gdx.app.debug(loggingTag, log);
         world.resize(width, height);
@@ -100,8 +86,7 @@ public class SpaceTravels3 extends ApplicationAdapter
     }
 
     @Override
-    public void resume()
-    {
+    public void resume() {
         Gdx.app.debug(loggingTag, "Resume");
         super.resume();
     }

@@ -1,21 +1,39 @@
 package com.draga.component;
 
-import com.badlogic.gdx.graphics.glutils.FloatTextureData;
+import com.badlogic.gdx.physics.box2d.Body;
 
-public abstract class PhysicComponent
-{
+public abstract class PhysicComponent {
     protected float mass;
     protected float rotation = 0;
+    protected Body body;
+
+    public float getMass() {
+        return mass;
+    }
+
+    public void setMass(float mass) {
+        this.mass = mass;
+    }
+
+    public Body getBody() {
+        return body;
+    }
+
+    public void setBody(Body body) {
+        this.body = body;
+    }
 
     public abstract void update(float elapsed);
 
-    public float getRotation()
-    {
+    public float getRotation() {
         return rotation;
     }
 
-    public void applyRotation(float i)
-    {
+    public void setRotation(float rotation) {
+        this.rotation = rotation;
+    }
+
+    public void applyRotation(float i) {
         rotation += i;
     }
 

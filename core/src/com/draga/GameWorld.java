@@ -14,9 +14,9 @@ import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.draga.ship.Ship;
 
-public class GameWorld
-{
+public class GameWorld {
     private final Texture backgroundTexture;
+    private final Box2DDebugRenderer box2DDebugRenderer;
     protected Array<GameEntity> gameEntities;
     SpriteBatch batch;
     private OrthographicCamera orthographicCamera;
@@ -25,10 +25,8 @@ public class GameWorld
     private int width;
     private int height;
     private World box2dWorld;
-    private final Box2DDebugRenderer box2DDebugRenderer;
 
-    public GameWorld(String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height)
-    {
+    public GameWorld(String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height) {
         box2dWorld = new World(Pools.obtain(Vector2.class), true);
         FileHandle backgroundFileHandle = Gdx.files.internal(backgroundTexturePath);
         this.backgroundTexture = new Texture(backgroundFileHandle);
@@ -46,19 +44,16 @@ public class GameWorld
         box2DDebugRenderer = new Box2DDebugRenderer();
     }
 
-    public void addShip(Ship ship)
-    {
+    public void addShip(Ship ship) {
         this.ship = ship;
         addGameEntity(ship);
     }
 
-    public void addGameEntity(GameEntity gameEntity)
-    {
+    public void addGameEntity(GameEntity gameEntity) {
         gameEntities.add(gameEntity);
     }
 
-    public void update(float elapsed)
-    {
+    public void update(float elapsed) {
         float halfWidth = orthographicCamera.viewportWidth / 2f;
         float halfHeight = orthographicCamera.viewportHeight / 2f;
 
@@ -75,8 +70,7 @@ public class GameWorld
         orthographicCamera.update();
         batch.setProjectionMatrix(orthographicCamera.combined);
 
-        for (GameEntity gameEntity : gameEntities)
-        {
+        for (GameEntity gameEntity : gameEntities) {
             gameEntity.update(elapsed);
         }
 
@@ -85,24 +79,20 @@ public class GameWorld
         box2dWorld.step(frameTime, 6, 2);
     }
 
-    public void draw()
-    {
+    public void draw() {
         batch.begin();
         batch.draw(backgroundTexture, 0, 0, width, height);
-        for (GameEntity gameEntity : gameEntities)
-        {
+        for (GameEntity gameEntity : gameEntities) {
             gameEntity.draw(batch);
         }
         batch.end();
 
-        if (Constants.IS_DEBUGGING)
-        {
+        if (Constants.IS_DEBUGGING) {
             box2DDebugRenderer.render(box2dWorld, orthographicCamera.combined);
         }
     }
 
-    public void resize(int width, int height)
-    {
+    public void resize(int width, int height) {
         extendViewport.update(width, height, true);
         orthographicCamera.update();
     }
