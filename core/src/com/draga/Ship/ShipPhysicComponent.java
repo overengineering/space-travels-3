@@ -1,8 +1,12 @@
 package com.draga.ship;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Pools;
 import com.draga.Constants;
 import com.draga.component.RectangularPhysicComponent;
+import com.draga.event.GameEventBus;
+import com.draga.event.GravityEvent;
+import com.google.common.eventbus.Subscribe;
 
 public class ShipPhysicComponent extends RectangularPhysicComponent
 {
@@ -17,6 +21,9 @@ public class ShipPhysicComponent extends RectangularPhysicComponent
     {
         super(0, 0, SHIP_WIDTH, SHIP_HEIGHT);
         this.velocity = new Vector2();
+        this.mass = 1f;
+
+        GameEventBus.GRAVITY_EVENT_BUS.register(this);
     }
 
     @Override
@@ -41,6 +48,7 @@ public class ShipPhysicComponent extends RectangularPhysicComponent
 
     /**
      * Rotate the ship towards the given vector smoothly
+     *
      * @param accelerometerForce The force of gravity on the device, should be capped to the constant Earth gravity
      */
     private void rotateTo(Vector2 accelerometerForce, float elapsed)
@@ -79,5 +87,17 @@ public class ShipPhysicComponent extends RectangularPhysicComponent
         {
             rotation += 360;
         }
+    }
+
+    @Subscribe
+    public void gravity(GravityEvent gravityEvent)
+    {
+        Vector2 distance = new Vector2(gravityEvent.x - rectangle.x , gravityEvent.y - rectangle.y);
+        float distanceLen2 = distance.len2();
+        distance = distance.nor();
+        float forceMagnitude = mass * gravityEvent.mass / distanceLen2 * gravityEvent.elapsed;
+        Vector2 force = new Vector2(distance.scl(forceMagnitude));
+
+        applyForce(force);
     }
 }

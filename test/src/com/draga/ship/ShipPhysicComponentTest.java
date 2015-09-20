@@ -3,6 +3,8 @@ package com.draga.ship;
 import com.badlogic.gdx.math.Vector2;
 import com.draga.Constants;
 import com.draga.TestHelper;
+import com.draga.event.GameEventBus;
+import com.draga.event.GravityEvent;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -30,6 +32,12 @@ public class ShipPhysicComponentTest
     @Test
     public void testGravity() throws Exception
     {
+        ShipPhysicComponent shipPhysicComponent = new ShipPhysicComponent();
+        GravityEvent gravityEvent = new GravityEvent(100f, 100f, 100f, 1f);
 
+        GameEventBus.GRAVITY_EVENT_BUS.post(gravityEvent);
+
+        Assert.assertEquals(shipPhysicComponent.getX(), 100f, 0f);
+        Assert.assertEquals(shipPhysicComponent.getY(), 100f, 0f);
     }
 }
