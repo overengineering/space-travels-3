@@ -7,6 +7,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.physics.box2d.Box2D;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.draga.manager.level.LevelManager;
 
 import java.sql.Timestamp;
@@ -35,6 +37,8 @@ public class SpaceTravels3 extends ApplicationAdapter
         }
 
         world = LevelManager.getLevelWorldFromFile("level1.json", spriteBatch);
+
+        Box2D.init();
     }
 
     @Override
