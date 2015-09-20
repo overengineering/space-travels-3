@@ -9,7 +9,7 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 1920;
 		config.height = 1080;
-        config.fullscreen = true;
+        config.fullscreen = false;
 		new LwjglApplication(new SpaceTravels3(), config);
 	}
 }

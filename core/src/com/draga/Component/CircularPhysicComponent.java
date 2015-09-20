@@ -12,7 +12,7 @@ public class CircularPhysicComponent extends PhysicComponent
 {
     Circle circle;
 
-    public CircularPhysicComponent(float mass, int radius, int x, int y)
+    public CircularPhysicComponent(float mass, float radius, float x, float y)
     {
         this.mass = mass;
         this.circle = new Circle(x, y, radius);

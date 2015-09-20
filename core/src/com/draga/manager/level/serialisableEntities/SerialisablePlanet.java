@@ -8,7 +8,7 @@ public class SerialisablePlanet
     String texturePath;
     int x;
     int y;
-    int radius;
+    float radius;
     float mass;
 
     public SerialisablePlanet()
@@ -18,11 +18,11 @@ public class SerialisablePlanet
 
     public SerialisablePlanet(String texturePath, int x, int y, int radius, float mass)
     {
-
         this.texturePath = texturePath;
         this.x = x;
         this.y = y;
         this.radius = radius;
+        this.mass = mass;
     }
 
     public float getMass()
@@ -65,7 +65,7 @@ public class SerialisablePlanet
         this.y = y;
     }
 
-    public int getRadius()
+    public float getRadius()
     {
         return radius;
     }
