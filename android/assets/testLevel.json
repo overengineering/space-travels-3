@@ -3,7 +3,7 @@
   "width": 300,
   "height": 150,
   "serialisedBackground": {
-    "texturePath": "../android/assets/background/background.jpg"
+    "texturePath": "../android/assets/background/background1080.jpg"
   },
   "serialisedShip": {
     "texturePath": "../android/assets/spaceship/destroyer128.png",

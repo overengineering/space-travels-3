@@ -1,57 +1,39 @@
 package com.draga.component;
 
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 /**
  * Created by Administrator on 03/09/2015.
  */
 public class RectangularPhysicComponent extends PhysicComponent {
-    protected Rectangle rectangle;
+    private final float width;
+    private final float height;
 
-    public RectangularPhysicComponent(float x, float y, int width, int height) {
-        rectangle = new Rectangle(x, y, width, height);
-    }
+    public RectangularPhysicComponent(float x, float y, int width, int height, float mass, BodyDef.BodyType bodyType) {
+        super(x, y, bodyType, mass, 0);
 
-    public float getX() {
-        return rectangle.x;
-    }
+        this.width = width;
+        this.height = height;
 
-    public void setX(float x) {
-        rectangle.setX(x);
-    }
+        PolygonShape polygonShape = new PolygonShape();
+        polygonShape.setAsBox(width / 2f, height / 2f);
 
-    public float getY() {
-        return rectangle.y;
-    }
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = polygonShape;
 
-    public void setY(float y) {
-        rectangle.setY(y);
-    }
+        body.createFixture(fixtureDef);
 
-    public void applyForce(float forceX, float forceY) {
-        rectangle.x += forceX;
-        rectangle.y += forceY;
-    }
-
-    public void applyForce(Vector2 force) {
-        applyForce(force.x, force.y);
-    }
-
-    public void applyYForce(float forceY) {
-        this.rectangle.y += forceY;
-    }
-
-    public void applyXForce(float forceX) {
-        this.rectangle.x += forceX;
+        polygonShape.dispose();
     }
 
     public float getHeight() {
-        return rectangle.height;
+        return this.height;
     }
 
     public float getWidth() {
-        return rectangle.width;
+        return this.width;
     }
 
     @Override

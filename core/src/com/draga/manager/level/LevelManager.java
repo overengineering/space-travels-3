@@ -31,14 +31,14 @@ public abstract class LevelManager {
 
         json.addClassTag("SerialisableWorld", SerialisableWorld.class);
 
-        SerialisableWorld serialisableWorld = json.fromJson(SerialisableWorld.class, serialisedWord);
+        SerialisableWorld serialisableWorld =
+            json.fromJson(SerialisableWorld.class, serialisedWord);
 
         return serialisableWorld;
     }
 
     public static GameWorld getLevelWorldFromFile(
-        String serialisedWorldFilePath,
-        SpriteBatch spriteBatch) {
+        String serialisedWorldFilePath, SpriteBatch spriteBatch) {
         String serialisedWordString = getStringFromFile(serialisedWorldFilePath);
         GameWorld world = getLevelWorldFromString(serialisedWordString, spriteBatch);
 
@@ -53,16 +53,18 @@ public abstract class LevelManager {
         return world;
     }
 
-    private static GameWorld getLevelWorld(SerialisableWorld serialisableWorld, SpriteBatch spriteBatch) {
+    private static GameWorld getLevelWorld(
+        SerialisableWorld serialisableWorld, SpriteBatch spriteBatch) {
         GameWorld world = new GameWorld(
             serialisableWorld.serialisedBackground.getTexturePath(),
             spriteBatch,
             serialisableWorld.width,
             serialisableWorld.height);
 
-        Ship ship = new Ship(serialisableWorld.serialisedShip.getTexturePath());
-        ship.physicComponent.setX(serialisableWorld.serialisedShip.getX());
-        ship.physicComponent.setY(serialisableWorld.serialisedShip.getY());
+        Ship ship = new Ship(
+            serialisableWorld.serialisedShip.getTexturePath(),
+            serialisableWorld.serialisedShip.getX(),
+            serialisableWorld.serialisedShip.getY());
         world.addShip(ship);
 
         for (SerialisablePlanet serialisablePlanet : serialisableWorld.serialisedPlanets) {
@@ -71,8 +73,7 @@ public abstract class LevelManager {
                 serialisablePlanet.getRadius(),
                 serialisablePlanet.getX(),
                 serialisablePlanet.getY(),
-                serialisablePlanet.getTexturePath()
-            );
+                serialisablePlanet.getTexturePath());
             world.addGameEntity(planet);
         }
 

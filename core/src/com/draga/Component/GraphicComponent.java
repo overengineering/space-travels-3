@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 
 public class GraphicComponent {
     protected Texture texture;
@@ -29,7 +30,7 @@ public class GraphicComponent {
             physicComponent.getHeight(),
             1,
             1,
-            physicComponent.getRotation(),
+            physicComponent.getAngle() * MathUtils.radiansToDegrees,
             0,
             0,
             texture.getWidth(),

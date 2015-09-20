@@ -13,8 +13,8 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 public class SpaceTravels3 extends ApplicationAdapter {
+    private final static String LOGGING_TAG = SpaceTravels3.class.getSimpleName();
     private final float timeBetweenDebugInfoUpdate = 1f;
-    private final String loggingTag = SpaceTravels3.class.getSimpleName();
     private GameWorld world;
     private float timeUntilDebugInfoUpdate = timeBetweenDebugInfoUpdate;
     private SpriteBatch spriteBatch;
@@ -55,7 +55,7 @@ public class SpaceTravels3 extends ApplicationAdapter {
                     Gdx.graphics.getFramesPerSecond(),
                     Gdx.app.getJavaHeap(),
                     Gdx.app.getNativeHeap());
-                Gdx.app.log(loggingTag, log);
+                Gdx.app.log(LOGGING_TAG, log);
             }
         }
 
@@ -65,21 +65,21 @@ public class SpaceTravels3 extends ApplicationAdapter {
 
     @Override
     public void dispose() {
-        Gdx.app.debug(loggingTag, "Dispose");
+        Gdx.app.debug(LOGGING_TAG, "Dispose");
         spriteBatch.dispose();
         super.dispose();
     }
 
     @Override
     public void pause() {
-        Gdx.app.debug(loggingTag, "Pause");
+        Gdx.app.debug(LOGGING_TAG, "Pause");
         super.pause();
     }
 
     @Override
     public void resize(int width, int height) {
         String log = String.format("Resize to %4d width x %4d height", width, height);
-        Gdx.app.debug(loggingTag, log);
+        Gdx.app.debug(LOGGING_TAG, log);
         world.resize(width, height);
 
         super.resize(width, height);
@@ -87,7 +87,7 @@ public class SpaceTravels3 extends ApplicationAdapter {
 
     @Override
     public void resume() {
-        Gdx.app.debug(loggingTag, "Resume");
+        Gdx.app.debug(LOGGING_TAG, "Resume");
         super.resume();
     }
 }
