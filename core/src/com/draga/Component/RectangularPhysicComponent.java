@@ -22,6 +22,8 @@ public class RectangularPhysicComponent extends PhysicComponent {
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = polygonShape;
+        fixtureDef.density = 1f;
+        fixtureDef.friction = 1f;
 
         body.createFixture(fixtureDef);
 

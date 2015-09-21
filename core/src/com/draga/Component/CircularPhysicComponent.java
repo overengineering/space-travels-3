@@ -22,6 +22,8 @@ public class CircularPhysicComponent extends PhysicComponent {
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = circleShape;
+        fixtureDef.density = 1f;
+        fixtureDef.friction = 1f;
 
         body.createFixture(fixtureDef);
     }

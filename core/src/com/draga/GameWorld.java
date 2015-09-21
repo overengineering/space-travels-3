@@ -104,7 +104,10 @@ public class GameWorld {
             default:
                 Gdx.app.error(LOGGING_TAG, "Orientation " + Gdx.input.getRotation() + " not implemented.");
         }
-        gravity = gravity.scl(GRAVITY_MULTIPLIER);
+        gravity = gravity
+            // Max the gravity by the Earth gravity to avoid excessive force being applied if the device is shaken
+            .clamp(0, Constants.EARTH_GRAVITY)
+            .scl(GRAVITY_MULTIPLIER);
         box2dWorld.setGravity(gravity);
 
 
