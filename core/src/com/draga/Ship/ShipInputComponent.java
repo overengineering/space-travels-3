@@ -39,4 +39,8 @@ public class ShipInputComponent extends InputComponent {
             this.shipPhysicComponent.applyRotation(-1);
         }
     }
+
+    @Override public void dispose() {
+
+    }
 }

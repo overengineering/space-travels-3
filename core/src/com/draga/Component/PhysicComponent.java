@@ -4,21 +4,28 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.MassData;
+import com.draga.GameEntity;
 import com.draga.GameWorld;
+import com.draga.manager.GravityManager;
 
-public abstract class PhysicComponent {
+public abstract class PhysicComponent extends Component {
     protected Body body;
 
-    public PhysicComponent(float x, float y, BodyDef.BodyType bodyType, float mass, float angle) {
+    public PhysicComponent(
+        float x,
+        float y,
+        BodyDef.BodyType bodyType,
+        float angle,
+        GameEntity gameEntity,
+        float gravityScale) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = bodyType;
         bodyDef.position.set(x, y);
+        bodyDef.gravityScale = gravityScale;
 
         body = GameWorld.box2dWorld.createBody(bodyDef);
 
-        MassData massData = new MassData();
-        massData.mass = mass;
-        body.setMassData(massData);
+        body.setUserData(gameEntity);
 
         body.setTransform(x, y, angle);
     }

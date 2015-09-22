@@ -17,4 +17,16 @@ public abstract class GameEntity {
             graphicComponent.draw(batch);
         }
     }
+
+    public void dispose(){
+        if (inputComponent != null) {
+            inputComponent.dispose();
+        }
+        if (physicComponent != null) {
+            physicComponent.dispose();
+        }
+        if (graphicComponent != null) {
+            graphicComponent.dispose();
+        }
+    }
 }

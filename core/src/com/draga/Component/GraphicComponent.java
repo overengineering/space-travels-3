@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 
-public class GraphicComponent {
+public class GraphicComponent extends Component {
     protected Texture texture;
     private PhysicComponent physicComponent;
 
@@ -37,5 +37,9 @@ public class GraphicComponent {
             texture.getHeight(),
             false,
             false);
+    }
+
+    @Override public void dispose() {
+        texture.dispose();
     }
 }

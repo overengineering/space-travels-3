@@ -74,7 +74,7 @@ public abstract class LevelManager {
                 serialisablePlanet.getX(),
                 serialisablePlanet.getY(),
                 serialisablePlanet.getTexturePath());
-            world.addGameEntity(planet);
+            world.addPlanet(planet);
         }
 
         return world;

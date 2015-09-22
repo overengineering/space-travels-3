@@ -67,6 +67,7 @@ public class SpaceTravels3 extends ApplicationAdapter {
     public void dispose() {
         Gdx.app.debug(LOGGING_TAG, "Dispose");
         spriteBatch.dispose();
+        world.dispose();
         super.dispose();
     }
 
