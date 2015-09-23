@@ -32,7 +32,7 @@ public class GameWorld {
     private ArrayList<Planet> planets;
 
     public GameWorld(String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height) {
-        box2dWorld = new World(Pools.obtain(Vector2.class), true);
+        box2dWorld = new World(Pools.obtain(Vector2.class), true); 
         planets = new ArrayList<>();
         FileHandle backgroundFileHandle = Gdx.files.internal(backgroundTexturePath);
         this.backgroundTexture = new Texture(backgroundFileHandle);

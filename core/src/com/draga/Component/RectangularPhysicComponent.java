@@ -34,6 +34,7 @@ public class RectangularPhysicComponent extends PhysicComponent {
         float area = width * height;
         fixtureDef.density = mass / area;
         fixtureDef.friction = 1f;
+        fixtureDef.restitution = 1f;
 
         body.createFixture(fixtureDef);
 

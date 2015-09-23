@@ -28,6 +28,7 @@ public class CircularPhysicComponent extends PhysicComponent {
         float area = radius * radius * MathUtils.PI;
         fixtureDef.density = mass / area;
         fixtureDef.friction = 1f;
+        fixtureDef.restitution = 1f;
 
         body.createFixture(fixtureDef);
     }
