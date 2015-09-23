@@ -28,6 +28,7 @@ public class GravityManager {
         planetForces = planetForces.scl(PLANET_GRAVITY_MULTIPLIER);
 
         Vector2 accelerometerForce = getDeviceAccelerationForDeviceOrientation();
+        accelerometerForce = accelerometerForce.scl(ACCELEROMETER_GRAVITY_MULTIPLIER);
 
         GameWorld.box2dWorld.setGravity(accelerometerForce.add(planetForces));
     }
@@ -41,7 +42,7 @@ public class GravityManager {
         return distance;
     }
 
-    private static Vector2 getDeviceAccelerationForDeviceOrientation() {
+    public static Vector2 getDeviceAccelerationForDeviceOrientation() {
         Vector2 gravity = Pools.obtain(Vector2.class);
         switch (Gdx.input.getRotation()) {
             case 0:
@@ -65,9 +66,7 @@ public class GravityManager {
                     LOGGING_TAG, "Orientation " + Gdx.input.getRotation() + " not implemented.");
         }
         // Max the gravity by the Earth gravity to avoid excessive force being applied if the device is shaken
-        gravity = gravity
-            .clamp(0, Constants.EARTH_GRAVITY)
-            .scl(ACCELEROMETER_GRAVITY_MULTIPLIER);
+        gravity = gravity.clamp(0, Constants.EARTH_GRAVITY);
 
         return gravity;
     }

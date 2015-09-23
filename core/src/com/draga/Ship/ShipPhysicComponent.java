@@ -4,12 +4,11 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.draga.GameEntity;
-import com.draga.GameWorld;
 import com.draga.component.RectangularPhysicComponent;
-import com.draga.event.GameEventBus;
+import com.draga.manager.GravityManager;
 
 public class ShipPhysicComponent extends RectangularPhysicComponent {
-    public static final int ROTATION_FORCE = 600;
+    public static final int ROTATION_FORCE = 1000;
     private static final int SHIP_WIDTH = 10;
     private static final int SHIP_HEIGHT = 10;
 
@@ -26,7 +25,8 @@ public class ShipPhysicComponent extends RectangularPhysicComponent {
     }
 
     @Override public void update(float elapsed) {
-        rotateTo(GameWorld.box2dWorld.getGravity(), elapsed);
+        Vector2 accelerometerForce = GravityManager.getDeviceAccelerationForDeviceOrientation();
+        rotateTo(accelerometerForce, elapsed);
     }
 
     /**
@@ -35,7 +35,7 @@ public class ShipPhysicComponent extends RectangularPhysicComponent {
      * @param accelerometerForce The force of gravity on the device, should be capped to the Earth gravity
      */
     private void rotateTo(Vector2 accelerometerForce, float elapsed) {
-        // ref http://www.iforce2d.net/b2dtut/rotate-to-angle
+        // Ref. http://www.iforce2d.net/b2dtut/rotate-to-angle
         float nextAngle = body.getAngle() + body.getAngularVelocity();
         float directionAngle = accelerometerForce.angleRad();
 
