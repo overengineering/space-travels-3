@@ -1,89 +1,55 @@
 package com.draga.component;
 
-import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.utils.Pools;
-import com.draga.event.GameEventBus;
-import com.draga.event.GravityEvent;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.draga.GameEntity;
+
+import java.awt.geom.Area;
 
 /**
  * Created by Administrator on 03/09/2015.
  */
-public class CircularPhysicComponent extends PhysicComponent
-{
-    Circle circle;
+public class CircularPhysicComponent extends PhysicComponent {
+    private final CircleShape circleShape;
 
-    public CircularPhysicComponent(float mass, float radius, float x, float y)
-    {
-        this.mass = mass;
-        this.circle = new Circle(x, y, radius);
+    public CircularPhysicComponent(
+        float mass, float radius, float x, float y, GameEntity gameEntity, float gravityScale) {
+        super(x, y, BodyDef.BodyType.DynamicBody, 0, gameEntity, gravityScale);
+
+        body.setGravityScale(0);
+
+        circleShape = new CircleShape();
+        circleShape.setRadius(radius);
+
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = circleShape;
+        float area = radius * radius * MathUtils.PI;
+        fixtureDef.density = mass / area;
+        fixtureDef.friction = 1f;
+        fixtureDef.restitution = 1f;
+
+        body.createFixture(fixtureDef);
     }
 
-    @Override
-    public void update(float elapsed)
-    {
-        GravityEvent gravityEvent = Pools.obtain(GravityEvent.class);
-        gravityEvent.set(getX(), getY(), mass, elapsed);
-        GameEventBus.GRAVITY_EVENT_BUS.post(gravityEvent);
-        Pools.free(gravityEvent);
+    @Override public void update(float elapsed) {
     }
 
-    @Override
-    public float getX()
-    {
-        return circle.x;
+
+    @Override public float getWidth() {
+        return circleShape.getRadius() * 2;
     }
 
-    @Override
-    public void setX(float x)
-    {
-        circle.setX(x);
+    @Override public float getHeight() {
+        return circleShape.getRadius() * 2;
     }
 
-    @Override
-    public float getY()
-    {
-        return circle.y;
+    public float getRadius() {
+        return circleShape.getRadius();
     }
 
-    @Override
-    public void setY(float y)
-    {
-        circle.setY(y);
-    }
-
-    @Override
-    public float getWidth()
-    {
-        return circle.radius * 2;
-    }
-
-    @Override
-    public float getHeight()
-    {
-        return circle.radius * 2;
-    }
-
-    public float getRadius()
-    {
-        return circle.radius;
-    }
-
-    @Override
-    public void applyYForce(float forceY)
-    {
-        circle.y += forceY;
-    }
-
-    @Override
-    public void applyXForce(float forceX)
-    {
-        circle.x += forceX;
-    }
-
-    @Override
-    public void applyForce(float forceX, float forceY)
-    {
-        circle.x += forceX;
-        circle.y += forceY;
+    public void dispose() {
+        circleShape.dispose();
     }
 }

@@ -1,20 +1,18 @@
-
-
 apply plugin: "java"
 
-sourceCompatibility = 1.6
+sourceCompatibility = 1.7
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 
 
 sourceSets {
-	test {
+    test {
         java {
             srcDir 'src'
         }
     }
-    
-    
+
+
 }
 
 eclipse.project {

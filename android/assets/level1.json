@@ -3,12 +3,12 @@
   "width": 300,
   "height": 150,
   "serialisedBackground": {
-    "texturePath": "background/background.jpg"
+    "texturePath": "background/background1080.jpg"
   },
   "serialisedShip": {
     "texturePath": "spaceship/destroyer128.png",
-    "x": 5,
-    "y": 5
+    "x": 150,
+    "y": 75
   },
   "serialisedPlanets": [
     {

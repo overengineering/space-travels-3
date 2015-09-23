@@ -3,26 +3,21 @@ package com.draga.manager.level.serialisableEntities;
 /**
  * Created by Administrator on 05/09/2015.
  */
-public class SerialisableBackground
-{
-    public String getTexturePath()
-    {
-        return texturePath;
+public class SerialisableBackground {
+    private String texturePath;
+
+    public SerialisableBackground() {
     }
 
-    public void setTexturePath(String texturePath)
-    {
+    public SerialisableBackground(String texturePath) {
         this.texturePath = texturePath;
     }
 
-    private String texturePath;
-
-    public SerialisableBackground()
-    {
+    public String getTexturePath() {
+        return texturePath;
     }
 
-    public SerialisableBackground(String texturePath)
-    {
+    public void setTexturePath(String texturePath) {
         this.texturePath = texturePath;
     }
 }

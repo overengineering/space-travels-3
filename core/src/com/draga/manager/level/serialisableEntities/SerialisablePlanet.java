@@ -3,21 +3,18 @@ package com.draga.manager.level.serialisableEntities;
 /**
  * Created by Administrator on 05/09/2015.
  */
-public class SerialisablePlanet
-{
+public class SerialisablePlanet {
     String texturePath;
     int x;
     int y;
     float radius;
     float mass;
 
-    public SerialisablePlanet()
-    {
+    public SerialisablePlanet() {
 
     }
 
-    public SerialisablePlanet(String texturePath, int x, int y, int radius, float mass)
-    {
+    public SerialisablePlanet(String texturePath, int x, int y, int radius, float mass) {
         this.texturePath = texturePath;
         this.x = x;
         this.y = y;
@@ -25,53 +22,43 @@ public class SerialisablePlanet
         this.mass = mass;
     }
 
-    public float getMass()
-    {
+    public float getMass() {
         return mass;
     }
 
-    public void setMass(float mass)
-    {
+    public void setMass(float mass) {
         this.mass = mass;
     }
 
-    public String getTexturePath()
-    {
+    public String getTexturePath() {
         return texturePath;
     }
 
-    public void setTexturePath(String texturePath)
-    {
+    public void setTexturePath(String texturePath) {
         this.texturePath = texturePath;
     }
 
-    public int getX()
-    {
+    public int getX() {
         return x;
     }
 
-    public void setX(int x)
-    {
+    public void setX(int x) {
         this.x = x;
     }
 
-    public int getY()
-    {
+    public int getY() {
         return y;
     }
 
-    public void setY(int y)
-    {
+    public void setY(int y) {
         this.y = y;
     }
 
-    public float getRadius()
-    {
+    public float getRadius() {
         return radius;
     }
 
-    public void setRadius(int radius)
-    {
+    public void setRadius(int radius) {
         this.radius = radius;
     }
 }

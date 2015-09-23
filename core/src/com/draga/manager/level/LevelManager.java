@@ -3,7 +3,6 @@ package com.draga.manager.level;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Json;
 import com.draga.GameWorld;
 import com.draga.manager.level.serialisableEntities.SerialisablePlanet;
@@ -14,44 +13,39 @@ import com.draga.ship.Ship;
 /**
  * Created by Administrator on 05/09/2015.
  */
-public abstract class LevelManager
-{
-    public static SerialisableWorld getSerialisedWorldFromFile(String serialisedWorldFilePath){
+public abstract class LevelManager {
+    public static SerialisableWorld getSerialisedWorldFromFile(String serialisedWorldFilePath) {
         String serialisedWordString = getStringFromFile(serialisedWorldFilePath);
         SerialisableWorld serialisableWorld = getSerialisedWorldFromString(serialisedWordString);
 
         return serialisableWorld;
     }
 
-    private static String getStringFromFile(String filePath)
-    {
+    private static String getStringFromFile(String filePath) {
         FileHandle serialisedWorldFileHandle = Gdx.files.internal(filePath);
         return serialisedWorldFileHandle.readString();
     }
 
-    public static SerialisableWorld getSerialisedWorldFromString(String serialisedWord)
-    {
+    public static SerialisableWorld getSerialisedWorldFromString(String serialisedWord) {
         Json json = new Json();
 
         json.addClassTag("SerialisableWorld", SerialisableWorld.class);
 
-        SerialisableWorld serialisableWorld = json.fromJson(SerialisableWorld.class, serialisedWord);
+        SerialisableWorld serialisableWorld =
+            json.fromJson(SerialisableWorld.class, serialisedWord);
 
         return serialisableWorld;
     }
 
     public static GameWorld getLevelWorldFromFile(
-        String serialisedWorldFilePath,
-        SpriteBatch spriteBatch)
-    {
+        String serialisedWorldFilePath, SpriteBatch spriteBatch) {
         String serialisedWordString = getStringFromFile(serialisedWorldFilePath);
         GameWorld world = getLevelWorldFromString(serialisedWordString, spriteBatch);
 
         return world;
     }
 
-    public static GameWorld getLevelWorldFromString(String jsonString, SpriteBatch spriteBatch)
-    {
+    public static GameWorld getLevelWorldFromString(String jsonString, SpriteBatch spriteBatch) {
         SerialisableWorld serialisableWorld = LevelManager.getSerialisedWorldFromString(jsonString);
 
         GameWorld world = LevelManager.getLevelWorld(serialisableWorld, spriteBatch);
@@ -59,29 +53,28 @@ public abstract class LevelManager
         return world;
     }
 
-    private static GameWorld getLevelWorld(SerialisableWorld serialisableWorld, SpriteBatch spriteBatch)
-    {
+    private static GameWorld getLevelWorld(
+        SerialisableWorld serialisableWorld, SpriteBatch spriteBatch) {
         GameWorld world = new GameWorld(
             serialisableWorld.serialisedBackground.getTexturePath(),
             spriteBatch,
             serialisableWorld.width,
             serialisableWorld.height);
 
-        Ship ship = new Ship(serialisableWorld.serialisedShip.getTexturePath());
-        ship.physicComponent.setX(serialisableWorld.serialisedShip.getX());
-        ship.physicComponent.setY(serialisableWorld.serialisedShip.getY());
+        Ship ship = new Ship(
+            serialisableWorld.serialisedShip.getTexturePath(),
+            serialisableWorld.serialisedShip.getX(),
+            serialisableWorld.serialisedShip.getY());
         world.addShip(ship);
 
-        for (SerialisablePlanet serialisablePlanet: serialisableWorld.serialisedPlanets)
-        {
+        for (SerialisablePlanet serialisablePlanet : serialisableWorld.serialisedPlanets) {
             Planet planet = new Planet(
                 serialisablePlanet.getMass(),
                 serialisablePlanet.getRadius(),
                 serialisablePlanet.getX(),
                 serialisablePlanet.getY(),
-                serialisablePlanet.getTexturePath()
-            );
-            world.addGameEntity(planet);
+                serialisablePlanet.getTexturePath());
+            world.addPlanet(planet);
         }
 
         return world;
