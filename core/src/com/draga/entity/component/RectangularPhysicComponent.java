@@ -1,9 +1,9 @@
-package com.draga.component;
+package com.draga.entity.component;
 
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.draga.GameEntity;
+import com.draga.entity.GameEntity;
 
 /**
  * Created by Administrator on 03/09/2015.

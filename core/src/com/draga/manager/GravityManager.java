@@ -6,8 +6,8 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Pools;
 import com.draga.Constants;
 import com.draga.GameWorld;
-import com.draga.planet.Planet;
-import com.draga.ship.Ship;
+import com.draga.entity.planet.Planet;
+import com.draga.entity.ship.Ship;
 
 import java.util.List;
 

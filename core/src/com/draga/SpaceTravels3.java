@@ -19,8 +19,7 @@ public class SpaceTravels3 extends ApplicationAdapter {
     private float timeUntilDebugInfoUpdate = timeBetweenDebugInfoUpdate;
     private SpriteBatch spriteBatch;
 
-    @Override
-    public void create() {
+    @Override public void create() {
         spriteBatch = new SpriteBatch();
 
         if (Constants.IS_DEBUGGING) {
@@ -34,8 +33,7 @@ public class SpaceTravels3 extends ApplicationAdapter {
         Box2D.init();
     }
 
-    @Override
-    public void render() {
+    @Override public void render() {
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit();
         }
@@ -49,12 +47,16 @@ public class SpaceTravels3 extends ApplicationAdapter {
             timeUntilDebugInfoUpdate -= deltaTime;
             if (timeUntilDebugInfoUpdate <= 0f) {
                 timeUntilDebugInfoUpdate = timeBetweenDebugInfoUpdate;
+                String formattedJavaHeap = Constants.COMMA_SEPARATED_THOUSANDS_FORMATTER.format(
+                    Gdx.app.getJavaHeap());
+                String formattedNativeHeap =
+                    Constants.COMMA_SEPARATED_THOUSANDS_FORMATTER.format(Gdx.app.getNativeHeap());
                 String log = String.format(
-                    "%-23s | FPS : %3d | Java heap : %10d | Java native heap : %10d",
+                    "%-23s | FPS : %3d | Java heap : %12s | Java native heap : %12s",
                     new Timestamp(new Date().getTime()).toString(),
                     Gdx.graphics.getFramesPerSecond(),
-                    Gdx.app.getJavaHeap(),
-                    Gdx.app.getNativeHeap());
+                    formattedJavaHeap,
+                    formattedNativeHeap);
                 Gdx.app.log(LOGGING_TAG, log);
             }
         }
@@ -63,22 +65,19 @@ public class SpaceTravels3 extends ApplicationAdapter {
         world.draw();
     }
 
-    @Override
-    public void dispose() {
+    @Override public void dispose() {
         Gdx.app.debug(LOGGING_TAG, "Dispose");
         spriteBatch.dispose();
         world.dispose();
         super.dispose();
     }
 
-    @Override
-    public void pause() {
+    @Override public void pause() {
         Gdx.app.debug(LOGGING_TAG, "Pause");
         super.pause();
     }
 
-    @Override
-    public void resize(int width, int height) {
+    @Override public void resize(int width, int height) {
         String log = String.format("Resize to %4d width x %4d height", width, height);
         Gdx.app.debug(LOGGING_TAG, log);
         world.resize(width, height);
@@ -86,8 +85,7 @@ public class SpaceTravels3 extends ApplicationAdapter {
         super.resize(width, height);
     }
 
-    @Override
-    public void resume() {
+    @Override public void resume() {
         Gdx.app.debug(LOGGING_TAG, "Resume");
         super.resume();
     }

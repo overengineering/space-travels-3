@@ -7,8 +7,8 @@ import com.badlogic.gdx.utils.Json;
 import com.draga.GameWorld;
 import com.draga.manager.level.serialisableEntities.SerialisablePlanet;
 import com.draga.manager.level.serialisableEntities.SerialisableWorld;
-import com.draga.planet.Planet;
-import com.draga.ship.Ship;
+import com.draga.entity.planet.Planet;
+import com.draga.entity.ship.Ship;
 
 /**
  * Created by Administrator on 05/09/2015.

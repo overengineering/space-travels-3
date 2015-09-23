@@ -1,12 +1,10 @@
-package com.draga.component;
+package com.draga.entity.component;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.MassData;
-import com.draga.GameEntity;
 import com.draga.GameWorld;
-import com.draga.manager.GravityManager;
+import com.draga.entity.GameEntity;
 
 public abstract class PhysicComponent extends Component {
     protected Body body;

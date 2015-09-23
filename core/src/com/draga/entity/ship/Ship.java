@@ -1,6 +1,6 @@
-package com.draga.ship;
+package com.draga.entity.ship;
 
-import com.draga.GameEntity;
+import com.draga.entity.GameEntity;
 
 public class Ship extends GameEntity {
     public ShipPhysicComponent physicComponent = null;

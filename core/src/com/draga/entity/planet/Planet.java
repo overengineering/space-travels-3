@@ -1,8 +1,8 @@
-package com.draga.planet;
+package com.draga.entity.planet;
 
-import com.draga.GameEntity;
-import com.draga.component.CircularPhysicComponent;
-import com.draga.component.GraphicComponent;
+import com.draga.entity.GameEntity;
+import com.draga.entity.component.CircularPhysicComponent;
+import com.draga.entity.component.GraphicComponent;
 
 /**
  * Created by Administrator on 03/09/2015.

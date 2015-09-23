@@ -1,4 +1,4 @@
-package com.draga.component;
+package com.draga.entity.component;
 
 /**
  * Created by Administrator on 22/09/2015.

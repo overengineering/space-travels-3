@@ -11,9 +11,10 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.draga.entity.GameEntity;
 import com.draga.manager.GravityManager;
-import com.draga.planet.Planet;
-import com.draga.ship.Ship;
+import com.draga.entity.planet.Planet;
+import com.draga.entity.ship.Ship;
 
 import java.util.ArrayList;
 
@@ -38,7 +39,7 @@ public class GameWorld {
         this.backgroundTexture = new Texture(backgroundFileHandle);
         this.width = width;
         this.height = height;
-        gameEntities = new Array<GameEntity>();
+        gameEntities = new Array<>();
         batch = spriteBatch;
         orthographicCamera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         extendViewport = new ExtendViewport(

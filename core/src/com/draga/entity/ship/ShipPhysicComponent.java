@@ -1,10 +1,10 @@
-package com.draga.ship;
+package com.draga.entity.ship;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.draga.GameEntity;
-import com.draga.component.RectangularPhysicComponent;
+import com.draga.entity.GameEntity;
+import com.draga.entity.component.RectangularPhysicComponent;
 import com.draga.manager.GravityManager;
 
 public class ShipPhysicComponent extends RectangularPhysicComponent {
