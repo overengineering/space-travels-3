@@ -54,7 +54,8 @@ public abstract class LevelManager {
     }
 
     private static GameWorld getLevelWorld(
-        SerialisableWorld serialisableWorld, SpriteBatch spriteBatch) {
+        SerialisableWorld serialisableWorld,
+        SpriteBatch spriteBatch) {
         GameWorld world = new GameWorld(
             serialisableWorld.serialisedBackground.getTexturePath(),
             spriteBatch,
@@ -64,7 +65,8 @@ public abstract class LevelManager {
         Ship ship = new Ship(
             serialisableWorld.serialisedShip.getTexturePath(),
             serialisableWorld.serialisedShip.getX(),
-            serialisableWorld.serialisedShip.getY());
+            serialisableWorld.serialisedShip.getY(),
+            world.box2dWorld);
         world.addShip(ship);
 
         for (SerialisablePlanet serialisablePlanet : serialisableWorld.serialisedPlanets) {
@@ -73,7 +75,8 @@ public abstract class LevelManager {
                 serialisablePlanet.getRadius(),
                 serialisablePlanet.getX(),
                 serialisablePlanet.getY(),
-                serialisablePlanet.getTexturePath());
+                serialisablePlanet.getTexturePath(),
+                world.box2dWorld);
             world.addPlanet(planet);
         }
 

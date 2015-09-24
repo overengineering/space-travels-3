@@ -20,11 +20,11 @@ import java.util.ArrayList;
 
 public class GameWorld {
     private static final String LOGGING_TAG = GameWorld.class.getSimpleName();
-    public static World box2dWorld;
+    public World box2dWorld;
     private final Texture backgroundTexture;
     private final Box2DDebugRenderer box2DDebugRenderer;
     protected Array<GameEntity> gameEntities;
-    SpriteBatch batch;
+    private SpriteBatch batch;
     private OrthographicCamera orthographicCamera;
     private ExtendViewport extendViewport;
     private Ship ship;
@@ -60,7 +60,7 @@ public class GameWorld {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.StaticBody;
 
-        Body body = GameWorld.box2dWorld.createBody(bodyDef);
+        Body body = box2dWorld.createBody(bodyDef);
 
         Vector2[] wallVertices = new Vector2[]{
             new Vector2(0, 0),
@@ -94,7 +94,7 @@ public class GameWorld {
     }
 
     public void update(float elapsed) {
-        GravityManager.update(ship, planets, elapsed);
+        GravityManager.update(box2dWorld, ship, planets);
 
         updateCamera();
 
@@ -142,8 +142,10 @@ public class GameWorld {
     }
 
     public void dispose() {
+        box2dWorld.dispose();
         for (GameEntity gameEntity : gameEntities) {
             gameEntity.dispose();
         }
+        backgroundTexture.dispose();
     }
 }

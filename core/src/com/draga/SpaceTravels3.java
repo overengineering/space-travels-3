@@ -7,7 +7,10 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Box2D;
+import com.draga.manager.SceneManager;
 import com.draga.manager.level.LevelManager;
+import com.draga.manager.scene.GameScene;
+import com.draga.manager.scene.Scene;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -15,20 +18,19 @@ import java.util.Date;
 public class SpaceTravels3 extends ApplicationAdapter {
     private final static String LOGGING_TAG = SpaceTravels3.class.getSimpleName();
     private final float timeBetweenDebugInfoUpdate = 1f;
-    private GameWorld world;
     private float timeUntilDebugInfoUpdate = timeBetweenDebugInfoUpdate;
     private SpriteBatch spriteBatch;
 
     @Override public void create() {
         spriteBatch = new SpriteBatch();
+        SceneManager.setActiveScene(new GameScene("level1.json", spriteBatch));
+        SceneManager.setActiveScene(new GameScene("level1.json", spriteBatch));
 
         if (Constants.IS_DEBUGGING) {
             Gdx.app.setLogLevel(Application.LOG_DEBUG);
         } else {
             Gdx.app.setLogLevel(Application.LOG_ERROR);
         }
-
-        world = LevelManager.getLevelWorldFromFile("level1.json", spriteBatch);
 
         Box2D.init();
     }
@@ -44,6 +46,7 @@ public class SpaceTravels3 extends ApplicationAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
         if (Constants.IS_DEBUGGING) {
+
             timeUntilDebugInfoUpdate -= deltaTime;
             if (timeUntilDebugInfoUpdate <= 0f) {
                 timeUntilDebugInfoUpdate = timeBetweenDebugInfoUpdate;
@@ -61,32 +64,34 @@ public class SpaceTravels3 extends ApplicationAdapter {
             }
         }
 
-        world.update(deltaTime);
-        world.draw();
+        SceneManager.getActiveScene().render(deltaTime);
     }
 
     @Override public void dispose() {
         Gdx.app.debug(LOGGING_TAG, "Dispose");
+        SceneManager.getActiveScene().dispose();
         spriteBatch.dispose();
-        world.dispose();
         super.dispose();
     }
 
     @Override public void pause() {
         Gdx.app.debug(LOGGING_TAG, "Pause");
+        SceneManager.getActiveScene().pause();
         super.pause();
     }
 
     @Override public void resize(int width, int height) {
         String log = String.format("Resize to %4d width x %4d height", width, height);
         Gdx.app.debug(LOGGING_TAG, log);
-        world.resize(width, height);
+
+        SceneManager.getActiveScene().resize(width, height);
 
         super.resize(width, height);
     }
 
     @Override public void resume() {
         Gdx.app.debug(LOGGING_TAG, "Resume");
+        SceneManager.getActiveScene().resume();
         super.resume();
     }
 }

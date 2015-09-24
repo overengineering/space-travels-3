@@ -3,6 +3,7 @@ package com.draga.manager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Pools;
 import com.draga.Constants;
 import com.draga.GameWorld;
@@ -19,7 +20,7 @@ public class GravityManager {
     private static final float PLANET_GRAVITY_MULTIPLIER = 3f;
     private static final String LOGGING_TAG = GravityManager.class.getSimpleName();
 
-    public static void update(Ship ship, List<Planet> planets, float elapsed) {
+    public static void update(World box2dWorld, Ship ship, List<Planet> planets) {
         Vector2 planetForces = Pools.obtain(Vector2.class);
         for (Planet planet : planets) {
             Vector2 gravityForce = getGravityForce(ship.physicComponent.getBody(), planet.physicComponent.getBody());
@@ -30,7 +31,7 @@ public class GravityManager {
         Vector2 accelerometerForce = getDeviceAccelerationForDeviceOrientation();
         accelerometerForce = accelerometerForce.scl(ACCELEROMETER_GRAVITY_MULTIPLIER);
 
-        GameWorld.box2dWorld.setGravity(accelerometerForce.add(planetForces));
+        box2dWorld.setGravity(accelerometerForce.add(planetForces));
     }
 
     private static Vector2 getGravityForce(Body shipBody, Body planetBody) {

@@ -3,6 +3,7 @@ package com.draga.entity.component;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.World;
 import com.draga.GameWorld;
 import com.draga.entity.GameEntity;
 
@@ -15,13 +16,14 @@ public abstract class PhysicComponent extends Component {
         BodyDef.BodyType bodyType,
         float angle,
         GameEntity gameEntity,
-        float gravityScale) {
+        float gravityScale,
+        World box2dWorld) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = bodyType;
         bodyDef.position.set(x, y);
         bodyDef.gravityScale = gravityScale;
 
-        body = GameWorld.box2dWorld.createBody(bodyDef);
+        body = box2dWorld.createBody(bodyDef);
 
         body.setUserData(gameEntity);
 

@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.World;
 import com.draga.entity.GameEntity;
 
 /**
@@ -13,8 +14,14 @@ public class CircularPhysicComponent extends PhysicComponent {
     private final CircleShape circleShape;
 
     public CircularPhysicComponent(
-        float mass, float radius, float x, float y, GameEntity gameEntity, float gravityScale) {
-        super(x, y, BodyDef.BodyType.DynamicBody, 0, gameEntity, gravityScale);
+        float mass,
+        float radius,
+        float x,
+        float y,
+        GameEntity gameEntity,
+        float gravityScale,
+        World box2dWorld) {
+        super(x, y, BodyDef.BodyType.DynamicBody, 0, gameEntity, gravityScale, box2dWorld);
 
         body.setGravityScale(0);
 

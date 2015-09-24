@@ -3,6 +3,7 @@ package com.draga.entity.ship;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.World;
 import com.draga.entity.GameEntity;
 import com.draga.entity.component.RectangularPhysicComponent;
 import com.draga.manager.GravityManager;
@@ -12,7 +13,8 @@ public class ShipPhysicComponent extends RectangularPhysicComponent {
     private static final int SHIP_WIDTH = 10;
     private static final int SHIP_HEIGHT = 10;
 
-    public ShipPhysicComponent(int x, int y, GameEntity gameEntity, float gravityScale) {
+    public ShipPhysicComponent(
+        int x, int y, GameEntity gameEntity, float gravityScale, World box2dWorld) {
         super(
             x,
             y,
@@ -21,7 +23,8 @@ public class ShipPhysicComponent extends RectangularPhysicComponent {
             1f,
             BodyDef.BodyType.DynamicBody,
             gameEntity,
-            gravityScale);
+            gravityScale,
+            box2dWorld);
     }
 
     @Override public void update(float elapsed) {
