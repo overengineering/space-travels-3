@@ -35,10 +35,6 @@ public class SpaceTravels3 extends ApplicationAdapter {
     }
 
     @Override public void render() {
-        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
-            Gdx.app.exit();
-        }
-
         float deltaTime = Gdx.graphics.getDeltaTime();
 
         Gdx.gl.glClearColor(0, 0, 0, 1);

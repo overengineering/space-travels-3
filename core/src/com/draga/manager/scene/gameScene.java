@@ -1,6 +1,7 @@
 package com.draga.manager.scene;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -16,6 +17,7 @@ import com.draga.entity.GameEntity;
 import com.draga.entity.planet.Planet;
 import com.draga.entity.ship.Ship;
 import com.draga.manager.GravityManager;
+import com.draga.manager.SceneManager;
 
 import java.util.ArrayList;
 
@@ -142,6 +144,11 @@ public class GameScene extends Scene {
     }
 
     @Override public void render(float delta) {
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+            SceneManager.setActiveScene(new MenuScene());
+            return;
+        }
+
         update(delta);
         draw();
     }

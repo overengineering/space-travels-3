@@ -1,6 +1,7 @@
 package com.draga.manager.scene;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -37,6 +38,10 @@ public class MenuScene extends Scene {
     }
 
     @Override public void render(float deltaTime) {
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+            Gdx.app.exit();
+        }
+
         stage.act(deltaTime);
         stage.draw();
     }
