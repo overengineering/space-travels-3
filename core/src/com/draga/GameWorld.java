@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.draga.entity.GameEntity;
@@ -41,13 +42,14 @@ public class GameWorld {
         this.height = height;
         gameEntities = new Array<>();
         batch = spriteBatch;
-        orthographicCamera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        orthographicCamera = new OrthographicCamera();
         extendViewport = new ExtendViewport(
             Constants.VIEWPORT_WIDTH,
             Constants.VIEWPORT_HEIGHT,
             width,
             height,
             orthographicCamera);
+        extendViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         if (Constants.IS_DEBUGGING) {
             createWalls();
@@ -137,8 +139,7 @@ public class GameWorld {
     }
 
     public void resize(int width, int height) {
-        extendViewport.update(width, height, true);
-        orthographicCamera.update();
+        extendViewport.update(width, height);
     }
 
     public void dispose() {
@@ -147,5 +148,6 @@ public class GameWorld {
             gameEntity.dispose();
         }
         backgroundTexture.dispose();
+        box2DDebugRenderer.dispose();
     }
 }

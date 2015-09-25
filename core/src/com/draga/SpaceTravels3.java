@@ -24,7 +24,6 @@ public class SpaceTravels3 extends ApplicationAdapter {
     @Override public void create() {
         spriteBatch = new SpriteBatch();
         SceneManager.setActiveScene(new GameScene("level1.json", spriteBatch));
-        SceneManager.setActiveScene(new GameScene("level1.json", spriteBatch));
 
         if (Constants.IS_DEBUGGING) {
             Gdx.app.setLogLevel(Application.LOG_DEBUG);
@@ -46,7 +45,6 @@ public class SpaceTravels3 extends ApplicationAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
         if (Constants.IS_DEBUGGING) {
-
             timeUntilDebugInfoUpdate -= deltaTime;
             if (timeUntilDebugInfoUpdate <= 0f) {
                 timeUntilDebugInfoUpdate = timeBetweenDebugInfoUpdate;
