@@ -10,7 +10,6 @@ import com.badlogic.gdx.physics.box2d.Box2D;
 import com.draga.manager.SceneManager;
 import com.draga.manager.level.LevelManager;
 import com.draga.manager.scene.GameScene;
-import com.draga.manager.scene.Scene;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -23,7 +22,8 @@ public class SpaceTravels3 extends ApplicationAdapter {
 
     @Override public void create() {
         spriteBatch = new SpriteBatch();
-        SceneManager.setActiveScene(new GameScene("level1.json", spriteBatch));
+        GameScene gameScene = LevelManager.getLevelWorldFromFile("level1.json", spriteBatch);
+        SceneManager.setActiveScene(gameScene);
 
         if (Constants.IS_DEBUGGING) {
             Gdx.app.setLogLevel(Application.LOG_DEBUG);

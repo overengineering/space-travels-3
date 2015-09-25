@@ -1,4 +1,4 @@
-package com.draga;
+package com.draga.manager.scene;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -9,21 +9,21 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.draga.Constants;
 import com.draga.entity.GameEntity;
-import com.draga.manager.GravityManager;
 import com.draga.entity.planet.Planet;
 import com.draga.entity.ship.Ship;
+import com.draga.manager.GravityManager;
 
 import java.util.ArrayList;
 
-public class GameWorld {
-    private static final String LOGGING_TAG = GameWorld.class.getSimpleName();
-    public World box2dWorld;
+public class GameScene extends Scene {
+    private static final String LOGGING_TAG = GameScene.class.getSimpleName();
     private final Texture backgroundTexture;
     private final Box2DDebugRenderer box2DDebugRenderer;
+    public World box2dWorld;
     protected Array<GameEntity> gameEntities;
     private SpriteBatch batch;
     private OrthographicCamera orthographicCamera;
@@ -33,8 +33,8 @@ public class GameWorld {
     private int height;
     private ArrayList<Planet> planets;
 
-    public GameWorld(String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height) {
-        box2dWorld = new World(Pools.obtain(Vector2.class), true); 
+    public GameScene(String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height) {
+        box2dWorld = new World(Pools.obtain(Vector2.class), true);
         planets = new ArrayList<>();
         FileHandle backgroundFileHandle = Gdx.files.internal(backgroundTexturePath);
         this.backgroundTexture = new Texture(backgroundFileHandle);
@@ -44,11 +44,7 @@ public class GameWorld {
         batch = spriteBatch;
         orthographicCamera = new OrthographicCamera();
         extendViewport = new ExtendViewport(
-            Constants.VIEWPORT_WIDTH,
-            Constants.VIEWPORT_HEIGHT,
-            width,
-            height,
-            orthographicCamera);
+            Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, width, height, orthographicCamera);
         extendViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         if (Constants.IS_DEBUGGING) {
@@ -64,13 +60,9 @@ public class GameWorld {
 
         Body body = box2dWorld.createBody(bodyDef);
 
-        Vector2[] wallVertices = new Vector2[]{
-            new Vector2(0, 0),
-            new Vector2(width, 0),
-            new Vector2(width, height),
-            new Vector2(0, height),
-            new Vector2(0, 0),
-        };
+        Vector2[] wallVertices =
+            new Vector2[] {new Vector2(0, 0), new Vector2(width, 0), new Vector2(width, height),
+                new Vector2(0, height), new Vector2(0, 0),};
         ChainShape chainShape = new ChainShape();
         chainShape.createChain(wallVertices);
 
@@ -116,9 +108,7 @@ public class GameWorld {
         float cameraXPosition = MathUtils.clamp(
             ship.physicComponent.getX(), halfWidth, width - halfWidth);
         float cameraYPosition = MathUtils.clamp(
-            ship.physicComponent.getY(),
-            halfHeight,
-            height - halfHeight);
+            ship.physicComponent.getY(), halfHeight, height - halfHeight);
         orthographicCamera.position.x = cameraXPosition;
         orthographicCamera.position.y = cameraYPosition;
         orthographicCamera.update();
@@ -149,5 +139,18 @@ public class GameWorld {
         }
         backgroundTexture.dispose();
         box2DDebugRenderer.dispose();
+    }
+
+    @Override public void render(float delta) {
+        update(delta);
+        draw();
+    }
+
+    @Override public void pause() {
+
+    }
+
+    @Override public void resume() {
+
     }
 }
