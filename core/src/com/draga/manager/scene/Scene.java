@@ -9,7 +9,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 /**
  * Created by Administrator on 23/09/2015.
  */
-public abstract class Scene extends Stage {
+public abstract class Scene {
 
     public abstract void render(float deltaTime);
 
