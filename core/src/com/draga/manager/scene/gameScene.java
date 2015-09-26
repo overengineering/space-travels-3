@@ -1,6 +1,7 @@
-package com.draga;
+package com.draga.manager.scene;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,19 +12,22 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.draga.Constants;
+import com.draga.entity.GameEntity;
+import com.draga.entity.planet.Planet;
+import com.draga.entity.ship.Ship;
 import com.draga.manager.GravityManager;
-import com.draga.planet.Planet;
-import com.draga.ship.Ship;
+import com.draga.manager.SceneManager;
 
 import java.util.ArrayList;
 
-public class GameWorld {
-    private static final String LOGGING_TAG = GameWorld.class.getSimpleName();
-    public static World box2dWorld;
+public class GameScene extends Scene {
+    private static final String LOGGING_TAG = GameScene.class.getSimpleName();
     private final Texture backgroundTexture;
     private final Box2DDebugRenderer box2DDebugRenderer;
+    public World box2dWorld;
     protected Array<GameEntity> gameEntities;
-    SpriteBatch batch;
+    private SpriteBatch batch;
     private OrthographicCamera orthographicCamera;
     private ExtendViewport extendViewport;
     private Ship ship;
@@ -31,22 +35,19 @@ public class GameWorld {
     private int height;
     private ArrayList<Planet> planets;
 
-    public GameWorld(String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height) {
-        box2dWorld = new World(Pools.obtain(Vector2.class), true); 
+    public GameScene(String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height) {
+        box2dWorld = new World(Pools.obtain(Vector2.class), true);
         planets = new ArrayList<>();
         FileHandle backgroundFileHandle = Gdx.files.internal(backgroundTexturePath);
         this.backgroundTexture = new Texture(backgroundFileHandle);
         this.width = width;
         this.height = height;
-        gameEntities = new Array<GameEntity>();
+        gameEntities = new Array<>();
         batch = spriteBatch;
-        orthographicCamera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        orthographicCamera = new OrthographicCamera();
         extendViewport = new ExtendViewport(
-            Constants.VIEWPORT_WIDTH,
-            Constants.VIEWPORT_HEIGHT,
-            width,
-            height,
-            orthographicCamera);
+            Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, width, height, orthographicCamera);
+        extendViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         if (Constants.IS_DEBUGGING) {
             createWalls();
@@ -59,15 +60,11 @@ public class GameWorld {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.StaticBody;
 
-        Body body = GameWorld.box2dWorld.createBody(bodyDef);
+        Body body = box2dWorld.createBody(bodyDef);
 
-        Vector2[] wallVertices = new Vector2[]{
-            new Vector2(0, 0),
-            new Vector2(width, 0),
-            new Vector2(width, height),
-            new Vector2(0, height),
-            new Vector2(0, 0),
-        };
+        Vector2[] wallVertices =
+            new Vector2[] {new Vector2(0, 0), new Vector2(width, 0), new Vector2(width, height),
+                new Vector2(0, height), new Vector2(0, 0),};
         ChainShape chainShape = new ChainShape();
         chainShape.createChain(wallVertices);
 
@@ -93,7 +90,7 @@ public class GameWorld {
     }
 
     public void update(float elapsed) {
-        GravityManager.update(ship, planets, elapsed);
+        GravityManager.update(box2dWorld, ship, planets);
 
         updateCamera();
 
@@ -113,9 +110,7 @@ public class GameWorld {
         float cameraXPosition = MathUtils.clamp(
             ship.physicComponent.getX(), halfWidth, width - halfWidth);
         float cameraYPosition = MathUtils.clamp(
-            ship.physicComponent.getY(),
-            halfHeight,
-            height - halfHeight);
+            ship.physicComponent.getY(), halfHeight, height - halfHeight);
         orthographicCamera.position.x = cameraXPosition;
         orthographicCamera.position.y = cameraYPosition;
         orthographicCamera.update();
@@ -136,13 +131,33 @@ public class GameWorld {
     }
 
     public void resize(int width, int height) {
-        extendViewport.update(width, height, true);
-        orthographicCamera.update();
+        extendViewport.update(width, height);
     }
 
     public void dispose() {
+        box2dWorld.dispose();
         for (GameEntity gameEntity : gameEntities) {
             gameEntity.dispose();
         }
+        backgroundTexture.dispose();
+        box2DDebugRenderer.dispose();
+    }
+
+    @Override public void render(float delta) {
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+            SceneManager.setActiveScene(new MenuScene());
+            return;
+        }
+
+        update(delta);
+        draw();
+    }
+
+    @Override public void pause() {
+
+    }
+
+    @Override public void resume() {
+
     }
 }

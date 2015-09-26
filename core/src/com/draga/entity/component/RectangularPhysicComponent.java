@@ -1,9 +1,10 @@
-package com.draga.component;
+package com.draga.entity.component;
 
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.draga.GameEntity;
+import com.badlogic.gdx.physics.box2d.World;
+import com.draga.entity.GameEntity;
 
 /**
  * Created by Administrator on 03/09/2015.
@@ -20,8 +21,8 @@ public class RectangularPhysicComponent extends PhysicComponent {
         float mass,
         BodyDef.BodyType bodyType,
         GameEntity gameEntity,
-        float gravityScale) {
-        super(x, y, bodyType, 0, gameEntity, gravityScale);
+        float gravityScale, World box2dWorld) {
+        super(x, y, bodyType, 0, gameEntity, gravityScale, box2dWorld);
 
         this.width = width;
         this.height = height;

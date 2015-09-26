@@ -4,19 +4,19 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Json;
-import com.draga.GameWorld;
 import com.draga.manager.level.serialisableEntities.SerialisablePlanet;
 import com.draga.manager.level.serialisableEntities.SerialisableWorld;
-import com.draga.planet.Planet;
-import com.draga.ship.Ship;
+import com.draga.entity.planet.Planet;
+import com.draga.entity.ship.Ship;
+import com.draga.manager.scene.GameScene;
 
 /**
  * Created by Administrator on 05/09/2015.
  */
 public abstract class LevelManager {
-    public static SerialisableWorld getSerialisedWorldFromFile(String serialisedWorldFilePath) {
+    public static SerialisableWorld getSerialisedGameSceneFromFile(String serialisedWorldFilePath) {
         String serialisedWordString = getStringFromFile(serialisedWorldFilePath);
-        SerialisableWorld serialisableWorld = getSerialisedWorldFromString(serialisedWordString);
+        SerialisableWorld serialisableWorld = getSerialisedGameSceneFromString(serialisedWordString);
 
         return serialisableWorld;
     }
@@ -26,7 +26,7 @@ public abstract class LevelManager {
         return serialisedWorldFileHandle.readString();
     }
 
-    public static SerialisableWorld getSerialisedWorldFromString(String serialisedWord) {
+    public static SerialisableWorld getSerialisedGameSceneFromString(String serialisedWord) {
         Json json = new Json();
 
         json.addClassTag("SerialisableWorld", SerialisableWorld.class);
@@ -37,25 +37,26 @@ public abstract class LevelManager {
         return serialisableWorld;
     }
 
-    public static GameWorld getLevelWorldFromFile(
+    public static GameScene getLevelWorldFromFile(
         String serialisedWorldFilePath, SpriteBatch spriteBatch) {
         String serialisedWordString = getStringFromFile(serialisedWorldFilePath);
-        GameWorld world = getLevelWorldFromString(serialisedWordString, spriteBatch);
+        GameScene world = getLevelGameSceneFromString(serialisedWordString, spriteBatch);
 
         return world;
     }
 
-    public static GameWorld getLevelWorldFromString(String jsonString, SpriteBatch spriteBatch) {
-        SerialisableWorld serialisableWorld = LevelManager.getSerialisedWorldFromString(jsonString);
+    public static GameScene getLevelGameSceneFromString(String jsonString, SpriteBatch spriteBatch) {
+        SerialisableWorld serialisableWorld = LevelManager.getSerialisedGameSceneFromString(
+            jsonString);
 
-        GameWorld world = LevelManager.getLevelWorld(serialisableWorld, spriteBatch);
+        GameScene world = LevelManager.getLevelGameScene(serialisableWorld, spriteBatch);
 
         return world;
     }
 
-    private static GameWorld getLevelWorld(
+    private static GameScene getLevelGameScene(
         SerialisableWorld serialisableWorld, SpriteBatch spriteBatch) {
-        GameWorld world = new GameWorld(
+        GameScene world = new GameScene(
             serialisableWorld.serialisedBackground.getTexturePath(),
             spriteBatch,
             serialisableWorld.width,
@@ -64,7 +65,8 @@ public abstract class LevelManager {
         Ship ship = new Ship(
             serialisableWorld.serialisedShip.getTexturePath(),
             serialisableWorld.serialisedShip.getX(),
-            serialisableWorld.serialisedShip.getY());
+            serialisableWorld.serialisedShip.getY(),
+            world.box2dWorld);
         world.addShip(ship);
 
         for (SerialisablePlanet serialisablePlanet : serialisableWorld.serialisedPlanets) {
@@ -73,7 +75,8 @@ public abstract class LevelManager {
                 serialisablePlanet.getRadius(),
                 serialisablePlanet.getX(),
                 serialisablePlanet.getY(),
-                serialisablePlanet.getTexturePath());
+                serialisablePlanet.getTexturePath(),
+                world.box2dWorld);
             world.addPlanet(planet);
         }
 

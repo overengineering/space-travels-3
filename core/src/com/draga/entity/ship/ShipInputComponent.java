@@ -1,8 +1,8 @@
-package com.draga.ship;
+package com.draga.entity.ship;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.draga.component.InputComponent;
+import com.draga.entity.component.InputComponent;
 
 public class ShipInputComponent extends InputComponent {
     public static final int KEYBOARD_FORCE = 10;

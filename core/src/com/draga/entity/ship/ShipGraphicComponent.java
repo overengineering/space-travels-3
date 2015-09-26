@@ -1,7 +1,7 @@
-package com.draga.ship;
+package com.draga.entity.ship;
 
-import com.draga.component.GraphicComponent;
-import com.draga.component.PhysicComponent;
+import com.draga.entity.component.GraphicComponent;
+import com.draga.entity.component.PhysicComponent;
 
 public class ShipGraphicComponent extends GraphicComponent {
     public ShipGraphicComponent(PhysicComponent shipPhysicComponent, String texturePath) {

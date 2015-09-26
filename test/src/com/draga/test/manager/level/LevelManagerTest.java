@@ -21,7 +21,8 @@ public class LevelManagerTest {
     @Test
     public void testGetSerialisedWord() throws Exception {
         String testLevelJson = getTestLevelJson();
-        SerialisableWorld serialisableWorld = LevelManager.getSerialisedWorldFromString(testLevelJson);
+        SerialisableWorld serialisableWorld = LevelManager.getSerialisedGameSceneFromString(
+            testLevelJson);
 
         Assert.assertNotNull(serialisableWorld);
         Assert.assertNotNull(serialisableWorld.serialisedPlanets);
@@ -33,7 +34,9 @@ public class LevelManagerTest {
     @Test
     public void testGetLevelWorld() throws Exception {
         String testLevelJson = getTestLevelJson();
-        GameWorld gameWorld = LevelManager.getLevelWorldFromString(testLevelJson, mock(SpriteBatch.class));
+        GameWorld gameWorld = LevelManager.getLevelGameSceneFromString(
+            testLevelJson,
+            mock(SpriteBatch.class));
 
         Assert.assertNotNull(gameWorld);
     }
