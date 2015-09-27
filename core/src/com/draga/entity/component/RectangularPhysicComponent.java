@@ -52,8 +52,4 @@ public class RectangularPhysicComponent extends PhysicComponent {
 
     @Override public void update(float elapsed) {
     }
-
-    @Override public void dispose() {
-
-    }
 }

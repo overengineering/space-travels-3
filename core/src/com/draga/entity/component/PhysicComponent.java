@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.draga.entity.GameEntity;
 
 public abstract class PhysicComponent extends Component {
+    protected World box2dWorld;
     protected Body body;
 
     public PhysicComponent(
@@ -17,6 +18,7 @@ public abstract class PhysicComponent extends Component {
         GameEntity gameEntity,
         float gravityScale,
         World box2dWorld) {
+        this.box2dWorld = box2dWorld;
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = bodyType;
         bodyDef.position.set(x, y);
@@ -27,6 +29,12 @@ public abstract class PhysicComponent extends Component {
         body.setUserData(gameEntity);
 
         body.setTransform(x, y, angle);
+    }
+
+    @Override public void dispose() {
+        box2dWorld.destroyBody(body);
+        box2dWorld = null;
+        body = null;
     }
 
     public float getMass() {
@@ -89,5 +97,11 @@ public abstract class PhysicComponent extends Component {
 
     public void applyXForce(float forceX) {
         applyForce(forceX, 0);
+    }
+
+    @Override public void reset() {
+        box2dWorld.destroyBody(body);
+        body = null;
+        box2dWorld = null;
     }
 }

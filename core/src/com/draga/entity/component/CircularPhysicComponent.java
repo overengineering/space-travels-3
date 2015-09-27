@@ -54,7 +54,13 @@ public class CircularPhysicComponent extends PhysicComponent {
         return circleShape.getRadius();
     }
 
+    @Override public void reset() {
+        super.reset();
+        dispose();
+    }
+
     public void dispose() {
+        super.dispose();
         circleShape.dispose();
     }
 }

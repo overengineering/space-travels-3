@@ -42,4 +42,10 @@ public class GraphicComponent extends Component {
     @Override public void dispose() {
         texture.dispose();
     }
+
+    @Override public void reset() {
+        dispose();
+        physicComponent = null;
+        texture = null;
+    }
 }

@@ -37,6 +37,29 @@ public class GameScene extends Scene {
 
     public GameScene(String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height) {
         box2dWorld = new World(Pools.obtain(Vector2.class), true);
+        box2dWorld.setContactListener(
+            new ContactListener() {
+                @Override public void beginContact(Contact contact) {
+                    if((contact.getFixtureA().getBody().getUserData() instanceof Ship
+                            && contact.getFixtureB().getBody().getUserData() instanceof Planet)
+                        || (contact.getFixtureA().getBody().getUserData() instanceof Planet
+                            && contact.getFixtureB().getBody().getUserData() instanceof Ship)){
+
+                    }
+                }
+
+                @Override public void endContact(Contact contact) {
+
+                }
+
+                @Override public void preSolve(Contact contact, Manifold oldManifold) {
+
+                }
+
+                @Override public void postSolve(Contact contact, ContactImpulse impulse) {
+
+                }
+            });
         planets = new ArrayList<>();
         FileHandle backgroundFileHandle = Gdx.files.internal(backgroundTexturePath);
         this.backgroundTexture = new Texture(backgroundFileHandle);
@@ -135,10 +158,10 @@ public class GameScene extends Scene {
     }
 
     public void dispose() {
-        box2dWorld.dispose();
         for (GameEntity gameEntity : gameEntities) {
             gameEntity.dispose();
         }
+        box2dWorld.dispose();
         backgroundTexture.dispose();
         box2DDebugRenderer.dispose();
     }

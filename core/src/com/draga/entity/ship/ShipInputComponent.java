@@ -43,4 +43,8 @@ public class ShipInputComponent extends InputComponent {
     @Override public void dispose() {
 
     }
+
+    @Override public void reset() {
+        shipPhysicComponent = null;
+    }
 }

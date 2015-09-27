@@ -11,10 +11,4 @@ public class Ship extends GameEntity {
         inputComponent = new ShipInputComponent(physicComponent);
         graphicComponent = new ShipGraphicComponent(physicComponent, texturePath);
     }
-
-    @Override
-    public void update(float elapsed) {
-        inputComponent.update(elapsed);
-        physicComponent.update(elapsed);
-    }
 }
