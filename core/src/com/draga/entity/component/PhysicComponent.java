@@ -6,7 +6,8 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.draga.entity.GameEntity;
 
-public abstract class PhysicComponent extends Component {
+public abstract class PhysicComponent extends Component
+{
     protected Body body;
 
     public PhysicComponent(
@@ -15,12 +16,11 @@ public abstract class PhysicComponent extends Component {
         BodyDef.BodyType bodyType,
         float angle,
         GameEntity gameEntity,
-        float gravityScale,
-        World box2dWorld) {
+        World box2dWorld)
+    {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = bodyType;
         bodyDef.position.set(x, y);
-        bodyDef.gravityScale = gravityScale;
 
         body = box2dWorld.createBody(bodyDef);
 
@@ -29,29 +29,35 @@ public abstract class PhysicComponent extends Component {
         body.setTransform(x, y, angle);
     }
 
-    public float getMass() {
+    public float getMass()
+    {
         return body.getMass();
     }
 
-    public void setMass(float mass) {
+    public void setMass(float mass)
+    {
         body.getMassData().mass = mass;
     }
 
-    public Body getBody() {
+    public Body getBody()
+    {
         return body;
     }
 
-    public void setBody(Body body) {
+    public void setBody(Body body)
+    {
         this.body = body;
     }
 
     public abstract void update(float elapsed);
 
-    public float getAngle() {
+    public float getAngle()
+    {
         return body.getAngle();
     }
 
-    public void applyRotation(float angle) {
+    public void applyRotation(float angle)
+    {
         body.setTransform(getX(), getY(), angle);
     }
 
@@ -59,35 +65,43 @@ public abstract class PhysicComponent extends Component {
 
     public abstract float getHeight();
 
-    public float getX() {
+    public float getX()
+    {
         return body.getPosition().x;
     }
 
-    public void setX(float x) {
+    public void setX(float x)
+    {
         body.getPosition().x = x;
     }
 
-    public float getY() {
+    public float getY()
+    {
         return body.getPosition().y;
     }
 
-    public void setY(float y) {
+    public void setY(float y)
+    {
         body.getPosition().y = y;
     }
 
-    public void applyForce(float forceX, float forceY) {
+    public void applyForce(float forceX, float forceY)
+    {
         body.applyForceToCenter(forceX, forceY, true);
     }
 
-    public void applyForce(Vector2 force) {
+    public void applyForce(Vector2 force)
+    {
         applyForce(force.x, force.y);
     }
 
-    public void applyYForce(float forceY) {
+    public void applyYForce(float forceY)
+    {
         applyForce(0, forceY);
     }
 
-    public void applyXForce(float forceX) {
+    public void applyXForce(float forceX)
+    {
         applyForce(forceX, 0);
     }
 }

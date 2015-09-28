@@ -15,11 +15,14 @@ import java.util.Map;
 
 import static org.mockito.Mockito.mock;
 
-public class GdxTestRunner extends BlockJUnit4ClassRunner implements ApplicationListener {
+public class GdxTestRunner extends BlockJUnit4ClassRunner implements ApplicationListener
+{
 
-    private Map<FrameworkMethod, RunNotifier> invokeInRender = new HashMap<FrameworkMethod, RunNotifier>();
+    private Map<FrameworkMethod, RunNotifier> invokeInRender =
+        new HashMap<FrameworkMethod, RunNotifier>();
 
-    public GdxTestRunner(Class<?> klass) throws InitializationError {
+    public GdxTestRunner(Class<?> klass) throws InitializationError
+    {
         super(klass);
         HeadlessApplicationConfiguration conf = new HeadlessApplicationConfiguration();
 
@@ -28,55 +31,64 @@ public class GdxTestRunner extends BlockJUnit4ClassRunner implements Application
         Gdx.gl20 = mock(GL20.class);
     }
 
-    @Override
-    public void create() {
+    @Override public void create()
+    {
     }
 
-    @Override
-    public void resume() {
+    @Override public void resume()
+    {
     }
 
-    @Override
-    public void render() {
-        synchronized (invokeInRender) {
-            for (Map.Entry<FrameworkMethod, RunNotifier> each : invokeInRender.entrySet()) {
+    @Override public void render()
+    {
+        synchronized (invokeInRender)
+        {
+            for (Map.Entry<FrameworkMethod, RunNotifier> each : invokeInRender.entrySet())
+            {
                 super.runChild(each.getKey(), each.getValue());
             }
             invokeInRender.clear();
         }
     }
 
-    @Override
-    public void resize(int width, int height) {
+    @Override public void resize(int width, int height)
+    {
     }
 
-    @Override
-    public void pause() {
+    @Override public void pause()
+    {
     }
 
-    @Override
-    public void dispose() {
+    @Override public void dispose()
+    {
     }
 
-    @Override
-    protected void runChild(FrameworkMethod method, RunNotifier notifier) {
-        synchronized (invokeInRender) {
+    @Override protected void runChild(FrameworkMethod method, RunNotifier notifier)
+    {
+        synchronized (invokeInRender)
+        {
             invokeInRender.put(method, notifier);
         }
         waitUntilInvokedInRenderMethod();
     }
 
-    private void waitUntilInvokedInRenderMethod() {
-        try {
-            while (true) {
+    private void waitUntilInvokedInRenderMethod()
+    {
+        try
+        {
+            while (true)
+            {
                 Thread.sleep(10);
-                synchronized (invokeInRender) {
-                    if (invokeInRender.isEmpty()) {
+                synchronized (invokeInRender)
+                {
+                    if (invokeInRender.isEmpty())
+                    {
                         break;
                     }
                 }
             }
-        } catch (InterruptedException e) {
+        } catch (InterruptedException e)
+        {
             e.printStackTrace();
         }
     }

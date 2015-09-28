@@ -16,10 +16,10 @@ import static org.mockito.Mockito.mock;
 /**
  * Created by Administrator on 05/09/2015.
  */
-@RunWith(GdxTestRunner.class)
-public class LevelManagerTest {
-    @Test
-    public void testGetSerialisedWord() throws Exception {
+@RunWith(GdxTestRunner.class) public class LevelManagerTest
+{
+    @Test public void testGetSerialisedWord() throws Exception
+    {
         String testLevelJson = getTestLevelJson();
         SerialisableWorld serialisableWorld = LevelManager.getSerialisedGameSceneFromString(
             testLevelJson);
@@ -31,17 +31,17 @@ public class LevelManagerTest {
         Assert.assertEquals(serialisableWorld.serialisedPlanets.size(), 1);
     }
 
-    @Test
-    public void testGetLevelWorld() throws Exception {
+    @Test public void testGetLevelWorld() throws Exception
+    {
         String testLevelJson = getTestLevelJson();
         GameWorld gameWorld = LevelManager.getLevelGameSceneFromString(
-            testLevelJson,
-            mock(SpriteBatch.class));
+            testLevelJson, mock(SpriteBatch.class));
 
         Assert.assertNotNull(gameWorld);
     }
 
-    private String getTestLevelJson() {
+    private String getTestLevelJson()
+    {
         FileHandle testLevelFileHandle = Gdx.files.internal("../android/assets/testLevel.json");
         String testLevelJson = testLevelFileHandle.readString();
 

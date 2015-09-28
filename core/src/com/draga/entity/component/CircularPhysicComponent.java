@@ -10,18 +10,14 @@ import com.draga.entity.GameEntity;
 /**
  * Created by Administrator on 03/09/2015.
  */
-public class CircularPhysicComponent extends PhysicComponent {
+public class CircularPhysicComponent extends PhysicComponent
+{
     private final CircleShape circleShape;
 
     public CircularPhysicComponent(
-        float mass,
-        float radius,
-        float x,
-        float y,
-        GameEntity gameEntity,
-        float gravityScale,
-        World box2dWorld) {
-        super(x, y, BodyDef.BodyType.DynamicBody, 0, gameEntity, gravityScale, box2dWorld);
+        float mass, float radius, float x, float y, GameEntity gameEntity, World box2dWorld)
+    {
+        super(x, y, BodyDef.BodyType.DynamicBody, 0, gameEntity, box2dWorld);
 
         body.setGravityScale(0);
 
@@ -38,23 +34,28 @@ public class CircularPhysicComponent extends PhysicComponent {
         body.createFixture(fixtureDef);
     }
 
-    @Override public void update(float elapsed) {
+    @Override public void update(float elapsed)
+    {
     }
 
 
-    @Override public float getWidth() {
+    @Override public float getWidth()
+    {
         return circleShape.getRadius() * 2;
     }
 
-    @Override public float getHeight() {
+    @Override public float getHeight()
+    {
         return circleShape.getRadius() * 2;
     }
 
-    public float getRadius() {
+    public float getRadius()
+    {
         return circleShape.getRadius();
     }
 
-    public void dispose() {
+    public void dispose()
+    {
         circleShape.dispose();
     }
 }
