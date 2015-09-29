@@ -1,4 +1,4 @@
-package com.draga.entity.planet;
+package com.draga.entity;
 
 import com.badlogic.gdx.physics.box2d.World;
 import com.draga.entity.GameEntity;

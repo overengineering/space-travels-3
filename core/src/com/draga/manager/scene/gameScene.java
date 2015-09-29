@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.draga.Constants;
 import com.draga.entity.Explosion;
 import com.draga.entity.GameEntity;
-import com.draga.entity.planet.Planet;
+import com.draga.entity.Planet;
 import com.draga.entity.ship.Ship;
 import com.draga.manager.SceneManager;
 
@@ -26,8 +26,8 @@ public class GameScene extends Scene
     private static final String LOGGING_TAG = GameScene.class.getSimpleName();
     private final Texture backgroundTexture;
     private final Box2DDebugRenderer box2DDebugRenderer;
-    private World box2dWorld;
     protected Array<GameEntity> gameEntities;
+    private World box2dWorld;
     private SpriteBatch batch;
     private OrthographicCamera orthographicCamera;
     private ExtendViewport extendViewport;
@@ -35,7 +35,7 @@ public class GameScene extends Scene
     private int width;
     private int height;
     private ArrayList<Planet> planets;
-    private Array<String> gameEntitiesToCreate;
+    private Array<GameEntity> gameEntitiesToCreate;
 
     public GameScene(String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height)
     {
@@ -45,16 +45,27 @@ public class GameScene extends Scene
             {
                 @Override public void beginContact(Contact contact)
                 {
-                    if ((contact.getFixtureA().getBody().getUserData() instanceof Ship
-                        && contact.getFixtureB().getBody().getUserData() instanceof Planet) || (
-                        contact.getFixtureA().getBody().getUserData() instanceof Planet
-                            && contact.getFixtureB().getBody().getUserData() instanceof Ship))
+                    Body bodyA = contact.getFixtureA().getBody();
+                    Body bodyB = contact.getFixtureB().getBody();
+                    Vector2 explosionPosition = null;
+                    if (bodyA.getUserData() instanceof Ship
+                        && bodyB.getUserData() instanceof Planet)
                     {
-                        Body fixtureABody = contact.getFixtureA().getBody();
-                        GameEntity explosion = new Explosion(fixtureABody.getPosition().x, fixtureABody.getPosition().y);
-//                        gameEntitiesToCreate.add(() -> {new Explosion(fixtureABody.getPosition().x, fixtureABody.getPosition().y, box2dWorld);});
-                        addGameEntity(explosion);
+                        explosionPosition = bodyA.getPosition();
                     }
+                    if (bodyA.getUserData() instanceof Planet
+                        && bodyB.getUserData() instanceof Ship)
+                    {
+                        explosionPosition = bodyB.getPosition();
+                    }
+                    if (explosionPosition != null)
+                    {
+                        Body fixtureABody = bodyA;
+                        GameEntity explosion = new Explosion(
+                            explosionPosition.x, explosionPosition.y);
+                        gameEntitiesToCreate.add(explosion);
+                    }
+
                 }
 
                 @Override public void endContact(Contact contact)
@@ -137,10 +148,17 @@ public class GameScene extends Scene
         Body body = box2dWorld.createBody(bodyDef);
         body.createFixture(gameEntity.physicComponent.getFixtureDef());
         gameEntity.physicComponent.setBody(body);
+        body.setUserData(gameEntity);
     }
 
     public void update(float elapsed)
     {
+        for (GameEntity gameEntity : gameEntitiesToCreate)
+        {
+            addGameEntity(gameEntity);
+        }
+        gameEntitiesToCreate.clear();
+
         updateCamera();
 
         for (GameEntity gameEntity : gameEntities)

@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.MathUtils;
  */
 public class AnimationGraphicComponent extends GraphicComponent
 {
+    public static final float TOTAL_ANIMATION_TIME = 1f;
     private Animation animation;
     private float stateTime;
 
@@ -23,7 +24,7 @@ public class AnimationGraphicComponent extends GraphicComponent
         stateTime = 0f;
 
         TextureAtlas textureAtlas = new TextureAtlas(packFilePath);
-        this.animation = new Animation(0.1f, textureAtlas.getRegions());
+        this.animation = new Animation(TOTAL_ANIMATION_TIME / textureAtlas.getRegions().size, textureAtlas.getRegions());
     }
 
     @Override public void draw(SpriteBatch spriteBatch)
