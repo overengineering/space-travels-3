@@ -4,9 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.draga.Constants;
 import com.draga.manager.scene.Scene;
 
-/**
- * Created by Administrator on 23/09/2015.
- */
 public class SceneManager
 {
     private static final String LOGGING_TAG = SceneManager.class.getSimpleName();

@@ -4,9 +4,6 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 
-/**
- * Created by Administrator on 03/09/2015.
- */
 public class RectangularPhysicComponent extends PhysicComponent
 {
     private float width;
@@ -14,7 +11,14 @@ public class RectangularPhysicComponent extends PhysicComponent
     private PolygonShape polygonShape;
 
     public RectangularPhysicComponent(
-        float x, float y, int width, int height, float mass, BodyDef.BodyType bodyType)
+        float x,
+        float y,
+        int width,
+        int height,
+        float mass,
+        BodyDef.BodyType bodyType,
+        int categoryBits,
+        int maskBits)
     {
         super(x, y, bodyType, 0);
 
@@ -30,6 +34,8 @@ public class RectangularPhysicComponent extends PhysicComponent
         fixtureDef.density = mass / area;
         fixtureDef.friction = 1f;
         fixtureDef.restitution = 1f;
+        fixtureDef.filter.categoryBits = (short) categoryBits;
+        fixtureDef.filter.maskBits = (short) maskBits;
     }
 
     public FixtureDef getFixtureDef()

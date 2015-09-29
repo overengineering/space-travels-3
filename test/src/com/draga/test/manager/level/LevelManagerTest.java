@@ -13,9 +13,6 @@ import org.junit.runner.RunWith;
 
 import static org.mockito.Mockito.mock;
 
-/**
- * Created by Administrator on 05/09/2015.
- */
 @RunWith(GdxTestRunner.class) public class LevelManagerTest
 {
     @Test public void testGetSerialisedWord() throws Exception

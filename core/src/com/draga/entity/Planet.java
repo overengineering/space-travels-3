@@ -1,24 +1,21 @@
 package com.draga.entity;
 
-import com.badlogic.gdx.physics.box2d.World;
-import com.draga.entity.GameEntity;
+import com.draga.BodyMaskBit;
 import com.draga.entity.component.CircularPhysicComponent;
 import com.draga.entity.component.TextureGraphicComponent;
 
-/**
- * Created by Administrator on 03/09/2015.
- */
 public class Planet extends GameEntity
 {
     public Planet(float mass, float radius, float x, float y, String texturePath)
     {
-        physicComponent = new CircularPhysicComponent(mass, radius, x, y);
+        physicComponent = new CircularPhysicComponent(
+            mass, radius, x, y, BodyMaskBit.PLANET, BodyMaskBit.SHIP);
         graphicComponent = new TextureGraphicComponent(texturePath, physicComponent);
     }
 
 
-    @Override
-    public void update(float elapsed) {
+    @Override public void update(float elapsed)
+    {
         physicComponent.update(elapsed);
     }
 }

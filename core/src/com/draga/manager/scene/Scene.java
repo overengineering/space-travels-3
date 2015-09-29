@@ -1,8 +1,5 @@
 package com.draga.manager.scene;
 
-/**
- * Created by Administrator on 23/09/2015.
- */
 public abstract class Scene
 {
 

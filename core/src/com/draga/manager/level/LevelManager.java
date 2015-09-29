@@ -10,9 +10,6 @@ import com.draga.manager.level.serialisableEntities.SerialisablePlanet;
 import com.draga.manager.level.serialisableEntities.SerialisableWorld;
 import com.draga.manager.scene.GameScene;
 
-/**
- * Created by Administrator on 05/09/2015.
- */
 public abstract class LevelManager
 {
     public static SerialisableWorld getSerialisedGameSceneFromFile(String serialisedWorldFilePath)

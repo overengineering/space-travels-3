@@ -5,14 +5,12 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 
-/**
- * Created by Administrator on 03/09/2015.
- */
 public class CircularPhysicComponent extends PhysicComponent
 {
     private CircleShape circleShape;
 
-    public CircularPhysicComponent(float mass, float radius, float x, float y)
+    public CircularPhysicComponent(
+        float mass, float radius, float x, float y, int categoryBits, int maskBits)
     {
         super(x, y, BodyDef.BodyType.DynamicBody, 0);
         circleShape = new CircleShape();
@@ -24,6 +22,8 @@ public class CircularPhysicComponent extends PhysicComponent
         fixtureDef.density = mass / area;
         fixtureDef.friction = 1f;
         fixtureDef.restitution = 1f;
+        fixtureDef.filter.categoryBits = (short) categoryBits;
+        fixtureDef.filter.maskBits = (short) maskBits;
     }
 
     @Override public void update(float elapsed)

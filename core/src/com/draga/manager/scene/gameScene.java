@@ -12,6 +12,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.draga.BodyMaskBit;
 import com.draga.Constants;
 import com.draga.entity.Explosion;
 import com.draga.entity.GameEntity;
@@ -124,6 +125,8 @@ public class GameScene extends Scene
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = chainShape;
+        fixtureDef.filter.categoryBits = BodyMaskBit.BOUNDARIES;
+        fixtureDef.filter.maskBits = BodyMaskBit.SHIP;
 
         body.createFixture(fixtureDef);
 

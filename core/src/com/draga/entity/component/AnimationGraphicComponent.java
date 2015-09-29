@@ -7,9 +7,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 
-/**
- * Created by Administrator on 26/09/2015.
- */
 public class AnimationGraphicComponent extends GraphicComponent
 {
     public static final float TOTAL_ANIMATION_TIME = 1f;
