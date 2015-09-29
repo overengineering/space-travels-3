@@ -3,6 +3,7 @@ package com.draga.entity;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Pool;
 import com.draga.entity.component.GraphicComponent;
+import com.draga.entity.component.TextureGraphicComponent;
 import com.draga.entity.component.InputComponent;
 import com.draga.entity.component.PhysicComponent;
 

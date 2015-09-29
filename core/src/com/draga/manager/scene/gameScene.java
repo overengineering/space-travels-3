@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.draga.Constants;
+import com.draga.entity.Explosion;
 import com.draga.entity.GameEntity;
 import com.draga.entity.planet.Planet;
 import com.draga.entity.ship.Ship;
@@ -48,7 +49,9 @@ public class GameScene extends Scene
                         contact.getFixtureA().getBody().getUserData() instanceof Planet
                             && contact.getFixtureB().getBody().getUserData() instanceof Ship))
                     {
-
+                        Body fixtureABody = contact.getFixtureA().getBody();
+                        GameEntity explosion = new Explosion(fixtureABody.getPosition().x, fixtureABody.getPosition().y, box2dWorld);
+                        addGameEntity(explosion);
                     }
                 }
 

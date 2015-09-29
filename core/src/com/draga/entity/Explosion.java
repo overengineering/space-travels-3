@@ -2,8 +2,7 @@ package com.draga.entity;
 
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Pool;
-import com.draga.entity.component.AnimatedGraphicComponent;
+import com.draga.entity.component.AnimationGraphicComponent;
 import com.draga.entity.component.RectangularPhysicComponent;
 
 /**
@@ -12,8 +11,8 @@ import com.draga.entity.component.RectangularPhysicComponent;
 public class Explosion extends GameEntity{
     public Explosion(float x, float y, World box2dWorld) {
         this.physicComponent = new RectangularPhysicComponent(
-            x, y, 50, 50, 0, BodyDef.BodyType.KinematicBody, this, box2dWorld);
+            x, y, 10, 10, 0, BodyDef.BodyType.KinematicBody, this, box2dWorld);
         this.graphicComponent =
-            new AnimatedGraphicComponent("explosion/explosion.atlas", physicComponent);
+            new AnimationGraphicComponent("explosion/explosion.atlas", physicComponent);
     }
 }

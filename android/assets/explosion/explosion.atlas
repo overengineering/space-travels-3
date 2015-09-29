@@ -2,567 +2,567 @@ explosion.png
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-explosion
+test
   rotate: false
   xy: 2, 2
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 1
-explosion
+test
   rotate: false
   xy: 2, 104
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 2
-explosion
+test
   rotate: false
   xy: 2, 206
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 3
-explosion
+test
   rotate: false
   xy: 2, 308
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 4
-explosion
+test
   rotate: false
   xy: 2, 410
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 5
-explosion
+test
   rotate: false
   xy: 104, 2
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 6
-explosion
+test
   rotate: false
   xy: 104, 104
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 7
-explosion
+test
   rotate: false
   xy: 104, 206
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 8
-explosion
+test
   rotate: false
   xy: 104, 308
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 9
-explosion
+test
   rotate: false
   xy: 104, 410
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 10
-explosion
+test
   rotate: false
   xy: 206, 2
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 11
-explosion
+test
   rotate: false
   xy: 206, 104
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 12
-explosion
+test
   rotate: false
   xy: 206, 206
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 13
-explosion
+test
   rotate: false
   xy: 206, 308
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 14
-explosion
+test
   rotate: false
   xy: 206, 410
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 15
-explosion
+test
   rotate: false
   xy: 308, 2
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 16
-explosion
+test
   rotate: false
   xy: 308, 104
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 17
-explosion
+test
   rotate: false
   xy: 308, 206
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 18
-explosion
+test
   rotate: false
   xy: 308, 308
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 19
-explosion
+test
   rotate: false
   xy: 308, 410
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 20
-explosion
+test
   rotate: false
   xy: 410, 2
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 21
-explosion
+test
   rotate: false
   xy: 410, 104
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 22
-explosion
+test
   rotate: false
   xy: 410, 206
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 23
-explosion
+test
   rotate: false
   xy: 410, 308
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 24
-explosion
+test
   rotate: false
   xy: 410, 410
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 25
-explosion
+test
   rotate: false
   xy: 512, 2
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 26
-explosion
+test
   rotate: false
   xy: 512, 104
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 27
-explosion
+test
   rotate: false
   xy: 512, 206
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 28
-explosion
+test
   rotate: false
   xy: 512, 308
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 29
-explosion
+test
   rotate: false
   xy: 512, 410
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 30
-explosion
+test
   rotate: false
   xy: 614, 2
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 31
-explosion
+test
   rotate: false
   xy: 614, 104
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 32
-explosion
+test
   rotate: false
   xy: 614, 206
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 33
-explosion
+test
   rotate: false
   xy: 614, 308
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 34
-explosion
+test
   rotate: false
   xy: 614, 410
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 35
-explosion
+test
   rotate: false
   xy: 716, 2
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 36
-explosion
+test
   rotate: false
   xy: 716, 104
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 37
-explosion
+test
   rotate: false
   xy: 716, 206
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 38
-explosion
+test
   rotate: false
   xy: 716, 308
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 39
-explosion
+test
   rotate: false
   xy: 716, 410
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 40
-explosion
+test
   rotate: false
   xy: 818, 2
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 41
-explosion
+test
   rotate: false
   xy: 818, 104
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 42
-explosion
+test
   rotate: false
   xy: 818, 206
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 43
-explosion
+test
   rotate: false
   xy: 818, 308
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 44
-explosion
+test
   rotate: false
   xy: 818, 410
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 45
-explosion
+test
   rotate: false
   xy: 920, 2
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 46
-explosion
+test
   rotate: false
   xy: 920, 104
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 47
-explosion
+test
   rotate: false
   xy: 920, 206
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 48
-explosion
+test
   rotate: false
   xy: 920, 308
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 49
-explosion
+test
   rotate: false
   xy: 920, 410
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 50
-explosion
+test
   rotate: false
   xy: 1022, 2
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 51
-explosion
+test
   rotate: false
   xy: 1022, 104
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 52
-explosion
+test
   rotate: false
   xy: 1022, 206
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 53
-explosion
+test
   rotate: false
   xy: 1022, 308
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 54
-explosion
+test
   rotate: false
   xy: 1022, 410
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 55
-explosion
+test
   rotate: false
   xy: 1124, 2
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 56
-explosion
+test
   rotate: false
   xy: 1124, 104
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 57
-explosion
+test
   rotate: false
   xy: 1124, 206
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 58
-explosion
+test
   rotate: false
   xy: 1124, 308
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 59
-explosion
+test
   rotate: false
   xy: 1124, 410
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 60
-explosion
+test
   rotate: false
   xy: 1226, 2
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 61
-explosion
+test
   rotate: false
   xy: 1226, 104
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 62
-explosion
+test
   rotate: false
   xy: 1226, 206
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 63
-explosion
+test
   rotate: false
   xy: 1226, 308
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 64
-explosion
+test
   rotate: false
   xy: 1226, 410
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 65
-explosion
+test
   rotate: false
   xy: 1328, 2
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 66
-explosion
+test
   rotate: false
   xy: 1430, 2
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 67
-explosion
+test
   rotate: false
   xy: 1532, 2
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 68
-explosion
+test
   rotate: false
   xy: 1634, 2
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 69
-explosion
+test
   rotate: false
   xy: 1328, 104
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 70
-explosion
+test
   rotate: false
   xy: 1328, 206
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 71
-explosion
+test
   rotate: false
   xy: 1328, 308
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 72
-explosion
+test
   rotate: false
   xy: 1328, 410
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 73
-explosion
+test
   rotate: false
   xy: 1430, 104
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 74
-explosion
+test
   rotate: false
   xy: 1532, 104
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 75
-explosion
+test
   rotate: false
   xy: 1634, 104
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 76
-explosion
+test
   rotate: false
   xy: 1430, 206
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 77
-explosion
+test
   rotate: false
   xy: 1430, 308
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 78
-explosion
+test
   rotate: false
   xy: 1430, 410
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 79
-explosion
+test
   rotate: false
   xy: 1532, 206
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: 80
-explosion
+test
   rotate: false
   xy: 1634, 206
   size: 100, 100
