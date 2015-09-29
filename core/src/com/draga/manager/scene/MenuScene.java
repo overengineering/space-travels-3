@@ -19,12 +19,14 @@ import com.draga.manager.level.LevelManager;
 /**
  * Created by Administrator on 25/09/2015.
  */
-public class MenuScene extends Scene {
+public class MenuScene extends Scene
+{
     private final FreeTypeFontGenerator freeTypeFontGenerator;
     private Stage stage;
     private BitmapFont pDark24Font;
 
-    public MenuScene() {
+    public MenuScene()
+    {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
         freeTypeFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font/pdark.ttf"));
@@ -37,8 +39,10 @@ public class MenuScene extends Scene {
         stage.addActor(getPlayButton());
     }
 
-    @Override public void render(float deltaTime) {
-        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+    @Override public void render(float deltaTime)
+    {
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
+        {
             Gdx.app.exit();
         }
 
@@ -46,25 +50,30 @@ public class MenuScene extends Scene {
         stage.draw();
     }
 
-    @Override public void dispose() {
+    @Override public void dispose()
+    {
         Gdx.input.setInputProcessor(null);
         stage.dispose();
         freeTypeFontGenerator.dispose();
     }
 
-    @Override public void pause() {
+    @Override public void pause()
+    {
 
     }
 
-    @Override public void resize(int width, int height) {
+    @Override public void resize(int width, int height)
+    {
         stage.getViewport().update(width, height);
     }
 
-    @Override public void resume() {
+    @Override public void resume()
+    {
 
     }
 
-    public Actor getPlayButton() {
+    public Actor getPlayButton()
+    {
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.font = pDark24Font;
 
@@ -72,8 +81,10 @@ public class MenuScene extends Scene {
         playButton.align(Align.center);
         playButton.sizeBy(stage.getWidth(), 100);
         playButton.addListener(
-            new ClickListener() {
-                @Override public void clicked(InputEvent event, float x, float y) {
+            new ClickListener()
+            {
+                @Override public void clicked(InputEvent event, float x, float y)
+                {
                     SceneManager.setActiveScene(
                         LevelManager.getLevelWorldFromFile(
                             "level1.json", new SpriteBatch()));
@@ -83,7 +94,8 @@ public class MenuScene extends Scene {
         return playButton;
     }
 
-    public Actor getHeaderLabel() {
+    public Actor getHeaderLabel()
+    {
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = pDark24Font;
 

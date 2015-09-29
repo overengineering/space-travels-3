@@ -9,7 +9,8 @@ import com.draga.entity.GameEntity;
 /**
  * Created by Administrator on 03/09/2015.
  */
-public class RectangularPhysicComponent extends PhysicComponent {
+public class RectangularPhysicComponent extends PhysicComponent
+{
     private final float width;
     private final float height;
 
@@ -21,8 +22,9 @@ public class RectangularPhysicComponent extends PhysicComponent {
         float mass,
         BodyDef.BodyType bodyType,
         GameEntity gameEntity,
-        float gravityScale, World box2dWorld) {
-        super(x, y, bodyType, 0, gameEntity, gravityScale, box2dWorld);
+        World box2dWorld)
+    {
+        super(x, y, bodyType, 0, gameEntity, box2dWorld);
 
         this.width = width;
         this.height = height;
@@ -42,14 +44,21 @@ public class RectangularPhysicComponent extends PhysicComponent {
         polygonShape.dispose();
     }
 
-    public float getHeight() {
+    public float getHeight()
+    {
         return this.height;
     }
 
-    public float getWidth() {
+    public float getWidth()
+    {
         return this.width;
     }
 
-    @Override public void update(float elapsed) {
+    @Override public void update(float elapsed)
+    {
+    }
+    @Override public void dispose()
+    {
+
     }
 }

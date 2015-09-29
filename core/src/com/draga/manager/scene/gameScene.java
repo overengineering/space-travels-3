@@ -16,12 +16,12 @@ import com.draga.Constants;
 import com.draga.entity.GameEntity;
 import com.draga.entity.planet.Planet;
 import com.draga.entity.ship.Ship;
-import com.draga.manager.GravityManager;
 import com.draga.manager.SceneManager;
 
 import java.util.ArrayList;
 
-public class GameScene extends Scene {
+public class GameScene extends Scene
+{
     private static final String LOGGING_TAG = GameScene.class.getSimpleName();
     private final Texture backgroundTexture;
     private final Box2DDebugRenderer box2DDebugRenderer;
@@ -35,28 +35,35 @@ public class GameScene extends Scene {
     private int height;
     private ArrayList<Planet> planets;
 
-    public GameScene(String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height) {
+    public GameScene(String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height)
+    {
         box2dWorld = new World(Pools.obtain(Vector2.class), true);
         box2dWorld.setContactListener(
-            new ContactListener() {
-                @Override public void beginContact(Contact contact) {
-                    if((contact.getFixtureA().getBody().getUserData() instanceof Ship
-                            && contact.getFixtureB().getBody().getUserData() instanceof Planet)
-                        || (contact.getFixtureA().getBody().getUserData() instanceof Planet
-                            && contact.getFixtureB().getBody().getUserData() instanceof Ship)){
+            new ContactListener()
+            {
+                @Override public void beginContact(Contact contact)
+                {
+                    if ((contact.getFixtureA().getBody().getUserData() instanceof Ship
+                        && contact.getFixtureB().getBody().getUserData() instanceof Planet) || (
+                        contact.getFixtureA().getBody().getUserData() instanceof Planet
+                            && contact.getFixtureB().getBody().getUserData() instanceof Ship))
+                    {
 
                     }
                 }
 
-                @Override public void endContact(Contact contact) {
+                @Override public void endContact(Contact contact)
+                {
 
                 }
 
-                @Override public void preSolve(Contact contact, Manifold oldManifold) {
+                @Override public void preSolve(Contact contact, Manifold oldManifold)
+                {
 
                 }
 
-                @Override public void postSolve(Contact contact, ContactImpulse impulse) {
+                @Override public void postSolve(Contact contact, ContactImpulse impulse)
+                {
 
                 }
             });
@@ -72,14 +79,21 @@ public class GameScene extends Scene {
             Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, width, height, orthographicCamera);
         extendViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        if (Constants.IS_DEBUGGING) {
+        if (Constants.IS_DEBUGGING)
+        {
             createWalls();
         }
 
         box2DDebugRenderer = new Box2DDebugRenderer();
     }
 
-    private void createWalls() {
+    public World getBox2dWorld()
+    {
+        return box2dWorld;
+    }
+
+    private void createWalls()
+    {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.StaticBody;
 
@@ -98,26 +112,29 @@ public class GameScene extends Scene {
 
     }
 
-    public void addShip(Ship ship) {
+    public void addShip(Ship ship)
+    {
         this.ship = ship;
         addGameEntity(ship);
     }
 
-    public void addPlanet(Planet planet) {
+    public void addPlanet(Planet planet)
+    {
         this.planets.add(planet);
         addGameEntity(planet);
     }
 
-    private void addGameEntity(GameEntity gameEntity) {
+    private void addGameEntity(GameEntity gameEntity)
+    {
         gameEntities.add(gameEntity);
     }
 
-    public void update(float elapsed) {
-        GravityManager.update(box2dWorld, ship, planets);
-
+    public void update(float elapsed)
+    {
         updateCamera();
 
-        for (GameEntity gameEntity : gameEntities) {
+        for (GameEntity gameEntity : gameEntities)
+        {
             gameEntity.update(elapsed);
         }
 
@@ -126,7 +143,8 @@ public class GameScene extends Scene {
         box2dWorld.step(frameTime, 6, 2);
     }
 
-    private void updateCamera() {
+    private void updateCamera()
+    {
         float halfWidth = orthographicCamera.viewportWidth / 2f;
         float halfHeight = orthographicCamera.viewportHeight / 2f;
 
@@ -140,25 +158,31 @@ public class GameScene extends Scene {
         batch.setProjectionMatrix(orthographicCamera.combined);
     }
 
-    public void draw() {
+    public void draw()
+    {
         batch.begin();
         batch.draw(backgroundTexture, 0, 0, width, height);
-        for (GameEntity gameEntity : gameEntities) {
+        for (GameEntity gameEntity : gameEntities)
+        {
             gameEntity.draw(batch);
         }
         batch.end();
 
-        if (Constants.IS_DEBUGGING) {
+        if (Constants.IS_DEBUGGING)
+        {
             box2DDebugRenderer.render(box2dWorld, orthographicCamera.combined);
         }
     }
 
-    public void resize(int width, int height) {
+    public void resize(int width, int height)
+    {
         extendViewport.update(width, height);
     }
 
-    public void dispose() {
-        for (GameEntity gameEntity : gameEntities) {
+    public void dispose()
+    {
+        for (GameEntity gameEntity : gameEntities)
+        {
             gameEntity.dispose();
         }
         box2dWorld.dispose();
@@ -166,8 +190,10 @@ public class GameScene extends Scene {
         box2DDebugRenderer.dispose();
     }
 
-    @Override public void render(float delta) {
-        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+    @Override public void render(float delta)
+    {
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
+        {
             SceneManager.setActiveScene(new MenuScene());
             return;
         }
@@ -176,11 +202,13 @@ public class GameScene extends Scene {
         draw();
     }
 
-    @Override public void pause() {
+    @Override public void pause()
+    {
 
     }
 
-    @Override public void resume() {
+    @Override public void resume()
+    {
 
     }
 }
