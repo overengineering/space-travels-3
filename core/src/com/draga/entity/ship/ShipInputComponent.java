@@ -2,6 +2,7 @@ package com.draga.entity.ship;
 
 import com.badlogic.gdx.math.Vector2;
 import com.draga.entity.component.InputComponent;
+import com.draga.entity.component.PhysicComponent;
 import com.draga.manager.InputManager;
 
 public class ShipInputComponent extends InputComponent

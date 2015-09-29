@@ -73,8 +73,7 @@ public abstract class LevelManager
         Ship ship = new Ship(
             serialisableWorld.serialisedShip.getTexturePath(),
             serialisableWorld.serialisedShip.getX(),
-            serialisableWorld.serialisedShip.getY(),
-            world.box2dWorld);
+            serialisableWorld.serialisedShip.getY());
         world.addShip(ship);
 
         for (SerialisablePlanet serialisablePlanet : serialisableWorld.serialisedPlanets)
@@ -84,8 +83,7 @@ public abstract class LevelManager
                 serialisablePlanet.getRadius(),
                 serialisablePlanet.getX(),
                 serialisablePlanet.getY(),
-                serialisablePlanet.getTexturePath(),
-                world.box2dWorld);
+                serialisablePlanet.getTexturePath());
             world.addPlanet(planet);
         }
 

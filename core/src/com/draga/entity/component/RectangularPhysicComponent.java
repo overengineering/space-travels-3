@@ -3,44 +3,57 @@ package com.draga.entity.component;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
-import com.draga.entity.GameEntity;
 
 /**
  * Created by Administrator on 03/09/2015.
  */
 public class RectangularPhysicComponent extends PhysicComponent
 {
-    private final float width;
-    private final float height;
+    private float width;
+    private float height;
+    private PolygonShape polygonShape;
 
     public RectangularPhysicComponent(
-        float x,
-        float y,
-        int width,
-        int height,
-        float mass,
-        BodyDef.BodyType bodyType,
-        GameEntity gameEntity,
-        World box2dWorld)
+        float x, float y, int width, int height, float mass, BodyDef.BodyType bodyType)
     {
-        super(x, y, bodyType, 0, gameEntity, box2dWorld);
+        super(x, y, bodyType, 0);
 
         this.width = width;
         this.height = height;
 
-        PolygonShape polygonShape = new PolygonShape();
+        polygonShape = new PolygonShape();
         polygonShape.setAsBox(width / 2f, height / 2f);
 
-        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef = new FixtureDef();
         fixtureDef.shape = polygonShape;
         float area = width * height;
         fixtureDef.density = mass / area;
         fixtureDef.friction = 1f;
         fixtureDef.restitution = 1f;
+    }
 
-        body.createFixture(fixtureDef);
+    public FixtureDef getFixtureDef()
+    {
+        return fixtureDef;
+    }
 
+    public void setFixtureDef(FixtureDef fixtureDef)
+    {
+        this.fixtureDef = fixtureDef;
+    }
+
+    @Override public void reset()
+    {
+        super.reset();
+        width = 0;
+        height = 0;
+        polygonShape = null;
+        fixtureDef = null;
+    }
+
+    @Override public void dispose()
+    {
+        super.dispose();
         polygonShape.dispose();
     }
 
@@ -56,9 +69,5 @@ public class RectangularPhysicComponent extends PhysicComponent
 
     @Override public void update(float elapsed)
     {
-    }
-    @Override public void dispose()
-    {
-
     }
 }

@@ -26,7 +26,7 @@ public class GameScene extends Scene
     private static final String LOGGING_TAG = GameScene.class.getSimpleName();
     private final Texture backgroundTexture;
     private final Box2DDebugRenderer box2DDebugRenderer;
-    public World box2dWorld;
+    private World box2dWorld;
     protected Array<GameEntity> gameEntities;
     private SpriteBatch batch;
     private OrthographicCamera orthographicCamera;
@@ -35,6 +35,7 @@ public class GameScene extends Scene
     private int width;
     private int height;
     private ArrayList<Planet> planets;
+    private Array<String> gameEntitiesToCreate;
 
     public GameScene(String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height)
     {
@@ -50,7 +51,8 @@ public class GameScene extends Scene
                             && contact.getFixtureB().getBody().getUserData() instanceof Ship))
                     {
                         Body fixtureABody = contact.getFixtureA().getBody();
-                        GameEntity explosion = new Explosion(fixtureABody.getPosition().x, fixtureABody.getPosition().y, box2dWorld);
+                        GameEntity explosion = new Explosion(fixtureABody.getPosition().x, fixtureABody.getPosition().y);
+//                        gameEntitiesToCreate.add(() -> {new Explosion(fixtureABody.getPosition().x, fixtureABody.getPosition().y, box2dWorld);});
                         addGameEntity(explosion);
                     }
                 }
@@ -70,6 +72,7 @@ public class GameScene extends Scene
 
                 }
             });
+        gameEntitiesToCreate = new Array<>();
         planets = new ArrayList<>();
         FileHandle backgroundFileHandle = Gdx.files.internal(backgroundTexturePath);
         this.backgroundTexture = new Texture(backgroundFileHandle);
@@ -130,6 +133,10 @@ public class GameScene extends Scene
     private void addGameEntity(GameEntity gameEntity)
     {
         gameEntities.add(gameEntity);
+        BodyDef bodyDef = gameEntity.physicComponent.getBodyDef();
+        Body body = box2dWorld.createBody(bodyDef);
+        body.createFixture(gameEntity.physicComponent.getFixtureDef());
+        gameEntity.physicComponent.setBody(body);
     }
 
     public void update(float elapsed)

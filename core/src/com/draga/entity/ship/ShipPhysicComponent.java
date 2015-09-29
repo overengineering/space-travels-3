@@ -10,23 +10,14 @@ import com.draga.manager.GravityManager;
 
 public class ShipPhysicComponent extends RectangularPhysicComponent
 {
-    public static final int ROTATION_FORCE = 1000;
+    public static final int ROTATION_FORCE = 1500;
     private static final int SHIP_WIDTH = 10;
     private static final int SHIP_HEIGHT = 10;
     private static final float BODY_GRAVITY_MULTIPLIER = 3f;
 
-    public ShipPhysicComponent(
-        int x, int y, GameEntity gameEntity, World box2dWorld)
+    public ShipPhysicComponent(int x, int y)
     {
-        super(
-            x,
-            y,
-            SHIP_WIDTH,
-            SHIP_HEIGHT,
-            1f,
-            BodyDef.BodyType.DynamicBody,
-            gameEntity,
-            box2dWorld);
+        super(x, y, SHIP_WIDTH, SHIP_HEIGHT, 1f, BodyDef.BodyType.DynamicBody);
     }
 
     @Override public void update(float elapsed)

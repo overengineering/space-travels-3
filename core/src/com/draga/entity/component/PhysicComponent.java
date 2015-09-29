@@ -3,38 +3,35 @@ package com.draga.entity.component;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
-import com.draga.entity.GameEntity;
 
 public abstract class PhysicComponent extends Component
 {
     protected Body body;
+    private BodyDef bodyDef;
+    protected FixtureDef fixtureDef;
 
-    public PhysicComponent(
-        float x,
-        float y,
-        BodyDef.BodyType bodyType,
-        float angle,
-        GameEntity gameEntity,
-        World box2dWorld)
+    public PhysicComponent(float x, float y, BodyDef.BodyType bodyType, float angle)
     {
-        BodyDef bodyDef = new BodyDef();
+        bodyDef = new BodyDef();
         bodyDef.type = bodyType;
         bodyDef.position.set(x, y);
-
-        body = box2dWorld.createBody(bodyDef);
-
-        body.setUserData(gameEntity);
-
-        body.setTransform(x, y, angle);
+        bodyDef.angle = angle;
     }
 
-    @Override public void dispose() {
-        World box2dWorld = body.getWorld();
-        box2dWorld.destroyBody(body);
+    public BodyDef getBodyDef()
+    {
+        return bodyDef;
     }
 
-    public float getMass() {
+    public void setBodyDef(BodyDef bodyDef)
+    {
+        this.bodyDef = bodyDef;
+    }
+
+    public float getMass()
+    {
         return body.getMass();
     }
 
@@ -109,8 +106,26 @@ public abstract class PhysicComponent extends Component
         applyForce(forceX, 0);
     }
 
-    @Override public void reset() {
+    @Override public void reset()
+    {
         dispose();
         body = null;
+        bodyDef = null;
+    }
+
+    @Override public void dispose()
+    {
+        World box2dWorld = body.getWorld();
+        box2dWorld.destroyBody(body);
+    }
+
+    public FixtureDef getFixtureDef()
+    {
+        return fixtureDef;
+    }
+
+    public void setFixtureDef(FixtureDef fixtureDef)
+    {
+        this.fixtureDef = fixtureDef;
     }
 }

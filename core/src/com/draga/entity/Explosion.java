@@ -9,9 +9,9 @@ import com.draga.entity.component.RectangularPhysicComponent;
  * Created by Administrator on 26/09/2015.
  */
 public class Explosion extends GameEntity{
-    public Explosion(float x, float y, World box2dWorld) {
+    public Explosion(float x, float y) {
         this.physicComponent = new RectangularPhysicComponent(
-            x, y, 10, 10, 0, BodyDef.BodyType.KinematicBody, this, box2dWorld);
+            x, y, 10, 10, 0, BodyDef.BodyType.KinematicBody);
         this.graphicComponent =
             new AnimationGraphicComponent("explosion/explosion.atlas", physicComponent);
     }

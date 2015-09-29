@@ -5,12 +5,11 @@ import com.draga.entity.GameEntity;
 
 public class Ship extends GameEntity
 {
-    public ShipPhysicComponent physicComponent = null;
-
-    public Ship(String texturePath, int x, int y, World box2dWorld)
+    public Ship(String texturePath, int x, int y)
     {
-        physicComponent = new ShipPhysicComponent(x, y, this, box2dWorld);
-        inputComponent = new ShipInputComponent(physicComponent);
+        ShipPhysicComponent shipPhysicComponent = new ShipPhysicComponent(x, y);
+        physicComponent = shipPhysicComponent;
+        inputComponent = new ShipInputComponent(shipPhysicComponent);
         graphicComponent = new ShipGraphicComponent(physicComponent, texturePath);
     }
     @Override
