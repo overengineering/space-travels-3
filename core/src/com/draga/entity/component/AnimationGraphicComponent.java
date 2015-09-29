@@ -41,7 +41,6 @@ public class AnimationGraphicComponent extends GraphicComponent
             1,
             1,
             physicComponent.getAngle() * MathUtils.radiansToDegrees);
-
     }
 
     @Override public void reset()

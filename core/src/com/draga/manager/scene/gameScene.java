@@ -18,9 +18,13 @@ import com.draga.entity.Explosion;
 import com.draga.entity.GameEntity;
 import com.draga.entity.Planet;
 import com.draga.entity.ship.Ship;
+import com.draga.manager.GameContactListener;
+import com.draga.manager.GameEntityManager;
 import com.draga.manager.SceneManager;
+import com.sun.org.apache.xpath.internal.WhitespaceStrippingElementMatcher;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class GameScene extends Scene
 {
@@ -36,55 +40,11 @@ public class GameScene extends Scene
     private int width;
     private int height;
     private ArrayList<Planet> planets;
-    private Array<GameEntity> gameEntitiesToCreate;
 
     public GameScene(String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height)
     {
         box2dWorld = new World(Pools.obtain(Vector2.class), true);
-        box2dWorld.setContactListener(
-            new ContactListener()
-            {
-                @Override public void beginContact(Contact contact)
-                {
-                    Body bodyA = contact.getFixtureA().getBody();
-                    Body bodyB = contact.getFixtureB().getBody();
-                    Vector2 explosionPosition = null;
-                    if (bodyA.getUserData() instanceof Ship
-                        && bodyB.getUserData() instanceof Planet)
-                    {
-                        explosionPosition = bodyA.getPosition();
-                    }
-                    if (bodyA.getUserData() instanceof Planet
-                        && bodyB.getUserData() instanceof Ship)
-                    {
-                        explosionPosition = bodyB.getPosition();
-                    }
-                    if (explosionPosition != null)
-                    {
-                        Body fixtureABody = bodyA;
-                        GameEntity explosion = new Explosion(
-                            explosionPosition.x, explosionPosition.y);
-                        gameEntitiesToCreate.add(explosion);
-                    }
-
-                }
-
-                @Override public void endContact(Contact contact)
-                {
-
-                }
-
-                @Override public void preSolve(Contact contact, Manifold oldManifold)
-                {
-
-                }
-
-                @Override public void postSolve(Contact contact, ContactImpulse impulse)
-                {
-
-                }
-            });
-        gameEntitiesToCreate = new Array<>();
+        box2dWorld.setContactListener(new GameContactListener());
         planets = new ArrayList<>();
         FileHandle backgroundFileHandle = Gdx.files.internal(backgroundTexturePath);
         this.backgroundTexture = new Texture(backgroundFileHandle);
@@ -156,11 +116,14 @@ public class GameScene extends Scene
 
     public void update(float elapsed)
     {
-        for (GameEntity gameEntity : gameEntitiesToCreate)
+        while (GameEntityManager.getGameEntitiesToCreate().size > 0)
         {
-            addGameEntity(gameEntity);
+            addGameEntity(GameEntityManager.getGameEntitiesToCreate().pop());
         }
-        gameEntitiesToCreate.clear();
+        while (GameEntityManager.getGameEntitiesToDestroy().size > 0)
+        {
+            removeGameEntity(GameEntityManager.getGameEntitiesToDestroy().pop());
+        }
 
         updateCamera();
 
@@ -172,6 +135,12 @@ public class GameScene extends Scene
         // max frame time to avoid spiral of death (on slow devices)
         float frameTime = Math.min(elapsed, 0.25f);
         box2dWorld.step(frameTime, 6, 2);
+    }
+
+    private void removeGameEntity(GameEntity gameEntity)
+    {
+        gameEntities.removeValue(gameEntity, true);
+        gameEntity.dispose();
     }
 
     private void updateCamera()
