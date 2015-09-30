@@ -17,11 +17,9 @@ public class SpaceTravels3 extends ApplicationAdapter
     private final static String LOGGING_TAG = SpaceTravels3.class.getSimpleName();
     private final float timeBetweenDebugInfoUpdate = 1f;
     private float timeUntilDebugInfoUpdate = timeBetweenDebugInfoUpdate;
-    private SpriteBatch spriteBatch;
 
     @Override public void create()
     {
-        spriteBatch = new SpriteBatch();
         SceneManager.setActiveScene(new MenuScene());
 
         if (Constants.IS_DEBUGGING)
@@ -69,7 +67,6 @@ public class SpaceTravels3 extends ApplicationAdapter
     {
         Gdx.app.debug(LOGGING_TAG, "Dispose");
         SceneManager.getActiveScene().dispose();
-        spriteBatch.dispose();
         super.dispose();
     }
 
