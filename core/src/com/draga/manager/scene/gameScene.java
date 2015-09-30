@@ -31,7 +31,6 @@ public class GameScene extends Scene
     private static final String LOGGING_TAG = GameScene.class.getSimpleName();
     private final Texture backgroundTexture;
     private final Box2DDebugRenderer box2DDebugRenderer;
-    protected Array<GameEntity> gameEntities;
     private World box2dWorld;
     private SpriteBatch batch;
     private OrthographicCamera orthographicCamera;
@@ -50,7 +49,6 @@ public class GameScene extends Scene
         this.backgroundTexture = new Texture(backgroundFileHandle);
         this.width = width;
         this.height = height;
-        gameEntities = new Array<>();
         batch = spriteBatch;
         orthographicCamera = new OrthographicCamera();
         extendViewport = new ExtendViewport(
@@ -106,7 +104,7 @@ public class GameScene extends Scene
 
     private void addGameEntity(GameEntity gameEntity)
     {
-        gameEntities.add(gameEntity);
+        GameEntityManager.addGameEntity(gameEntity);
         BodyDef bodyDef = gameEntity.physicComponent.getBodyDef();
         Body body = box2dWorld.createBody(bodyDef);
         body.createFixture(gameEntity.physicComponent.getFixtureDef());
@@ -127,7 +125,7 @@ public class GameScene extends Scene
 
         updateCamera();
 
-        for (GameEntity gameEntity : gameEntities)
+        for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
             gameEntity.update(elapsed);
         }
@@ -139,7 +137,7 @@ public class GameScene extends Scene
 
     private void removeGameEntity(GameEntity gameEntity)
     {
-        gameEntities.removeValue(gameEntity, true);
+        GameEntityManager.getGameEntities().removeValue(gameEntity, true);
         gameEntity.dispose();
     }
 
@@ -162,7 +160,7 @@ public class GameScene extends Scene
     {
         batch.begin();
         batch.draw(backgroundTexture, 0, 0, width, height);
-        for (GameEntity gameEntity : gameEntities)
+        for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
             gameEntity.draw(batch);
         }
@@ -181,10 +179,12 @@ public class GameScene extends Scene
 
     public void dispose()
     {
-        for (GameEntity gameEntity : gameEntities)
+        for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
             gameEntity.dispose();
         }
+
+        GameEntityManager.dispose();
         box2dWorld.dispose();
         backgroundTexture.dispose();
         box2DDebugRenderer.dispose();

@@ -1,11 +1,11 @@
 package com.draga.manager;
 
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Disposable;
 import com.draga.entity.GameEntity;
 
-public class GameEntityManager implements Disposable
+public class GameEntityManager
 {
+    private static final Array<GameEntity> gameEntities = new Array<>();
     private static final Array<GameEntity> gameEntitiesToCreate = new Array<>();
     private static final Array<GameEntity> gameEntitiesToDestroy = new Array<>();
 
@@ -29,10 +29,21 @@ public class GameEntityManager implements Disposable
         return gameEntitiesToDestroy;
     }
 
-
-    @Override public void dispose()
+    public static Array<GameEntity> getGameEntities()
     {
+        return gameEntities;
+    }
+
+
+    public static void dispose()
+    {
+        gameEntities.clear();
         gameEntitiesToCreate.clear();
         gameEntitiesToDestroy.clear();
+    }
+
+    public static void addGameEntity(GameEntity gameEntity)
+    {
+        gameEntities.add(gameEntity);
     }
 }
