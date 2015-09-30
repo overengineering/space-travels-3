@@ -1,49 +1,20 @@
 package com.draga.entity.component;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
 
-public class GraphicComponent extends Component
+public abstract class GraphicComponent extends Component
 {
-    protected Texture texture;
-    private PhysicComponent physicComponent;
+    protected PhysicComponent physicComponent;
 
-    public GraphicComponent(String texturePath, PhysicComponent physicComponent)
+    public GraphicComponent(PhysicComponent physicComponent)
     {
-        FileHandle fileHandle = Gdx.files.internal(texturePath);
-
-        this.texture = new Texture(fileHandle);
         this.physicComponent = physicComponent;
     }
 
-    public void draw(SpriteBatch spriteBatch)
-    {
-        float halfWidth = physicComponent.getWidth() / 2;
-        float halfHeight = physicComponent.getHeight() / 2;
-        spriteBatch.draw(
-            texture,
-            physicComponent.getX() - halfWidth,
-            physicComponent.getY() - halfHeight,
-            halfWidth,
-            halfHeight,
-            physicComponent.getWidth(),
-            physicComponent.getHeight(),
-            1,
-            1,
-            physicComponent.getAngle() * MathUtils.radiansToDegrees,
-            0,
-            0,
-            texture.getWidth(),
-            texture.getHeight(),
-            false,
-            false);
-    }
+    public abstract void draw(SpriteBatch spriteBatch);
 
-    @Override public void dispose()
+    @Override public void reset()
     {
-        texture.dispose();
+        physicComponent = null;
     }
 }

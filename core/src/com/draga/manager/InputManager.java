@@ -6,9 +6,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pools;
 import com.draga.Constants;
 
-/**
- * Created by Administrator on 28/09/2015.
- */
 public class InputManager
 {
     private static final String LOGGING_TAG = InputManager.class.getSimpleName();

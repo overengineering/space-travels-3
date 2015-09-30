@@ -3,9 +3,9 @@ package com.draga.test.manager.level;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.draga.GameWorld;
 import com.draga.manager.level.LevelManager;
 import com.draga.manager.level.serialisableEntities.SerialisableWorld;
+import com.draga.manager.scene.GameScene;
 import com.draga.test.gdxTestRunner.GdxTestRunner;
 import org.junit.Assert;
 import org.junit.Test;
@@ -13,9 +13,6 @@ import org.junit.runner.RunWith;
 
 import static org.mockito.Mockito.mock;
 
-/**
- * Created by Administrator on 05/09/2015.
- */
 @RunWith(GdxTestRunner.class) public class LevelManagerTest
 {
     @Test public void testGetSerialisedWord() throws Exception
@@ -34,10 +31,10 @@ import static org.mockito.Mockito.mock;
     @Test public void testGetLevelWorld() throws Exception
     {
         String testLevelJson = getTestLevelJson();
-        GameWorld gameWorld = LevelManager.getLevelGameSceneFromString(
+        GameScene gameScene = LevelManager.getLevelGameSceneFromString(
             testLevelJson, mock(SpriteBatch.class));
 
-        Assert.assertNotNull(gameWorld);
+        Assert.assertNotNull(gameScene);
     }
 
     private String getTestLevelJson()

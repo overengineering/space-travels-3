@@ -3,9 +3,6 @@ package com.draga;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-/**
- * Created by Administrator on 19/09/2015.
- */
 public abstract class TestHelper
 {
     public static void invokeMethod(

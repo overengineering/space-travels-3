@@ -6,9 +6,6 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pools;
 
-/**
- * Created by Administrator on 28/09/2015.
- */
 public abstract class GravityManager
 {
     public static Vector2 getForceActingOn(Body body)
