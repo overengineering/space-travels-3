@@ -21,7 +21,9 @@ public class AnimationGraphicComponent extends GraphicComponent
         stateTime = 0f;
 
         TextureAtlas textureAtlas = new TextureAtlas(packFilePath);
-        this.animation = new Animation(TOTAL_ANIMATION_TIME / textureAtlas.getRegions().size, textureAtlas.getRegions());
+        this.animation = new Animation(
+            TOTAL_ANIMATION_TIME / textureAtlas.getRegions().size,
+            textureAtlas.getRegions());
     }
 
     @Override public void draw(SpriteBatch spriteBatch)
@@ -41,6 +43,11 @@ public class AnimationGraphicComponent extends GraphicComponent
             1,
             1,
             physicComponent.getAngle() * MathUtils.radiansToDegrees);
+    }
+
+    public boolean isAnimationFinished()
+    {
+        return animation.isAnimationFinished(stateTime);
     }
 
     @Override public void reset()
