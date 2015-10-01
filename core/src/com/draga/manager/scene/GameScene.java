@@ -12,21 +12,26 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.draga.BodyMaskBit;
 import com.draga.Constants;
+import com.draga.entity.Explosion;
 import com.draga.entity.GameEntity;
-import com.draga.entity.planet.Planet;
+import com.draga.entity.Planet;
 import com.draga.entity.ship.Ship;
+import com.draga.manager.GameContactListener;
+import com.draga.manager.GameEntityManager;
 import com.draga.manager.SceneManager;
+import com.sun.org.apache.xpath.internal.WhitespaceStrippingElementMatcher;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class GameScene extends Scene
 {
     private static final String LOGGING_TAG = GameScene.class.getSimpleName();
     private final Texture backgroundTexture;
     private final Box2DDebugRenderer box2DDebugRenderer;
-    public World box2dWorld;
-    protected Array<GameEntity> gameEntities;
+    private World box2dWorld;
     private SpriteBatch batch;
     private OrthographicCamera orthographicCamera;
     private ExtendViewport extendViewport;
@@ -34,15 +39,16 @@ public class GameScene extends Scene
     private int width;
     private int height;
     private ArrayList<Planet> planets;
+
     public GameScene(String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height)
     {
         box2dWorld = new World(Pools.obtain(Vector2.class), true);
+        box2dWorld.setContactListener(new GameContactListener());
         planets = new ArrayList<>();
         FileHandle backgroundFileHandle = Gdx.files.internal(backgroundTexturePath);
         this.backgroundTexture = new Texture(backgroundFileHandle);
         this.width = width;
         this.height = height;
-        gameEntities = new Array<>();
         batch = spriteBatch;
         orthographicCamera = new OrthographicCamera();
         extendViewport = new ExtendViewport(
@@ -77,6 +83,8 @@ public class GameScene extends Scene
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = chainShape;
+        fixtureDef.filter.categoryBits = BodyMaskBit.BOUNDARIES;
+        fixtureDef.filter.maskBits = BodyMaskBit.SHIP;
 
         body.createFixture(fixtureDef);
 
@@ -96,14 +104,28 @@ public class GameScene extends Scene
 
     private void addGameEntity(GameEntity gameEntity)
     {
-        gameEntities.add(gameEntity);
+        GameEntityManager.addGameEntity(gameEntity);
+        BodyDef bodyDef = gameEntity.physicComponent.getBodyDef();
+        Body body = box2dWorld.createBody(bodyDef);
+        body.createFixture(gameEntity.physicComponent.getFixtureDef());
+        gameEntity.physicComponent.setBody(body);
+        body.setUserData(gameEntity);
     }
 
     public void update(float elapsed)
     {
+        while (GameEntityManager.getGameEntitiesToCreate().size > 0)
+        {
+            addGameEntity(GameEntityManager.getGameEntitiesToCreate().pop());
+        }
+        while (GameEntityManager.getGameEntitiesToDestroy().size > 0)
+        {
+            removeGameEntity(GameEntityManager.getGameEntitiesToDestroy().pop());
+        }
+
         updateCamera();
 
-        for (GameEntity gameEntity : gameEntities)
+        for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
             gameEntity.update(elapsed);
         }
@@ -111,6 +133,12 @@ public class GameScene extends Scene
         // max frame time to avoid spiral of death (on slow devices)
         float frameTime = Math.min(elapsed, 0.25f);
         box2dWorld.step(frameTime, 6, 2);
+    }
+
+    private void removeGameEntity(GameEntity gameEntity)
+    {
+        GameEntityManager.getGameEntities().removeValue(gameEntity, true);
+        gameEntity.dispose();
     }
 
     private void updateCamera()
@@ -132,7 +160,7 @@ public class GameScene extends Scene
     {
         batch.begin();
         batch.draw(backgroundTexture, 0, 0, width, height);
-        for (GameEntity gameEntity : gameEntities)
+        for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
             gameEntity.draw(batch);
         }
@@ -151,11 +179,13 @@ public class GameScene extends Scene
 
     public void dispose()
     {
-        box2dWorld.dispose();
-        for (GameEntity gameEntity : gameEntities)
+        for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
             gameEntity.dispose();
         }
+
+        GameEntityManager.dispose();
+        box2dWorld.dispose();
         backgroundTexture.dispose();
         box2DDebugRenderer.dispose();
     }

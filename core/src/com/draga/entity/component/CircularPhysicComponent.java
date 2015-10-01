@@ -4,34 +4,26 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.World;
-import com.draga.entity.GameEntity;
 
-/**
- * Created by Administrator on 03/09/2015.
- */
 public class CircularPhysicComponent extends PhysicComponent
 {
-    private final CircleShape circleShape;
+    private CircleShape circleShape;
 
     public CircularPhysicComponent(
-        float mass, float radius, float x, float y, GameEntity gameEntity, World box2dWorld)
+        float mass, float radius, float x, float y, int categoryBits, int maskBits)
     {
-        super(x, y, BodyDef.BodyType.DynamicBody, 0, gameEntity, box2dWorld);
-
-        body.setGravityScale(0);
-
+        super(x, y, BodyDef.BodyType.DynamicBody, 0);
         circleShape = new CircleShape();
         circleShape.setRadius(radius);
 
-        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef = new FixtureDef();
         fixtureDef.shape = circleShape;
         float area = radius * radius * MathUtils.PI;
         fixtureDef.density = mass / area;
         fixtureDef.friction = 1f;
         fixtureDef.restitution = 1f;
-
-        body.createFixture(fixtureDef);
+        fixtureDef.filter.categoryBits = (short) categoryBits;
+        fixtureDef.filter.maskBits = (short) maskBits;
     }
 
     @Override public void update(float elapsed)
@@ -54,8 +46,17 @@ public class CircularPhysicComponent extends PhysicComponent
         return circleShape.getRadius();
     }
 
-    public void dispose()
+    @Override public void reset()
     {
+        super.reset();
+        dispose();
+        circleShape = null;
+        fixtureDef = null;
+    }
+
+    @Override public void dispose()
+    {
+        super.dispose();
         circleShape.dispose();
     }
 }

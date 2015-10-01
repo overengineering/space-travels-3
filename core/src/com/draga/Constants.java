@@ -2,9 +2,6 @@ package com.draga;
 
 import java.text.DecimalFormat;
 
-/**
- * Created by Administrator on 16/09/2015.
- */
 public abstract class Constants
 {
     public static final boolean IS_DEBUGGING = true;

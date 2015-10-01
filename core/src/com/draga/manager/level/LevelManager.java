@@ -4,15 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Json;
-import com.draga.entity.planet.Planet;
+import com.draga.entity.Planet;
 import com.draga.entity.ship.Ship;
 import com.draga.manager.level.serialisableEntities.SerialisablePlanet;
 import com.draga.manager.level.serialisableEntities.SerialisableWorld;
 import com.draga.manager.scene.GameScene;
 
-/**
- * Created by Administrator on 05/09/2015.
- */
 public abstract class LevelManager
 {
     public static SerialisableWorld getSerialisedGameSceneFromFile(String serialisedWorldFilePath)
@@ -73,8 +70,7 @@ public abstract class LevelManager
         Ship ship = new Ship(
             serialisableWorld.serialisedShip.getTexturePath(),
             serialisableWorld.serialisedShip.getX(),
-            serialisableWorld.serialisedShip.getY(),
-            world.box2dWorld);
+            serialisableWorld.serialisedShip.getY());
         world.addShip(ship);
 
         for (SerialisablePlanet serialisablePlanet : serialisableWorld.serialisedPlanets)
@@ -84,8 +80,7 @@ public abstract class LevelManager
                 serialisablePlanet.getRadius(),
                 serialisablePlanet.getX(),
                 serialisablePlanet.getY(),
-                serialisablePlanet.getTexturePath(),
-                world.box2dWorld);
+                serialisablePlanet.getTexturePath());
             world.addPlanet(planet);
         }
 

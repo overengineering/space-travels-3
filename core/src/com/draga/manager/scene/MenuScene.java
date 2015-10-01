@@ -16,9 +16,6 @@ import com.badlogic.gdx.utils.Align;
 import com.draga.manager.SceneManager;
 import com.draga.manager.level.LevelManager;
 
-/**
- * Created by Administrator on 25/09/2015.
- */
 public class MenuScene extends Scene
 {
     private final FreeTypeFontGenerator freeTypeFontGenerator;
