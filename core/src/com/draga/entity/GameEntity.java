@@ -1,62 +1,35 @@
 package com.draga.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.Pool;
-import com.draga.entity.component.GraphicComponent;
-import com.draga.entity.component.TextureGraphicComponent;
-import com.draga.entity.component.InputComponent;
-import com.draga.entity.component.PhysicComponent;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.World;
 
-public abstract class GameEntity implements Pool.Poolable
+public abstract class GameEntity
 {
-    public InputComponent inputComponent = null;
-    public PhysicComponent physicComponent = null;
-    public GraphicComponent graphicComponent = null;
+    protected BodyDef bodyDef;
+    protected Body    body;
 
-    public void update(float elapsed)
+    public abstract void update(float deltaTime);
+
+    public abstract void draw(SpriteBatch spriteBatch);
+
+    public abstract void dispose();
+
+    public abstract void createBody(World world);
+
+    public float getX()
     {
-        if (inputComponent != null) {
-            inputComponent.update(elapsed);
-        }
-        if (physicComponent != null) {
-            physicComponent.update(elapsed);
-        }
+        return body.getPosition().x;
     }
 
-    public void draw(SpriteBatch batch)
+    public float getY()
     {
-        if (graphicComponent != null)
-        {
-            graphicComponent.draw(batch);
-        }
+        return body.getPosition().y;
     }
 
-    public void dispose()
+    public Body getBody()
     {
-        if (inputComponent != null)
-        {
-            inputComponent.dispose();
-        }
-        if (physicComponent != null)
-        {
-            physicComponent.dispose();
-        }
-        if (graphicComponent != null)
-        {
-            graphicComponent.dispose();
-        }
-    }
-
-    @Override public void reset()
-    {
-        if (inputComponent != null) {
-            inputComponent.reset();
-        }
-        if (physicComponent != null) {
-            physicComponent.reset();
-        }
-        if (graphicComponent != null) {
-            graphicComponent.reset();
-        }
+        return body;
     }
 }

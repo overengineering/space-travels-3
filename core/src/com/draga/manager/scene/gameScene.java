@@ -9,36 +9,32 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.draga.BodyMaskBit;
 import com.draga.Constants;
-import com.draga.entity.Explosion;
+import com.draga.MaskBits;
 import com.draga.entity.GameEntity;
 import com.draga.entity.Planet;
-import com.draga.entity.ship.Ship;
+import com.draga.entity.Ship;
 import com.draga.manager.GameContactListener;
 import com.draga.manager.GameEntityManager;
 import com.draga.manager.SceneManager;
-import com.sun.org.apache.xpath.internal.WhitespaceStrippingElementMatcher;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class GameScene extends Scene
 {
     private static final String LOGGING_TAG = GameScene.class.getSimpleName();
-    private final Texture backgroundTexture;
-    private final Box2DDebugRenderer box2DDebugRenderer;
-    private World box2dWorld;
-    private SpriteBatch batch;
+    private Texture            backgroundTexture;
+    private Box2DDebugRenderer box2DDebugRenderer;
+    private World              box2dWorld;
+    private SpriteBatch        batch;
     private OrthographicCamera orthographicCamera;
-    private ExtendViewport extendViewport;
-    private Ship ship;
-    private int width;
-    private int height;
-    private ArrayList<Planet> planets;
+    private ExtendViewport     extendViewport;
+    private Ship               ship;
+    private int                width;
+    private int                height;
+    private ArrayList<Planet>  planets;
 
     public GameScene(String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height)
     {
@@ -75,16 +71,19 @@ public class GameScene extends Scene
 
         Body body = box2dWorld.createBody(bodyDef);
 
-        Vector2[] wallVertices =
-            new Vector2[] {new Vector2(0, 0), new Vector2(width, 0), new Vector2(width, height),
-                new Vector2(0, height), new Vector2(0, 0),};
+        Vector2[] wallVertices = new Vector2[] {
+            new Vector2(0, 0),
+            new Vector2(width, 0),
+            new Vector2(width, height),
+            new Vector2(0, height),
+            new Vector2(0, 0),};
         ChainShape chainShape = new ChainShape();
         chainShape.createChain(wallVertices);
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = chainShape;
-        fixtureDef.filter.categoryBits = BodyMaskBit.BOUNDARIES;
-        fixtureDef.filter.maskBits = BodyMaskBit.SHIP;
+        fixtureDef.filter.categoryBits = MaskBits.BOUNDARIES;
+        fixtureDef.filter.maskBits = MaskBits.SHIP;
 
         body.createFixture(fixtureDef);
 
@@ -105,11 +104,7 @@ public class GameScene extends Scene
     private void addGameEntity(GameEntity gameEntity)
     {
         GameEntityManager.addGameEntity(gameEntity);
-        BodyDef bodyDef = gameEntity.physicComponent.getBodyDef();
-        Body body = box2dWorld.createBody(bodyDef);
-        body.createFixture(gameEntity.physicComponent.getFixtureDef());
-        gameEntity.physicComponent.setBody(body);
-        body.setUserData(gameEntity);
+        gameEntity.createBody(getBox2dWorld());
     }
 
     public void update(float elapsed)
@@ -130,6 +125,7 @@ public class GameScene extends Scene
             gameEntity.update(elapsed);
         }
 
+        // TODO: investigate this
         // max frame time to avoid spiral of death (on slow devices)
         float frameTime = Math.min(elapsed, 0.25f);
         box2dWorld.step(frameTime, 6, 2);
@@ -138,6 +134,7 @@ public class GameScene extends Scene
     private void removeGameEntity(GameEntity gameEntity)
     {
         GameEntityManager.getGameEntities().removeValue(gameEntity, true);
+        box2dWorld.destroyBody(gameEntity.getBody());
         gameEntity.dispose();
     }
 
@@ -147,9 +144,9 @@ public class GameScene extends Scene
         float halfHeight = orthographicCamera.viewportHeight / 2f;
 
         float cameraXPosition = MathUtils.clamp(
-            ship.physicComponent.getX(), halfWidth, width - halfWidth);
+            ship.getX(), halfWidth, width - halfWidth);
         float cameraYPosition = MathUtils.clamp(
-            ship.physicComponent.getY(), halfHeight, height - halfHeight);
+            ship.getY(), halfHeight, height - halfHeight);
         orthographicCamera.position.x = cameraXPosition;
         orthographicCamera.position.y = cameraYPosition;
         orthographicCamera.update();

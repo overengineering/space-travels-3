@@ -5,7 +5,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.draga.entity.Explosion;
 import com.draga.entity.GameEntity;
 import com.draga.entity.Planet;
-import com.draga.entity.ship.Ship;
+import com.draga.entity.Ship;
 
 public class GameContactListener implements ContactListener
 {
@@ -25,7 +25,7 @@ public class GameContactListener implements ContactListener
         if (explosionPosition != null)
         {
             GameEntity explosion = new Explosion(
-                explosionPosition.x, explosionPosition.y);
+                explosionPosition.x, explosionPosition.y, "explosion/explosion.atlas");
             GameEntityManager.addGameEntityToCreate(explosion);
         }
 

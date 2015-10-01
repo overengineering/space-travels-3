@@ -5,7 +5,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Json;
 import com.draga.entity.Planet;
-import com.draga.entity.ship.Ship;
+import com.draga.entity.Ship;
 import com.draga.manager.level.serialisableEntities.SerialisablePlanet;
 import com.draga.manager.level.serialisableEntities.SerialisableWorld;
 import com.draga.manager.scene.GameScene;
@@ -61,17 +61,18 @@ public abstract class LevelManager
     private static GameScene getLevelGameScene(
         SerialisableWorld serialisableWorld, SpriteBatch spriteBatch)
     {
-        GameScene world = new GameScene(
+        GameScene gameScene = new GameScene(
             serialisableWorld.serialisedBackground.getTexturePath(),
             spriteBatch,
             serialisableWorld.width,
             serialisableWorld.height);
 
         Ship ship = new Ship(
-            serialisableWorld.serialisedShip.getTexturePath(),
             serialisableWorld.serialisedShip.getX(),
-            serialisableWorld.serialisedShip.getY());
-        world.addShip(ship);
+            serialisableWorld.serialisedShip.getY(),
+            serialisableWorld.serialisedShip.getTexturePath(),
+            "thruster/thrusterSize256Frames75.txt");
+        gameScene.addShip(ship);
 
         for (SerialisablePlanet serialisablePlanet : serialisableWorld.serialisedPlanets)
         {
@@ -81,9 +82,9 @@ public abstract class LevelManager
                 serialisablePlanet.getX(),
                 serialisablePlanet.getY(),
                 serialisablePlanet.getTexturePath());
-            world.addPlanet(planet);
+            gameScene.addPlanet(planet);
         }
 
-        return world;
+        return gameScene;
     }
 }
