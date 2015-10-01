@@ -8,23 +8,20 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.draga.BodyMaskBit;
 import com.draga.Constants;
-import com.draga.entity.Explosion;
 import com.draga.entity.GameEntity;
 import com.draga.entity.Planet;
 import com.draga.entity.ship.Ship;
 import com.draga.manager.GameContactListener;
 import com.draga.manager.GameEntityManager;
 import com.draga.manager.SceneManager;
-import com.sun.org.apache.xpath.internal.WhitespaceStrippingElementMatcher;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class GameScene extends Scene
 {
@@ -150,9 +147,16 @@ public class GameScene extends Scene
             ship.physicComponent.getX(), halfWidth, width - halfWidth);
         float cameraYPosition = MathUtils.clamp(
             ship.physicComponent.getY(), halfHeight, height - halfHeight);
-        orthographicCamera.position.x = cameraXPosition;
-        orthographicCamera.position.y = cameraYPosition;
+
+        // Soften camera movement.
+        Vector3 cameraVec = new Vector3(cameraXPosition, cameraYPosition, 0);
+        Vector3 softCamera = cameraVec.cpy();
+        Vector3 cameraOffset = cameraVec.sub(orthographicCamera.position);
+        softCamera.sub(cameraOffset.scl(0.9f));
+
+        orthographicCamera.position.set(softCamera);
         orthographicCamera.update();
+
         batch.setProjectionMatrix(orthographicCamera.combined);
     }
 
