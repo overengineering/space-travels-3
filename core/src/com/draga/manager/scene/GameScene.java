@@ -111,13 +111,13 @@ public class GameScene extends Scene
 
     public void update(float elapsed)
     {
-        while (GameEntityManager.getGameEntitiesToCreate().size > 0)
+        while (!GameEntityManager.getGameEntitiesToCreate().isEmpty())
         {
-            addGameEntity(GameEntityManager.getGameEntitiesToCreate().pop());
+            addGameEntity(GameEntityManager.getGameEntitiesToCreate().poll());
         }
-        while (GameEntityManager.getGameEntitiesToDestroy().size > 0)
+        while (!GameEntityManager.getGameEntitiesToDestroy().isEmpty())
         {
-            removeGameEntity(GameEntityManager.getGameEntitiesToDestroy().pop());
+            removeGameEntity(GameEntityManager.getGameEntitiesToDestroy().poll());
         }
 
         updateCamera();
@@ -134,7 +134,7 @@ public class GameScene extends Scene
 
     private void removeGameEntity(GameEntity gameEntity)
     {
-        GameEntityManager.getGameEntities().removeValue(gameEntity, true);
+        GameEntityManager.getGameEntities().remove(gameEntity);
         gameEntity.dispose();
     }
 
