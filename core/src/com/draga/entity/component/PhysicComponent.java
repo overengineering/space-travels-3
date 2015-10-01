@@ -11,6 +11,7 @@ public abstract class PhysicComponent extends Component
     protected Body body;
     private BodyDef bodyDef;
     protected FixtureDef fixtureDef;
+    public Box2dCollisionResolutionComponent collisionResolutionComponent = null;
 
     public PhysicComponent(float x, float y, BodyDef.BodyType bodyType, float angle)
     {
