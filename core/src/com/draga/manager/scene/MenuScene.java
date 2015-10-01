@@ -41,7 +41,7 @@ public class MenuScene extends Scene
 
     @Override public void render(float deltaTime)
     {
-        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
         {
             Gdx.app.exit();
         }
@@ -78,8 +78,8 @@ public class MenuScene extends Scene
         textButtonStyle.font = pDark24Font;
 
         Button playButton = new TextButton("Play", textButtonStyle);
-        playButton.align(Align.center);
-        playButton.sizeBy(stage.getWidth(), 100);
+
+        playButton.setX((stage.getWidth() / 2) - (playButton.getWidth() / 2));
         playButton.addListener(
             new ClickListener()
             {
