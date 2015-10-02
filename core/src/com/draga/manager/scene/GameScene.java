@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -150,12 +149,14 @@ public class GameScene extends Scene
             ship.getY(), halfHeight, height - halfHeight);
 
         // Soften camera movement.
-        Vector3 cameraVec = new Vector3(cameraXPosition, cameraYPosition, 0);
-        Vector3 softCamera = cameraVec.cpy();
-        Vector3 cameraOffset = cameraVec.sub(orthographicCamera.position);
+        Vector2 cameraVec = Pools.obtain(Vector2.class).set(cameraXPosition, cameraYPosition);
+        Vector2 softCamera = Pools.obtain(Vector2.class).set(cameraVec);
+        Vector2 cameraOffset =
+            cameraVec.sub(orthographicCamera.position.x, orthographicCamera.position.y);
         softCamera.sub(cameraOffset.scl(0.9f));
 
-        orthographicCamera.position.set(softCamera);
+        orthographicCamera.position.x = softCamera.x;
+        orthographicCamera.position.y = softCamera.y;
         orthographicCamera.update();
 
         batch.setProjectionMatrix(orthographicCamera.combined);
