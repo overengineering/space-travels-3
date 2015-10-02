@@ -7,8 +7,9 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public abstract class GameEntity
 {
-    protected BodyDef bodyDef;
-    protected Body    body;
+    protected BodyDef                           bodyDef;
+    protected Body                              body;
+    public    Box2dCollisionResolutionComponent collisionResolutionComponent;
 
     public abstract void update(float deltaTime);
 

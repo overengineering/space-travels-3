@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.draga.MaskBits;
+import com.draga.entity.ship.ShipBox2dCollisionResolutionComponent;
 import com.draga.manager.GravityManager;
 import com.draga.manager.InputManager;
 
@@ -41,6 +42,8 @@ public class Ship extends GameEntity
 
     public Ship(float x, float y, String shipTexturePath, String thrusterTextureAtlasPath)
     {
+        collisionResolutionComponent = new ShipBox2dCollisionResolutionComponent(this);
+
         shipShape = new PolygonShape();
         shipShape.setAsBox(SHIP_WIDTH / 2f, SHIP_HEIGHT / 2f);
 

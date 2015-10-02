@@ -1,13 +1,16 @@
 package com.draga.manager;
 
-import com.badlogic.gdx.utils.Array;
 import com.draga.entity.GameEntity;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class GameEntityManager
 {
-    private static final Array<GameEntity> gameEntities = new Array<>();
-    private static final Array<GameEntity> gameEntitiesToCreate = new Array<>();
-    private static final Array<GameEntity> gameEntitiesToDestroy = new Array<>();
+    private static final LinkedList<GameEntity> gameEntities = new LinkedList<>();
+    private static final Queue<GameEntity> gameEntitiesToCreate = new LinkedList<>();
+    private static final Queue<GameEntity> gameEntitiesToDestroy = new LinkedList<>();
 
     public static void addGameEntityToCreate(GameEntity gameEntity)
     {
@@ -19,17 +22,17 @@ public class GameEntityManager
         gameEntitiesToDestroy.add(gameEntity);
     }
 
-    public static Array<GameEntity> getGameEntitiesToCreate()
+    public static Queue<GameEntity> getGameEntitiesToCreate()
     {
         return gameEntitiesToCreate;
     }
 
-    public static Array<GameEntity> getGameEntitiesToDestroy()
+    public static Queue<GameEntity> getGameEntitiesToDestroy()
     {
         return gameEntitiesToDestroy;
     }
 
-    public static Array<GameEntity> getGameEntities()
+    public static LinkedList<GameEntity> getGameEntities()
     {
         return gameEntities;
     }

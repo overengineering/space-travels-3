@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -109,13 +110,13 @@ public class GameScene extends Scene
 
     public void update(float elapsed)
     {
-        while (GameEntityManager.getGameEntitiesToCreate().size > 0)
+        while (!GameEntityManager.getGameEntitiesToCreate().isEmpty())
         {
-            addGameEntity(GameEntityManager.getGameEntitiesToCreate().pop());
+            addGameEntity(GameEntityManager.getGameEntitiesToCreate().poll());
         }
-        while (GameEntityManager.getGameEntitiesToDestroy().size > 0)
+        while (!GameEntityManager.getGameEntitiesToDestroy().isEmpty())
         {
-            removeGameEntity(GameEntityManager.getGameEntitiesToDestroy().pop());
+            removeGameEntity(GameEntityManager.getGameEntitiesToDestroy().poll());
         }
 
         updateCamera();
@@ -133,8 +134,8 @@ public class GameScene extends Scene
 
     private void removeGameEntity(GameEntity gameEntity)
     {
-        GameEntityManager.getGameEntities().removeValue(gameEntity, true);
         box2dWorld.destroyBody(gameEntity.getBody());
+        GameEntityManager.getGameEntities().remove(gameEntity);
         gameEntity.dispose();
     }
 
@@ -147,9 +148,16 @@ public class GameScene extends Scene
             ship.getX(), halfWidth, width - halfWidth);
         float cameraYPosition = MathUtils.clamp(
             ship.getY(), halfHeight, height - halfHeight);
-        orthographicCamera.position.x = cameraXPosition;
-        orthographicCamera.position.y = cameraYPosition;
+
+        // Soften camera movement.
+        Vector3 cameraVec = new Vector3(cameraXPosition, cameraYPosition, 0);
+        Vector3 softCamera = cameraVec.cpy();
+        Vector3 cameraOffset = cameraVec.sub(orthographicCamera.position);
+        softCamera.sub(cameraOffset.scl(0.9f));
+
+        orthographicCamera.position.set(softCamera);
         orthographicCamera.update();
+
         batch.setProjectionMatrix(orthographicCamera.combined);
     }
 
