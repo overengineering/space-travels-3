@@ -82,6 +82,7 @@ public class GameScene extends Scene
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = chainShape;
+        fixtureDef.restitution = 0;
         fixtureDef.filter.categoryBits = MaskBits.BOUNDARIES;
         fixtureDef.filter.maskBits = MaskBits.SHIP;
 
