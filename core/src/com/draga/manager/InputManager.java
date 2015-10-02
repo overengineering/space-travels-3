@@ -46,7 +46,7 @@ public class InputManager
         input = input.clamp(0, Constants.EARTH_GRAVITY);
 
         // Scale the input by the Earth's gravity so that I'll be between 1 and 0
-        input = input.scl(input.len() / Constants.EARTH_GRAVITY);
+        input = input.scl(1 / Constants.EARTH_GRAVITY);
 
         return input;
     }

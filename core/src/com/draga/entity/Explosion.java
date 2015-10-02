@@ -30,7 +30,7 @@ public class Explosion extends GameEntity
         fixtureDef.shape = polygonShape;
         fixtureDef.density = 0;
         fixtureDef.friction = 1f;
-        fixtureDef.restitution = 1f;
+        fixtureDef.restitution = 0;
         fixtureDef.filter.categoryBits = MaskBits.EXPLOSION;
         fixtureDef.filter.maskBits = 0;
 

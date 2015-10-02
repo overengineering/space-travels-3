@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.Pools;
 import com.draga.MaskBits;
 import com.draga.entity.ship.ShipBox2dCollisionResolutionComponent;
 import com.draga.manager.GravityManager;
@@ -29,7 +30,9 @@ public class Ship extends GameEntity
     private static final float   SHIP_MASS                     = 1f;
     private static final float   TOTAL_THRUSTER_ANIMATION_TIME = 1f;
     private static final float   INPUT_GRAVITY_MULTIPLIER      = 100f;
-    private static final Vector2 THRUSTER_OFFSET               = new Vector2(-5, 0);
+    private static final Vector2 THRUSTER_OFFSET               = new Vector2(-2.5f, 0);
+    private float thrusterWidth;
+    private float thrusterHeight;
     private Animation    thrusterAnimation;
     private FixtureDef   thrusterFixtureDef;
     private Fixture      shipFixture;
@@ -39,6 +42,7 @@ public class Ship extends GameEntity
     private float        thrusterAnimationStateTime;
     private PolygonShape thrusterShape;
     private PolygonShape shipShape;
+    private TextureAtlas thrusterTextureAtlas;
 
     public Ship(float x, float y, String shipTexturePath, String thrusterTextureAtlasPath)
     {
@@ -52,23 +56,20 @@ public class Ship extends GameEntity
         float area = SHIP_WIDTH * SHIP_HEIGHT;
         shipFixtureDef.density = SHIP_MASS / area;
         shipFixtureDef.friction = 1f;
-        shipFixtureDef.restitution = 1f;
+        shipFixtureDef.restitution = 0;
         shipFixtureDef.filter.categoryBits = MaskBits.SHIP;
         shipFixtureDef.filter.maskBits = MaskBits.PLANET | MaskBits.BOUNDARIES;
 
 
         thrusterShape = new PolygonShape();
         thrusterShape.setAsBox(
-            THRUSTER_MAX_WIDTH / 2f,
-            THRUSTER_MAX_HEIGHT / 2f,
-            THRUSTER_OFFSET,
-            0);
+            THRUSTER_MAX_WIDTH / 2f, THRUSTER_MAX_HEIGHT / 2f, THRUSTER_OFFSET, 0);
 
         thrusterFixtureDef = new FixtureDef();
         thrusterFixtureDef.shape = thrusterShape;
         thrusterFixtureDef.density = 0;
         thrusterFixtureDef.friction = 1f;
-        thrusterFixtureDef.restitution = 1f;
+        thrusterFixtureDef.restitution = 0;
         thrusterFixtureDef.filter.categoryBits = MaskBits.THRUSTER;
         thrusterFixtureDef.filter.maskBits = 0;
 
@@ -84,10 +85,10 @@ public class Ship extends GameEntity
 
 
         thrusterAnimationStateTime = 0f;
-        TextureAtlas textureAtlas = new TextureAtlas(thrusterTextureAtlasPath);
+        thrusterTextureAtlas = new TextureAtlas(thrusterTextureAtlasPath);
         thrusterAnimation = new Animation(
-            TOTAL_THRUSTER_ANIMATION_TIME / textureAtlas.getRegions().size,
-            textureAtlas.getRegions(),
+            TOTAL_THRUSTER_ANIMATION_TIME / thrusterTextureAtlas.getRegions().size,
+            thrusterTextureAtlas.getRegions(),
             Animation.PlayMode.LOOP);
     }
 
@@ -106,12 +107,42 @@ public class Ship extends GameEntity
 
         Vector2 inputForce = InputManager.getInputForce();
         rotateTo(inputForce, deltaTime);
+        float thrusterScale = inputForce.len();
+        thrusterWidth = THRUSTER_MAX_WIDTH * thrusterScale;
+        thrusterHeight = THRUSTER_MAX_HEIGHT * thrusterScale;
+        Vector2 thrusterOffsetFromCentre = Pools.obtain(Vector2.class)
+            .set(THRUSTER_OFFSET)
+            .sub(thrusterWidth / 2f, 0);
+        thrusterShape.setAsBox(
+            thrusterWidth / 2f, thrusterHeight / 2f, thrusterOffsetFromCentre, 0);
+        thrusterFixtureDef.shape = thrusterShape;
+        body.destroyFixture(thrusterFixture);
+        thrusterFixture = body.createFixture(thrusterFixtureDef);
         inputForce.scl(INPUT_GRAVITY_MULTIPLIER);
         body.applyForceToCenter(inputForce, true);
     }
 
     @Override public void draw(SpriteBatch spriteBatch)
     {
+        TextureRegion textureRegion = thrusterAnimation.getKeyFrame(thrusterAnimationStateTime);
+        Vector2 thrusterOffsetFromCentre = Pools.obtain(Vector2.class)
+            .set(THRUSTER_OFFSET)
+            .sub(thrusterWidth / 2f, 0);
+        Vector2 thrusterPosition = new Vector2(body.getPosition());
+        Vector2 thrusterRotateOffset = new Vector2(thrusterOffsetFromCentre).rotateRad(body.getAngle());
+        thrusterPosition.add(thrusterRotateOffset);
+        spriteBatch.draw(
+            textureRegion,
+            thrusterPosition.x - thrusterWidth / 2f,
+            thrusterPosition.y - thrusterHeight / 2f,
+            thrusterWidth / 2f,
+            thrusterHeight / 2f,
+            thrusterWidth,
+            thrusterHeight,
+            1,
+            1,
+            body.getAngle() * MathUtils.radiansToDegrees);
+
         spriteBatch.draw(
             shipTexture,
             getX() - HALF_SHIP_WIDTH,
@@ -129,22 +160,6 @@ public class Ship extends GameEntity
             shipTexture.getHeight(),
             false,
             false);
-
-        TextureRegion textureRegion = thrusterAnimation.getKeyFrame(thrusterAnimationStateTime);
-        Vector2 thrusterPosition = new Vector2(body.getPosition());
-        Vector2 thrusterRotateOffset = new Vector2(THRUSTER_OFFSET).rotateRad(body.getAngle());
-        thrusterPosition.add(thrusterRotateOffset);
-        spriteBatch.draw(
-            textureRegion,
-            thrusterPosition.x - THRUSTER_MAX_WIDTH / 2f,
-            thrusterPosition.y - THRUSTER_MAX_HEIGHT / 2f,
-            THRUSTER_MAX_WIDTH / 2f,
-            THRUSTER_MAX_HEIGHT / 2f,
-            THRUSTER_MAX_WIDTH,
-            THRUSTER_MAX_HEIGHT,
-            1,
-            1,
-            body.getAngle() * MathUtils.radiansToDegrees);
     }
 
     @Override public void dispose()
@@ -152,6 +167,7 @@ public class Ship extends GameEntity
         shipShape.dispose();
         thrusterShape.dispose();
         shipTexture.dispose();
+        thrusterTextureAtlas.dispose();
     }
 
     @Override public void createBody(World world)
