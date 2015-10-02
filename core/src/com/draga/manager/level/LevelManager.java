@@ -83,6 +83,11 @@ public abstract class LevelManager
                 serialisablePlanet.getY(),
                 serialisablePlanet.getTexturePath());
             gameScene.addPlanet(planet);
+
+            if (serialisablePlanet.isDestination())
+            {
+                gameScene.setDestinationPlanet(planet);
+            }
         }
 
         return gameScene;

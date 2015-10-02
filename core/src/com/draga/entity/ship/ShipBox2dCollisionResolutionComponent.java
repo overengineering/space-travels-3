@@ -5,9 +5,6 @@ import com.draga.entity.*;
 import com.draga.entity.Box2dCollisionResolutionComponent;
 import com.draga.manager.GameEntityManager;
 
-/**
- * Created by qwasqaws on 01/10/15.
- */
 public class ShipBox2dCollisionResolutionComponent extends Box2dCollisionResolutionComponent
 {
     public ShipBox2dCollisionResolutionComponent(com.draga.entity.Ship ship)
@@ -29,6 +26,8 @@ public class ShipBox2dCollisionResolutionComponent extends Box2dCollisionResolut
                     gameEntity.getY(),
                 "explosion/explosion.atlas");
             GameEntityManager.addGameEntityToCreate(explosion);
+
+            ((Ship)gameEntity).setIsDead(true);
         }
     }
 }

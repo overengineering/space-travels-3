@@ -16,7 +16,8 @@
       "x": 280,
       "y": 75,
       "radius": 6.378,
-      "mass": 5970
+      "mass": 5970,
+      "destination": true
     },
     {
       "texturePath": "planet/jupiter256.png",

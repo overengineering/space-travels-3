@@ -36,6 +36,17 @@ public class GameScene extends Scene
     private int                width;
     private int                height;
     private ArrayList<Planet>  planets;
+    private Planet             destinationPlanet;
+
+    public Planet getDestinationPlanet()
+    {
+        return destinationPlanet;
+    }
+
+    public void setDestinationPlanet(Planet destinationPlanet)
+    {
+        this.destinationPlanet = destinationPlanet;
+    }
 
     public GameScene(String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height)
     {
@@ -130,6 +141,13 @@ public class GameScene extends Scene
         // max frame time to avoid spiral of death (on slow devices)
         float frameTime = Math.min(elapsed, 0.25f);
         box2dWorld.step(frameTime, 6, 2);
+
+        // On death
+        if (ship.isDead())
+        {
+            // TODO: Make scene manager a stack.
+            //SceneManager
+        }
     }
 
     private void removeGameEntity(GameEntity gameEntity)
