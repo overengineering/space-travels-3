@@ -12,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Align;
 import com.draga.manager.SceneManager;
 import com.draga.manager.level.LevelManager;
 
@@ -38,9 +37,13 @@ public class MenuScene extends Scene
 
     @Override public void render(float deltaTime)
     {
-        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
         {
             Gdx.app.exit();
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER))
+        {
+            StartGameScene();
         }
 
         stage.act(deltaTime);
@@ -75,20 +78,25 @@ public class MenuScene extends Scene
         textButtonStyle.font = pDark24Font;
 
         Button playButton = new TextButton("Play", textButtonStyle);
-        playButton.align(Align.center);
-        playButton.sizeBy(stage.getWidth(), 100);
+
+        playButton.setX((stage.getWidth() / 2) - (playButton.getWidth() / 2));
         playButton.addListener(
             new ClickListener()
             {
                 @Override public void clicked(InputEvent event, float x, float y)
                 {
-                    SceneManager.setActiveScene(
-                        LevelManager.getLevelWorldFromFile(
-                            "level1.json", new SpriteBatch()));
+                    StartGameScene();
                     super.clicked(event, x, y);
                 }
             });
         return playButton;
+    }
+
+    private void StartGameScene()
+    {
+        SceneManager.setActiveScene(
+                LevelManager.getLevelWorldFromFile(
+                        "level1.json", new SpriteBatch()));
     }
 
     public Actor getHeaderLabel()
