@@ -39,6 +39,7 @@ public class Ship extends GameEntity
     private float        thrusterAnimationStateTime;
     private PolygonShape thrusterShape;
     private PolygonShape shipShape;
+    private TextureAtlas thrusterTextureAtlas;
 
     public Ship(float x, float y, String shipTexturePath, String thrusterTextureAtlasPath)
     {
@@ -59,10 +60,7 @@ public class Ship extends GameEntity
 
         thrusterShape = new PolygonShape();
         thrusterShape.setAsBox(
-            THRUSTER_MAX_WIDTH / 2f,
-            THRUSTER_MAX_HEIGHT / 2f,
-            THRUSTER_OFFSET,
-            0);
+            THRUSTER_MAX_WIDTH / 2f, THRUSTER_MAX_HEIGHT / 2f, THRUSTER_OFFSET, 0);
 
         thrusterFixtureDef = new FixtureDef();
         thrusterFixtureDef.shape = thrusterShape;
@@ -84,10 +82,10 @@ public class Ship extends GameEntity
 
 
         thrusterAnimationStateTime = 0f;
-        TextureAtlas textureAtlas = new TextureAtlas(thrusterTextureAtlasPath);
+        thrusterTextureAtlas = new TextureAtlas(thrusterTextureAtlasPath);
         thrusterAnimation = new Animation(
-            TOTAL_THRUSTER_ANIMATION_TIME / textureAtlas.getRegions().size,
-            textureAtlas.getRegions(),
+            TOTAL_THRUSTER_ANIMATION_TIME / thrusterTextureAtlas.getRegions().size,
+            thrusterTextureAtlas.getRegions(),
             Animation.PlayMode.LOOP);
     }
 
@@ -152,6 +150,7 @@ public class Ship extends GameEntity
         shipShape.dispose();
         thrusterShape.dispose();
         shipTexture.dispose();
+        thrusterTextureAtlas.dispose();
     }
 
     @Override public void createBody(World world)
