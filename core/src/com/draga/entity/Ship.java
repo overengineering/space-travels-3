@@ -16,7 +16,8 @@ import com.draga.manager.InputManager;
 
 public class Ship extends GameEntity
 {
-    public static final  float ROTATION_FORCE                = 1500;
+    public static final String LOGGING_TAG = Ship.class.getSimpleName();
+    private static final  float ROTATION_FORCE                = 1500;
     private static final float SHIP_WIDTH                    = 10;
     private static final float HALF_SHIP_WIDTH               = SHIP_WIDTH / 2f;
     private static final float SHIP_HEIGHT                   = 10;
@@ -90,6 +91,7 @@ public class Ship extends GameEntity
 
     @Override public void update(float deltaTime)
     {
+        // Avoid overflow.
         thrusterAnimationStateTime += deltaTime;
         if (thrusterAnimationStateTime > TOTAL_THRUSTER_ANIMATION_TIME)
         {
@@ -101,8 +103,8 @@ public class Ship extends GameEntity
         body.applyForceToCenter(gravityForce, true);
 
         Vector2 inputForce = InputManager.getInputForce();
-        inputForce.scl(INPUT_GRAVITY_MULTIPLIER);
         rotateTo(inputForce, deltaTime);
+        inputForce.scl(INPUT_GRAVITY_MULTIPLIER);
         body.applyForceToCenter(inputForce, true);
     }
 
@@ -157,13 +159,18 @@ public class Ship extends GameEntity
     /**
      * Rotate the ship towards the given vector smoothly
      *
-     * @param accelerometerForce The force of gravity on the device, should be capped to the Earth gravity
+     * @param inputForce The input force, should be long between 0 and 1.
      */
-    private void rotateTo(Vector2 accelerometerForce, float elapsed)
+    private void rotateTo(Vector2 inputForce, float elapsed)
     {
+        float maxLength = 1;
+        if (inputForce.len2() > maxLength){
+            Gdx.app.error(LOGGING_TAG, "The input provided is longer than 1!");
+        }
+
         // Ref. http://www.iforce2d.net/b2dtut/rotate-to-angle
         float nextAngle = body.getAngle() + body.getAngularVelocity();
-        float directionAngle = accelerometerForce.angleRad();
+        float directionAngle = inputForce.angleRad();
 
         float diffRotation = directionAngle - nextAngle;
 
@@ -178,7 +185,9 @@ public class Ship extends GameEntity
             diffRotation -= 360 * MathUtils.degreesToRadians;
         }
 
-        body.applyAngularImpulse(diffRotation * ROTATION_FORCE * elapsed, true);
+        float scale = inputForce.len() / 1;
+
+        body.applyAngularImpulse(diffRotation * ROTATION_FORCE * elapsed * scale, true);
     }
 
 }
