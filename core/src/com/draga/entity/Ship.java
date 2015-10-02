@@ -16,18 +16,19 @@ import com.draga.manager.InputManager;
 
 public class Ship extends GameEntity
 {
-    public static final String LOGGING_TAG = Ship.class.getSimpleName();
-    private static final  float ROTATION_FORCE                = 1500;
-    private static final float SHIP_WIDTH                    = 10;
-    private static final float HALF_SHIP_WIDTH               = SHIP_WIDTH / 2f;
-    private static final float SHIP_HEIGHT                   = 10;
-    private static final float HALF_SHIP_HEIGHT              = SHIP_HEIGHT / 2f;
-    private static final float THRUSTER_MAX_WIDTH            = 5;
-    private static final float THRUSTER_MAX_HEIGHT           = 5;
-    private static final float BODY_GRAVITY_MULTIPLIER       = 3f;
-    private static final float SHIP_MASS                     = 1f;
-    private static final float TOTAL_THRUSTER_ANIMATION_TIME = 1f;
-    private static final float INPUT_GRAVITY_MULTIPLIER      = 100f;
+    public static final  String  LOGGING_TAG                   = Ship.class.getSimpleName();
+    private static final float   ROTATION_FORCE                = 1500;
+    private static final float   SHIP_WIDTH                    = 10;
+    private static final float   HALF_SHIP_WIDTH               = SHIP_WIDTH / 2f;
+    private static final float   SHIP_HEIGHT                   = 10;
+    private static final float   HALF_SHIP_HEIGHT              = SHIP_HEIGHT / 2f;
+    private static final float   THRUSTER_MAX_WIDTH            = 5;
+    private static final float   THRUSTER_MAX_HEIGHT           = 5;
+    private static final float   BODY_GRAVITY_MULTIPLIER       = 3f;
+    private static final float   SHIP_MASS                     = 1f;
+    private static final float   TOTAL_THRUSTER_ANIMATION_TIME = 1f;
+    private static final float   INPUT_GRAVITY_MULTIPLIER      = 100f;
+    private static final Vector2 THRUSTER_OFFSET               = new Vector2(-5, 0);
     private Animation    thrusterAnimation;
     private FixtureDef   thrusterFixtureDef;
     private Fixture      shipFixture;
@@ -38,8 +39,7 @@ public class Ship extends GameEntity
     private PolygonShape thrusterShape;
     private PolygonShape shipShape;
 
-    public Ship(
-        float x, float y, String shipTexturePath, String thrusterTextureAtlasPath)
+    public Ship(float x, float y, String shipTexturePath, String thrusterTextureAtlasPath)
     {
         shipShape = new PolygonShape();
         shipShape.setAsBox(SHIP_WIDTH / 2f, SHIP_HEIGHT / 2f);
@@ -55,12 +55,11 @@ public class Ship extends GameEntity
 
 
         thrusterShape = new PolygonShape();
-        Vector2[] thrusterVertices = new Vector2[] {
-            new Vector2(-HALF_SHIP_WIDTH - THRUSTER_MAX_WIDTH, -THRUSTER_MAX_HEIGHT / 2f),
-            new Vector2(-HALF_SHIP_WIDTH, -THRUSTER_MAX_HEIGHT / 2f),
-            new Vector2(-HALF_SHIP_WIDTH - THRUSTER_MAX_WIDTH, THRUSTER_MAX_HEIGHT / 2f),
-            new Vector2(-HALF_SHIP_WIDTH, THRUSTER_MAX_HEIGHT / 2f),};
-        thrusterShape.set(thrusterVertices);
+        thrusterShape.setAsBox(
+            THRUSTER_MAX_WIDTH / 2f,
+            THRUSTER_MAX_HEIGHT / 2f,
+            THRUSTER_OFFSET,
+            0);
 
         thrusterFixtureDef = new FixtureDef();
         thrusterFixtureDef.shape = thrusterShape;
@@ -129,10 +128,13 @@ public class Ship extends GameEntity
             false);
 
         TextureRegion textureRegion = thrusterAnimation.getKeyFrame(thrusterAnimationStateTime);
+        Vector2 thrusterPosition = new Vector2(body.getPosition());
+        Vector2 thrusterRotateOffset = new Vector2(THRUSTER_OFFSET).rotateRad(body.getAngle());
+        thrusterPosition.add(thrusterRotateOffset);
         spriteBatch.draw(
             textureRegion,
-            getX() - THRUSTER_MAX_WIDTH / 2f,
-            getY() - THRUSTER_MAX_HEIGHT / 2f,
+            thrusterPosition.x - THRUSTER_MAX_WIDTH / 2f,
+            thrusterPosition.y - THRUSTER_MAX_HEIGHT / 2f,
             THRUSTER_MAX_WIDTH / 2f,
             THRUSTER_MAX_HEIGHT / 2f,
             THRUSTER_MAX_WIDTH,
@@ -146,6 +148,7 @@ public class Ship extends GameEntity
     {
         shipShape.dispose();
         thrusterShape.dispose();
+        shipTexture.dispose();
     }
 
     @Override public void createBody(World world)
@@ -163,11 +166,6 @@ public class Ship extends GameEntity
      */
     private void rotateTo(Vector2 inputForce, float elapsed)
     {
-        float maxLength = 1;
-        if (inputForce.len2() > maxLength){
-            Gdx.app.error(LOGGING_TAG, "The input provided is longer than 1!");
-        }
-
         // Ref. http://www.iforce2d.net/b2dtut/rotate-to-angle
         float nextAngle = body.getAngle() + body.getAngularVelocity();
         float directionAngle = inputForce.angleRad();
@@ -189,5 +187,4 @@ public class Ship extends GameEntity
 
         body.applyAngularImpulse(diffRotation * ROTATION_FORCE * elapsed * scale, true);
     }
-
 }

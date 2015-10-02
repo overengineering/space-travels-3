@@ -70,6 +70,7 @@ public class Planet extends GameEntity
     @Override public void dispose()
     {
         circleShape.dispose();
+        texture.dispose();
     }
 
     @Override public void createBody(World world)
