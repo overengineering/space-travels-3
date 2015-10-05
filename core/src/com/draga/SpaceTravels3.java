@@ -19,12 +19,12 @@ import java.util.concurrent.TimeUnit;
 
 public class SpaceTravels3 extends ApplicationAdapter
 {
-    private final static String LOGGING_TAG = SpaceTravels3.class.getSimpleName();
-    private final float timeBetweenDebugInfoUpdate = 1f;
+    private final static String LOGGING_TAG                = SpaceTravels3.class.getSimpleName();
+    private final        float  timeBetweenDebugInfoUpdate = 1f;
     private float timeUntilDebugInfoUpdate = timeBetweenDebugInfoUpdate;
+    private ScheduledExecutorService logOutputScheduler;
 
-    @Override
-    public void create()
+    @Override public void create()
     {
         SceneManager.setActiveScene(new MenuScene());
 
@@ -32,29 +32,26 @@ public class SpaceTravels3 extends ApplicationAdapter
         {
             Gdx.app.setLogLevel(Application.LOG_DEBUG);
 
-            ScheduledExecutorService logOutputScheduler = Executors.newSingleThreadScheduledExecutor();
+            logOutputScheduler = Executors.newSingleThreadScheduledExecutor();
             logOutputScheduler.scheduleAtFixedRate(
-                    new Runnable()
+                new Runnable()
+                {
+                    @Override public void run()
                     {
-                        @Override
-                        public void run()
-                        {
-                            String formattedJavaHeap = Constants.COMMA_SEPARATED_THOUSANDS_FORMATTER.format(
-                                    Gdx.app.getJavaHeap());
-                            String formattedNativeHeap =
-                                    Constants.COMMA_SEPARATED_THOUSANDS_FORMATTER.format(Gdx.app.getNativeHeap());
-                            String log = String.format(
-                                    "%-23s | FPS : %3d | Java heap : %12s | Java native heap : %12s",
-                                    new Timestamp(new Date().getTime()).toString(),
-                                    Gdx.graphics.getFramesPerSecond(),
-                                    formattedJavaHeap,
-                                    formattedNativeHeap);
-                            Gdx.app.log(LOGGING_TAG, log);
-                        }
-                    },
-                    0,
-                    1,
-                    TimeUnit.SECONDS);
+                        String formattedJavaHeap =
+                            Constants.COMMA_SEPARATED_THOUSANDS_FORMATTER.format(
+                                Gdx.app.getJavaHeap());
+                        String formattedNativeHeap =
+                            Constants.COMMA_SEPARATED_THOUSANDS_FORMATTER.format(Gdx.app.getNativeHeap());
+                        String log = String.format(
+                            "%-23s | FPS : %3d | Java heap : %12s | Java native heap : %12s",
+                            new Timestamp(new Date().getTime()).toString(),
+                            Gdx.graphics.getFramesPerSecond(),
+                            formattedJavaHeap,
+                            formattedNativeHeap);
+                        Gdx.app.log(LOGGING_TAG, log);
+                    }
+                }, 0, 1, TimeUnit.SECONDS);
         } else
         {
             Gdx.app.setLogLevel(Application.LOG_ERROR);
@@ -79,6 +76,7 @@ public class SpaceTravels3 extends ApplicationAdapter
     {
         Gdx.app.debug(LOGGING_TAG, "Dispose");
         SceneManager.getActiveScene().dispose();
+        logOutputScheduler.shutdown();
         super.dispose();
     }
 
