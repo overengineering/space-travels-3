@@ -26,7 +26,6 @@ public class Ship extends GameEntity
     private static final float   HALF_SHIP_HEIGHT              = SHIP_HEIGHT / 2f;
     private static final float   THRUSTER_MAX_WIDTH            = 5;
     private static final float   THRUSTER_MAX_HEIGHT           = 5;
-    private static final float   BODY_GRAVITY_MULTIPLIER       = 3f;
     private static final float   SHIP_MASS                     = 1f;
     private static final float   TOTAL_THRUSTER_ANIMATION_TIME = 1f;
     private static final float   INPUT_GRAVITY_MULTIPLIER      = 100f;
@@ -102,7 +101,6 @@ public class Ship extends GameEntity
         }
 
         Vector2 gravityForce = GravityManager.getForceActingOn(body);
-        gravityForce.scl(BODY_GRAVITY_MULTIPLIER);
         body.applyForceToCenter(gravityForce, true);
 
         Vector2 inputForce = InputManager.getInputForce();
