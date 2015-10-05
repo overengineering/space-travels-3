@@ -19,7 +19,7 @@ import com.draga.manager.InputManager;
 public class Ship extends GameEntity
 {
     public static final  String  LOGGING_TAG                   = Ship.class.getSimpleName();
-    private static final float   ROTATION_FORCE                = 1500;
+    private static final float   ROTATION_FORCE                = 2000;
     private static final float   SHIP_WIDTH                    = 10;
     private static final float   HALF_SHIP_WIDTH               = SHIP_WIDTH / 2f;
     private static final float   SHIP_HEIGHT                   = 10;
@@ -28,10 +28,10 @@ public class Ship extends GameEntity
     private static final float   THRUSTER_MAX_HEIGHT           = 5;
     private static final float   SHIP_MASS                     = 1f;
     private static final float   TOTAL_THRUSTER_ANIMATION_TIME = 1f;
-    private static final float   INPUT_GRAVITY_MULTIPLIER      = 100f;
+    private static final float   INPUT_FORCE_MULTIPLIER        = 100f;
     private static final Vector2 THRUSTER_OFFSET               = new Vector2(-2.5f, 0);
-    private float thrusterWidth;
-    private float thrusterHeight;
+    private float        thrusterWidth;
+    private float        thrusterHeight;
     private Animation    thrusterAnimation;
     private FixtureDef   thrusterFixtureDef;
     private Fixture      shipFixture;
@@ -116,7 +116,7 @@ public class Ship extends GameEntity
         thrusterFixtureDef.shape = thrusterShape;
         body.destroyFixture(thrusterFixture);
         thrusterFixture = body.createFixture(thrusterFixtureDef);
-        inputForce.scl(INPUT_GRAVITY_MULTIPLIER);
+        inputForce.scl(INPUT_FORCE_MULTIPLIER);
         body.applyForceToCenter(inputForce, true);
     }
 
@@ -184,7 +184,7 @@ public class Ship extends GameEntity
     private void rotateTo(Vector2 inputForce, float elapsed)
     {
         // Ref. http://www.iforce2d.net/b2dtut/rotate-to-angle
-        float nextAngle = body.getAngle() + body.getAngularVelocity();
+        float nextAngle = body.getAngle() + body.getAngularVelocity() / 2f;
         float directionAngle = inputForce.angleRad();
 
         float diffRotation = directionAngle - nextAngle;
