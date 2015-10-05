@@ -26,7 +26,7 @@ public class Planet extends GameEntity
         float area = radius * radius * MathUtils.PI;
         fixtureDef.density = mass / area;
         fixtureDef.friction = 1f;
-        fixtureDef.restitution = 1f;
+        fixtureDef.restitution = 0;
         fixtureDef.filter.categoryBits = MaskBits.PLANET;
         fixtureDef.filter.maskBits = MaskBits.SHIP;
 
