@@ -8,8 +8,6 @@ import com.badlogic.gdx.physics.box2d.Box2D;
 import com.draga.manager.SceneManager;
 import com.draga.scene.MenuScene;
 
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -17,8 +15,6 @@ import java.util.concurrent.TimeUnit;
 public class SpaceTravels3 extends ApplicationAdapter
 {
     private final static String LOGGING_TAG                = SpaceTravels3.class.getSimpleName();
-    private final        float  timeBetweenDebugInfoUpdate = 1f;
-    private float timeUntilDebugInfoUpdate = timeBetweenDebugInfoUpdate;
     private ScheduledExecutorService logOutputScheduler;
 
     @Override public void create()
@@ -29,26 +25,7 @@ public class SpaceTravels3 extends ApplicationAdapter
         {
             Gdx.app.setLogLevel(Application.LOG_DEBUG);
 
-            logOutputScheduler = Executors.newSingleThreadScheduledExecutor();
-            logOutputScheduler.scheduleAtFixedRate(
-                new Runnable()
-                {
-                    @Override public void run()
-                    {
-                        String formattedJavaHeap =
-                            Constants.COMMA_SEPARATED_THOUSANDS_FORMATTER.format(
-                                Gdx.app.getJavaHeap());
-                        String formattedNativeHeap =
-                            Constants.COMMA_SEPARATED_THOUSANDS_FORMATTER.format(Gdx.app.getNativeHeap());
-                        String log = String.format(
-                            "%-23s | FPS : %3d | Java heap : %12s | Java native heap : %12s",
-                            new Timestamp(new Date().getTime()).toString(),
-                            Gdx.graphics.getFramesPerSecond(),
-                            formattedJavaHeap,
-                            formattedNativeHeap);
-                        Gdx.app.log(LOGGING_TAG, log);
-                    }
-                }, 0, 1, TimeUnit.SECONDS);
+            launchPerformanceLoggerScheduler();
         } else
         {
             Gdx.app.setLogLevel(Application.LOG_ERROR);
@@ -57,8 +34,13 @@ public class SpaceTravels3 extends ApplicationAdapter
         Box2D.init();
     }
 
-    @Override
-    public void render()
+    private void launchPerformanceLoggerScheduler()
+    {
+        logOutputScheduler = Executors.newSingleThreadScheduledExecutor();
+        logOutputScheduler.scheduleAtFixedRate(new PerformanceLogger(), 0, 1, TimeUnit.SECONDS);
+    }
+
+    @Override public void render()
     {
         float deltaTime = Gdx.graphics.getDeltaTime();
 
@@ -68,8 +50,7 @@ public class SpaceTravels3 extends ApplicationAdapter
         SceneManager.getActiveScene().render(deltaTime);
     }
 
-    @Override
-    public void dispose()
+    @Override public void dispose()
     {
         Gdx.app.debug(LOGGING_TAG, "Dispose");
         SceneManager.getActiveScene().dispose();
@@ -77,16 +58,15 @@ public class SpaceTravels3 extends ApplicationAdapter
         super.dispose();
     }
 
-    @Override
-    public void pause()
+    @Override public void pause()
     {
         Gdx.app.debug(LOGGING_TAG, "Pause");
         SceneManager.getActiveScene().pause();
-        super.pause();
+        logOutputScheduler.shutdown();
+            super.pause();
     }
 
-    @Override
-    public void resize(int width, int height)
+    @Override public void resize(int width, int height)
     {
         String log = String.format("Resize to %4d width x %4d height", width, height);
         Gdx.app.debug(LOGGING_TAG, log);
@@ -96,11 +76,11 @@ public class SpaceTravels3 extends ApplicationAdapter
         super.resize(width, height);
     }
 
-    @Override
-    public void resume()
+    @Override public void resume()
     {
         Gdx.app.debug(LOGGING_TAG, "Resume");
         SceneManager.getActiveScene().resume();
+        launchPerformanceLoggerScheduler();
         super.resume();
     }
 }
