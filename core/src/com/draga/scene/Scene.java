@@ -1,4 +1,4 @@
-package com.draga.manager.scene;
+package com.draga.scene;
 
 public abstract class Scene
 {

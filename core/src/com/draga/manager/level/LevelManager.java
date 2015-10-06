@@ -1,14 +1,17 @@
 package com.draga.manager.level;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Json;
 import com.draga.entity.Planet;
 import com.draga.entity.Ship;
 import com.draga.manager.level.serialisableEntities.SerialisablePlanet;
 import com.draga.manager.level.serialisableEntities.SerialisableWorld;
-import com.draga.manager.scene.GameScene;
+import com.draga.scene.GameScene;
 
 public abstract class LevelManager
 {
@@ -39,7 +42,7 @@ public abstract class LevelManager
         return serialisableWorld;
     }
 
-    public static GameScene getLevelWorldFromFile(
+    public static GameScene getGameSceneFromFile(
         String serialisedWorldFilePath, SpriteBatch spriteBatch)
     {
         String serialisedWordString = getStringFromFile(serialisedWorldFilePath);
@@ -61,17 +64,37 @@ public abstract class LevelManager
     private static GameScene getLevelGameScene(
         SerialisableWorld serialisableWorld, SpriteBatch spriteBatch)
     {
+        AssetManager assetManager = new AssetManager();
+        assetManager.load(serialisableWorld.serialisedBackground.getTexturePath(), Texture.class);
+        assetManager.load(serialisableWorld.serialisedShip.getShipTexturePath(), Texture.class);
+        assetManager.load(
+            serialisableWorld.serialisedShip.getThrusterTextureAtlasPath(), TextureAtlas.class);
+        for (SerialisablePlanet serialisablePlanet : serialisableWorld.serialisedPlanets)
+        {
+            assetManager.load(serialisablePlanet.getTexturePath(), Texture.class);
+        }
+        assetManager.load("explosion/explosion.atlas", TextureAtlas.class);
+
+
+        Long startTime = System.nanoTime();
+        assetManager.finishLoading();
+        Long finishTime = System.nanoTime();
+        Gdx.app.log("AssetManager", "Time: " + ((finishTime - startTime) * 0.000000001));
+
+
         GameScene gameScene = new GameScene(
             serialisableWorld.serialisedBackground.getTexturePath(),
             spriteBatch,
             serialisableWorld.width,
-            serialisableWorld.height);
+            serialisableWorld.height,
+            assetManager);
 
         Ship ship = new Ship(
             serialisableWorld.serialisedShip.getX(),
             serialisableWorld.serialisedShip.getY(),
-            serialisableWorld.serialisedShip.getTexturePath(),
-            "thruster/thrusterSize256Frames75.txt");
+            serialisableWorld.serialisedShip.getShipTexturePath(),
+            serialisableWorld.serialisedShip.getThrusterTextureAtlasPath(),
+            assetManager);
         gameScene.addShip(ship);
 
         for (SerialisablePlanet serialisablePlanet : serialisableWorld.serialisedPlanets)
@@ -81,7 +104,8 @@ public abstract class LevelManager
                 serialisablePlanet.getRadius(),
                 serialisablePlanet.getX(),
                 serialisablePlanet.getY(),
-                serialisablePlanet.getTexturePath());
+                serialisablePlanet.getTexturePath(),
+                assetManager);
             gameScene.addPlanet(planet);
         }
 

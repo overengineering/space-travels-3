@@ -1,4 +1,4 @@
-package com.draga.manager.scene;
+package com.draga.scene;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -95,8 +95,8 @@ public class MenuScene extends Scene
     private void StartGameScene()
     {
         SceneManager.setActiveScene(
-                LevelManager.getLevelWorldFromFile(
-                        "level1.json", new SpriteBatch()));
+                LevelManager.getGameSceneFromFile(
+                    "level1.json", new SpriteBatch()));
     }
 
     public Actor getHeaderLabel()

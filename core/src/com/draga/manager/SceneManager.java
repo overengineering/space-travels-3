@@ -2,7 +2,7 @@ package com.draga.manager;
 
 import com.badlogic.gdx.Gdx;
 import com.draga.Constants;
-import com.draga.manager.scene.Scene;
+import com.draga.scene.Scene;
 
 public class SceneManager
 {

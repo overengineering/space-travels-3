@@ -6,7 +6,8 @@
     "texturePath": "background/background1080.jpg"
   },
   "serialisedShip": {
-    "texturePath": "spaceship/destroyer128.png",
+    "shipTexturePath": "spaceship/destroyer128.png",
+    "ThrusterTextureAtlasPath": "thruster/thrusterSize256Frames75.txt",
     "x": 150,
     "y": 75
   },

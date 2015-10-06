@@ -5,7 +5,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.draga.manager.level.LevelManager;
 import com.draga.manager.level.serialisableEntities.SerialisableWorld;
-import com.draga.manager.scene.GameScene;
+import com.draga.scene.GameScene;
 import com.draga.test.gdxTestRunner.GdxTestRunner;
 import org.junit.Assert;
 import org.junit.Test;
@@ -25,7 +25,7 @@ import static org.mockito.Mockito.mock;
         Assert.assertNotNull(serialisableWorld.serialisedPlanets);
         Assert.assertNotNull(serialisableWorld.serialisedBackground);
         Assert.assertNotNull(serialisableWorld.serialisedShip);
-        Assert.assertEquals(serialisableWorld.serialisedPlanets.size(), 1);
+        Assert.assertNotEquals(serialisableWorld.serialisedPlanets.size(), 0);
     }
 
     @Test public void testGetLevelWorld() throws Exception
@@ -39,7 +39,7 @@ import static org.mockito.Mockito.mock;
 
     private String getTestLevelJson()
     {
-        FileHandle testLevelFileHandle = Gdx.files.internal("../android/assets/testLevel.json");
+        FileHandle testLevelFileHandle = Gdx.files.internal("level1.json");
         String testLevelJson = testLevelFileHandle.readString();
 
         return testLevelJson;

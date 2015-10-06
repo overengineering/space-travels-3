@@ -1,7 +1,6 @@
 package com.draga.entity;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -43,9 +42,15 @@ public class Ship extends GameEntity
     private PolygonShape shipShape;
     private TextureAtlas thrusterTextureAtlas;
 
-    public Ship(float x, float y, String shipTexturePath, String thrusterTextureAtlasPath)
+    public Ship(
+        float x,
+        float y,
+        String shipTexturePath,
+        String thrusterTextureAtlasPath,
+        AssetManager assetManager)
     {
-        collisionResolutionComponent = new ShipBox2dCollisionResolutionComponent(this);
+        collisionResolutionComponent =
+            new ShipBox2dCollisionResolutionComponent(this, assetManager);
 
         shipShape = new PolygonShape();
         shipShape.setAsBox(SHIP_WIDTH / 2f, SHIP_HEIGHT / 2f);
@@ -79,15 +84,14 @@ public class Ship extends GameEntity
         bodyDef.angle = 0;
 
 
-        FileHandle fileHandle = Gdx.files.internal(shipTexturePath);
-        shipTexture = new Texture(fileHandle);
+        this.shipTexture = assetManager.get(shipTexturePath);
 
 
         thrusterAnimationStateTime = 0f;
-        thrusterTextureAtlas = new TextureAtlas(thrusterTextureAtlasPath);
+        this.thrusterTextureAtlas = assetManager.get(thrusterTextureAtlasPath);
         thrusterAnimation = new Animation(
-            TOTAL_THRUSTER_ANIMATION_TIME / thrusterTextureAtlas.getRegions().size,
-            thrusterTextureAtlas.getRegions(),
+            TOTAL_THRUSTER_ANIMATION_TIME / this.thrusterTextureAtlas.getRegions().size,
+            this.thrusterTextureAtlas.getRegions(),
             Animation.PlayMode.LOOP);
     }
 
@@ -108,9 +112,8 @@ public class Ship extends GameEntity
         float thrusterScale = inputForce.len();
         thrusterWidth = THRUSTER_MAX_WIDTH * thrusterScale;
         thrusterHeight = THRUSTER_MAX_HEIGHT * thrusterScale;
-        Vector2 thrusterOffsetFromCentre = Pools.obtain(Vector2.class)
-            .set(THRUSTER_OFFSET)
-            .sub(thrusterWidth / 2f, 0);
+        Vector2 thrusterOffsetFromCentre =
+            Pools.obtain(Vector2.class).set(THRUSTER_OFFSET).sub(thrusterWidth / 2f, 0);
         thrusterShape.setAsBox(
             thrusterWidth / 2f, thrusterHeight / 2f, thrusterOffsetFromCentre, 0);
         thrusterFixtureDef.shape = thrusterShape;
@@ -123,11 +126,11 @@ public class Ship extends GameEntity
     @Override public void draw(SpriteBatch spriteBatch)
     {
         TextureRegion textureRegion = thrusterAnimation.getKeyFrame(thrusterAnimationStateTime);
-        Vector2 thrusterOffsetFromCentre = Pools.obtain(Vector2.class)
-            .set(THRUSTER_OFFSET)
-            .sub(thrusterWidth / 2f, 0);
+        Vector2 thrusterOffsetFromCentre =
+            Pools.obtain(Vector2.class).set(THRUSTER_OFFSET).sub(thrusterWidth / 2f, 0);
         Vector2 thrusterPosition = new Vector2(body.getPosition());
-        Vector2 thrusterRotateOffset = new Vector2(thrusterOffsetFromCentre).rotateRad(body.getAngle());
+        Vector2 thrusterRotateOffset =
+            new Vector2(thrusterOffsetFromCentre).rotateRad(body.getAngle());
         thrusterPosition.add(thrusterRotateOffset);
         spriteBatch.draw(
             textureRegion,
