@@ -5,7 +5,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.draga.manager.level.LevelManager;
 import com.draga.manager.level.serialisableEntities.SerialisableWorld;
-import com.draga.manager.scene.GameScene;
+import com.draga.manager.scene.GameScreen;
 import com.draga.test.gdxTestRunner.GdxTestRunner;
 import org.junit.Assert;
 import org.junit.Test;
@@ -31,10 +31,10 @@ import static org.mockito.Mockito.mock;
     @Test public void testGetLevelWorld() throws Exception
     {
         String testLevelJson = getTestLevelJson();
-        GameScene gameScene = LevelManager.getLevelGameSceneFromString(
+        GameScreen gameScreen = LevelManager.getLevelGameSceneFromString(
             testLevelJson, mock(SpriteBatch.class));
 
-        Assert.assertNotNull(gameScene);
+        Assert.assertNotNull(gameScreen);
     }
 
     private String getTestLevelJson()

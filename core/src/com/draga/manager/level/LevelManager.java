@@ -8,7 +8,7 @@ import com.draga.entity.Planet;
 import com.draga.entity.Ship;
 import com.draga.manager.level.serialisableEntities.SerialisablePlanet;
 import com.draga.manager.level.serialisableEntities.SerialisableWorld;
-import com.draga.manager.scene.GameScene;
+import com.draga.manager.scene.GameScreen;
 
 public abstract class LevelManager
 {
@@ -39,29 +39,29 @@ public abstract class LevelManager
         return serialisableWorld;
     }
 
-    public static GameScene getLevelWorldFromFile(
+    public static GameScreen getLevelWorldFromFile(
         String serialisedWorldFilePath, SpriteBatch spriteBatch)
     {
         String serialisedWordString = getStringFromFile(serialisedWorldFilePath);
-        GameScene world = getLevelGameSceneFromString(serialisedWordString, spriteBatch);
+        GameScreen world = getLevelGameSceneFromString(serialisedWordString, spriteBatch);
 
         return world;
     }
 
-    public static GameScene getLevelGameSceneFromString(String jsonString, SpriteBatch spriteBatch)
+    public static GameScreen getLevelGameSceneFromString(String jsonString, SpriteBatch spriteBatch)
     {
         SerialisableWorld serialisableWorld = LevelManager.getSerialisedGameSceneFromString(
             jsonString);
 
-        GameScene world = LevelManager.getLevelGameScene(serialisableWorld, spriteBatch);
+        GameScreen world = LevelManager.getLevelGameScene(serialisableWorld, spriteBatch);
 
         return world;
     }
 
-    private static GameScene getLevelGameScene(
+    private static GameScreen getLevelGameScene(
         SerialisableWorld serialisableWorld, SpriteBatch spriteBatch)
     {
-        GameScene gameScene = new GameScene(
+        GameScreen gameScreen = new GameScreen(
             serialisableWorld.serialisedBackground.getTexturePath(),
             spriteBatch,
             serialisableWorld.width,
@@ -72,7 +72,7 @@ public abstract class LevelManager
             serialisableWorld.serialisedShip.getY(),
             serialisableWorld.serialisedShip.getTexturePath(),
             "thruster/thrusterSize256Frames75.txt");
-        gameScene.addShip(ship);
+        gameScreen.addShip(ship);
 
         for (SerialisablePlanet serialisablePlanet : serialisableWorld.serialisedPlanets)
         {
@@ -82,14 +82,14 @@ public abstract class LevelManager
                 serialisablePlanet.getX(),
                 serialisablePlanet.getY(),
                 serialisablePlanet.getTexturePath());
-            gameScene.addPlanet(planet);
+            gameScreen.addPlanet(planet);
 
             if (serialisablePlanet.isDestination())
             {
-                gameScene.setDestinationPlanet(planet);
+                gameScreen.setDestinationPlanet(planet);
             }
         }
 
-        return gameScene;
+        return gameScreen;
     }
 }

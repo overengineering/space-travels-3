@@ -1,7 +1,9 @@
-package com.draga.manager.scene;
+package com.draga.manager.screen;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -18,13 +20,14 @@ import com.draga.entity.Planet;
 import com.draga.entity.Ship;
 import com.draga.manager.GameContactListener;
 import com.draga.manager.GameEntityManager;
-import com.draga.manager.SceneManager;
+import com.draga.manager.ScreenManager;
 
 import java.util.ArrayList;
 
-public class GameScene extends Scene
+public class GameScreen implements Screen
 {
-    private static final String LOGGING_TAG = GameScene.class.getSimpleName();
+    private              Game   game        = null;
+    private static final String LOGGING_TAG = GameScreen.class.getSimpleName();
     private Texture            backgroundTexture;
     private Box2DDebugRenderer box2DDebugRenderer;
     private World              box2dWorld;
@@ -37,17 +40,7 @@ public class GameScene extends Scene
     private ArrayList<Planet>  planets;
     private Planet             destinationPlanet;
 
-    public Planet getDestinationPlanet()
-    {
-        return destinationPlanet;
-    }
-
-    public void setDestinationPlanet(Planet destinationPlanet)
-    {
-        this.destinationPlanet = destinationPlanet;
-    }
-
-    public GameScene(String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height)
+    public GameScreen(String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height)
     {
         box2dWorld = new World(Pools.obtain(Vector2.class), true);
         box2dWorld.setContactListener(new GameContactListener());
@@ -68,6 +61,26 @@ public class GameScene extends Scene
         }
 
         box2DDebugRenderer = new Box2DDebugRenderer();
+    }
+
+    public Game getGame()
+    {
+        return game;
+    }
+
+    public void setGame(Game game)
+    {
+        this.game = game;
+    }
+
+    public Planet getDestinationPlanet()
+    {
+        return destinationPlanet;
+    }
+
+    public void setDestinationPlanet(Planet destinationPlanet)
+    {
+        this.destinationPlanet = destinationPlanet;
     }
 
     public World getBox2dWorld()
@@ -146,7 +159,7 @@ public class GameScene extends Scene
         if (ship.isDead())
         {
             // TODO: Make scene manager a stack.
-            //SceneManager
+            //ScreenManager
         }
     }
 
@@ -215,11 +228,16 @@ public class GameScene extends Scene
         box2DDebugRenderer.dispose();
     }
 
+    @Override public void show()
+    {
+
+    }
+
     @Override public void render(float delta)
     {
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
         {
-            SceneManager.setActiveScene(new MenuScene());
+            ScreenManager.setActiveScreen(new MenuScreen());
             return;
         }
 
@@ -233,6 +251,11 @@ public class GameScene extends Scene
     }
 
     @Override public void resume()
+    {
+
+    }
+
+    @Override public void hide()
     {
 
     }

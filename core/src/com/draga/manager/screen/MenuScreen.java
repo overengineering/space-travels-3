@@ -1,7 +1,8 @@
-package com.draga.manager.scene;
+package com.draga.manager.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -12,16 +13,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.draga.manager.SceneManager;
+import com.draga.manager.ScreenManager;
 import com.draga.manager.level.LevelManager;
 
-public class MenuScene extends Scene
+public class MenuScreen implements Screen
 {
     private final FreeTypeFontGenerator freeTypeFontGenerator;
     private Stage stage;
     private BitmapFont pDark24Font;
 
-    public MenuScene()
+    public MenuScreen()
     {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
@@ -35,6 +36,11 @@ public class MenuScene extends Scene
         stage.addActor(getPlayButton());
     }
 
+    @Override public void show()
+    {
+
+    }
+
     @Override public void render(float deltaTime)
     {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
@@ -43,7 +49,7 @@ public class MenuScene extends Scene
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER))
         {
-            StartGameScene();
+            StartGameScreen();
         }
 
         stage.act(deltaTime);
@@ -72,6 +78,11 @@ public class MenuScene extends Scene
 
     }
 
+    @Override public void hide()
+    {
+
+    }
+
     public Actor getPlayButton()
     {
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
@@ -85,18 +96,18 @@ public class MenuScene extends Scene
             {
                 @Override public void clicked(InputEvent event, float x, float y)
                 {
-                    StartGameScene();
+                    StartGameScreen();
                     super.clicked(event, x, y);
                 }
             });
         return playButton;
     }
 
-    private void StartGameScene()
+    private void StartGameScreen()
     {
-        SceneManager.setActiveScene(
-                LevelManager.getLevelWorldFromFile(
-                        "level1.json", new SpriteBatch()));
+        ScreenManager.setActiveScreen(
+            LevelManager.getLevelWorldFromFile(
+                "level1.json", new SpriteBatch()));
     }
 
     public Actor getHeaderLabel()
