@@ -24,8 +24,13 @@ public class ScreenManager
     {
         return game.getScreen();
     }
-    
+
     public static void setActiveScreen(Screen screen)
+    {
+        setActiveScreen(screen, true);
+    }
+
+    public static void setActiveScreen(Screen screen, boolean doDispose)
     {
         if (Constants.IS_DEBUGGING)
         {
@@ -33,7 +38,7 @@ public class ScreenManager
         }
 
         Screen activeScreen = game.getScreen();
-        if (activeScreen != null)
+        if (doDispose && activeScreen != null)
         {
             activeScreen.pause();
             activeScreen.dispose();

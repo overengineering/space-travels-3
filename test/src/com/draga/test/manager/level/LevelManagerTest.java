@@ -5,7 +5,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.draga.manager.level.LevelManager;
 import com.draga.manager.level.serialisableEntities.SerialisableWorld;
-import com.draga.manager.scene.GameScreen;
+import com.draga.manager.screen.GameScreen;
 import com.draga.test.gdxTestRunner.GdxTestRunner;
 import org.junit.Assert;
 import org.junit.Test;

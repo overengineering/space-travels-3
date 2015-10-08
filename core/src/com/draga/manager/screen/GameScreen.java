@@ -26,7 +26,6 @@ import java.util.ArrayList;
 
 public class GameScreen implements Screen
 {
-    private              Game   game        = null;
     private static final String LOGGING_TAG = GameScreen.class.getSimpleName();
     private Texture            backgroundTexture;
     private Box2DDebugRenderer box2DDebugRenderer;
@@ -39,6 +38,7 @@ public class GameScreen implements Screen
     private int                height;
     private ArrayList<Planet>  planets;
     private Planet             destinationPlanet;
+    private boolean            isPaused = false;
 
     public GameScreen(String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height)
     {
@@ -61,16 +61,6 @@ public class GameScreen implements Screen
         }
 
         box2DDebugRenderer = new Box2DDebugRenderer();
-    }
-
-    public Game getGame()
-    {
-        return game;
-    }
-
-    public void setGame(Game game)
-    {
-        this.game = game;
     }
 
     public Planet getDestinationPlanet()
@@ -158,8 +148,10 @@ public class GameScreen implements Screen
         // On death
         if (ship.isDead())
         {
-            // TODO: Make scene manager a stack.
-            //ScreenManager
+            ship.setIsDead(false);
+
+            removeGameEntity(ship);
+            ScreenManager.setActiveScreen(new LoseScreen(this), false);
         }
     }
 
@@ -235,24 +227,27 @@ public class GameScreen implements Screen
 
     @Override public void render(float delta)
     {
-        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
         {
             ScreenManager.setActiveScreen(new MenuScreen());
             return;
         }
 
-        update(delta);
+        if(!isPaused)
+        {
+            update(delta);
+        }
         draw();
     }
 
     @Override public void pause()
     {
-
+        isPaused = true;
     }
 
     @Override public void resume()
     {
-
+        isPaused = false;
     }
 
     @Override public void hide()

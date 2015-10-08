@@ -8,7 +8,7 @@ import com.draga.entity.Planet;
 import com.draga.entity.Ship;
 import com.draga.manager.level.serialisableEntities.SerialisablePlanet;
 import com.draga.manager.level.serialisableEntities.SerialisableWorld;
-import com.draga.manager.scene.GameScreen;
+import com.draga.manager.screen.GameScreen;
 
 public abstract class LevelManager
 {

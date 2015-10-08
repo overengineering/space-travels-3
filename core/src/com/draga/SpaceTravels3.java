@@ -6,7 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.draga.manager.ScreenManager;
-import com.draga.manager.scene.MenuScreen;
+import com.draga.manager.screen.MenuScreen;
 
 import java.sql.Timestamp;
 import java.util.Date;
