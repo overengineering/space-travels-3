@@ -1,5 +1,5 @@
 {
-  "class": "SerialisableWorld",
+  "class": "SerialisableGameScene",
   "width": 300,
   "height": 150,
   "serialisedBackground": {

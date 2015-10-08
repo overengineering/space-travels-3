@@ -3,25 +3,23 @@ package com.draga.manager.level;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Json;
 import com.draga.entity.Planet;
 import com.draga.entity.Ship;
+import com.draga.manager.level.serialisableEntities.SerialisableGameScene;
 import com.draga.manager.level.serialisableEntities.SerialisablePlanet;
-import com.draga.manager.level.serialisableEntities.SerialisableWorld;
 import com.draga.scene.GameScene;
 
 public abstract class LevelManager
 {
-    public static SerialisableWorld getSerialisedGameSceneFromFile(String serialisedWorldFilePath)
+    public static SerialisableGameScene getSerialisedGameSceneFromFile(String serialisedGameSceneFilePath)
     {
-        String serialisedWordString = getStringFromFile(serialisedWorldFilePath);
-        SerialisableWorld serialisableWorld =
+        String serialisedWordString = getStringFromFile(serialisedGameSceneFilePath);
+        SerialisableGameScene serialisableGameScene =
             getSerialisedGameSceneFromString(serialisedWordString);
 
-        return serialisableWorld;
+        return serialisableGameScene;
     }
 
     private static String getStringFromFile(String filePath)
@@ -30,74 +28,61 @@ public abstract class LevelManager
         return serialisedWorldFileHandle.readString();
     }
 
-    public static SerialisableWorld getSerialisedGameSceneFromString(String serialisedWord)
+    public static SerialisableGameScene getSerialisedGameSceneFromString(String serialisedWord)
     {
         Json json = new Json();
 
-        json.addClassTag("SerialisableWorld", SerialisableWorld.class);
+        json.addClassTag("SerialisableGameScene", SerialisableGameScene.class);
 
-        SerialisableWorld serialisableWorld =
-            json.fromJson(SerialisableWorld.class, serialisedWord);
+        SerialisableGameScene serialisableGameScene =
+            json.fromJson(SerialisableGameScene.class, serialisedWord);
 
-        return serialisableWorld;
+        return serialisableGameScene;
     }
 
     public static GameScene getGameSceneFromFile(
-        String serialisedWorldFilePath, SpriteBatch spriteBatch)
+        String serialisedGameSceneFilePath, SpriteBatch spriteBatch, AssetManager assetManager)
     {
-        String serialisedWordString = getStringFromFile(serialisedWorldFilePath);
-        GameScene world = getLevelGameSceneFromString(serialisedWordString, spriteBatch);
+        String serialisedWordString = getStringFromFile(serialisedGameSceneFilePath);
+        GameScene gameScene = getLevelGameSceneFromString(
+            serialisedWordString, spriteBatch, assetManager);
 
-        return world;
+        return gameScene;
     }
 
-    public static GameScene getLevelGameSceneFromString(String jsonString, SpriteBatch spriteBatch)
+    public static GameScene getLevelGameSceneFromString(
+        String jsonString, SpriteBatch spriteBatch, AssetManager assetManager)
     {
-        SerialisableWorld serialisableWorld = LevelManager.getSerialisedGameSceneFromString(
+        SerialisableGameScene serialisableGameScene = LevelManager.getSerialisedGameSceneFromString(
             jsonString);
 
-        GameScene world = LevelManager.getLevelGameScene(serialisableWorld, spriteBatch);
+        GameScene gameScene =
+            LevelManager.getLevelGameScene(serialisableGameScene, spriteBatch, assetManager);
 
-        return world;
+        return gameScene;
     }
 
-    private static GameScene getLevelGameScene(
-        SerialisableWorld serialisableWorld, SpriteBatch spriteBatch)
+    public static GameScene getLevelGameScene(
+        SerialisableGameScene serialisableGameScene,
+        SpriteBatch spriteBatch,
+        AssetManager assetManager)
     {
-        AssetManager assetManager = new AssetManager();
-        assetManager.load(serialisableWorld.serialisedBackground.getTexturePath(), Texture.class);
-        assetManager.load(serialisableWorld.serialisedShip.getShipTexturePath(), Texture.class);
-        assetManager.load(
-            serialisableWorld.serialisedShip.getThrusterTextureAtlasPath(), TextureAtlas.class);
-        for (SerialisablePlanet serialisablePlanet : serialisableWorld.serialisedPlanets)
-        {
-            assetManager.load(serialisablePlanet.getTexturePath(), Texture.class);
-        }
-        assetManager.load("explosion/explosion.atlas", TextureAtlas.class);
-
-
-        Long startTime = System.nanoTime();
-        assetManager.finishLoading();
-        Long finishTime = System.nanoTime();
-        Gdx.app.log("AssetManager", "Time: " + ((finishTime - startTime) * 0.000000001));
-
-
         GameScene gameScene = new GameScene(
-            serialisableWorld.serialisedBackground.getTexturePath(),
+            serialisableGameScene.serialisedBackground.getTexturePath(),
             spriteBatch,
-            serialisableWorld.width,
-            serialisableWorld.height,
+            serialisableGameScene.width,
+            serialisableGameScene.height,
             assetManager);
 
         Ship ship = new Ship(
-            serialisableWorld.serialisedShip.getX(),
-            serialisableWorld.serialisedShip.getY(),
-            serialisableWorld.serialisedShip.getShipTexturePath(),
-            serialisableWorld.serialisedShip.getThrusterTextureAtlasPath(),
+            serialisableGameScene.serialisedShip.getX(),
+            serialisableGameScene.serialisedShip.getY(),
+            serialisableGameScene.serialisedShip.getShipTexturePath(),
+            serialisableGameScene.serialisedShip.getThrusterTextureAtlasPath(),
             assetManager);
         gameScene.addShip(ship);
 
-        for (SerialisablePlanet serialisablePlanet : serialisableWorld.serialisedPlanets)
+        for (SerialisablePlanet serialisablePlanet : serialisableGameScene.serialisedPlanets)
         {
             Planet planet = new Planet(
                 serialisablePlanet.getMass(),

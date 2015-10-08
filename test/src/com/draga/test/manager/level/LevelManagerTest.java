@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.draga.manager.level.LevelManager;
-import com.draga.manager.level.serialisableEntities.SerialisableWorld;
+import com.draga.manager.level.serialisableEntities.SerialisableGameScene;
 import com.draga.scene.GameScene;
 import com.draga.test.gdxTestRunner.GdxTestRunner;
 import org.junit.Assert;
@@ -18,21 +18,21 @@ import static org.mockito.Mockito.mock;
     @Test public void testGetSerialisedWord() throws Exception
     {
         String testLevelJson = getTestLevelJson();
-        SerialisableWorld serialisableWorld = LevelManager.getSerialisedGameSceneFromString(
+        SerialisableGameScene serialisableGameScene = LevelManager.getSerialisedGameSceneFromString(
             testLevelJson);
 
-        Assert.assertNotNull(serialisableWorld);
-        Assert.assertNotNull(serialisableWorld.serialisedPlanets);
-        Assert.assertNotNull(serialisableWorld.serialisedBackground);
-        Assert.assertNotNull(serialisableWorld.serialisedShip);
-        Assert.assertNotEquals(serialisableWorld.serialisedPlanets.size(), 0);
+        Assert.assertNotNull(serialisableGameScene);
+        Assert.assertNotNull(serialisableGameScene.serialisedPlanets);
+        Assert.assertNotNull(serialisableGameScene.serialisedBackground);
+        Assert.assertNotNull(serialisableGameScene.serialisedShip);
+        Assert.assertNotEquals(serialisableGameScene.serialisedPlanets.size(), 0);
     }
 
     @Test public void testGetLevelWorld() throws Exception
     {
         String testLevelJson = getTestLevelJson();
         GameScene gameScene = LevelManager.getLevelGameSceneFromString(
-            testLevelJson, mock(SpriteBatch.class));
+            testLevelJson, mock(SpriteBatch.class), assetManager);
 
         Assert.assertNotNull(gameScene);
     }

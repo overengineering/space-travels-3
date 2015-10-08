@@ -25,6 +25,7 @@ public class MenuScene extends Scene
     {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
+
         freeTypeFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font/pdark.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter =
             new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -94,9 +95,7 @@ public class MenuScene extends Scene
 
     private void StartGameScene()
     {
-        SceneManager.setActiveScene(
-                LevelManager.getGameSceneFromFile(
-                    "level1.json", new SpriteBatch()));
+        SceneManager.setActiveScene(new LoadingScene("level1.json"));
     }
 
     public Actor getHeaderLabel()
