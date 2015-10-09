@@ -5,6 +5,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.physics.box2d.Box2D;
+import com.draga.manager.FontManager;
 import com.draga.manager.ScreenManager;
 import com.draga.manager.screen.MenuScreen;
 
@@ -23,6 +24,8 @@ public class SpaceTravels3 extends Game
     @Override
     public void create()
     {
+        FontManager.create();
+        FontManager.assetManager.finishLoading();
         ScreenManager.setGame(this);
         ScreenManager.setActiveScreen(new MenuScreen());
 
@@ -84,6 +87,7 @@ public class SpaceTravels3 extends Game
     public void pause()
     {
         Gdx.app.debug(LOGGING_TAG, "Pause");
+        FontManager.destroy();
         ScreenManager.getActiveScreen().pause();
         super.pause();
     }
@@ -103,6 +107,7 @@ public class SpaceTravels3 extends Game
     public void resume()
     {
         Gdx.app.debug(LOGGING_TAG, "Resume");
+        FontManager.create();
         ScreenManager.getActiveScreen().resume();
         super.resume();
     }

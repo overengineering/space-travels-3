@@ -3,11 +3,10 @@ package com.draga.manager.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -16,32 +15,23 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.draga.manager.FontManager;
 import com.draga.manager.ScreenManager;
 import com.draga.manager.level.LevelManager;
 
 public class LoseScreen implements Screen
 {
-    private final Stage      stage;
-    private final BitmapFont pDark24Font;
-    private final GameScreen parentScreen;
-    private final SpriteBatch batch        = new SpriteBatch();
-    private final Color       fadeToColour = new Color(0, 0, 0, 0.7f);
-    private final Color backgroundColour = new Color(0, 0, 0, 0);
+    private final Stage         stage;
+    private final GameScreen    parentGameScreen;
+    private final Color         fadeToColour     = new Color(0, 0, 0, 0.7f);
+    private final Color         backgroundColour = new Color(0, 0, 0, 0);
     private final ShapeRenderer shapeRenderer;
 
     public LoseScreen(GameScreen parentScreen)
     {
-        this.parentScreen = parentScreen;
+        this.parentGameScreen = parentScreen;
         this.stage = new Stage();
         Gdx.input.setInputProcessor(stage);
-
-        FreeTypeFontGenerator freeTypeFontGenerator =
-            new FreeTypeFontGenerator(Gdx.files.internal("font/pdark.ttf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter =
-            new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 64;
-        pDark24Font = freeTypeFontGenerator.generateFont(parameter);
-        freeTypeFontGenerator.dispose();
 
         stage.addActor(getRetryButton());
 
@@ -55,10 +45,11 @@ public class LoseScreen implements Screen
 
     @Override public void render(float delta)
     {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK)
+            || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
         {
-            parentScreen.pause();
-            parentScreen.dispose();
+            parentGameScreen.pause();
+            parentGameScreen.dispose();
             ScreenManager.setActiveScreen(new MenuScreen());
             return;
         }
@@ -69,7 +60,7 @@ public class LoseScreen implements Screen
             return;
         }
 
-        parentScreen.render(delta);
+        parentGameScreen.render(delta);
         update(delta);
         draw(delta);
     }
@@ -82,7 +73,7 @@ public class LoseScreen implements Screen
 
         if (fadeToColour.equals(backgroundColour))
         {
-            parentScreen.pause();
+            parentGameScreen.setDoUpdate(false);
         }
 
         Gdx.gl.glEnable(GL20.GL_BLEND);
@@ -133,7 +124,7 @@ public class LoseScreen implements Screen
     public Actor getRetryButton()
     {
         TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
-        buttonStyle.font = pDark24Font;
+        buttonStyle.font = FontManager.getBigFont();
 
         TextButton retryButton = new TextButton("Try Again?", buttonStyle);
 
@@ -157,8 +148,8 @@ public class LoseScreen implements Screen
 
     private void Retry()
     {
-        parentScreen.pause();
-        parentScreen.dispose();
+        parentGameScreen.pause();
+        parentGameScreen.dispose();
         ScreenManager.setActiveScreen(
             LevelManager.getLevelWorldFromFile(
                 "level1.json", new SpriteBatch()));

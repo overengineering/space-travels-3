@@ -38,7 +38,7 @@ public class GameScreen implements Screen
     private int                height;
     private ArrayList<Planet>  planets;
     private Planet             destinationPlanet;
-    private boolean            isPaused = false;
+    private boolean            doUpdate = true;
 
     public GameScreen(String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height)
     {
@@ -233,7 +233,7 @@ public class GameScreen implements Screen
             return;
         }
 
-        if(!isPaused)
+        if(doUpdate)
         {
             update(delta);
         }
@@ -242,16 +242,21 @@ public class GameScreen implements Screen
 
     @Override public void pause()
     {
-        isPaused = true;
+
     }
 
     @Override public void resume()
     {
-        isPaused = false;
+
     }
 
     @Override public void hide()
     {
 
+    }
+
+    public void setDoUpdate(boolean doUpdate)
+    {
+        this.doUpdate = doUpdate;
     }
 }
