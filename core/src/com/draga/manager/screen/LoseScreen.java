@@ -11,11 +11,11 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.manager.ScreenManager;
 import com.draga.manager.level.LevelManager;
 
@@ -41,10 +41,9 @@ public class LoseScreen implements Screen
             new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 64;
         pDark24Font = freeTypeFontGenerator.generateFont(parameter);
-
         freeTypeFontGenerator.dispose();
 
-        stage.addActor(getLoseLabel());
+        stage.addActor(getRetryButton());
 
         shapeRenderer = new ShapeRenderer();
     }
@@ -64,13 +63,9 @@ public class LoseScreen implements Screen
             return;
         }
 
-        if (Gdx.input.isTouched() || Gdx.input.isKeyJustPressed(Input.Keys.ENTER))
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER))
         {
-            parentScreen.pause();
-            parentScreen.dispose();
-            ScreenManager.setActiveScreen(
-                LevelManager.getLevelWorldFromFile(
-                    "level1.json", new SpriteBatch()));
+            Retry();
             return;
         }
 
@@ -135,20 +130,37 @@ public class LoseScreen implements Screen
         stage.dispose();
     }
 
-    public Actor getLoseLabel()
+    public Actor getRetryButton()
     {
-        Label.LabelStyle labelStyle = new Label.LabelStyle();
-        labelStyle.font = pDark24Font;
+        TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
+        buttonStyle.font = pDark24Font;
 
-        Label loseLabel = new Label("Try Again?", labelStyle);
+        TextButton retryButton = new TextButton("Try Again?", buttonStyle);
 
-        loseLabel.setWidth(stage.getWidth());
-        loseLabel.setHeight(stage.getHeight());
-        loseLabel.setAlignment(Align.center);
+        retryButton.setX(stage.getWidth() / 2 - retryButton.getWidth() / 2);
+        retryButton.setY(stage.getHeight() / 2 - retryButton.getHeight() / 2);
 
-        loseLabel.setColor(new Color(1, 1, 1, 0));
-        loseLabel.addAction(Actions.color(new Color(1, 1, 1, 1), 5, Interpolation.pow2In));
+        retryButton.setColor(new Color(1, 1, 1, 0));
+        retryButton.addAction(Actions.color(new Color(1, 1, 1, 1), 5, Interpolation.pow2In));
+        retryButton.addListener(
+            new ClickListener()
+            {
+                @Override public void clicked(InputEvent event, float x, float y)
+                {
+                    Retry();
+                    super.clicked(event, x, y);
+                }
+            });
 
-        return loseLabel;
+        return retryButton;
+    }
+
+    private void Retry()
+    {
+        parentScreen.pause();
+        parentScreen.dispose();
+        ScreenManager.setActiveScreen(
+            LevelManager.getLevelWorldFromFile(
+                "level1.json", new SpriteBatch()));
     }
 }

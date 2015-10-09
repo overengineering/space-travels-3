@@ -31,6 +31,7 @@ public class MenuScreen implements Screen
             new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 64;
         pDark24Font = freeTypeFontGenerator.generateFont(parameter);
+        freeTypeFontGenerator.dispose();
 
         stage.addActor(getHeaderLabel());
         stage.addActor(getPlayButton());
@@ -60,7 +61,6 @@ public class MenuScreen implements Screen
     {
         Gdx.input.setInputProcessor(null);
         stage.dispose();
-        freeTypeFontGenerator.dispose();
     }
 
     @Override public void pause()
