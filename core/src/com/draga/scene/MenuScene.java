@@ -1,4 +1,4 @@
-package com.draga.manager.scene;
+package com.draga.scene;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -25,6 +25,7 @@ public class MenuScene extends Scene
     {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
+
         freeTypeFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font/pdark.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter =
             new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -94,9 +95,7 @@ public class MenuScene extends Scene
 
     private void StartGameScene()
     {
-        SceneManager.setActiveScene(
-                LevelManager.getLevelWorldFromFile(
-                        "level1.json", new SpriteBatch()));
+        SceneManager.setActiveScene(new LoadingScene("level1.json"));
     }
 
     public Actor getHeaderLabel()

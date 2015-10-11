@@ -1,12 +1,12 @@
 package com.draga.entity;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.*;
 import com.draga.MaskBits;
+import com.draga.manager.AssMan;
 
 public class Planet extends GameEntity
 {
@@ -16,7 +16,8 @@ public class Planet extends GameEntity
     private Fixture     fixture;
     private Texture     texture;
 
-    public Planet(float mass, float radius, float x, float y, String texturePath)
+    public Planet(
+        float mass, float radius, float x, float y, String texturePath)
     {
         circleShape = new CircleShape();
         circleShape.setRadius(radius);
@@ -36,8 +37,7 @@ public class Planet extends GameEntity
         bodyDef.angle = 0;
 
 
-        FileHandle fileHandle = Gdx.files.internal(texturePath);
-        texture = new Texture(fileHandle);
+        this.texture = AssMan.getAssetManager().get(texturePath);
     }
 
 

@@ -9,8 +9,8 @@ public class DesktopLauncher
     public static void main(String[] arg)
     {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        config.width = 1920;
-        config.height = 1080;
+        config.width = 1280;
+        config.height = 720;
         config.fullscreen = false;
         new LwjglApplication(new SpaceTravels3(), config);
     }

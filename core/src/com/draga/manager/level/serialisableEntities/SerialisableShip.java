@@ -4,27 +4,33 @@ public class SerialisableShip
 {
     int x;
     int y;
-    private String texturePath;
+    private String shipTexturePath;
+    private String ThrusterTextureAtlasPath;
 
     public SerialisableShip()
     {
 
     }
 
-    public SerialisableShip(String texturePath)
+    public SerialisableShip(String shipTexturePath)
     {
 
-        this.texturePath = texturePath;
+        this.shipTexturePath = shipTexturePath;
     }
 
-    public String getTexturePath()
+    public String getThrusterTextureAtlasPath()
     {
-        return texturePath;
+        return ThrusterTextureAtlasPath;
     }
 
-    public void setTexturePath(String texturePath)
+    public String getShipTexturePath()
     {
-        this.texturePath = texturePath;
+        return shipTexturePath;
+    }
+
+    public void setShipTexturePath(String shipTexturePath)
+    {
+        this.shipTexturePath = shipTexturePath;
     }
 
     public int getX()

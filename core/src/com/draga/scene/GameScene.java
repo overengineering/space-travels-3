@@ -1,8 +1,8 @@
-package com.draga.manager.scene;
+package com.draga.scene;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -16,6 +16,7 @@ import com.draga.MaskBits;
 import com.draga.entity.GameEntity;
 import com.draga.entity.Planet;
 import com.draga.entity.Ship;
+import com.draga.manager.AssMan;
 import com.draga.manager.GameContactListener;
 import com.draga.manager.GameEntityManager;
 import com.draga.manager.SceneManager;
@@ -36,13 +37,17 @@ public class GameScene extends Scene
     private int                height;
     private ArrayList<Planet>  planets;
 
-    public GameScene(String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height)
+    public GameScene(
+        String backgroundTexturePath,
+        SpriteBatch spriteBatch,
+        int width,
+        int height)
     {
         box2dWorld = new World(Pools.obtain(Vector2.class), true);
         box2dWorld.setContactListener(new GameContactListener());
+
         planets = new ArrayList<>();
-        FileHandle backgroundFileHandle = Gdx.files.internal(backgroundTexturePath);
-        this.backgroundTexture = new Texture(backgroundFileHandle);
+        this.backgroundTexture = AssMan.getAssetManager().get(backgroundTexturePath);
         this.width = width;
         this.height = height;
         batch = spriteBatch;
@@ -195,6 +200,7 @@ public class GameScene extends Scene
         box2dWorld.dispose();
         backgroundTexture.dispose();
         box2DDebugRenderer.dispose();
+        AssMan.getAssetManager().clear();
     }
 
     @Override public void render(float delta)

@@ -1,5 +1,6 @@
 package com.draga.entity;
 
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -7,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.*;
 import com.draga.MaskBits;
+import com.draga.manager.AssMan;
 import com.draga.manager.GameEntityManager;
 
 public class Explosion extends GameEntity
@@ -21,7 +23,8 @@ public class Explosion extends GameEntity
     private Animation    animation;
     private Fixture      fixture;
 
-    public Explosion(float x, float y, String textureAtlasPath)
+    public Explosion(
+        float x, float y, String textureAtlasPath)
     {
         polygonShape = new PolygonShape();
         polygonShape.setAsBox(WIDTH / 2f, HEIGHT / 2f);
@@ -40,7 +43,7 @@ public class Explosion extends GameEntity
         bodyDef.angle = 0;
 
         stateTime = 0f;
-        TextureAtlas textureAtlas = new TextureAtlas(textureAtlasPath);
+        TextureAtlas textureAtlas = AssMan.getAssetManager().get(textureAtlasPath);
         animation = new Animation(
             ANIMATION_TOTAL_TIME / textureAtlas.getRegions().size, textureAtlas.getRegions());
     }
