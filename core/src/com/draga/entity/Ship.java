@@ -12,6 +12,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Pools;
 import com.draga.MaskBits;
 import com.draga.entity.ship.ShipBox2dCollisionResolutionComponent;
+import com.draga.manager.AssMan;
 import com.draga.manager.GravityManager;
 import com.draga.manager.InputManager;
 
@@ -43,14 +44,10 @@ public class Ship extends GameEntity
     private TextureAtlas thrusterTextureAtlas;
 
     public Ship(
-        float x,
-        float y,
-        String shipTexturePath,
-        String thrusterTextureAtlasPath,
-        AssetManager assetManager)
+        float x, float y, String shipTexturePath, String thrusterTextureAtlasPath)
     {
         collisionResolutionComponent =
-            new ShipBox2dCollisionResolutionComponent(this, assetManager);
+            new ShipBox2dCollisionResolutionComponent(this);
 
         shipShape = new PolygonShape();
         shipShape.setAsBox(SHIP_WIDTH / 2f, SHIP_HEIGHT / 2f);
@@ -84,11 +81,11 @@ public class Ship extends GameEntity
         bodyDef.angle = 0;
 
 
-        this.shipTexture = assetManager.get(shipTexturePath);
+        this.shipTexture = AssMan.getAssetManager().get(shipTexturePath);
 
 
         thrusterAnimationStateTime = 0f;
-        this.thrusterTextureAtlas = assetManager.get(thrusterTextureAtlasPath);
+        this.thrusterTextureAtlas = AssMan.getAssetManager().get(thrusterTextureAtlasPath);
         thrusterAnimation = new Animation(
             TOTAL_THRUSTER_ANIMATION_TIME / this.thrusterTextureAtlas.getRegions().size,
             this.thrusterTextureAtlas.getRegions(),

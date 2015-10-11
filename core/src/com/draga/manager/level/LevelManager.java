@@ -1,7 +1,6 @@
 package com.draga.manager.level;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Json;
@@ -41,45 +40,39 @@ public abstract class LevelManager
     }
 
     public static GameScene getGameSceneFromFile(
-        String serialisedGameSceneFilePath, SpriteBatch spriteBatch, AssetManager assetManager)
+        String serialisedGameSceneFilePath,
+        SpriteBatch spriteBatch)
     {
         String serialisedWordString = getStringFromFile(serialisedGameSceneFilePath);
-        GameScene gameScene = getLevelGameSceneFromString(
-            serialisedWordString, spriteBatch, assetManager);
+        GameScene gameScene = getLevelGameSceneFromString(serialisedWordString, spriteBatch);
 
         return gameScene;
     }
 
-    public static GameScene getLevelGameSceneFromString(
-        String jsonString, SpriteBatch spriteBatch, AssetManager assetManager)
+    public static GameScene getLevelGameSceneFromString(String jsonString, SpriteBatch spriteBatch)
     {
         SerialisableGameScene serialisableGameScene = LevelManager.getSerialisedGameSceneFromString(
             jsonString);
 
-        GameScene gameScene =
-            LevelManager.getLevelGameScene(serialisableGameScene, spriteBatch, assetManager);
+        GameScene gameScene = LevelManager.getLevelGameScene(serialisableGameScene, spriteBatch);
 
         return gameScene;
     }
 
     public static GameScene getLevelGameScene(
-        SerialisableGameScene serialisableGameScene,
-        SpriteBatch spriteBatch,
-        AssetManager assetManager)
+        SerialisableGameScene serialisableGameScene, SpriteBatch spriteBatch)
     {
         GameScene gameScene = new GameScene(
             serialisableGameScene.serialisedBackground.getTexturePath(),
             spriteBatch,
             serialisableGameScene.width,
-            serialisableGameScene.height,
-            assetManager);
+            serialisableGameScene.height);
 
         Ship ship = new Ship(
             serialisableGameScene.serialisedShip.getX(),
             serialisableGameScene.serialisedShip.getY(),
             serialisableGameScene.serialisedShip.getShipTexturePath(),
-            serialisableGameScene.serialisedShip.getThrusterTextureAtlasPath(),
-            assetManager);
+            serialisableGameScene.serialisedShip.getThrusterTextureAtlasPath());
         gameScene.addShip(ship);
 
         for (SerialisablePlanet serialisablePlanet : serialisableGameScene.serialisedPlanets)
@@ -89,8 +82,7 @@ public abstract class LevelManager
                 serialisablePlanet.getRadius(),
                 serialisablePlanet.getX(),
                 serialisablePlanet.getY(),
-                serialisablePlanet.getTexturePath(),
-                assetManager);
+                serialisablePlanet.getTexturePath());
             gameScene.addPlanet(planet);
         }
 

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.*;
 import com.draga.MaskBits;
+import com.draga.manager.AssMan;
 
 public class Planet extends GameEntity
 {
@@ -16,7 +17,7 @@ public class Planet extends GameEntity
     private Texture     texture;
 
     public Planet(
-        float mass, float radius, float x, float y, String texturePath, AssetManager assetManager)
+        float mass, float radius, float x, float y, String texturePath)
     {
         circleShape = new CircleShape();
         circleShape.setRadius(radius);
@@ -36,7 +37,7 @@ public class Planet extends GameEntity
         bodyDef.angle = 0;
 
 
-        this.texture = assetManager.get(texturePath);
+        this.texture = AssMan.getAssetManager().get(texturePath);
     }
 
 

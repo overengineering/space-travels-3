@@ -1,7 +1,6 @@
 package com.draga.scene;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -11,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.draga.Constants;
+import com.draga.manager.AssMan;
 import com.draga.manager.SceneManager;
 import com.draga.manager.level.LevelManager;
 import com.draga.manager.level.serialisableEntities.SerialisableGameScene;
@@ -23,27 +23,26 @@ public class LoadingScene extends Scene
     private final FreeTypeFontGenerator freeTypeFontGenerator;
     private final BitmapFont            pDark24Font;
     private final long                  startTime;
-    private       AssetManager          assetManager;
     private       Label                 progressLabel;
     private       SerialisableGameScene serialisableGameScene;
 
     public LoadingScene(String levelJsonPath)
     {
         startTime = System.nanoTime();
-        this.assetManager = new AssetManager();
 
         serialisableGameScene = LevelManager.getSerialisedGameSceneFromFile(levelJsonPath);
 
-        assetManager.load(
+        AssMan.getAssetManager().load(
             serialisableGameScene.serialisedBackground.getTexturePath(), Texture.class);
-        assetManager.load(serialisableGameScene.serialisedShip.getShipTexturePath(), Texture.class);
-        assetManager.load(
+        AssMan.getAssetManager().load(
+            serialisableGameScene.serialisedShip.getShipTexturePath(), Texture.class);
+        AssMan.getAssetManager().load(
             serialisableGameScene.serialisedShip.getThrusterTextureAtlasPath(), TextureAtlas.class);
         for (SerialisablePlanet serialisablePlanet : serialisableGameScene.serialisedPlanets)
         {
-            assetManager.load(serialisablePlanet.getTexturePath(), Texture.class);
+            AssMan.getAssetManager().load(serialisablePlanet.getTexturePath(), Texture.class);
         }
-        assetManager.load("explosion/explosion.atlas", TextureAtlas.class);
+        AssMan.getAssetManager().load("explosion/explosion.atlas", TextureAtlas.class);
         stage = new Stage();
 
 
@@ -59,12 +58,13 @@ public class LoadingScene extends Scene
         stage.addActor(progressLabel);
     }
 
-    @Override public void render(float deltaTime)
+    @Override
+    public void render(float deltaTime)
     {
-        if (assetManager.update())
+        if (AssMan.getAssetManager().update())
         {
             GameScene gameScene = LevelManager.getLevelGameScene(
-                serialisableGameScene, new SpriteBatch(), assetManager);
+                serialisableGameScene, new SpriteBatch());
             long elapsedNanoTime = System.nanoTime() - startTime;
             Gdx.app.debug(LOGGING_TAG, "Loading time: " + elapsedNanoTime * Constants.NANO + "s");
             SceneManager.setActiveScene(gameScene);
@@ -78,27 +78,32 @@ public class LoadingScene extends Scene
     private void setProgressLabelText()
     {
         progressLabel.setText(
-            assetManager.getLoadedAssets() + " of " + (
-                assetManager.getQueuedAssets() + assetManager.getLoadedAssets()));
+            AssMan.getAssetManager().getLoadedAssets() + " of " + (
+                AssMan.getAssetManager().getQueuedAssets() + AssMan.getAssetManager()
+                    .getLoadedAssets()));
         progressLabel.setX(stage.getWidth() - progressLabel.getWidth() / 2f);
     }
 
-    @Override public void dispose()
+    @Override
+    public void dispose()
     {
         freeTypeFontGenerator.dispose();
         stage.dispose();
     }
 
-    @Override public void pause()
+    @Override
+    public void pause()
     {
     }
 
-    @Override public void resize(int width, int height)
+    @Override
+    public void resize(int width, int height)
     {
         stage.getViewport().update(width, height);
     }
 
-    @Override public void resume()
+    @Override
+    public void resume()
     {
 
     }

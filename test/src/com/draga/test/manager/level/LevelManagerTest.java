@@ -13,9 +13,11 @@ import org.junit.runner.RunWith;
 
 import static org.mockito.Mockito.mock;
 
-@RunWith(GdxTestRunner.class) public class LevelManagerTest
+@RunWith(GdxTestRunner.class)
+public class LevelManagerTest
 {
-    @Test public void testGetSerialisedWord() throws Exception
+    @Test
+    public void testGetSerialisedGameScene() throws Exception
     {
         String testLevelJson = getTestLevelJson();
         SerialisableGameScene serialisableGameScene = LevelManager.getSerialisedGameSceneFromString(
@@ -28,11 +30,12 @@ import static org.mockito.Mockito.mock;
         Assert.assertNotEquals(serialisableGameScene.serialisedPlanets.size(), 0);
     }
 
-    @Test public void testGetLevelWorld() throws Exception
+    @Test
+    public void testGetLevelGameScene() throws Exception
     {
         String testLevelJson = getTestLevelJson();
         GameScene gameScene = LevelManager.getLevelGameSceneFromString(
-            testLevelJson, mock(SpriteBatch.class), assetManager);
+            testLevelJson, mock(SpriteBatch.class));
 
         Assert.assertNotNull(gameScene);
     }

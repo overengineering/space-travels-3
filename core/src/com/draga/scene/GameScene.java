@@ -16,6 +16,7 @@ import com.draga.MaskBits;
 import com.draga.entity.GameEntity;
 import com.draga.entity.Planet;
 import com.draga.entity.Ship;
+import com.draga.manager.AssMan;
 import com.draga.manager.GameContactListener;
 import com.draga.manager.GameEntityManager;
 import com.draga.manager.SceneManager;
@@ -25,7 +26,6 @@ import java.util.ArrayList;
 public class GameScene extends Scene
 {
     private static final String LOGGING_TAG = GameScene.class.getSimpleName();
-    private AssetManager       assetManager;
     private Texture            backgroundTexture;
     private Box2DDebugRenderer box2DDebugRenderer;
     private World              box2dWorld;
@@ -41,16 +41,13 @@ public class GameScene extends Scene
         String backgroundTexturePath,
         SpriteBatch spriteBatch,
         int width,
-        int height,
-        AssetManager assetManager)
+        int height)
     {
         box2dWorld = new World(Pools.obtain(Vector2.class), true);
         box2dWorld.setContactListener(new GameContactListener());
 
-        this.assetManager = assetManager;
-
         planets = new ArrayList<>();
-        this.backgroundTexture = this.assetManager.get(backgroundTexturePath);
+        this.backgroundTexture = AssMan.getAssetManager().get(backgroundTexturePath);
         this.width = width;
         this.height = height;
         batch = spriteBatch;
@@ -203,7 +200,7 @@ public class GameScene extends Scene
         box2dWorld.dispose();
         backgroundTexture.dispose();
         box2DDebugRenderer.dispose();
-        assetManager.dispose();
+        AssMan.getAssetManager().clear();
     }
 
     @Override public void render(float delta)
