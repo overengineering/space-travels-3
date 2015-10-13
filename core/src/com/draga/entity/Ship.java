@@ -16,7 +16,6 @@ import com.draga.entity.ship.ShipBox2dCollisionResolutionComponent;
 import com.draga.manager.AssMan;
 import com.draga.manager.GravityManager;
 import com.draga.manager.InputManager;
-import com.google.common.eventbus.EventBus;
 
 public class Ship extends GameEntity
 {
@@ -111,6 +110,12 @@ public class Ship extends GameEntity
         body.applyForceToCenter(gravityForce, true);
 
         Vector2 inputForce = InputManager.getInputForce();
+        // TODO: apply the last part of acceleration properly and maybe then stop updating the
+        // thrusters?
+        if (fuel <= 0)
+        {
+            inputForce.setZero();
+        }
         rotateTo(inputForce, deltaTime);
         updateFuel(inputForce, deltaTime);
         float thrusterScale = inputForce.len();

@@ -19,7 +19,7 @@ public abstract class Constants
     public static final float NANO = 0.000000001f;
 
     public static final float MAX_FUEL        = 1f;
-    public static final float FUEL_PER_SECOND = 0.03f;
+    public static final float FUEL_PER_SECOND = 0.3f;
 
     public static final EventBus EVENT_BUS = new EventBus();
 }

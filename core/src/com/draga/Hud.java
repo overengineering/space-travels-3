@@ -2,50 +2,62 @@ package com.draga;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.google.common.eventbus.Subscribe;
 
 public class Hud implements Screen
 {
-    public static final float WORLD_HEIGHT = 1000f;
-    public static final float WORLD_WIDTH  = 1000f;
-    private final FreeTypeFontGenerator freeTypeFontGenerator;
-    private final BitmapFont            pDark24Font;
+    private static final float WORLD_HEIGHT                  = 1000f;
+    private static final float WORLD_WIDTH                   = 1000f;
+    private static final float FUEL_PROGRESS_BAR_HEIGHT      = WORLD_HEIGHT / 20f;
+    private static final float FUEL_PROGRESS_BAR_WIDTH       = WORLD_WIDTH / 3f;
+    private static final float FUEL_PROGRESS_BAR_LEFT_MARGIN = FUEL_PROGRESS_BAR_HEIGHT;
+    private static final float FUEL_PROGRESS_BAR_TOP_MARGIN  = FUEL_PROGRESS_BAR_LEFT_MARGIN;
     private       Stage                 stage;
-    private       Label                 fuelLabel;
+    private       ProgressBar           fuelProgressBar;
 
     public Hud()
     {
-        freeTypeFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font/pdark.ttf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter =
-            new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 24;
-        pDark24Font = freeTypeFontGenerator.generateFont(parameter);
+        Constants.EVENT_BUS.register(this);
 
         StretchViewport viewport = new StretchViewport(WORLD_WIDTH, WORLD_HEIGHT);
         stage = new Stage(viewport);
 
-        fuelLabel = getFuelLabel();
-        stage.addActor(fuelLabel);
-
-        Constants.EVENT_BUS.register(this);
+        fuelProgressBar = getFuelProgressBar();
+        updateFuelProgressBar(Constants.MAX_FUEL);
+        stage.addActor(fuelProgressBar);
+        stage.setDebugAll(Constants.IS_DEBUGGING);
     }
 
-    public Label getFuelLabel()
+    public ProgressBar getFuelProgressBar()
     {
-        Label.LabelStyle labelStyle = new Label.LabelStyle();
-        labelStyle.font = pDark24Font;
+        Skin skin = new Skin();
+        Pixmap pixmap = new Pixmap(
+            1, (int) Math.ceil(FUEL_PROGRESS_BAR_HEIGHT), Pixmap.Format.RGBA8888);
+        pixmap.setColor(Color.WHITE);
+        pixmap.fill();
+        skin.add("white", new Texture(pixmap));
 
-        Label fuelLabel = new Label(null, labelStyle);
-        float height = pDark24Font.getLineHeight() * 2;
-        fuelLabel.setHeight(height);
-        fuelLabel.setPosition(0, WORLD_HEIGHT - height);
+        ProgressBar.ProgressBarStyle fuelProgressBarStyle = new ProgressBar.ProgressBarStyle(
+            skin.newDrawable("white", Color.DARK_GRAY), null);
+        fuelProgressBarStyle.knobBefore = skin.newDrawable("white", Color.WHITE);
 
-        return fuelLabel;
+        ProgressBar fuelProgressBar = new ProgressBar(
+            0, Constants.MAX_FUEL, Constants.MAX_FUEL / 1000f, false, fuelProgressBarStyle);
+        fuelProgressBar.setSize(FUEL_PROGRESS_BAR_WIDTH, FUEL_PROGRESS_BAR_HEIGHT);
+        fuelProgressBar.setPosition(
+            FUEL_PROGRESS_BAR_LEFT_MARGIN,
+            WORLD_HEIGHT - FUEL_PROGRESS_BAR_TOP_MARGIN - FUEL_PROGRESS_BAR_HEIGHT);
+
+        return fuelProgressBar;
     }
 
     @Override
@@ -87,18 +99,17 @@ public class Hud implements Screen
     @Override
     public void dispose()
     {
-
+        Constants.EVENT_BUS.unregister(this);
     }
 
     @Subscribe
     public void FuelChanged(FuelChangeEvent fuelChangeEvent)
     {
-        updateFuelLabel(fuelChangeEvent.fuel);
+        updateFuelProgressBar(fuelChangeEvent.fuel);
     }
 
-    private void updateFuelLabel(float fuel)
+    private void updateFuelProgressBar(float fuel)
     {
-        String label = String.format("%.2f of %.2f", fuel, Constants.MAX_FUEL);
-        fuelLabel.setText(label);
+        fuelProgressBar.setValue(fuel);
     }
 }
