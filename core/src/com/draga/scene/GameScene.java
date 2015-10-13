@@ -9,9 +9,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.draga.Constants;
+import com.draga.Hud;
 import com.draga.MaskBits;
 import com.draga.entity.GameEntity;
 import com.draga.entity.Planet;
@@ -26,22 +28,20 @@ import java.util.ArrayList;
 public class GameScene extends Scene
 {
     private static final String LOGGING_TAG = GameScene.class.getSimpleName();
-    private Texture            backgroundTexture;
-    private Box2DDebugRenderer box2DDebugRenderer;
-    private World              box2dWorld;
-    private SpriteBatch        batch;
-    private OrthographicCamera orthographicCamera;
-    private ExtendViewport     extendViewport;
-    private Ship               ship;
-    private int                width;
-    private int                height;
-    private ArrayList<Planet>  planets;
+    private final Hud                hud;
+    private       Texture            backgroundTexture;
+    private       Box2DDebugRenderer box2DDebugRenderer;
+    private       World              box2dWorld;
+    private       SpriteBatch        batch;
+    private       OrthographicCamera orthographicCamera;
+    private       ExtendViewport     extendViewport;
+    private       Ship               ship;
+    private       int                width;
+    private       int                height;
+    private       ArrayList<Planet>  planets;
 
     public GameScene(
-        String backgroundTexturePath,
-        SpriteBatch spriteBatch,
-        int width,
-        int height)
+        String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height)
     {
         box2dWorld = new World(Pools.obtain(Vector2.class), true);
         box2dWorld.setContactListener(new GameContactListener());
@@ -62,6 +62,8 @@ public class GameScene extends Scene
         }
 
         box2DDebugRenderer = new Box2DDebugRenderer();
+
+        hud = new Hud();
     }
 
     public World getBox2dWorld()
@@ -203,7 +205,7 @@ public class GameScene extends Scene
         AssMan.getAssetManager().clear();
     }
 
-    @Override public void render(float delta)
+    @Override public void render(float deltaTime)
     {
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
         {
@@ -211,8 +213,10 @@ public class GameScene extends Scene
             return;
         }
 
-        update(delta);
+        update(deltaTime);
         draw();
+
+        hud.render(deltaTime);
     }
 
     @Override public void pause()

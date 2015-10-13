@@ -1,6 +1,5 @@
 package com.draga.entity;
 
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -10,11 +9,14 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Pools;
+import com.draga.Constants;
+import com.draga.FuelChangeEvent;
 import com.draga.MaskBits;
 import com.draga.entity.ship.ShipBox2dCollisionResolutionComponent;
 import com.draga.manager.AssMan;
 import com.draga.manager.GravityManager;
 import com.draga.manager.InputManager;
+import com.google.common.eventbus.EventBus;
 
 public class Ship extends GameEntity
 {
@@ -42,12 +44,12 @@ public class Ship extends GameEntity
     private PolygonShape thrusterShape;
     private PolygonShape shipShape;
     private TextureAtlas thrusterTextureAtlas;
+    private float        fuel;
 
     public Ship(
         float x, float y, String shipTexturePath, String thrusterTextureAtlasPath)
     {
-        collisionResolutionComponent =
-            new ShipBox2dCollisionResolutionComponent(this);
+        collisionResolutionComponent = new ShipBox2dCollisionResolutionComponent(this);
 
         shipShape = new PolygonShape();
         shipShape.setAsBox(SHIP_WIDTH / 2f, SHIP_HEIGHT / 2f);
@@ -90,9 +92,13 @@ public class Ship extends GameEntity
             TOTAL_THRUSTER_ANIMATION_TIME / this.thrusterTextureAtlas.getRegions().size,
             this.thrusterTextureAtlas.getRegions(),
             Animation.PlayMode.LOOP);
+
+
+        fuel = Constants.MAX_FUEL;
     }
 
-    @Override public void update(float deltaTime)
+    @Override
+    public void update(float deltaTime)
     {
         // Avoid overflow.
         thrusterAnimationStateTime += deltaTime;
@@ -106,6 +112,7 @@ public class Ship extends GameEntity
 
         Vector2 inputForce = InputManager.getInputForce();
         rotateTo(inputForce, deltaTime);
+        updateFuel(inputForce, deltaTime);
         float thrusterScale = inputForce.len();
         thrusterWidth = THRUSTER_MAX_WIDTH * thrusterScale;
         thrusterHeight = THRUSTER_MAX_HEIGHT * thrusterScale;
@@ -120,7 +127,17 @@ public class Ship extends GameEntity
         body.applyForceToCenter(inputForce, true);
     }
 
-    @Override public void draw(SpriteBatch spriteBatch)
+    private void updateFuel(Vector2 inputForce, float deltaTime)
+    {
+        fuel -= inputForce.len() * Constants.FUEL_PER_SECOND * deltaTime;
+        FuelChangeEvent fuelChangeEvent = Pools.obtain(FuelChangeEvent.class);
+        fuelChangeEvent.set(fuel);
+        Constants.EVENT_BUS.post(fuelChangeEvent);
+        Pools.free(fuelChangeEvent);
+    }
+
+    @Override
+    public void draw(SpriteBatch spriteBatch)
     {
         TextureRegion textureRegion = thrusterAnimation.getKeyFrame(thrusterAnimationStateTime);
         Vector2 thrusterOffsetFromCentre =
@@ -160,7 +177,8 @@ public class Ship extends GameEntity
             false);
     }
 
-    @Override public void dispose()
+    @Override
+    public void dispose()
     {
         shipShape.dispose();
         thrusterShape.dispose();
@@ -168,7 +186,8 @@ public class Ship extends GameEntity
         thrusterTextureAtlas.dispose();
     }
 
-    @Override public void createBody(World world)
+    @Override
+    public void createBody(World world)
     {
         body = world.createBody(bodyDef);
         body.setUserData(this);
