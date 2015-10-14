@@ -3,7 +3,6 @@ package com.draga.manager.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -13,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.manager.FontManager;
@@ -33,7 +33,14 @@ public class LoseScreen implements Screen
         this.stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-        stage.addActor(getRetryButton());
+        Actor retryButton = getRetryButton();
+
+        Table table = new Table();
+        table
+            .add(retryButton)
+            .size(retryButton.getWidth() * 2, retryButton.getHeight() * 3);
+        table.setFillParent(true);
+        stage.addActor(table);
 
         shapeRenderer = new ShapeRenderer();
     }
@@ -127,9 +134,6 @@ public class LoseScreen implements Screen
         buttonStyle.font = FontManager.getBigFont();
 
         TextButton retryButton = new TextButton("Try Again?", buttonStyle);
-
-        retryButton.setX(stage.getWidth() / 2 - retryButton.getWidth() / 2);
-        retryButton.setY(stage.getHeight() / 2 - retryButton.getHeight() / 2);
 
         retryButton.setColor(new Color(1, 1, 1, 0));
         retryButton.addAction(Actions.color(new Color(1, 1, 1, 1), 5, Interpolation.pow2In));

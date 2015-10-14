@@ -108,6 +108,7 @@ public class SpaceTravels3 extends Game
     {
         Gdx.app.debug(LOGGING_TAG, "Resume");
         FontManager.create();
+        FontManager.assetManager.finishLoading();
         ScreenManager.getActiveScreen().resume();
         super.resume();
     }

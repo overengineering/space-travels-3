@@ -1,5 +1,6 @@
 package com.draga.manager;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
@@ -13,11 +14,15 @@ import com.badlogic.gdx.utils.Disposable;
 public class FontManager
 {
     public static AssetManager assetManager = new AssetManager();
+    private static final String LOGGING_TAG = "FontManager";
 
     public static void create()
     {
+        Gdx.app.debug(LOGGING_TAG, "Create");
+
         FileHandleResolver resolver = new InternalFileHandleResolver();
-        assetManager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
+        assetManager.setLoader(
+            FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
         assetManager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));
 
         // Main label font
@@ -30,6 +35,8 @@ public class FontManager
 
     public static void destroy()
     {
+        Gdx.app.debug(LOGGING_TAG, "Destroy");
+
         Array<Disposable> allAssets = new Array<>();
         assetManager.getAll(Disposable.class, allAssets);
 
