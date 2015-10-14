@@ -72,7 +72,7 @@ public abstract class LevelManager
             serialisableGameScene.serialisedShip.getY(),
             serialisableGameScene.serialisedShip.getShipTexturePath(),
             serialisableGameScene.serialisedShip.getThrusterTextureAtlasPath());
-            gameScreen.addShip(ship);
+        gameScreen.addShip(ship);
 
         for (SerialisablePlanet serialisablePlanet : serialisableGameScene.serialisedPlanets)
         {

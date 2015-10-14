@@ -1,7 +1,6 @@
 package com.draga.entity;
 
 import com.badlogic.gdx.physics.box2d.Contact;
-import com.draga.entity.GameEntity;
 
 /**
  * Created by qwasqaws on 01/10/15.

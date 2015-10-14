@@ -1,6 +1,5 @@
 package com.draga.manager.screen;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -11,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.draga.Constants;
@@ -40,8 +38,8 @@ public class GameScreen implements Screen
     private       int                width;
     private       int                height;
     private       ArrayList<Planet>  planets;
-    private Planet             destinationPlanet;
-    private boolean            doUpdate = true;
+    private       Planet             destinationPlanet;
+    private boolean doUpdate = true;
 
     public GameScreen(String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height)
     {
@@ -225,12 +223,14 @@ public class GameScreen implements Screen
         box2DDebugRenderer.dispose();
     }
 
-    @Override public void show()
+    @Override
+    public void show()
     {
 
     }
 
-    @Override public void render(float deltaTime)
+    @Override
+    public void render(float deltaTime)
     {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
         {
@@ -238,7 +238,7 @@ public class GameScreen implements Screen
             return;
         }
 
-        if(doUpdate)
+        if (doUpdate)
         {
             update(deltaTime);
         }
@@ -247,17 +247,20 @@ public class GameScreen implements Screen
         hud.render(deltaTime);
     }
 
-    @Override public void pause()
+    @Override
+    public void pause()
     {
 
     }
 
-    @Override public void resume()
+    @Override
+    public void resume()
     {
 
     }
 
-    @Override public void hide()
+    @Override
+    public void hide()
     {
 
     }

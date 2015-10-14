@@ -2,15 +2,14 @@ package com.draga.manager;
 
 import com.draga.entity.GameEntity;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
 public class GameEntityManager
 {
-    private static final LinkedList<GameEntity> gameEntities = new LinkedList<>();
-    private static final Queue<GameEntity> gameEntitiesToCreate = new LinkedList<>();
-    private static final Queue<GameEntity> gameEntitiesToDestroy = new LinkedList<>();
+    private static final LinkedList<GameEntity> gameEntities          = new LinkedList<>();
+    private static final Queue<GameEntity>      gameEntitiesToCreate  = new LinkedList<>();
+    private static final Queue<GameEntity>      gameEntitiesToDestroy = new LinkedList<>();
 
     public static void addGameEntityToCreate(GameEntity gameEntity)
     {

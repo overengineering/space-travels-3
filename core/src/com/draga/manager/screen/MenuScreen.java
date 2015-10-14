@@ -27,12 +27,14 @@ public class MenuScreen implements Screen
         stage.addActor(getPlayButton());
     }
 
-    @Override public void show()
+    @Override
+    public void show()
     {
 
     }
 
-    @Override public void render(float deltaTime)
+    @Override
+    public void render(float deltaTime)
     {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
         {
@@ -47,28 +49,33 @@ public class MenuScreen implements Screen
         stage.draw();
     }
 
-    @Override public void dispose()
+    @Override
+    public void dispose()
     {
         Gdx.input.setInputProcessor(null);
         stage.dispose();
     }
 
-    @Override public void pause()
+    @Override
+    public void pause()
     {
 
     }
 
-    @Override public void resize(int width, int height)
+    @Override
+    public void resize(int width, int height)
     {
         stage.getViewport().update(width, height);
     }
 
-    @Override public void resume()
+    @Override
+    public void resume()
     {
 
     }
 
-    @Override public void hide()
+    @Override
+    public void hide()
     {
 
     }
@@ -84,7 +91,8 @@ public class MenuScreen implements Screen
         playButton.addListener(
             new ClickListener()
             {
-                @Override public void clicked(InputEvent event, float x, float y)
+                @Override
+                public void clicked(InputEvent event, float x, float y)
                 {
                     StartGameScreen();
                     super.clicked(event, x, y);

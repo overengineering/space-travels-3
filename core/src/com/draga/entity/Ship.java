@@ -44,25 +44,15 @@ public class Ship extends GameEntity
     private PolygonShape shipShape;
     private TextureAtlas thrusterTextureAtlas;
     private float        fuel;
-    private boolean      isDead = false;
-    
-    public boolean isDead()
-    {
-        return isDead;
-    }
-    
-    public void setIsDead(boolean isDead)
-    {
-        this.isDead = isDead;
-    }
+    private boolean isDead = false;
     
     public Ship(float x, float y, String shipTexturePath, String thrusterTextureAtlasPath)
     {
         collisionResolutionComponent = new ShipBox2dCollisionResolutionComponent(this);
-        
+
         shipShape = new PolygonShape();
         shipShape.setAsBox(SHIP_WIDTH / 2f, SHIP_HEIGHT / 2f);
-        
+
         shipFixtureDef = new FixtureDef();
         shipFixtureDef.shape = shipShape;
         float area = SHIP_WIDTH * SHIP_HEIGHT;
@@ -104,6 +94,16 @@ public class Ship extends GameEntity
 
 
         fuel = Constants.MAX_FUEL;
+    }
+    
+    public boolean isDead()
+    {
+        return isDead;
+    }
+    
+    public void setIsDead(boolean isDead)
+    {
+        this.isDead = isDead;
     }
 
     @Override
@@ -154,7 +154,7 @@ public class Ship extends GameEntity
     @Override
     public void draw(SpriteBatch spriteBatch)
     {
-		if(isDead())
+        if (isDead())
         {
             return;
         }

@@ -15,10 +15,11 @@ import java.util.concurrent.TimeUnit;
 
 public class SpaceTravels3 extends Game
 {
-    private final static String LOGGING_TAG                = SpaceTravels3.class.getSimpleName();
+    private final static String LOGGING_TAG = SpaceTravels3.class.getSimpleName();
     private ScheduledExecutorService logOutputScheduler;
 
-    @Override public void create()
+    @Override
+    public void create()
     {
         FontManager.create();
         FontManager.assetManager.finishLoading();
@@ -44,7 +45,8 @@ public class SpaceTravels3 extends Game
         logOutputScheduler.scheduleAtFixedRate(new PerformanceLogger(), 0, 1, TimeUnit.SECONDS);
     }
 
-    @Override public void render()
+    @Override
+    public void render()
     {
         float deltaTime = Gdx.graphics.getDeltaTime();
 
@@ -54,15 +56,17 @@ public class SpaceTravels3 extends Game
         ScreenManager.getActiveScreen().render(deltaTime);
     }
 
-    @Override public void dispose()
+    @Override
+    public void dispose()
     {
         Gdx.app.debug(LOGGING_TAG, "Dispose");
         ScreenManager.getActiveScreen().dispose();
-		    logOutputScheduler.shutdown();
+        logOutputScheduler.shutdown();
         super.dispose();
     }
 
-    @Override public void pause()
+    @Override
+    public void pause()
     {
         Gdx.app.debug(LOGGING_TAG, "Pause");
         FontManager.destroy();
@@ -71,7 +75,8 @@ public class SpaceTravels3 extends Game
         super.pause();
     }
 
-    @Override public void resize(int width, int height)
+    @Override
+    public void resize(int width, int height)
     {
         String log = String.format("Resize to %4d width x %4d height", width, height);
         Gdx.app.debug(LOGGING_TAG, log);
@@ -81,13 +86,14 @@ public class SpaceTravels3 extends Game
         super.resize(width, height);
     }
 
-    @Override public void resume()
+    @Override
+    public void resume()
     {
         Gdx.app.debug(LOGGING_TAG, "Resume");
         FontManager.create();
         FontManager.assetManager.finishLoading();
         ScreenManager.getActiveScreen().resume();
-		launchPerformanceLoggerScheduler();
+        launchPerformanceLoggerScheduler();
         super.resume();
     }
 }

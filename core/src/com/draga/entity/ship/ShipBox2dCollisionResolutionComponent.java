@@ -12,7 +12,8 @@ public class ShipBox2dCollisionResolutionComponent extends Box2dCollisionResolut
         super(ship);
     }
 
-    @Override public void Resolve(Contact contact)
+    @Override
+    public void Resolve(Contact contact)
     {
         super.Resolve(contact);
 
@@ -24,7 +25,7 @@ public class ShipBox2dCollisionResolutionComponent extends Box2dCollisionResolut
                 gameEntity.getX(), gameEntity.getY(), "explosion/explosion.atlas");
             GameEntityManager.addGameEntityToCreate(explosion);
 
-            ((Ship)gameEntity).setIsDead(true);
+            ((Ship) gameEntity).setIsDead(true);
         }
     }
 }
