@@ -7,19 +7,21 @@ public class SerialisablePlanet
     int y;
     float radius;
     float mass;
+    boolean destination;
 
     public SerialisablePlanet()
     {
 
     }
 
-    public SerialisablePlanet(String texturePath, int x, int y, int radius, float mass)
+    public boolean isDestination()
     {
-        this.texturePath = texturePath;
-        this.x = x;
-        this.y = y;
-        this.radius = radius;
-        this.mass = mass;
+        return destination;
+    }
+
+    public void setDestination(boolean destination)
+    {
+        this.destination = destination;
     }
 
     public float getMass()
