@@ -2,7 +2,7 @@ package com.draga.manager.level.serialisableEntities;
 
 import java.util.List;
 
-public class SerialisableGameScene
+public class SerialisableLevel
 {
     public int                      width;
     public int                      height;
@@ -10,7 +10,7 @@ public class SerialisableGameScene
     public SerialisableShip         serialisedShip;
     public List<SerialisablePlanet> serialisedPlanets;
 
-    public SerialisableGameScene()
+    public SerialisableLevel()
     {
     }
 }

@@ -1,5 +1,5 @@
 {
-  "class": "SerialisableGameScene",
+  "class": "SerialisableLevel",
   "width": 300,
   "height": 150,
   "serialisedBackground": {
@@ -17,7 +17,7 @@
       "x": 280,
       "y": 75,
       "radius": 6.378,
-      "mass": 59700
+      "mass": 59700,
       "destination": true
     },
     {

@@ -14,7 +14,7 @@ import com.draga.Constants;
 import com.draga.manager.AssMan;
 import com.draga.manager.ScreenManager;
 import com.draga.manager.level.LevelManager;
-import com.draga.manager.level.serialisableEntities.SerialisableGameScene;
+import com.draga.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.manager.level.serialisableEntities.SerialisablePlanet;
 
 public class LoadingScreen implements Screen
@@ -25,22 +25,22 @@ public class LoadingScreen implements Screen
     private final BitmapFont            pDark24Font;
     private final long                  startTime;
     private       Label                 progressLabel;
-    private       SerialisableGameScene serialisableGameScene;
+    private       SerialisableLevel     serialisableLevel;
 
     public LoadingScreen(String levelJsonPath)
     {
         startTime = System.nanoTime();
 
-        serialisableGameScene = LevelManager.getSerialisedGameSceneFromFile(levelJsonPath);
+        serialisableLevel = LevelManager.getSerialisedGameSceneFromFile(levelJsonPath);
 
         AssMan.DisposeAllAndClear();
         AssMan.getAssetManager().load(
-            serialisableGameScene.serialisedBackground.getTexturePath(), Texture.class);
+            serialisableLevel.serialisedBackground.getTexturePath(), Texture.class);
         AssMan.getAssetManager().load(
-            serialisableGameScene.serialisedShip.getShipTexturePath(), Texture.class);
+            serialisableLevel.serialisedShip.getShipTexturePath(), Texture.class);
         AssMan.getAssetManager().load(
-            serialisableGameScene.serialisedShip.getThrusterTextureAtlasPath(), TextureAtlas.class);
-        for (SerialisablePlanet serialisablePlanet : serialisableGameScene.serialisedPlanets)
+            serialisableLevel.serialisedShip.getThrusterTextureAtlasPath(), TextureAtlas.class);
+        for (SerialisablePlanet serialisablePlanet : serialisableLevel.serialisedPlanets)
         {
             AssMan.getAssetManager().load(serialisablePlanet.getTexturePath(), Texture.class);
         }
@@ -72,7 +72,7 @@ public class LoadingScreen implements Screen
         if (AssMan.getAssetManager().update())
         {
             GameScreen gameScene = LevelManager.getLevelGameScene(
-                serialisableGameScene, new SpriteBatch());
+                serialisableLevel, new SpriteBatch());
             long elapsedNanoTime = System.nanoTime() - startTime;
             Gdx.app.debug(LOGGING_TAG, "Loading time: " + elapsedNanoTime * Constants.NANO + "s");
             ScreenManager.setActiveScreen(gameScene);
