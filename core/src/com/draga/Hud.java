@@ -1,12 +1,9 @@
 package com.draga;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -21,8 +18,8 @@ public class Hud implements Screen
     private static final float FUEL_PROGRESS_BAR_WIDTH       = WORLD_WIDTH / 3f;
     private static final float FUEL_PROGRESS_BAR_LEFT_MARGIN = FUEL_PROGRESS_BAR_HEIGHT;
     private static final float FUEL_PROGRESS_BAR_TOP_MARGIN  = FUEL_PROGRESS_BAR_LEFT_MARGIN;
-    private       Stage                 stage;
-    private       ProgressBar           fuelProgressBar;
+    private Stage       stage;
+    private ProgressBar fuelProgressBar;
 
     public Hud()
     {
@@ -37,7 +34,7 @@ public class Hud implements Screen
         stage.setDebugAll(Constants.IS_DEBUGGING);
     }
 
-    public ProgressBar getFuelProgressBar()
+    private ProgressBar getFuelProgressBar()
     {
         Skin skin = new Skin();
         Pixmap pixmap = new Pixmap(

@@ -1,10 +1,9 @@
-package com.draga.scene;
+package com.draga.manager.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -12,28 +11,25 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.draga.manager.SceneManager;
-import com.draga.manager.level.LevelManager;
+import com.draga.manager.FontManager;
+import com.draga.manager.ScreenManager;
 
-public class MenuScene extends Scene
+public class MenuScreen implements Screen
 {
-    private final FreeTypeFontGenerator freeTypeFontGenerator;
     private Stage stage;
-    private BitmapFont pDark24Font;
 
-    public MenuScene()
+    public MenuScreen()
     {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-        freeTypeFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font/pdark.ttf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter =
-            new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 64;
-        pDark24Font = freeTypeFontGenerator.generateFont(parameter);
-
         stage.addActor(getHeaderLabel());
         stage.addActor(getPlayButton());
+    }
+
+    @Override public void show()
+    {
+
     }
 
     @Override public void render(float deltaTime)
@@ -44,7 +40,7 @@ public class MenuScene extends Scene
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER))
         {
-            StartGameScene();
+            StartGameScreen();
         }
 
         stage.act(deltaTime);
@@ -55,7 +51,6 @@ public class MenuScene extends Scene
     {
         Gdx.input.setInputProcessor(null);
         stage.dispose();
-        freeTypeFontGenerator.dispose();
     }
 
     @Override public void pause()
@@ -73,10 +68,15 @@ public class MenuScene extends Scene
 
     }
 
+    @Override public void hide()
+    {
+
+    }
+
     public Actor getPlayButton()
     {
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        textButtonStyle.font = pDark24Font;
+        textButtonStyle.font = FontManager.getBigFont();
 
         Button playButton = new TextButton("Play", textButtonStyle);
 
@@ -86,25 +86,26 @@ public class MenuScene extends Scene
             {
                 @Override public void clicked(InputEvent event, float x, float y)
                 {
-                    StartGameScene();
+                    StartGameScreen();
                     super.clicked(event, x, y);
                 }
             });
         return playButton;
     }
 
-    private void StartGameScene()
+    private void StartGameScreen()
     {
-        SceneManager.setActiveScene(new LoadingScene("level1.json"));
+        ScreenManager.setActiveScreen(new LoadingScreen("level1.json"));
     }
 
     public Actor getHeaderLabel()
     {
         Label.LabelStyle labelStyle = new Label.LabelStyle();
-        labelStyle.font = pDark24Font;
+        BitmapFont bigFont = FontManager.getBigFont();
+        labelStyle.font = bigFont;
 
         Label headerLabel = new Label("Space Travels 3", labelStyle);
-        float height = pDark24Font.getLineHeight() * 2;
+        float height = bigFont.getLineHeight() * 2;
         headerLabel.sizeBy(stage.getWidth(), height);
         headerLabel.setPosition(
             stage.getWidth() - headerLabel.getWidth() / 2f, stage.getHeight() - height);

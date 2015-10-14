@@ -8,7 +8,7 @@ import com.draga.entity.Planet;
 import com.draga.entity.Ship;
 import com.draga.manager.level.serialisableEntities.SerialisableGameScene;
 import com.draga.manager.level.serialisableEntities.SerialisablePlanet;
-import com.draga.scene.GameScene;
+import com.draga.manager.screen.GameScreen;
 
 public abstract class LevelManager
 {
@@ -39,30 +39,29 @@ public abstract class LevelManager
         return serialisableGameScene;
     }
 
-    public static GameScene getGameSceneFromFile(
-        String serialisedGameSceneFilePath,
-        SpriteBatch spriteBatch)
+    public static GameScreen getLevelWorldFromFile(
+        String serialisedWorldFilePath, SpriteBatch spriteBatch)
     {
-        String serialisedWordString = getStringFromFile(serialisedGameSceneFilePath);
-        GameScene gameScene = getLevelGameSceneFromString(serialisedWordString, spriteBatch);
+        String serialisedWordString = getStringFromFile(serialisedWorldFilePath);
+        GameScreen world = getLevelGameSceneFromString(serialisedWordString, spriteBatch);
 
-        return gameScene;
+        return world;
     }
 
-    public static GameScene getLevelGameSceneFromString(String jsonString, SpriteBatch spriteBatch)
+    public static GameScreen getLevelGameSceneFromString(String jsonString, SpriteBatch spriteBatch)
     {
         SerialisableGameScene serialisableGameScene = LevelManager.getSerialisedGameSceneFromString(
             jsonString);
 
-        GameScene gameScene = LevelManager.getLevelGameScene(serialisableGameScene, spriteBatch);
+        GameScreen world = LevelManager.getLevelGameScene(serialisableGameScene, spriteBatch);
 
-        return gameScene;
+        return world;
     }
 
-    public static GameScene getLevelGameScene(
+    public static GameScreen getLevelGameScene(
         SerialisableGameScene serialisableGameScene, SpriteBatch spriteBatch)
     {
-        GameScene gameScene = new GameScene(
+        GameScreen gameScreen = new GameScreen(
             serialisableGameScene.serialisedBackground.getTexturePath(),
             spriteBatch,
             serialisableGameScene.width,
@@ -73,7 +72,7 @@ public abstract class LevelManager
             serialisableGameScene.serialisedShip.getY(),
             serialisableGameScene.serialisedShip.getShipTexturePath(),
             serialisableGameScene.serialisedShip.getThrusterTextureAtlasPath());
-        gameScene.addShip(ship);
+            gameScreen.addShip(ship);
 
         for (SerialisablePlanet serialisablePlanet : serialisableGameScene.serialisedPlanets)
         {
@@ -83,9 +82,14 @@ public abstract class LevelManager
                 serialisablePlanet.getX(),
                 serialisablePlanet.getY(),
                 serialisablePlanet.getTexturePath());
-            gameScene.addPlanet(planet);
+            gameScreen.addPlanet(planet);
+
+            if (serialisablePlanet.isDestination())
+            {
+                gameScreen.setDestinationPlanet(planet);
+            }
         }
 
-        return gameScene;
+        return gameScreen;
     }
 }

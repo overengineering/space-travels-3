@@ -4,9 +4,6 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.draga.entity.*;
 import com.draga.manager.GameEntityManager;
 
-/**
- * Created by qwasqaws on 01/10/15.
- */
 public class ShipBox2dCollisionResolutionComponent extends Box2dCollisionResolutionComponent
 {
 
@@ -26,6 +23,8 @@ public class ShipBox2dCollisionResolutionComponent extends Box2dCollisionResolut
             GameEntity explosion = new Explosion(
                 gameEntity.getX(), gameEntity.getY(), "explosion/explosion.atlas");
             GameEntityManager.addGameEntityToCreate(explosion);
+
+            ((Ship)gameEntity).setIsDead(true);
         }
     }
 }

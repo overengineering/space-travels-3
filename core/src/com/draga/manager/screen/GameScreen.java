@@ -1,8 +1,10 @@
-package com.draga.scene;
+package com.draga.manager.screen;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -18,16 +20,15 @@ import com.draga.MaskBits;
 import com.draga.entity.GameEntity;
 import com.draga.entity.Planet;
 import com.draga.entity.Ship;
-import com.draga.manager.AssMan;
 import com.draga.manager.GameContactListener;
 import com.draga.manager.GameEntityManager;
-import com.draga.manager.SceneManager;
+import com.draga.manager.ScreenManager;
 
 import java.util.ArrayList;
 
-public class GameScene extends Scene
+public class GameScreen implements Screen
 {
-    private static final String LOGGING_TAG = GameScene.class.getSimpleName();
+    private static final String LOGGING_TAG = GameScreen.class.getSimpleName();
     private final Hud                hud;
     private       Texture            backgroundTexture;
     private       Box2DDebugRenderer box2DDebugRenderer;
@@ -39,15 +40,16 @@ public class GameScene extends Scene
     private       int                width;
     private       int                height;
     private       ArrayList<Planet>  planets;
+    private Planet             destinationPlanet;
+    private boolean            doUpdate = true;
 
-    public GameScene(
-        String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height)
+    public GameScreen(String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height)
     {
         box2dWorld = new World(Pools.obtain(Vector2.class), true);
         box2dWorld.setContactListener(new GameContactListener());
-
         planets = new ArrayList<>();
-        this.backgroundTexture = AssMan.getAssetManager().get(backgroundTexturePath);
+        FileHandle backgroundFileHandle = Gdx.files.internal(backgroundTexturePath);
+        this.backgroundTexture = new Texture(backgroundFileHandle);
         this.width = width;
         this.height = height;
         batch = spriteBatch;
@@ -64,6 +66,16 @@ public class GameScene extends Scene
         box2DDebugRenderer = new Box2DDebugRenderer();
 
         hud = new Hud();
+    }
+
+    public Planet getDestinationPlanet()
+    {
+        return destinationPlanet;
+    }
+
+    public void setDestinationPlanet(Planet destinationPlanet)
+    {
+        this.destinationPlanet = destinationPlanet;
     }
 
     public World getBox2dWorld()
@@ -137,6 +149,15 @@ public class GameScene extends Scene
         // max frame time to avoid spiral of death (on slow devices)
         float frameTime = Math.min(elapsed, 0.25f);
         box2dWorld.step(frameTime, 6, 2);
+
+        // On death
+        if (ship.isDead())
+        {
+            ship.setIsDead(false);
+
+            removeGameEntity(ship);
+            ScreenManager.setActiveScreen(new LoseScreen(this), false);
+        }
     }
 
     private void removeGameEntity(GameEntity gameEntity)
@@ -202,18 +223,25 @@ public class GameScene extends Scene
         box2dWorld.dispose();
         backgroundTexture.dispose();
         box2DDebugRenderer.dispose();
-        AssMan.getAssetManager().clear();
+    }
+
+    @Override public void show()
+    {
+
     }
 
     @Override public void render(float deltaTime)
     {
-        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
         {
-            SceneManager.setActiveScene(new MenuScene());
+            ScreenManager.setActiveScreen(new MenuScreen());
             return;
         }
 
-        update(deltaTime);
+        if(doUpdate)
+        {
+            update(deltaTime);
+        }
         draw();
 
         hud.render(deltaTime);
@@ -227,5 +255,15 @@ public class GameScene extends Scene
     @Override public void resume()
     {
 
+    }
+
+    @Override public void hide()
+    {
+
+    }
+
+    public void setDoUpdate(boolean doUpdate)
+    {
+        this.doUpdate = doUpdate;
     }
 }

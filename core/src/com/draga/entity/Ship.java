@@ -44,15 +44,25 @@ public class Ship extends GameEntity
     private PolygonShape shipShape;
     private TextureAtlas thrusterTextureAtlas;
     private float        fuel;
-
-    public Ship(
-        float x, float y, String shipTexturePath, String thrusterTextureAtlasPath)
+    private boolean      isDead = false;
+    
+    public boolean isDead()
+    {
+        return isDead;
+    }
+    
+    public void setIsDead(boolean isDead)
+    {
+        this.isDead = isDead;
+    }
+    
+    public Ship(float x, float y, String shipTexturePath, String thrusterTextureAtlasPath)
     {
         collisionResolutionComponent = new ShipBox2dCollisionResolutionComponent(this);
-
+        
         shipShape = new PolygonShape();
         shipShape.setAsBox(SHIP_WIDTH / 2f, SHIP_HEIGHT / 2f);
-
+        
         shipFixtureDef = new FixtureDef();
         shipFixtureDef.shape = shipShape;
         float area = SHIP_WIDTH * SHIP_HEIGHT;
@@ -144,6 +154,11 @@ public class Ship extends GameEntity
     @Override
     public void draw(SpriteBatch spriteBatch)
     {
+		if(isDead())
+        {
+            return;
+        }
+
         TextureRegion textureRegion = thrusterAnimation.getKeyFrame(thrusterAnimationStateTime);
         Vector2 thrusterOffsetFromCentre =
             Pools.obtain(Vector2.class).set(THRUSTER_OFFSET).sub(thrusterWidth / 2f, 0);

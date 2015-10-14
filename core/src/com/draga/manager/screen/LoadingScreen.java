@@ -1,6 +1,7 @@
-package com.draga.scene;
+package com.draga.manager.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -9,16 +10,17 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.utils.Disposable;
 import com.draga.Constants;
 import com.draga.manager.AssMan;
-import com.draga.manager.SceneManager;
+import com.draga.manager.ScreenManager;
 import com.draga.manager.level.LevelManager;
 import com.draga.manager.level.serialisableEntities.SerialisableGameScene;
 import com.draga.manager.level.serialisableEntities.SerialisablePlanet;
 
-public class LoadingScene extends Scene
+public class LoadingScreen implements Screen
 {
-    private static final String LOGGING_TAG = LoadingScene.class.getSimpleName();
+    private static final String LOGGING_TAG = LoadingScreen.class.getSimpleName();
     private final Stage                 stage;
     private final FreeTypeFontGenerator freeTypeFontGenerator;
     private final BitmapFont            pDark24Font;
@@ -26,12 +28,13 @@ public class LoadingScene extends Scene
     private       Label                 progressLabel;
     private       SerialisableGameScene serialisableGameScene;
 
-    public LoadingScene(String levelJsonPath)
+    public LoadingScreen(String levelJsonPath)
     {
         startTime = System.nanoTime();
 
         serialisableGameScene = LevelManager.getSerialisedGameSceneFromFile(levelJsonPath);
 
+        AssMan.DisposeAllAndClear();
         AssMan.getAssetManager().load(
             serialisableGameScene.serialisedBackground.getTexturePath(), Texture.class);
         AssMan.getAssetManager().load(
@@ -59,15 +62,21 @@ public class LoadingScene extends Scene
     }
 
     @Override
+    public void show()
+    {
+
+    }
+
+    @Override
     public void render(float deltaTime)
     {
         if (AssMan.getAssetManager().update())
         {
-            GameScene gameScene = LevelManager.getLevelGameScene(
+            GameScreen gameScene = LevelManager.getLevelGameScene(
                 serialisableGameScene, new SpriteBatch());
             long elapsedNanoTime = System.nanoTime() - startTime;
             Gdx.app.debug(LOGGING_TAG, "Loading time: " + elapsedNanoTime * Constants.NANO + "s");
-            SceneManager.setActiveScene(gameScene);
+            ScreenManager.setActiveScreen(gameScene);
         }
         setProgressLabelText();
 
@@ -104,6 +113,12 @@ public class LoadingScene extends Scene
 
     @Override
     public void resume()
+    {
+
+    }
+
+    @Override
+    public void hide()
     {
 
     }
