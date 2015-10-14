@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.utils.Disposable;
 import com.draga.Constants;
 import com.draga.manager.AssMan;
 import com.draga.manager.ScreenManager;
@@ -33,6 +34,7 @@ public class LoadingScreen implements Screen
 
         serialisableGameScene = LevelManager.getSerialisedGameSceneFromFile(levelJsonPath);
 
+        AssMan.DisposeAllAndClear();
         AssMan.getAssetManager().load(
             serialisableGameScene.serialisedBackground.getTexturePath(), Texture.class);
         AssMan.getAssetManager().load(
