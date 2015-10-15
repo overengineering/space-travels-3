@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.Disposable;
 
 public class FontManager
 {
-    private static final String       LOGGING_TAG  = "FontManager";
+    private static final String       LOGGING_TAG  = FontManager.class.getSimpleName();
     public static        AssetManager assetManager = new AssetManager();
 
     public static void create()

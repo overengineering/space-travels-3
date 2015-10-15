@@ -6,8 +6,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Json;
 import com.draga.entity.Planet;
 import com.draga.entity.Ship;
+import com.draga.entity.Star;
 import com.draga.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.manager.level.serialisableEntities.SerialisablePlanet;
+import com.draga.manager.level.serialisableEntities.SerialisableStar;
 import com.draga.manager.screen.GameScreen;
 
 public abstract class LevelManager
@@ -88,6 +90,12 @@ public abstract class LevelManager
             {
                 gameScreen.setDestinationPlanet(planet);
             }
+        }
+
+        for (SerialisableStar serialisableStar : serialisableLevel.serialisedStars)
+        {
+            Star star = new Star(serialisableStar.getX(), serialisableStar.getY(), "star/starGold64.png");
+            gameScreen.addGameEntity(star);
         }
 
         return gameScreen;

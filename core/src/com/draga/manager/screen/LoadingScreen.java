@@ -45,6 +45,7 @@ public class LoadingScreen implements Screen
             AssMan.getAssetManager().load(serialisablePlanet.getTexturePath(), Texture.class);
         }
         AssMan.getAssetManager().load("explosion/explosion.atlas", TextureAtlas.class);
+        AssMan.getAssetManager().load("star/starGold64.png", Texture.class);
         stage = new Stage();
 
 

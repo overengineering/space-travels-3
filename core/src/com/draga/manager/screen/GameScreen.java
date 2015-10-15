@@ -27,18 +27,18 @@ import java.util.ArrayList;
 public class GameScreen implements Screen
 {
     private static final String LOGGING_TAG = GameScreen.class.getSimpleName();
-    private final Hud                hud;
-    private       Texture            backgroundTexture;
-    private       Box2DDebugRenderer box2DDebugRenderer;
-    private       World              box2dWorld;
-    private       SpriteBatch        batch;
-    private       OrthographicCamera orthographicCamera;
-    private       ExtendViewport     extendViewport;
-    private       Ship               ship;
-    private       int                width;
-    private       int                height;
-    private       ArrayList<Planet>  planets;
-    private       Planet             destinationPlanet;
+    private Hud                hud;
+    private Texture            backgroundTexture;
+    private Box2DDebugRenderer box2DDebugRenderer;
+    private World              box2dWorld;
+    private SpriteBatch        batch;
+    private OrthographicCamera orthographicCamera;
+    private ExtendViewport     extendViewport;
+    private Ship               ship;
+    private int                width;
+    private int                height;
+    private ArrayList<Planet>  planets;
+    private Planet             destinationPlanet;
     private boolean doUpdate = true;
 
     public GameScreen(String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height)
@@ -119,7 +119,7 @@ public class GameScreen implements Screen
         addGameEntity(planet);
     }
 
-    private void addGameEntity(GameEntity gameEntity)
+    public void addGameEntity(GameEntity gameEntity)
     {
         GameEntityManager.addGameEntity(gameEntity);
         gameEntity.createBody(getBox2dWorld());

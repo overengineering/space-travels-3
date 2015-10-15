@@ -9,6 +9,7 @@ public class SerialisableLevel
     public SerialisableBackground   serialisedBackground;
     public SerialisableShip         serialisedShip;
     public List<SerialisablePlanet> serialisedPlanets;
+    public List<SerialisableStar>   serialisedStars;
 
     public SerialisableLevel()
     {

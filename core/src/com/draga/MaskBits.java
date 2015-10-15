@@ -7,4 +7,5 @@ public abstract class MaskBits
     public static final int EXPLOSION  = 1 << 2;
     public static final int BOUNDARIES = 1 << 3;
     public static final int THRUSTER   = 1 << 4;
+    public static final int STAR       = 1 << 5;
 }

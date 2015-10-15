@@ -41,5 +41,11 @@
       "radius": 6.052,
       "mass": 48700
     }
+  ],
+  "serialisedStars": [
+    {
+      "x": 10,
+      "y": 10
+    }
   ]
 }
