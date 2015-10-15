@@ -84,6 +84,7 @@ public abstract class LevelManager
                 serialisablePlanet.getX(),
                 serialisablePlanet.getY(),
                 serialisablePlanet.getTexturePath());
+
             gameScreen.addPlanet(planet);
 
             if (serialisablePlanet.isDestination())
@@ -95,7 +96,7 @@ public abstract class LevelManager
         for (SerialisableStar serialisableStar : serialisableLevel.serialisedStars)
         {
             Star star = new Star(serialisableStar.getX(), serialisableStar.getY(), "star/starGold64.png");
-            gameScreen.addGameEntity(star);
+            gameScreen.addStar(star);
         }
 
         return gameScreen;

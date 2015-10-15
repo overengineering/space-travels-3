@@ -17,28 +17,28 @@ public class Star extends GameEntity
     private PolygonShape polygonShape;
     private FixtureDef   fixtureDef;
     private Texture      texture;
-    private Fixture fixture;
+    private Fixture      fixture;
 
     public Star(float x, float y, String texturePath)
     {
-        polygonShape = new PolygonShape();
-        polygonShape.setAsBox(WIDTH / 2f, HEIGHT / 2f);
+        this.polygonShape = new PolygonShape();
+        this.polygonShape.setAsBox(WIDTH / 2f, HEIGHT / 2f);
 
-        fixtureDef = new FixtureDef();
-        fixtureDef.shape = polygonShape;
-        fixtureDef.density = 0;
-        fixtureDef.friction = 1f;
-        fixtureDef.restitution = 0;
-        fixtureDef.filter.categoryBits = MaskBits.STAR;
-        fixtureDef.filter.maskBits = 0;
+        this.fixtureDef = new FixtureDef();
+        this.fixtureDef.shape = polygonShape;
+        this.fixtureDef.density = 0;
+        this.fixtureDef.friction = 1f;
+        this.fixtureDef.restitution = 0;
+        this.fixtureDef.filter.categoryBits = MaskBits.STAR;
+        this.fixtureDef.filter.maskBits = MaskBits.SHIP;
 
-        bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(x, y);
-        bodyDef.angle = 0;
+        this.bodyDef = new BodyDef();
+        this.bodyDef.type = BodyDef.BodyType.DynamicBody;
+        this.bodyDef.position.set(x, y);
+        this.bodyDef.angle = 0;
 
 
-        texture = AssMan.getAssetManager().get(texturePath);
+        this.texture = AssMan.getAssetManager().get(texturePath);
     }
 
     @Override

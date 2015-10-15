@@ -16,6 +16,7 @@ import com.draga.manager.ScreenManager;
 import com.draga.manager.level.LevelManager;
 import com.draga.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.manager.level.serialisableEntities.SerialisablePlanet;
+import com.google.common.base.Joiner;
 
 public class LoadingScreen implements Screen
 {
@@ -46,6 +47,7 @@ public class LoadingScreen implements Screen
         }
         AssMan.getAssetManager().load("explosion/explosion.atlas", TextureAtlas.class);
         AssMan.getAssetManager().load("star/starGold64.png", Texture.class);
+        AssMan.getAssetManager().load("star/starGray64.png", Texture.class);
         stage = new Stage();
 
 
@@ -72,6 +74,11 @@ public class LoadingScreen implements Screen
     {
         if (AssMan.getAssetManager().update())
         {
+            if (Constants.IS_DEBUGGING)
+            {
+                Gdx.app.debug(LOGGING_TAG, Joiner.on(", ").join(AssMan.getAssetManager().getAssetNames()));
+            }
+
             GameScreen gameScene = LevelManager.getLevelGameScene(
                 serialisableLevel, new SpriteBatch());
             long elapsedNanoTime = System.nanoTime() - startTime;

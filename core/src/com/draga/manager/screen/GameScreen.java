@@ -15,12 +15,13 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.draga.Constants;
 import com.draga.Hud;
 import com.draga.MaskBits;
-import com.draga.entity.GameEntity;
-import com.draga.entity.Planet;
-import com.draga.entity.Ship;
+import com.draga.event.StarCollectedEvent;
+import com.draga.entity.*;
+import com.draga.manager.AssMan;
 import com.draga.manager.GameContactListener;
 import com.draga.manager.GameEntityManager;
 import com.draga.manager.ScreenManager;
+import com.google.common.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
@@ -31,7 +32,7 @@ public class GameScreen implements Screen
     private Texture            backgroundTexture;
     private Box2DDebugRenderer box2DDebugRenderer;
     private World              box2dWorld;
-    private SpriteBatch        batch;
+    private SpriteBatch        spriteBatch;
     private OrthographicCamera orthographicCamera;
     private ExtendViewport     extendViewport;
     private Ship               ship;
@@ -39,18 +40,20 @@ public class GameScreen implements Screen
     private int                height;
     private ArrayList<Planet>  planets;
     private Planet             destinationPlanet;
-    private boolean doUpdate = true;
+    private boolean doUpdate       = true;
+    private int     totalStars     = 0;
+    private int     starsCollected = 0;
 
     public GameScreen(String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height)
     {
+        Constants.EVENT_BUS.register(this);
         box2dWorld = new World(Pools.obtain(Vector2.class), true);
         box2dWorld.setContactListener(new GameContactListener());
         planets = new ArrayList<>();
-        FileHandle backgroundFileHandle = Gdx.files.internal(backgroundTexturePath);
-        this.backgroundTexture = new Texture(backgroundFileHandle);
+        this.backgroundTexture = AssMan.getAssetManager().get(backgroundTexturePath, Texture.class);
         this.width = width;
         this.height = height;
-        batch = spriteBatch;
+        this.spriteBatch = spriteBatch;
         orthographicCamera = new OrthographicCamera();
         extendViewport = new ExtendViewport(
             Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, width, height, orthographicCamera);
@@ -59,9 +62,8 @@ public class GameScreen implements Screen
         if (Constants.IS_DEBUGGING)
         {
             createWalls();
+            box2DDebugRenderer = new Box2DDebugRenderer();
         }
-
-        box2DDebugRenderer = new Box2DDebugRenderer();
 
         hud = new Hud();
     }
@@ -119,7 +121,13 @@ public class GameScreen implements Screen
         addGameEntity(planet);
     }
 
-    public void addGameEntity(GameEntity gameEntity)
+    public void addStar(Star star)
+    {
+        totalStars++;
+        addGameEntity(star);
+    }
+
+    private void addGameEntity(GameEntity gameEntity)
     {
         GameEntityManager.addGameEntity(gameEntity);
         gameEntity.createBody(getBox2dWorld());
@@ -186,18 +194,18 @@ public class GameScreen implements Screen
         orthographicCamera.position.y = softCamera.y;
         orthographicCamera.update();
 
-        batch.setProjectionMatrix(orthographicCamera.combined);
+        spriteBatch.setProjectionMatrix(orthographicCamera.combined);
     }
 
     public void draw()
     {
-        batch.begin();
-        batch.draw(backgroundTexture, 0, 0, width, height);
+        spriteBatch.begin();
+        spriteBatch.draw(backgroundTexture, 0, 0, width, height);
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
-            gameEntity.draw(batch);
+            gameEntity.draw(spriteBatch);
         }
-        batch.end();
+        spriteBatch.end();
 
         if (Constants.IS_DEBUGGING)
         {
@@ -221,6 +229,8 @@ public class GameScreen implements Screen
         box2dWorld.dispose();
         backgroundTexture.dispose();
         box2DDebugRenderer.dispose();
+        Constants.EVENT_BUS.unregister(this);
+        hud.dispose();
     }
 
     @Override
@@ -268,5 +278,12 @@ public class GameScreen implements Screen
     public void setDoUpdate(boolean doUpdate)
     {
         this.doUpdate = doUpdate;
+    }
+
+    @Subscribe
+    public void starCollected(StarCollectedEvent starCollectedEvent)
+    {
+        starsCollected++;
+        GameEntityManager.addGameEntityToDestroy(starCollectedEvent.star);
     }
 }

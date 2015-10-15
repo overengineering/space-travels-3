@@ -8,15 +8,18 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.draga.event.FuelChangeEvent;
 import com.google.common.eventbus.Subscribe;
 
 public class Hud implements Screen
 {
     private static final float WORLD_HEIGHT                  = 1000f;
     private static final float WORLD_WIDTH                   = 1000f;
-    private static final float FUEL_PROGRESS_BAR_HEIGHT      = WORLD_HEIGHT / 20f;
+    private static final float FUEL_PROGRESS_BAR_HEIGHT      = WORLD_HEIGHT / 30f;
     private static final float FUEL_PROGRESS_BAR_WIDTH       = WORLD_WIDTH / 3f;
+    @SuppressWarnings("SuspiciousNameCombination")
     private static final float FUEL_PROGRESS_BAR_LEFT_MARGIN = FUEL_PROGRESS_BAR_HEIGHT;
+    @SuppressWarnings("SuspiciousNameCombination")
     private static final float FUEL_PROGRESS_BAR_TOP_MARGIN  = FUEL_PROGRESS_BAR_LEFT_MARGIN;
     private Stage       stage;
     private ProgressBar fuelProgressBar;

@@ -21,9 +21,10 @@ public class LoseScreen implements Screen
 {
     private final Stage      stage;
     private final GameScreen parentGameScreen;
-    private final Color fadeToColour     = new Color(0, 0, 0, 0.7f);
-    private final Color backgroundColour = new Color(0, 0, 0, 0);
+    private final Color         fadeToColour     = new Color(0, 0, 0, 0.7f);
+    private final Color         backgroundColour = new Color(0, 0, 0, 0);
     private final ShapeRenderer shapeRenderer;
+    public static final float FADE_PER_SECOND = 0.7f;
 
     public LoseScreen(GameScreen parentScreen)
     {
@@ -72,9 +73,7 @@ public class LoseScreen implements Screen
 
     private void draw(float delta)
     {
-        final float fadePerSecond = 0.7f;
-
-        backgroundColour.lerp(fadeToColour, fadePerSecond * delta);
+        backgroundColour.lerp(fadeToColour, FADE_PER_SECOND * delta);
 
         if (fadeToColour.equals(backgroundColour))
         {
@@ -102,7 +101,8 @@ public class LoseScreen implements Screen
     @Override
     public void resize(int width, int height)
     {
-
+        parentGameScreen.resize(width, height);
+        stage.getViewport().update(width, height);
     }
 
     @Override

@@ -10,7 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Pools;
 import com.draga.Constants;
-import com.draga.FuelChangeEvent;
+import com.draga.event.FuelChangeEvent;
 import com.draga.MaskBits;
 import com.draga.entity.ship.ShipBox2dCollisionResolutionComponent;
 import com.draga.manager.AssMan;
@@ -25,26 +25,30 @@ public class Ship extends GameEntity
     private static final float   HALF_SHIP_WIDTH               = SHIP_WIDTH / 2f;
     private static final float   SHIP_HEIGHT                   = 10;
     private static final float   HALF_SHIP_HEIGHT              = SHIP_HEIGHT / 2f;
+
     private static final float   THRUSTER_MAX_WIDTH            = 5;
     private static final float   THRUSTER_MAX_HEIGHT           = 5;
     private static final float   SHIP_MASS                     = 1f;
     private static final float   TOTAL_THRUSTER_ANIMATION_TIME = 1f;
     private static final float   INPUT_FORCE_MULTIPLIER        = 100f;
     private static final Vector2 THRUSTER_OFFSET               = new Vector2(-2.5f, 0);
+
     private float        thrusterWidth;
     private float        thrusterHeight;
     private Animation    thrusterAnimation;
     private FixtureDef   thrusterFixtureDef;
-    private Fixture      shipFixture;
     private Fixture      thrusterFixture;
-    private FixtureDef   shipFixtureDef;
-    private Texture      shipTexture;
     private float        thrusterAnimationStateTime;
     private PolygonShape thrusterShape;
-    private PolygonShape shipShape;
     private TextureAtlas thrusterTextureAtlas;
+
+    private Fixture      shipFixture;
+    private FixtureDef   shipFixtureDef;
+    private Texture      shipTexture;
+    private PolygonShape shipShape;
+
     private float        fuel;
-    private boolean isDead = false;
+    private boolean      isDead = false;
     
     public Ship(float x, float y, String shipTexturePath, String thrusterTextureAtlasPath)
     {
@@ -60,7 +64,7 @@ public class Ship extends GameEntity
         shipFixtureDef.friction = 1f;
         shipFixtureDef.restitution = 0;
         shipFixtureDef.filter.categoryBits = MaskBits.SHIP;
-        shipFixtureDef.filter.maskBits = MaskBits.PLANET | MaskBits.BOUNDARIES;
+        shipFixtureDef.filter.maskBits = MaskBits.PLANET | MaskBits.BOUNDARIES | MaskBits.STAR;
 
 
         thrusterShape = new PolygonShape();

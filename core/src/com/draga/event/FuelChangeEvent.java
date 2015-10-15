@@ -1,4 +1,4 @@
-package com.draga;
+package com.draga.event;
 
 import com.badlogic.gdx.utils.Pool;
 
