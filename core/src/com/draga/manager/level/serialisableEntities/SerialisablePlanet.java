@@ -2,11 +2,11 @@ package com.draga.manager.level.serialisableEntities;
 
 public class SerialisablePlanet
 {
-    String texturePath;
-    int x;
-    int y;
-    float radius;
-    float mass;
+    String  texturePath;
+    int     x;
+    int     y;
+    float   radius;
+    float   mass;
     boolean destination;
 
     public SerialisablePlanet()

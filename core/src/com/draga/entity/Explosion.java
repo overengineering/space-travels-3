@@ -1,6 +1,5 @@
 package com.draga.entity;
 
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -48,7 +47,8 @@ public class Explosion extends GameEntity
             ANIMATION_TOTAL_TIME / textureAtlas.getRegions().size, textureAtlas.getRegions());
     }
 
-    @Override public void update(float deltaTime)
+    @Override
+    public void update(float deltaTime)
     {
         stateTime += deltaTime;
         if (animation.isAnimationFinished(stateTime))
@@ -57,7 +57,8 @@ public class Explosion extends GameEntity
         }
     }
 
-    @Override public void draw(SpriteBatch spriteBatch)
+    @Override
+    public void draw(SpriteBatch spriteBatch)
     {
         TextureRegion textureRegion = animation.getKeyFrame(stateTime);
         spriteBatch.draw(
@@ -73,12 +74,14 @@ public class Explosion extends GameEntity
             body.getAngle() * MathUtils.radiansToDegrees);
     }
 
-    @Override public void dispose()
+    @Override
+    public void dispose()
     {
         polygonShape.dispose();
     }
 
-    @Override public void createBody(World world)
+    @Override
+    public void createBody(World world)
     {
         body = world.createBody(bodyDef);
         body.setUserData(this);

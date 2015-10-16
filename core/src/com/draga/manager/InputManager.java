@@ -87,25 +87,29 @@ public class InputManager
     {
         Vector2 input = Pools.obtain(Vector2.class);
 
-        if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W)
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)
+            || Gdx.input.isKeyPressed(Input.Keys.W)
             || Gdx.input.isKeyPressed(Input.Keys.DPAD_UP))
         {
             input.add(0, 1);
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)
+            || Gdx.input.isKeyPressed(Input.Keys.D)
             || Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT))
         {
             input.add(1, 0);
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S)
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)
+            || Gdx.input.isKeyPressed(Input.Keys.S)
             || Gdx.input.isKeyPressed(Input.Keys.DPAD_DOWN))
         {
             input.add(0, -1);
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)
+            || Gdx.input.isKeyPressed(Input.Keys.A)
             || Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT))
         {
             input.add(-1, 0);

@@ -1,6 +1,5 @@
 package com.draga.entity;
 
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -41,12 +40,14 @@ public class Planet extends GameEntity
     }
 
 
-    @Override public void update(float deltaTime)
+    @Override
+    public void update(float deltaTime)
     {
 
     }
 
-    @Override public void draw(SpriteBatch spriteBatch)
+    @Override
+    public void draw(SpriteBatch spriteBatch)
     {
         spriteBatch.draw(
             texture,
@@ -67,13 +68,15 @@ public class Planet extends GameEntity
             false);
     }
 
-    @Override public void dispose()
+    @Override
+    public void dispose()
     {
         circleShape.dispose();
         texture.dispose();
     }
 
-    @Override public void createBody(World world)
+    @Override
+    public void createBody(World world)
     {
         body = world.createBody(bodyDef);
         body.setUserData(this);

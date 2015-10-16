@@ -10,13 +10,13 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.utils.Disposable;
 import com.draga.Constants;
 import com.draga.manager.AssMan;
 import com.draga.manager.ScreenManager;
 import com.draga.manager.level.LevelManager;
-import com.draga.manager.level.serialisableEntities.SerialisableGameScene;
+import com.draga.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.manager.level.serialisableEntities.SerialisablePlanet;
+import com.google.common.base.Joiner;
 
 public class LoadingScreen implements Screen
 {
@@ -26,26 +26,28 @@ public class LoadingScreen implements Screen
     private final BitmapFont            pDark24Font;
     private final long                  startTime;
     private       Label                 progressLabel;
-    private       SerialisableGameScene serialisableGameScene;
+    private       SerialisableLevel     serialisableLevel;
 
     public LoadingScreen(String levelJsonPath)
     {
         startTime = System.nanoTime();
 
-        serialisableGameScene = LevelManager.getSerialisedGameSceneFromFile(levelJsonPath);
+        serialisableLevel = LevelManager.getSerialisedGameSceneFromFile(levelJsonPath);
 
         AssMan.DisposeAllAndClear();
         AssMan.getAssetManager().load(
-            serialisableGameScene.serialisedBackground.getTexturePath(), Texture.class);
+            serialisableLevel.serialisedBackground.getTexturePath(), Texture.class);
         AssMan.getAssetManager().load(
-            serialisableGameScene.serialisedShip.getShipTexturePath(), Texture.class);
+            serialisableLevel.serialisedShip.getShipTexturePath(), Texture.class);
         AssMan.getAssetManager().load(
-            serialisableGameScene.serialisedShip.getThrusterTextureAtlasPath(), TextureAtlas.class);
-        for (SerialisablePlanet serialisablePlanet : serialisableGameScene.serialisedPlanets)
+            serialisableLevel.serialisedShip.getThrusterTextureAtlasPath(), TextureAtlas.class);
+        for (SerialisablePlanet serialisablePlanet : serialisableLevel.serialisedPlanets)
         {
             AssMan.getAssetManager().load(serialisablePlanet.getTexturePath(), Texture.class);
         }
         AssMan.getAssetManager().load("explosion/explosion.atlas", TextureAtlas.class);
+        AssMan.getAssetManager().load("star/starGold64.png", Texture.class);
+        AssMan.getAssetManager().load("star/starGray64.png", Texture.class);
         stage = new Stage();
 
 
@@ -72,8 +74,13 @@ public class LoadingScreen implements Screen
     {
         if (AssMan.getAssetManager().update())
         {
+            if (Constants.IS_DEBUGGING)
+            {
+                Gdx.app.debug(LOGGING_TAG, Joiner.on(", ").join(AssMan.getAssetManager().getAssetNames()));
+            }
+
             GameScreen gameScene = LevelManager.getLevelGameScene(
-                serialisableGameScene, new SpriteBatch());
+                serialisableLevel, new SpriteBatch());
             long elapsedNanoTime = System.nanoTime() - startTime;
             Gdx.app.debug(LOGGING_TAG, "Loading time: " + elapsedNanoTime * Constants.NANO + "s");
             ScreenManager.setActiveScreen(gameScene);

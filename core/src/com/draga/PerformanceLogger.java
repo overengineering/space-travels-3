@@ -9,7 +9,8 @@ public class PerformanceLogger implements Runnable
 {
     private static final String LOGGING_TAG = PerformanceLogger.class.getSimpleName();
 
-    @Override public void run()
+    @Override
+    public void run()
     {
         String formattedJavaHeap = Constants.COMMA_SEPARATED_THOUSANDS_FORMATTER.format(
             Gdx.app.getJavaHeap());

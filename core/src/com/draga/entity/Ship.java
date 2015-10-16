@@ -1,6 +1,5 @@
 package com.draga.entity;
 
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -10,6 +9,8 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Pools;
+import com.draga.Constants;
+import com.draga.event.FuelChangeEvent;
 import com.draga.MaskBits;
 import com.draga.entity.ship.ShipBox2dCollisionResolutionComponent;
 import com.draga.manager.AssMan;
@@ -24,43 +25,38 @@ public class Ship extends GameEntity
     private static final float   HALF_SHIP_WIDTH               = SHIP_WIDTH / 2f;
     private static final float   SHIP_HEIGHT                   = 10;
     private static final float   HALF_SHIP_HEIGHT              = SHIP_HEIGHT / 2f;
+
     private static final float   THRUSTER_MAX_WIDTH            = 5;
     private static final float   THRUSTER_MAX_HEIGHT           = 5;
     private static final float   SHIP_MASS                     = 1f;
     private static final float   TOTAL_THRUSTER_ANIMATION_TIME = 1f;
     private static final float   INPUT_FORCE_MULTIPLIER        = 100f;
     private static final Vector2 THRUSTER_OFFSET               = new Vector2(-2.5f, 0);
+
     private float        thrusterWidth;
     private float        thrusterHeight;
     private Animation    thrusterAnimation;
     private FixtureDef   thrusterFixtureDef;
-    private Fixture      shipFixture;
     private Fixture      thrusterFixture;
-    private FixtureDef   shipFixtureDef;
-    private Texture      shipTexture;
     private float        thrusterAnimationStateTime;
     private PolygonShape thrusterShape;
-    private PolygonShape shipShape;
     private TextureAtlas thrusterTextureAtlas;
+
+    private Fixture      shipFixture;
+    private FixtureDef   shipFixtureDef;
+    private Texture      shipTexture;
+    private PolygonShape shipShape;
+
+    private float        fuel;
     private boolean      isDead = false;
-    
-    public boolean isDead()
-    {
-        return isDead;
-    }
-    
-    public void setIsDead(boolean isDead)
-    {
-        this.isDead = isDead;
-    }
     
     public Ship(float x, float y, String shipTexturePath, String thrusterTextureAtlasPath)
     {
         collisionResolutionComponent = new ShipBox2dCollisionResolutionComponent(this);
-        
+
         shipShape = new PolygonShape();
         shipShape.setAsBox(SHIP_WIDTH / 2f, SHIP_HEIGHT / 2f);
-        
+
         shipFixtureDef = new FixtureDef();
         shipFixtureDef.shape = shipShape;
         float area = SHIP_WIDTH * SHIP_HEIGHT;
@@ -68,7 +64,7 @@ public class Ship extends GameEntity
         shipFixtureDef.friction = 1f;
         shipFixtureDef.restitution = 0;
         shipFixtureDef.filter.categoryBits = MaskBits.SHIP;
-        shipFixtureDef.filter.maskBits = MaskBits.PLANET | MaskBits.BOUNDARIES;
+        shipFixtureDef.filter.maskBits = MaskBits.PLANET | MaskBits.BOUNDARIES | MaskBits.STAR;
 
 
         thrusterShape = new PolygonShape();
@@ -99,9 +95,23 @@ public class Ship extends GameEntity
             TOTAL_THRUSTER_ANIMATION_TIME / this.thrusterTextureAtlas.getRegions().size,
             this.thrusterTextureAtlas.getRegions(),
             Animation.PlayMode.LOOP);
+
+
+        fuel = Constants.MAX_FUEL;
+    }
+    
+    public boolean isDead()
+    {
+        return isDead;
+    }
+    
+    public void setIsDead(boolean isDead)
+    {
+        this.isDead = isDead;
     }
 
-    @Override public void update(float deltaTime)
+    @Override
+    public void update(float deltaTime)
     {
         // Avoid overflow.
         thrusterAnimationStateTime += deltaTime;
@@ -114,7 +124,14 @@ public class Ship extends GameEntity
         body.applyForceToCenter(gravityForce, true);
 
         Vector2 inputForce = InputManager.getInputForce();
+        // TODO: apply the last part of acceleration properly and maybe then stop updating the
+        // thrusters?
+        if (fuel <= 0)
+        {
+            inputForce.setZero();
+        }
         rotateTo(inputForce, deltaTime);
+        updateFuel(inputForce, deltaTime);
         float thrusterScale = inputForce.len();
         thrusterWidth = THRUSTER_MAX_WIDTH * thrusterScale;
         thrusterHeight = THRUSTER_MAX_HEIGHT * thrusterScale;
@@ -129,9 +146,19 @@ public class Ship extends GameEntity
         body.applyForceToCenter(inputForce, true);
     }
 
-    @Override public void draw(SpriteBatch spriteBatch)
+    private void updateFuel(Vector2 inputForce, float deltaTime)
     {
-		if(isDead())
+        fuel -= inputForce.len() * Constants.FUEL_PER_SECOND * deltaTime;
+        FuelChangeEvent fuelChangeEvent = Pools.obtain(FuelChangeEvent.class);
+        fuelChangeEvent.set(fuel);
+        Constants.EVENT_BUS.post(fuelChangeEvent);
+        Pools.free(fuelChangeEvent);
+    }
+
+    @Override
+    public void draw(SpriteBatch spriteBatch)
+    {
+        if (isDead())
         {
             return;
         }
@@ -174,7 +201,8 @@ public class Ship extends GameEntity
             false);
     }
 
-    @Override public void dispose()
+    @Override
+    public void dispose()
     {
         shipShape.dispose();
         thrusterShape.dispose();
@@ -182,7 +210,8 @@ public class Ship extends GameEntity
         thrusterTextureAtlas.dispose();
     }
 
-    @Override public void createBody(World world)
+    @Override
+    public void createBody(World world)
     {
         body = world.createBody(bodyDef);
         body.setUserData(this);
