@@ -10,21 +10,21 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Pools;
 import com.draga.Constants;
-import com.draga.event.FuelChangeEvent;
 import com.draga.MaskBits;
 import com.draga.entity.ship.ShipBox2dCollisionResolutionComponent;
+import com.draga.event.FuelChangeEvent;
 import com.draga.manager.AssMan;
 import com.draga.manager.GravityManager;
 import com.draga.manager.InputManager;
 
 public class Ship extends GameEntity
 {
-    public static final  String  LOGGING_TAG                   = Ship.class.getSimpleName();
-    private static final float   ROTATION_FORCE                = 2000;
-    private static final float   SHIP_WIDTH                    = 10;
-    private static final float   HALF_SHIP_WIDTH               = SHIP_WIDTH / 2f;
-    private static final float   SHIP_HEIGHT                   = 10;
-    private static final float   HALF_SHIP_HEIGHT              = SHIP_HEIGHT / 2f;
+    public static final  String LOGGING_TAG      = Ship.class.getSimpleName();
+    private static final float  ROTATION_FORCE   = 2000;
+    private static final float  SHIP_WIDTH       = 10;
+    private static final float  HALF_SHIP_WIDTH  = SHIP_WIDTH / 2f;
+    private static final float  SHIP_HEIGHT      = 10;
+    private static final float  HALF_SHIP_HEIGHT = SHIP_HEIGHT / 2f;
 
     private static final float   THRUSTER_MAX_WIDTH            = 5;
     private static final float   THRUSTER_MAX_HEIGHT           = 5;
@@ -47,8 +47,8 @@ public class Ship extends GameEntity
     private Texture      shipTexture;
     private PolygonShape shipShape;
 
-    private float        fuel;
-    private boolean      isDead = false;
+    private float fuel;
+    private boolean isDead = false;
     
     public Ship(float x, float y, String shipTexturePath, String thrusterTextureAtlasPath)
     {

@@ -2,8 +2,8 @@ package com.draga.manager.level.serialisableEntities;
 
 public class SerialisableShip
 {
-    private int x;
-    private int y;
+    private int    x;
+    private int    y;
     private String shipTexturePath;
     private String ThrusterTextureAtlasPath;
 

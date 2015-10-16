@@ -14,11 +14,10 @@ import com.draga.manager.screen.GameScreen;
 
 public abstract class LevelManager
 {
-    public static SerialisableLevel getSerialisedGameSceneFromFile(String serialisedGameSceneFilePath)
+    public static SerialisableLevel getSerialisedLevelFromFile(String serialisedGameScreenFilePath)
     {
-        String serialisedWordString = getStringFromFile(serialisedGameSceneFilePath);
-        SerialisableLevel serialisableLevel =
-            getSerialisedGameSceneFromString(serialisedWordString);
+        String serialisedLevelString = getStringFromFile(serialisedGameScreenFilePath);
+        SerialisableLevel serialisableLevel = getSerialisedLevelFromString(serialisedLevelString);
 
         return serialisableLevel;
     }
@@ -29,7 +28,7 @@ public abstract class LevelManager
         return serialisedWorldFileHandle.readString();
     }
 
-    public static SerialisableLevel getSerialisedGameSceneFromString(String serialisedWord)
+    public static SerialisableLevel getSerialisedLevelFromString(String serialisedWord)
     {
         Json json = new Json();
 
@@ -40,27 +39,19 @@ public abstract class LevelManager
 
         return serialisableLevel;
     }
-
-    public static GameScreen getLevelWorldFromFile(
-        String serialisedWorldFilePath, SpriteBatch spriteBatch)
+    
+    public static GameScreen getLevelGameScreenFromString(
+        String jsonString, SpriteBatch spriteBatch)
     {
-        String serialisedWordString = getStringFromFile(serialisedWorldFilePath);
-        GameScreen world = getLevelGameSceneFromString(serialisedWordString, spriteBatch);
-
-        return world;
-    }
-
-    public static GameScreen getLevelGameSceneFromString(String jsonString, SpriteBatch spriteBatch)
-    {
-        SerialisableLevel serialisableLevel = LevelManager.getSerialisedGameSceneFromString(
+        SerialisableLevel serialisableLevel = LevelManager.getSerialisedLevelFromString(
             jsonString);
 
-        GameScreen world = LevelManager.getLevelGameScene(serialisableLevel, spriteBatch);
+        GameScreen world = LevelManager.getLevelGameScreen(serialisableLevel, spriteBatch);
 
         return world;
     }
 
-    public static GameScreen getLevelGameScene(
+    public static GameScreen getLevelGameScreen(
         SerialisableLevel serialisableLevel, SpriteBatch spriteBatch)
     {
         GameScreen gameScreen = new GameScreen(
@@ -95,7 +86,8 @@ public abstract class LevelManager
 
         for (SerialisableStar serialisableStar : serialisableLevel.serialisedStars)
         {
-            Star star = new Star(serialisableStar.getX(), serialisableStar.getY(), "star/starGold64.png");
+            Star star =
+                new Star(serialisableStar.getX(), serialisableStar.getY(), "star/starGold64.png");
             gameScreen.addStar(star);
         }
 

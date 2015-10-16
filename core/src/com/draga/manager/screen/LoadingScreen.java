@@ -32,7 +32,7 @@ public class LoadingScreen implements Screen
     {
         startTime = System.nanoTime();
 
-        serialisableLevel = LevelManager.getSerialisedGameSceneFromFile(levelJsonPath);
+        serialisableLevel = LevelManager.getSerialisedLevelFromFile(levelJsonPath);
 
         AssMan.DisposeAllAndClear();
         AssMan.getAssetManager().load(
@@ -76,14 +76,15 @@ public class LoadingScreen implements Screen
         {
             if (Constants.IS_DEBUGGING)
             {
-                Gdx.app.debug(LOGGING_TAG, Joiner.on(", ").join(AssMan.getAssetManager().getAssetNames()));
+                Gdx.app.debug(
+                    LOGGING_TAG, Joiner.on(", ").join(AssMan.getAssetManager().getAssetNames()));
             }
 
-            GameScreen gameScene = LevelManager.getLevelGameScene(
+            GameScreen gameScreen = LevelManager.getLevelGameScreen(
                 serialisableLevel, new SpriteBatch());
             long elapsedNanoTime = System.nanoTime() - startTime;
             Gdx.app.debug(LOGGING_TAG, "Loading time: " + elapsedNanoTime * Constants.NANO + "s");
-            ScreenManager.setActiveScreen(gameScene);
+            ScreenManager.setActiveScreen(gameScreen);
         }
         setProgressLabelText();
 
