@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.draga.event.FuelChangeEvent;
 import com.google.common.eventbus.Subscribe;
 
@@ -32,7 +31,7 @@ public class Hud implements Screen
     {
         float height = stage.getHeight() / 30f;
         float width = stage.getWidth() / 3f;
-        float margin = ((stage.getHeight()+stage.getWidth()) /2f) / 50f;
+        float margin = ((stage.getHeight() + stage.getWidth()) / 2f) / 50f;
 
         Skin skin = new Skin();
         Pixmap pixmap = new Pixmap(
@@ -49,8 +48,7 @@ public class Hud implements Screen
             0, Constants.MAX_FUEL, Constants.MAX_FUEL / 1000f, false, fuelProgressBarStyle);
         fuelProgressBar.setSize(width, height);
         fuelProgressBar.setPosition(
-            margin,
-            stage.getHeight() - margin - height);
+            margin, stage.getHeight() - margin - height);
 
         return fuelProgressBar;
     }
