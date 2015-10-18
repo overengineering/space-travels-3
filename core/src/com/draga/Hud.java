@@ -22,7 +22,6 @@ public class Hud implements Screen
         stage = new Stage();
 
         fuelProgressBar = getFuelProgressBar();
-        updateFuelProgressBar(Constants.MAX_FUEL);
         stage.addActor(fuelProgressBar);
         stage.setDebugAll(Constants.IS_DEBUGGING);
     }
@@ -45,7 +44,7 @@ public class Hud implements Screen
         fuelProgressBarStyle.knobBefore = skin.newDrawable("white", Color.WHITE);
 
         ProgressBar fuelProgressBar = new ProgressBar(
-            0, Constants.MAX_FUEL, Constants.MAX_FUEL / 1000f, false, fuelProgressBarStyle);
+            0, 1, 0.0001f, false, fuelProgressBarStyle);
         fuelProgressBar.setSize(width, height);
         fuelProgressBar.setPosition(
             margin, stage.getHeight() - margin - height);
@@ -98,11 +97,7 @@ public class Hud implements Screen
     @Subscribe
     public void FuelChanged(FuelChangeEvent fuelChangeEvent)
     {
-        updateFuelProgressBar(fuelChangeEvent.fuel);
-    }
-
-    private void updateFuelProgressBar(float fuel)
-    {
-        fuelProgressBar.setValue(fuel);
+        fuelProgressBar.setRange(0, fuelChangeEvent.maxFuel);
+        fuelProgressBar.setValue(fuelChangeEvent.newFuel);
     }
 }
