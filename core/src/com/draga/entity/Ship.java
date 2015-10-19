@@ -10,29 +10,33 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Pools;
 import com.draga.Constants;
-import com.draga.event.FuelChangeEvent;
 import com.draga.MaskBits;
 import com.draga.entity.ship.ShipBox2dCollisionResolutionComponent;
+import com.draga.event.FuelChangeEvent;
 import com.draga.manager.AssMan;
 import com.draga.manager.GravityManager;
 import com.draga.manager.InputManager;
 
 public class Ship extends GameEntity
 {
-    public static final  String  LOGGING_TAG                   = Ship.class.getSimpleName();
-    private static final float   ROTATION_FORCE                = 2000;
-    private static final float   SHIP_WIDTH                    = 10;
-    private static final float   HALF_SHIP_WIDTH               = SHIP_WIDTH / 2f;
-    private static final float   SHIP_HEIGHT                   = 10;
-    private static final float   HALF_SHIP_HEIGHT              = SHIP_HEIGHT / 2f;
-
+    public static final String LOGGING_TAG = Ship.class.getSimpleName();
+    // Fuel.
+    public static final float MAX_FUEL        = 1f;
+    public static final float FUEL_PER_SECOND = 0.3f;
+    // Size.
+    private static final float SHIP_WIDTH       = 10;
+    private static final float HALF_SHIP_WIDTH  = SHIP_WIDTH / 2f;
+    private static final float SHIP_HEIGHT      = 10;
+    private static final float HALF_SHIP_HEIGHT = SHIP_HEIGHT / 2f;
+    // Physic.
+    private static final float ROTATION_FORCE         = 2000;
+    private static final float SHIP_MASS              = 1f;
+    private static final float INPUT_FORCE_MULTIPLIER = 100f;
+    // Thruster.
     private static final float   THRUSTER_MAX_WIDTH            = 5;
     private static final float   THRUSTER_MAX_HEIGHT           = 5;
-    private static final float   SHIP_MASS                     = 1f;
     private static final float   TOTAL_THRUSTER_ANIMATION_TIME = 1f;
-    private static final float   INPUT_FORCE_MULTIPLIER        = 100f;
     private static final Vector2 THRUSTER_OFFSET               = new Vector2(-2.5f, 0);
-
     private float        thrusterWidth;
     private float        thrusterHeight;
     private Animation    thrusterAnimation;
@@ -47,8 +51,8 @@ public class Ship extends GameEntity
     private Texture      shipTexture;
     private PolygonShape shipShape;
 
-    private float        fuel;
-    private boolean      isDead = false;
+    private float fuel;
+    private boolean isDead = false;
     
     public Ship(float x, float y, String shipTexturePath, String thrusterTextureAtlasPath)
     {
@@ -97,7 +101,7 @@ public class Ship extends GameEntity
             Animation.PlayMode.LOOP);
 
 
-        fuel = Constants.MAX_FUEL;
+        fuel = MAX_FUEL;
     }
     
     public boolean isDead()
@@ -148,9 +152,10 @@ public class Ship extends GameEntity
 
     private void updateFuel(Vector2 inputForce, float deltaTime)
     {
-        fuel -= inputForce.len() * Constants.FUEL_PER_SECOND * deltaTime;
+        float oldFuel = fuel;
+        fuel -= inputForce.len() * FUEL_PER_SECOND * deltaTime;
         FuelChangeEvent fuelChangeEvent = Pools.obtain(FuelChangeEvent.class);
-        fuelChangeEvent.set(fuel);
+        fuelChangeEvent.set(oldFuel, fuel, MAX_FUEL);
         Constants.EVENT_BUS.post(fuelChangeEvent);
         Pools.free(fuelChangeEvent);
     }

@@ -19,12 +19,12 @@ import com.draga.manager.ScreenManager;
 
 public class LoseScreen implements Screen
 {
+    public static final float FADE_PER_SECOND = 0.7f;
     private final Stage      stage;
     private final GameScreen parentGameScreen;
-    private final Color         fadeToColour     = new Color(0, 0, 0, 0.7f);
-    private final Color         backgroundColour = new Color(0, 0, 0, 0);
+    private final Color fadeToColour     = new Color(0, 0, 0, 0.7f);
+    private final Color backgroundColour = new Color(0, 0, 0, 0);
     private final ShapeRenderer shapeRenderer;
-    public static final float FADE_PER_SECOND = 0.7f;
 
     public LoseScreen(GameScreen parentScreen)
     {

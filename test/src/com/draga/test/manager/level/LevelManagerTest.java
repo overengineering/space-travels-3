@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.draga.manager.level.LevelManager;
-import com.draga.manager.level.serialisableEntities.SerialisableWorld;
+import com.draga.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.manager.screen.GameScreen;
 import com.draga.test.gdxTestRunner.GdxTestRunner;
 import org.junit.Assert;
@@ -17,24 +17,24 @@ import static org.mockito.Mockito.mock;
 public class LevelManagerTest
 {
     @Test
-    public void testGetSerialisedGameScene() throws Exception
+    public void testGetSerialisedLevelFromString() throws Exception
     {
         String testLevelJson = getTestLevelJson();
-        SerialisableGameScene serialisableGameScene = LevelManager.getSerialisedGameSceneFromString(
+        SerialisableLevel serialisableLevel = LevelManager.getSerialisedLevelFromString(
             testLevelJson);
 
-        Assert.assertNotNull(serialisableGameScene);
-        Assert.assertNotNull(serialisableGameScene.serialisedPlanets);
-        Assert.assertNotNull(serialisableGameScene.serialisedBackground);
-        Assert.assertNotNull(serialisableGameScene.serialisedShip);
-        Assert.assertNotEquals(serialisableGameScene.serialisedPlanets.size(), 0);
+        Assert.assertNotNull(serialisableLevel);
+        Assert.assertNotNull(serialisableLevel.serialisedPlanets);
+        Assert.assertNotNull(serialisableLevel.serialisedBackground);
+        Assert.assertNotNull(serialisableLevel.serialisedShip);
+        Assert.assertNotEquals(serialisableLevel.serialisedPlanets.size(), 0);
     }
 
     @Test
-    public void testGetLevelGameScene() throws Exception
+    public void testGetLevelGameScreenFromString() throws Exception
     {
         String testLevelJson = getTestLevelJson();
-        GameScreen gameScreen = LevelManager.getLevelGameSceneFromString(
+        GameScreen gameScreen = LevelManager.getLevelGameScreenFromString(
             testLevelJson, mock(SpriteBatch.class));
 
         Assert.assertNotNull(gameScreen);

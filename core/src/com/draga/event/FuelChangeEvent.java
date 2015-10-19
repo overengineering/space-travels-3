@@ -4,16 +4,23 @@ import com.badlogic.gdx.utils.Pool;
 
 public class FuelChangeEvent implements Pool.Poolable
 {
-    public float fuel;
+    public float oldFuel;
+    public float newFuel;
+    public float maxFuel;
+
+    public void set(float oldFuel, float newFuel, float maxFuel)
+    {
+        this.oldFuel = oldFuel;
+        this.newFuel = newFuel;
+        this.maxFuel = maxFuel;
+    }
 
     @Override
     public void reset()
     {
-        fuel = 0f;
-    }
+        oldFuel = 0f;
 
-    public void set(float fuel)
-    {
-        this.fuel = fuel;
+        newFuel = 0f;
+        maxFuel = 0f;
     }
 }

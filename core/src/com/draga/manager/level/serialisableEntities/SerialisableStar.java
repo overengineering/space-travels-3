@@ -3,6 +3,7 @@ package com.draga.manager.level.serialisableEntities;
 public class SerialisableStar
 {
     private int x;
+    private int y;
 
     public int getX()
     {
@@ -13,6 +14,4 @@ public class SerialisableStar
     {
         return y;
     }
-
-    private int y;
 }

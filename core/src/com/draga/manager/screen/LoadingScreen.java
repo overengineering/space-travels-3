@@ -2,6 +2,8 @@ package com.draga.manager.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -10,6 +12,8 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.draga.Constants;
 import com.draga.manager.AssMan;
 import com.draga.manager.ScreenManager;
@@ -25,15 +29,15 @@ public class LoadingScreen implements Screen
     private final FreeTypeFontGenerator freeTypeFontGenerator;
     private final BitmapFont            pDark24Font;
     private final long                  startTime;
-    private       Label                 progressLabel;
+    private       ProgressBar           progressBar;
     private       SerialisableLevel     serialisableLevel;
-
+    
     public LoadingScreen(String levelJsonPath)
     {
         startTime = System.nanoTime();
-
-        serialisableLevel = LevelManager.getSerialisedGameSceneFromFile(levelJsonPath);
-
+        
+        serialisableLevel = LevelManager.getSerialisedLevelFromFile(levelJsonPath);
+        
         AssMan.DisposeAllAndClear();
         AssMan.getAssetManager().load(
             serialisableLevel.serialisedBackground.getTexturePath(), Texture.class);
@@ -48,7 +52,6 @@ public class LoadingScreen implements Screen
         AssMan.getAssetManager().load("explosion/explosion.atlas", TextureAtlas.class);
         AssMan.getAssetManager().load("star/starGold64.png", Texture.class);
         AssMan.getAssetManager().load("star/starGray64.png", Texture.class);
-        stage = new Stage();
 
 
         freeTypeFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font/pdark.ttf"));
@@ -57,10 +60,15 @@ public class LoadingScreen implements Screen
         parameter.size = 64;
         pDark24Font = freeTypeFontGenerator.generateFont(parameter);
 
+        stage = new Stage();
+
         Actor headerLabel = getHeaderLabel();
-        progressLabel = getProgressLabel();
+        progressBar = getProgressBar();
         stage.addActor(headerLabel);
-        stage.addActor(progressLabel);
+        stage.addActor(progressBar);
+
+
+        stage.setDebugAll(Constants.IS_DEBUGGING);
     }
 
     @Override
@@ -76,28 +84,29 @@ public class LoadingScreen implements Screen
         {
             if (Constants.IS_DEBUGGING)
             {
-                Gdx.app.debug(LOGGING_TAG, Joiner.on(", ").join(AssMan.getAssetManager().getAssetNames()));
+                Gdx.app.debug(
+                    LOGGING_TAG, Joiner.on(", ").join(AssMan.getAssetManager().getAssetNames()));
             }
 
-            GameScreen gameScene = LevelManager.getLevelGameScene(
+            GameScreen gameScreen = LevelManager.getLevelGameScreen(
                 serialisableLevel, new SpriteBatch());
             long elapsedNanoTime = System.nanoTime() - startTime;
             Gdx.app.debug(LOGGING_TAG, "Loading time: " + elapsedNanoTime * Constants.NANO + "s");
-            ScreenManager.setActiveScreen(gameScene);
+            ScreenManager.setActiveScreen(gameScreen);
         }
-        setProgressLabelText();
+        updateProgressBar();
 
         stage.act(deltaTime);
         stage.draw();
     }
 
-    private void setProgressLabelText()
+    private void updateProgressBar()
     {
-        progressLabel.setText(
-            AssMan.getAssetManager().getLoadedAssets() + " of " + (
-                AssMan.getAssetManager().getQueuedAssets() + AssMan.getAssetManager()
-                    .getLoadedAssets()));
-        progressLabel.setX(stage.getWidth() - progressLabel.getWidth() / 2f);
+        progressBar.setRange(
+            0,
+            AssMan.getAssetManager().getQueuedAssets() + AssMan.getAssetManager()
+                .getLoadedAssets());
+        progressBar.setValue(AssMan.getAssetManager().getLoadedAssets());
     }
 
     @Override
@@ -144,17 +153,33 @@ public class LoadingScreen implements Screen
         return headerLabel;
     }
 
-    public Label getProgressLabel()
+    private ProgressBar getProgressBar()
     {
-        Label.LabelStyle labelStyle = new Label.LabelStyle();
-        labelStyle.font = pDark24Font;
+        float height = stage.getHeight() / 20f;
+        float width = stage.getWidth() * 0.75f;
+        float margin = (stage.getWidth() - width) / 2f;
 
-        Label progressLabel = new Label("Loading", labelStyle);
-        float height = pDark24Font.getLineHeight() * 2;
-        progressLabel.sizeBy(stage.getWidth(), height);
-        progressLabel.setHeight(stage.getHeight() / 10);
-        progressLabel.setX((stage.getWidth() / 2) - (progressLabel.getWidth() / 2));
+        Skin skin = new Skin();
+        Pixmap pixmap = new Pixmap(
+            1, (int) Math.ceil(height), Pixmap.Format.RGBA8888);
+        pixmap.setColor(Color.WHITE);
+        pixmap.fill();
+        skin.add("white", new Texture(pixmap));
 
-        return progressLabel;
+        ProgressBar.ProgressBarStyle progressBarStyle = new ProgressBar.ProgressBarStyle(
+            skin.newDrawable("white", Color.DARK_GRAY), null);
+        progressBarStyle.knobBefore = skin.newDrawable("white", Color.WHITE);
+
+        ProgressBar progressBar = new ProgressBar(
+            0,
+            AssMan.getAssetManager().getQueuedAssets() + AssMan.getAssetManager().getLoadedAssets(),
+            1,
+            false,
+            progressBarStyle);
+        progressBar.setSize(width, height);
+        progressBar.setPosition(
+            margin, margin);
+
+        return progressBar;
     }
 }
