@@ -127,6 +127,7 @@ public class GameScreen implements Screen
     {
         totalStars++;
         addGameEntity(star);
+        hud.addStar();
     }
 
     private void addGameEntity(GameEntity gameEntity)
