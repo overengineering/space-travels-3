@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.draga.Constants;
 import com.draga.manager.FontManager;
 import com.draga.manager.ScreenManager;
 
@@ -39,6 +40,7 @@ public class LoseScreen implements Screen
         table.setFillParent(true);
         stage.addActor(table);
 
+        stage.setDebugAll(Constants.IS_DEBUGGING);
         shapeRenderer = new ShapeRenderer();
     }
 
@@ -85,7 +87,7 @@ public class LoseScreen implements Screen
 
         shapeRenderer.setColor(backgroundColour);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.rect(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        shapeRenderer.rect(0, 0, stage.getWidth(), stage.getHeight());
         shapeRenderer.end();
 
         Gdx.gl.glDisable(GL20.GL_BLEND);
