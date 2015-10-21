@@ -31,7 +31,7 @@ public class Ship extends GameEntity
     // Physic.
     private static final float ROTATION_FORCE         = 2000;
     private static final float SHIP_MASS              = 1f;
-    private static final float INPUT_FORCE_MULTIPLIER = 40f;
+    private static final float INPUT_FORCE_MULTIPLIER = 100f;
     // Thruster.
     private static final float   THRUSTER_MAX_WIDTH            = 5;
     private static final float   THRUSTER_MAX_HEIGHT           = 5;

@@ -21,8 +21,11 @@ public class Hud implements Screen
 {
     private Stage        stage;
     private ProgressBar  fuelProgressBar;
+
     private int          totalStars;
     private Stack<Image> grayStars;
+
+    private float        shipVelocity;
 
     public Hud()
     {

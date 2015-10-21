@@ -304,7 +304,7 @@ public class GameScreen implements Screen
         {
             shipPlanetCollisionEvent.ship.setIsDead(true);
         }
-        else if (ship.getBody().getLinearVelocity().len() < 5)
+        else if (ship.getBody().getLinearVelocity().len() < 15)
         {
             ship.setIsDead(true);
         }
