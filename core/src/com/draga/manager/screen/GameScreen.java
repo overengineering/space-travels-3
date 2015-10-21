@@ -115,6 +115,9 @@ public class GameScreen implements Screen
     {
         this.ship = ship;
         addGameEntity(ship);
+
+        orthographicCamera.position.x = ship.getX();
+        orthographicCamera.position.y = ship.getY();
     }
 
     public void addPlanet(Planet planet)
