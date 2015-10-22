@@ -6,9 +6,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.draga.event.FuelChangeEvent;
 import com.draga.event.StarCollectedEvent;
@@ -19,12 +17,13 @@ import java.util.Stack;
 
 public class Hud implements Screen
 {
-    private Stage        stage;
+    private Stage stage;
 
-    private ProgressBar  fuelProgressBar;
+    private ProgressBar fuelProgressBar;
 
-    private int          totalStars;
-    private Stack<Image> grayStars;
+    private int             totalStars;
+    private Stack<Image>    grayStars;
+    private HorizontalGroup starsHorizontalGroup;
 
     public Hud()
     {
@@ -36,8 +35,26 @@ public class Hud implements Screen
 
         stage = new Stage();
 
+
+
+        Table table = new Table();
+        stage.addActor(table);
+
+
+
         fuelProgressBar = getFuelProgressBar();
-        stage.addActor(fuelProgressBar);
+        float padding = ((stage.getHeight() + stage.getWidth()) / 2f) / 50f;
+        table.add(fuelProgressBar).top().left().pad(padding).expand();
+
+        table.row();
+
+        starsHorizontalGroup = new HorizontalGroup();
+        table.add(starsHorizontalGroup).bottom().right().pad(padding).expand();
+
+
+
+        table.setFillParent(true);
+
 
         stage.setDebugAll(Constants.IS_DEBUGGING);
     }
@@ -62,8 +79,6 @@ public class Hud implements Screen
         ProgressBar fuelProgressBar = new ProgressBar(
             0, 1, 0.0001f, false, fuelProgressBarStyle);
         fuelProgressBar.setSize(width, height);
-        fuelProgressBar.setPosition(
-            margin, stage.getHeight() - margin - height);
 
         return fuelProgressBar;
     }
@@ -132,7 +147,7 @@ public class Hud implements Screen
 
         grayStars.add(starImage);
 
-        stage.addActor(starImage);
+        starsHorizontalGroup.addActor(starImage);
     }
 
     @Subscribe
