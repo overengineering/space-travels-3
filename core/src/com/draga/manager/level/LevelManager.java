@@ -1,7 +1,6 @@
 package com.draga.manager.level;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Json;
 import com.draga.entity.Planet;
@@ -14,41 +13,13 @@ import com.draga.manager.screen.GameScreen;
 
 public abstract class LevelManager
 {
-    public static SerialisableLevel getSerialisedLevelFromFile(String serialisedGameScreenFilePath)
+    public static SerialisableLevel getSerialisedLevelFromName(String serialisedLevelName)
     {
-        String serialisedLevelString = getStringFromFile(serialisedGameScreenFilePath);
+        String serialisedLevelString =
+            Gdx.files.internal(serialisedLevelName).readString();
         SerialisableLevel serialisableLevel = getSerialisedLevelFromString(serialisedLevelString);
 
         return serialisableLevel;
-    }
-
-    private static String getStringFromFile(String filePath)
-    {
-        FileHandle serialisedWorldFileHandle = Gdx.files.internal(filePath);
-        return serialisedWorldFileHandle.readString();
-    }
-
-    public static SerialisableLevel getSerialisedLevelFromString(String serialisedWord)
-    {
-        Json json = new Json();
-
-        json.addClassTag("SerialisableLevel", SerialisableLevel.class);
-
-        SerialisableLevel serialisableLevel =
-            json.fromJson(SerialisableLevel.class, serialisedWord);
-
-        return serialisableLevel;
-    }
-    
-    public static GameScreen getLevelGameScreenFromString(
-        String jsonString, SpriteBatch spriteBatch)
-    {
-        SerialisableLevel serialisableLevel = LevelManager.getSerialisedLevelFromString(
-            jsonString);
-
-        GameScreen world = LevelManager.getLevelGameScreen(serialisableLevel, spriteBatch);
-
-        return world;
     }
 
     public static GameScreen getLevelGameScreen(
@@ -90,6 +61,29 @@ public abstract class LevelManager
                 new Star(serialisableStar.getX(), serialisableStar.getY(), "star/starGold64.png");
             gameScreen.addStar(star);
         }
+
+        return gameScreen;
+    }
+
+    private static SerialisableLevel getSerialisedLevelFromString(String serialisedLevel)
+    {
+        Json json = new Json();
+
+        json.addClassTag("SerialisableLevel", SerialisableLevel.class);
+
+        SerialisableLevel serialisableLevel =
+            json.fromJson(SerialisableLevel.class, serialisedLevel);
+
+        return serialisableLevel;
+    }
+
+    private static GameScreen getLevelGameScreenFromString(
+        String jsonString, SpriteBatch spriteBatch)
+    {
+        SerialisableLevel serialisableLevel = LevelManager.getSerialisedLevelFromString(
+            jsonString);
+
+        GameScreen gameScreen = LevelManager.getLevelGameScreen(serialisableLevel, spriteBatch);
 
         return gameScreen;
     }

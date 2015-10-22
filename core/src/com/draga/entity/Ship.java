@@ -21,18 +21,22 @@ import com.draga.manager.InputManager;
 public class Ship extends GameEntity
 {
     public static final String LOGGING_TAG = Ship.class.getSimpleName();
+
     // Fuel.
     public static final float MAX_FUEL        = 1f;
     public static final float FUEL_PER_SECOND = 0.3f;
+
     // Size.
     private static final float SHIP_WIDTH       = 10;
     private static final float HALF_SHIP_WIDTH  = SHIP_WIDTH / 2f;
     private static final float SHIP_HEIGHT      = 10;
     private static final float HALF_SHIP_HEIGHT = SHIP_HEIGHT / 2f;
+
     // Physic.
     private static final float ROTATION_FORCE         = 2000;
     private static final float SHIP_MASS              = 1f;
     private static final float INPUT_FORCE_MULTIPLIER = 100f;
+
     // Thruster.
     private static final float   THRUSTER_MAX_WIDTH            = 5;
     private static final float   THRUSTER_MAX_HEIGHT           = 5;
@@ -49,9 +53,11 @@ public class Ship extends GameEntity
 
     private Fixture      shipFixture;
     private FixtureDef   shipFixtureDef;
-    private Texture      shipTexture;
     private PolygonShape shipShape;
 
+    private Texture      shipTexture;
+
+    // State
     private float fuel;
     private boolean isDead = false;
     
