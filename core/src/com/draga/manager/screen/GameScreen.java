@@ -185,6 +185,12 @@ public class GameScreen implements Screen
         {
             DebugManager.noGravity = !DebugManager.noGravity;
         }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.F3))
+        {
+            ship.getBody().setLinearVelocity(0, 0);
+            ship.getBody().setAngularVelocity(0);
+        }
     }
 
     private void removeGameEntity(GameEntity gameEntity)
