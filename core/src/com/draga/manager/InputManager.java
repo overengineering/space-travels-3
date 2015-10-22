@@ -32,7 +32,7 @@ public class InputManager
             default:
                 Gdx.app.error(
                     LOGGING_TAG, "Device type " + Gdx.input.getRotation() + " not implemented.");
-                input = Pools.obtain(Vector2.class);
+                input = new Vector2();
                 break;
         }
         return input;
@@ -53,7 +53,7 @@ public class InputManager
 
     private static Vector2 getDeviceAccelerationForDeviceOrientation()
     {
-        Vector2 input = Pools.obtain(Vector2.class);
+        Vector2 input = new Vector2();
         switch (Gdx.input.getRotation())
         {
             case 0:
@@ -85,7 +85,7 @@ public class InputManager
      */
     private static Vector2 getKeyboardInput()
     {
-        Vector2 input = Pools.obtain(Vector2.class);
+        Vector2 input = new Vector2();
 
         if (Gdx.input.isKeyPressed(Input.Keys.UP)
             || Gdx.input.isKeyPressed(Input.Keys.W)
