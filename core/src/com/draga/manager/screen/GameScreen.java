@@ -42,9 +42,7 @@ public class GameScreen implements Screen
     private int                height;
     private ArrayList<Planet>  planets;
     private Planet             destinationPlanet;
-    private boolean doUpdate       = true;
-    private int     totalStars     = 0;
-    private int     starsCollected = 0;
+    private boolean doUpdate = true;
 
     public GameScreen(String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height)
     {
@@ -128,7 +126,6 @@ public class GameScreen implements Screen
 
     public void addStar(Star star)
     {
-        totalStars++;
         addGameEntity(star);
         hud.addStar();
     }
@@ -289,7 +286,6 @@ public class GameScreen implements Screen
     @Subscribe
     public void starCollected(StarCollectedEvent starCollectedEvent)
     {
-        starsCollected++;
         GameEntityManager.addGameEntityToDestroy(starCollectedEvent.star);
     }
 }
