@@ -22,7 +22,6 @@ public class SpaceTravels3 extends Game
     public void create()
     {
         FontManager.create();
-        FontManager.assetManager.finishLoading();
         ScreenManager.setGame(this);
         ScreenManager.setActiveScreen(new MenuScreen());
 
@@ -69,10 +68,18 @@ public class SpaceTravels3 extends Game
     public void pause()
     {
         Gdx.app.debug(LOGGING_TAG, "Pause");
-        FontManager.destroy();
         ScreenManager.getActiveScreen().pause();
         logOutputScheduler.shutdown();
         super.pause();
+    }
+
+    @Override
+    public void resume()
+    {
+        Gdx.app.debug(LOGGING_TAG, "Resume");
+        ScreenManager.getActiveScreen().resume();
+        launchPerformanceLoggerScheduler();
+        super.resume();
     }
 
     @Override
@@ -84,16 +91,5 @@ public class SpaceTravels3 extends Game
         ScreenManager.getActiveScreen().resize(width, height);
 
         super.resize(width, height);
-    }
-
-    @Override
-    public void resume()
-    {
-        Gdx.app.debug(LOGGING_TAG, "Resume");
-        FontManager.create();
-        FontManager.assetManager.finishLoading();
-        ScreenManager.getActiveScreen().resume();
-        launchPerformanceLoggerScheduler();
-        super.resume();
     }
 }

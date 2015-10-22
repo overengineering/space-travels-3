@@ -31,6 +31,8 @@ public class FontManager
         size1Params.fontFileName = "font/pdark.ttf";
         size1Params.fontParameters.size = 64;
         assetManager.load("bigFont.ttf", BitmapFont.class, size1Params);
+
+        FontManager.assetManager.finishLoading();
     }
 
     public static void destroy()
