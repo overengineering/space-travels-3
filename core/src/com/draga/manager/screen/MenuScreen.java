@@ -26,6 +26,7 @@ public class MenuScreen implements Screen
 
         stage.addActor(getHeaderLabel());
         stage.addActor(getPlayButton());
+        stage.addActor(getDebugButton());
 
 
         stage.setDebugAll(Constants.IS_DEBUGGING);
@@ -56,7 +57,6 @@ public class MenuScreen implements Screen
     @Override
     public void dispose()
     {
-        Gdx.input.setInputProcessor(null);
         stage.dispose();
     }
 
@@ -99,6 +99,28 @@ public class MenuScreen implements Screen
                 public void clicked(InputEvent event, float x, float y)
                 {
                     StartGameScreen();
+                    super.clicked(event, x, y);
+                }
+            });
+        return playButton;
+    }
+
+    public Actor getDebugButton()
+    {
+        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
+        textButtonStyle.font = FontManager.getBigFont();
+
+        Button playButton = new TextButton("Debug", textButtonStyle);
+
+        playButton.setX((stage.getWidth() / 2) - (playButton.getWidth() / 2));
+        playButton.setY(playButton.getHeight());
+        playButton.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    ScreenManager.setActiveScreen(new DebugMenuScreen());;
                     super.clicked(event, x, y);
                 }
             });
