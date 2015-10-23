@@ -5,10 +5,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -17,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.draga.Constants;
 import com.draga.manager.AssMan;
+import com.draga.manager.FontManager;
 import com.draga.manager.ScreenManager;
 import com.draga.manager.level.LevelManager;
 import com.draga.manager.level.serialisableEntities.SerialisableLevel;
@@ -26,12 +25,10 @@ import com.google.common.base.Joiner;
 public class LoadingScreen implements Screen
 {
     private static final String LOGGING_TAG = LoadingScreen.class.getSimpleName();
-    private final Stage                 stage;
-    private final FreeTypeFontGenerator freeTypeFontGenerator;
-    private final BitmapFont            pDark24Font;
-    private final long                  startTime;
-    private       ProgressBar           progressBar;
-    private       SerialisableLevel     serialisableLevel;
+    private final Stage             stage;
+    private final long              startTime;
+    private       ProgressBar       progressBar;
+    private       SerialisableLevel serialisableLevel;
     
     public LoadingScreen(String levelName)
     {
@@ -53,13 +50,6 @@ public class LoadingScreen implements Screen
         AssMan.getAssetManager().load("explosion/explosion.atlas", TextureAtlas.class);
         AssMan.getAssetManager().load("star/starGold64.png", Texture.class);
         AssMan.getAssetManager().load("star/starGray64.png", Texture.class);
-
-
-        freeTypeFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font/pdark.ttf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter =
-            new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 64;
-        pDark24Font = freeTypeFontGenerator.generateFont(parameter);
 
         stage = new Stage();
 
@@ -125,7 +115,6 @@ public class LoadingScreen implements Screen
     @Override
     public void dispose()
     {
-        freeTypeFontGenerator.dispose();
         stage.dispose();
     }
 
@@ -155,7 +144,7 @@ public class LoadingScreen implements Screen
     public Label getHeaderLabel()
     {
         Label.LabelStyle labelStyle = new Label.LabelStyle();
-        labelStyle.font = pDark24Font;
+        labelStyle.font = FontManager.getBigFont();
 
         Label headerLabel = new Label("Loading", labelStyle);
 
