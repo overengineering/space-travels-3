@@ -13,9 +13,9 @@ import com.draga.manager.GameEntityManager;
 public class Explosion extends GameEntity
 {
 
-    private static final int   HEIGHT               = 5;
-    private static final int   WIDTH                = 5;
-    private static final float ANIMATION_TOTAL_TIME = 1f;
+    private static final int   HEIGHT               = 10;
+    private static final int   WIDTH                = 10;
+    private static final float ANIMATION_TOTAL_TIME = 2f;
     private PolygonShape polygonShape;
     private FixtureDef   fixtureDef;
     private float        stateTime;

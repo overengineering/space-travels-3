@@ -252,7 +252,10 @@ public class GameScreen implements Screen
         GameEntityManager.dispose();
         box2dWorld.dispose();
         backgroundTexture.dispose();
-        box2DDebugRenderer.dispose();
+        if (Constants.IS_DEBUGGING)
+        {
+            box2DDebugRenderer.dispose();
+        }
         Constants.EVENT_BUS.unregister(this);
         hud.dispose();
     }
