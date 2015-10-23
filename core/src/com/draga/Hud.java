@@ -20,6 +20,7 @@ import java.util.Stack;
 public class Hud implements Screen
 {
     private Stage        stage;
+
     private ProgressBar  fuelProgressBar;
 
     private int          totalStars;
@@ -110,6 +111,7 @@ public class Hud implements Screen
     public void dispose()
     {
         Constants.EVENT_BUS.unregister(this);
+        stage.dispose();
     }
 
     @Subscribe

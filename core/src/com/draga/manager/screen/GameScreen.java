@@ -17,10 +17,7 @@ import com.draga.MaskBits;
 import com.draga.entity.*;
 import com.draga.event.ShipPlanetCollisionEvent;
 import com.draga.event.StarCollectedEvent;
-import com.draga.manager.AssMan;
-import com.draga.manager.GameContactListener;
-import com.draga.manager.GameEntityManager;
-import com.draga.manager.ScreenManager;
+import com.draga.manager.*;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.ArrayList;
@@ -40,14 +37,12 @@ public class GameScreen implements Screen
     private int                height;
     private ArrayList<Planet>  planets;
     private Planet             destinationPlanet;
-    private boolean doUpdate       = true;
-    private int     totalStars     = 0;
-    private int     starsCollected = 0;
+    private boolean doUpdate = true;
 
     public GameScreen(String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height)
     {
         Constants.EVENT_BUS.register(this);
-        box2dWorld = new World(Pools.obtain(Vector2.class), true);
+        box2dWorld = new World(new Vector2(), true);
         box2dWorld.setContactListener(new GameContactListener());
         planets = new ArrayList<>();
         this.backgroundTexture = AssMan.getAssetManager().get(backgroundTexturePath, Texture.class);
@@ -126,7 +121,6 @@ public class GameScreen implements Screen
 
     public void addStar(Star star)
     {
-        totalStars++;
         addGameEntity(star);
         hud.addStar();
     }
@@ -139,6 +133,11 @@ public class GameScreen implements Screen
 
     public void update(float elapsed)
     {
+        if (Constants.IS_DEBUGGING)
+        {
+            checkDebugKeys();
+        }
+
         while (!GameEntityManager.getGameEntitiesToCreate().isEmpty())
         {
             addGameEntity(GameEntityManager.getGameEntitiesToCreate().poll());
@@ -170,6 +169,25 @@ public class GameScreen implements Screen
         }
     }
 
+    private void checkDebugKeys()
+    {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F1))
+        {
+            DebugManager.infiniteFuel = !DebugManager.infiniteFuel;
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F2))
+        {
+            DebugManager.noGravity = !DebugManager.noGravity;
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.F3))
+        {
+            ship.getBody().setLinearVelocity(0, 0);
+            ship.getBody().setAngularVelocity(0);
+        }
+    }
+
     private void removeGameEntity(GameEntity gameEntity)
     {
         box2dWorld.destroyBody(gameEntity.getBody());
@@ -188,8 +206,8 @@ public class GameScreen implements Screen
             ship.getY(), halfHeight, height - halfHeight);
 
         // Soften camera movement.
-        Vector2 cameraVec = Pools.obtain(Vector2.class).set(cameraXPosition, cameraYPosition);
-        Vector2 softCamera = Pools.obtain(Vector2.class).set(cameraVec);
+        Vector2 cameraVec = new Vector2(cameraXPosition, cameraYPosition);
+        Vector2 softCamera = cameraVec.cpy();
         Vector2 cameraOffset =
             cameraVec.sub(orthographicCamera.position.x, orthographicCamera.position.y);
         softCamera.sub(cameraOffset.scl(0.9f));
@@ -287,7 +305,6 @@ public class GameScreen implements Screen
     @Subscribe
     public void starCollected(StarCollectedEvent starCollectedEvent)
     {
-        starsCollected++;
         GameEntityManager.addGameEntityToDestroy(starCollectedEvent.star);
     }
 
