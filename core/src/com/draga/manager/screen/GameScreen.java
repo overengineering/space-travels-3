@@ -311,7 +311,7 @@ public class GameScreen implements Screen
     @Subscribe
     public void shipPlanetCollision(ShipPlanetCollisionEvent shipPlanetCollisionEvent)
     {
-        Gdx.app.log(LOGGING_TAG, String.valueOf(ship.getBody().getLinearVelocity().len()));
+        Gdx.app.log(LOGGING_TAG, "Linear velocity on collision: " + ship.getBody().getLinearVelocity().len());
 
         GameEntity explosion = new Explosion(
             shipPlanetCollisionEvent.ship.getX(), shipPlanetCollisionEvent.ship.getY(), "explosion/explosion.atlas");

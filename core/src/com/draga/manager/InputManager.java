@@ -10,6 +10,9 @@ public class InputManager
 {
     private static final String LOGGING_TAG = InputManager.class.getSimpleName();
 
+    private static final float   KEYBOARD_ACCELERATION       = 0.05f;
+    private static       Vector2 KEYBOARD_ACCELERATION_DELTA = new Vector2();
+
     /**
      * Returns a vector with length from 0 to 1, representing where the input is pointing to,
      * abstracting away the fact that it could be a mobile accelerometer, mouse clicks, etc.
@@ -85,38 +88,47 @@ public class InputManager
      */
     private static Vector2 getKeyboardInput()
     {
-        Vector2 input = new Vector2();
+        Vector2 input = new Vector2().setZero();
 
         if (Gdx.input.isKeyPressed(Input.Keys.UP)
             || Gdx.input.isKeyPressed(Input.Keys.W)
             || Gdx.input.isKeyPressed(Input.Keys.DPAD_UP))
         {
-            input.add(0, 1);
+            input.add(0, KEYBOARD_ACCELERATION*2);
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)
             || Gdx.input.isKeyPressed(Input.Keys.D)
             || Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT))
         {
-            input.add(1, 0);
+            input.add(KEYBOARD_ACCELERATION*2, 0);
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN)
             || Gdx.input.isKeyPressed(Input.Keys.S)
             || Gdx.input.isKeyPressed(Input.Keys.DPAD_DOWN))
         {
-            input.add(0, -1);
+            input.add(0, -KEYBOARD_ACCELERATION*2);
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)
             || Gdx.input.isKeyPressed(Input.Keys.A)
             || Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT))
         {
-            input.add(-1, 0);
+            input.add(-KEYBOARD_ACCELERATION*2, 0);
         }
 
-        input = input.clamp(0, 1);
+        if (input.isZero())
+        {
+            KEYBOARD_ACCELERATION_DELTA.setZero();
+        }
+        else
+        {
+            KEYBOARD_ACCELERATION_DELTA.add(input);
+        }
 
-        return input;
+        KEYBOARD_ACCELERATION_DELTA = KEYBOARD_ACCELERATION_DELTA.clamp(0, 1);
+
+        return KEYBOARD_ACCELERATION_DELTA.cpy();
     }
 }

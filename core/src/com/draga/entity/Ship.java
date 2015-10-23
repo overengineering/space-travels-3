@@ -182,11 +182,6 @@ public class Ship extends GameEntity
 
     private void updateFuel(Vector2 inputForce, float deltaTime)
     {
-        if (Constants.INFINITE_FUEL)
-        {
-            return;
-        }
-
         float oldFuel = fuel;
 
         if (DebugManager.infiniteFuel)

@@ -19,5 +19,4 @@ public abstract class Constants
     public static final float NANO = 0.000000001f;
 
     public static final EventBus EVENT_BUS     = new EventBus();
-    public static final boolean  INFINITE_FUEL = IS_DEBUGGING;
 }
