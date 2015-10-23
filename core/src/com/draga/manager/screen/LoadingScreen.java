@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.draga.Constants;
 import com.draga.manager.AssMan;
 import com.draga.manager.ScreenManager;
@@ -63,9 +64,21 @@ public class LoadingScreen implements Screen
         stage = new Stage();
 
         Actor headerLabel = getHeaderLabel();
-        progressBar = getProgressBar();
-        stage.addActor(headerLabel);
-        stage.addActor(progressBar);
+
+        float progressBarHeight = stage.getHeight() / 20f;
+        progressBar = getProgressBar((int) progressBarHeight);
+
+
+        Table table = new Table();
+        stage.addActor(table);
+        table.setFillParent(true);
+
+        table.add(headerLabel);
+        table.row();
+        table
+            .add(progressBar)
+            .height(progressBarHeight)
+            .width(stage.getWidth() * 0.75f);
 
 
         stage.setDebugAll(Constants.IS_DEBUGGING);
@@ -145,23 +158,15 @@ public class LoadingScreen implements Screen
         labelStyle.font = pDark24Font;
 
         Label headerLabel = new Label("Loading", labelStyle);
-        float height = pDark24Font.getLineHeight() * 2;
-        headerLabel.sizeBy(stage.getWidth(), height);
-        headerLabel.setPosition(
-            stage.getWidth() - headerLabel.getWidth() / 2f, stage.getHeight() - height);
 
         return headerLabel;
     }
 
-    private ProgressBar getProgressBar()
+    private ProgressBar getProgressBar(int height)
     {
-        float height = stage.getHeight() / 20f;
-        float width = stage.getWidth() * 0.75f;
-        float margin = (stage.getWidth() - width) / 2f;
-
         Skin skin = new Skin();
         Pixmap pixmap = new Pixmap(
-            1, (int) Math.ceil(height), Pixmap.Format.RGBA8888);
+            1, height, Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.WHITE);
         pixmap.fill();
         skin.add("white", new Texture(pixmap));
@@ -176,9 +181,6 @@ public class LoadingScreen implements Screen
             1,
             false,
             progressBarStyle);
-        progressBar.setSize(width, height);
-        progressBar.setPosition(
-            margin, margin);
 
         return progressBar;
     }
