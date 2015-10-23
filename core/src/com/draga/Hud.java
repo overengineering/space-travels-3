@@ -6,7 +6,10 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.draga.event.FuelChangeEvent;
 import com.draga.event.StarCollectedEvent;
@@ -21,53 +24,52 @@ public class Hud implements Screen
 
     private ProgressBar fuelProgressBar;
 
-    private int             totalStars;
-    private Stack<Image>    grayStars;
-    private HorizontalGroup starsHorizontalGroup;
+    private Stack<Image> grayStars;
+    private Table        starsTable;
 
     public Hud()
     {
         Constants.EVENT_BUS.register(this);
-
-        this.totalStars = 0;
-
         this.grayStars = new Stack<>();
-
         stage = new Stage();
 
-
-
         Table table = new Table();
+        table.setFillParent(true);
+        table.pad(((stage.getHeight() + stage.getWidth()) / 2f) / 50f);
         stage.addActor(table);
 
+        float fuelProgressBarHeight = stage.getHeight() / 30f;
+        fuelProgressBar = getFuelProgressBar((int) fuelProgressBarHeight);
+        table
+            .add(fuelProgressBar)
+            .height(fuelProgressBarHeight)
+            .width(stage.getWidth() / 3f)
+            .top()
+            .left();
 
-
-        fuelProgressBar = getFuelProgressBar();
-        float padding = ((stage.getHeight() + stage.getWidth()) / 2f) / 50f;
-        table.add(fuelProgressBar).top().left().pad(padding).expand();
+        // Add an empty row with an expanded cell to fill the gap in the middle.
+        table.row();
+        table.add().expand();
 
         table.row();
-
-        starsHorizontalGroup = new HorizontalGroup();
-        table.add(starsHorizontalGroup).bottom().right().pad(padding).expand();
-
-
-
-        table.setFillParent(true);
-
+        starsTable = new Table();
+        starsTable
+            .defaults()
+            .width(stage.getViewport().getScreenWidth() / 30f)
+            .height(stage.getViewport().getScreenWidth() / 30f);
+        table
+            .add(starsTable)
+            .bottom()
+            .right();
 
         stage.setDebugAll(Constants.IS_DEBUGGING);
     }
 
-    private ProgressBar getFuelProgressBar()
+    private ProgressBar getFuelProgressBar(int height)
     {
-        float height = stage.getHeight() / 30f;
-        float width = stage.getWidth() / 3f;
-        float margin = ((stage.getHeight() + stage.getWidth()) / 2f) / 50f;
-
         Skin skin = new Skin();
         Pixmap pixmap = new Pixmap(
-            1, (int) Math.ceil(height), Pixmap.Format.RGBA8888);
+            1, height, Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.WHITE);
         pixmap.fill();
         skin.add("white", new Texture(pixmap));
@@ -78,7 +80,6 @@ public class Hud implements Screen
 
         ProgressBar fuelProgressBar = new ProgressBar(
             0, 1, 0.0001f, false, fuelProgressBarStyle);
-        fuelProgressBar.setSize(width, height);
 
         return fuelProgressBar;
     }
@@ -136,18 +137,12 @@ public class Hud implements Screen
 
     public void addStar()
     {
-        totalStars++;
-
-        float width = stage.getViewport().getScreenWidth() / 30f;
-        float height = width;
         Texture starTexture = AssMan.getAssetManager().get("star/starGray64.png");
         Image starImage = new Image(starTexture);
-        starImage.setPosition(stage.getViewport().getScreenWidth() - (width * totalStars), 0);
-        starImage.setSize(width, height);
 
         grayStars.add(starImage);
 
-        starsHorizontalGroup.addActor(starImage);
+        starsTable.add(starImage);//.width(width).height(height);
     }
 
     @Subscribe
