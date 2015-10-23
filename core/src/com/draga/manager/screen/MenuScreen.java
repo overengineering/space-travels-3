@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.Constants;
@@ -24,9 +25,29 @@ public class MenuScreen implements Screen
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-        stage.addActor(getHeaderLabel());
-        stage.addActor(getPlayButton());
+        Table table = new Table();
+        table.setFillParent(true);
+        table.pad(((stage.getHeight() + stage.getWidth()) / 2f) / 50f);
+        stage.addActor(table);
 
+        Actor headerLabel = getHeaderLabel();
+        Actor playButton = getPlayButton();
+
+
+        table
+            .add(headerLabel)
+            .top();
+
+        // Add a row with an expanded cell to fill the gap.
+        table.row();
+        table
+            .add()
+            .expand();
+
+        table.row();
+        table
+            .add(playButton)
+            .bottom();
 
         stage.setDebugAll(Constants.IS_DEBUGGING);
     }
@@ -91,7 +112,6 @@ public class MenuScreen implements Screen
 
         Button playButton = new TextButton("Play", textButtonStyle);
 
-        playButton.setX((stage.getWidth() / 2) - (playButton.getWidth() / 2));
         playButton.addListener(
             new ClickListener()
             {
@@ -117,10 +137,6 @@ public class MenuScreen implements Screen
         labelStyle.font = bigFont;
 
         Label headerLabel = new Label("Space Travels 3", labelStyle);
-        float height = bigFont.getLineHeight() * 2;
-        headerLabel.sizeBy(stage.getWidth(), height);
-        headerLabel.setPosition(
-            stage.getWidth() - headerLabel.getWidth() / 2f, stage.getHeight() - height);
 
         return headerLabel;
     }

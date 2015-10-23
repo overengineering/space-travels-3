@@ -60,7 +60,10 @@ public class SpaceTravels3 extends Game
     {
         Gdx.app.debug(LOGGING_TAG, "Dispose");
         ScreenManager.getActiveScreen().dispose();
-        logOutputScheduler.shutdown();
+        if (Constants.IS_DEBUGGING)
+        {
+            logOutputScheduler.shutdown();
+        }
         super.dispose();
     }
 
@@ -69,7 +72,10 @@ public class SpaceTravels3 extends Game
     {
         Gdx.app.debug(LOGGING_TAG, "Pause");
         ScreenManager.getActiveScreen().pause();
-        logOutputScheduler.shutdown();
+        if (Constants.IS_DEBUGGING)
+        {
+            logOutputScheduler.shutdown();
+        }
         super.pause();
     }
 
