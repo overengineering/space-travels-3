@@ -142,7 +142,7 @@ public class Hud implements Screen
 
         grayStars.add(starImage);
 
-        starsTable.add(starImage);//.width(width).height(height);
+        starsTable.add(starImage);
     }
 
     @Subscribe
