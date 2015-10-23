@@ -32,11 +32,11 @@ public class LoadingScreen implements Screen
     private       ProgressBar           progressBar;
     private       SerialisableLevel     serialisableLevel;
     
-    public LoadingScreen(String levelJsonPath)
+    public LoadingScreen(String levelName)
     {
         startTime = System.nanoTime();
         
-        serialisableLevel = LevelManager.getSerialisedLevelFromFile(levelJsonPath);
+        serialisableLevel = LevelManager.getSerialisedLevelFromName(levelName);
         
         AssMan.DisposeAllAndClear();
         AssMan.getAssetManager().load(
