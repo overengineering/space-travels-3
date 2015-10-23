@@ -112,7 +112,6 @@ public class MenuScreen implements Screen
 
         Button playButton = new TextButton("Play", textButtonStyle);
 
-        playButton.setX((stage.getWidth() / 2) - (playButton.getWidth() / 2));
         playButton.addListener(
             new ClickListener()
             {
@@ -138,10 +137,6 @@ public class MenuScreen implements Screen
         labelStyle.font = bigFont;
 
         Label headerLabel = new Label("Space Travels 3", labelStyle);
-        float height = bigFont.getLineHeight() * 2;
-        headerLabel.sizeBy(stage.getWidth(), height);
-        headerLabel.setPosition(
-            stage.getWidth() - headerLabel.getWidth() / 2f, stage.getHeight() - height);
 
         return headerLabel;
     }
