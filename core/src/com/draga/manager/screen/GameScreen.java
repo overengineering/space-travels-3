@@ -14,10 +14,8 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.draga.Constants;
 import com.draga.Hud;
 import com.draga.MaskBits;
-import com.draga.entity.GameEntity;
-import com.draga.entity.Planet;
-import com.draga.entity.Ship;
-import com.draga.entity.Star;
+import com.draga.entity.*;
+import com.draga.event.ShipPlanetCollisionEvent;
 import com.draga.event.StarCollectedEvent;
 import com.draga.manager.*;
 import com.google.common.eventbus.Subscribe;
@@ -311,5 +309,24 @@ public class GameScreen implements Screen
     public void starCollected(StarCollectedEvent starCollectedEvent)
     {
         GameEntityManager.addGameEntityToDestroy(starCollectedEvent.star);
+    }
+
+    @Subscribe
+    public void shipPlanetCollision(ShipPlanetCollisionEvent shipPlanetCollisionEvent)
+    {
+        Gdx.app.log(LOGGING_TAG, "Linear velocity on collision: " + ship.getBody().getLinearVelocity().len());
+
+        GameEntity explosion = new Explosion(
+            shipPlanetCollisionEvent.ship.getX(), shipPlanetCollisionEvent.ship.getY(), "explosion/explosion.atlas");
+        GameEntityManager.addGameEntityToCreate(explosion);
+
+        if (getDestinationPlanet() != shipPlanetCollisionEvent.planet)
+        {
+            shipPlanetCollisionEvent.ship.setIsDead(true);
+        }
+        else if (ship.getBody().getLinearVelocity().len() < 15)
+        {
+            ship.setIsDead(true);
+        }
     }
 }

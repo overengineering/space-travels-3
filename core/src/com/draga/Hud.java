@@ -27,6 +27,8 @@ public class Hud implements Screen
     private Stack<Image> grayStars;
     private Table        starsTable;
 
+    private float        shipVelocity;
+
     public Hud()
     {
         Constants.EVENT_BUS.register(this);
