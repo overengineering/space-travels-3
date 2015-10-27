@@ -42,7 +42,7 @@ public class Explosion extends GameEntity
         bodyDef.angle = 0;
 
         stateTime = 0f;
-        TextureAtlas textureAtlas = AssMan.getAssetManager().get(textureAtlasPath);
+        TextureAtlas textureAtlas = AssMan.getAssMan().get(textureAtlasPath);
         animation = new Animation(
             ANIMATION_TOTAL_TIME / textureAtlas.getRegions().size, textureAtlas.getRegions());
     }

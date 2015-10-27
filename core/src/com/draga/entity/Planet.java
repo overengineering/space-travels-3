@@ -36,7 +36,7 @@ public class Planet extends GameEntity
         bodyDef.angle = 0;
 
 
-        this.texture = AssMan.getAssetManager().get(texturePath);
+        this.texture = AssMan.getAssMan().get(texturePath);
     }
 
 

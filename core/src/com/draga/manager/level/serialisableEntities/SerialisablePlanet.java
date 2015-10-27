@@ -2,75 +2,15 @@ package com.draga.manager.level.serialisableEntities;
 
 public class SerialisablePlanet
 {
-    String  texturePath;
-    int     x;
-    int     y;
-    float   radius;
-    float   mass;
-    boolean destination;
+    public String  texturePath;
+    public int     x;
+    public int     y;
+    public float   radius;
+    public float   mass;
+    public boolean destination;
 
     public SerialisablePlanet()
     {
 
-    }
-
-    public boolean isDestination()
-    {
-        return destination;
-    }
-
-    public void setDestination(boolean destination)
-    {
-        this.destination = destination;
-    }
-
-    public float getMass()
-    {
-        return mass;
-    }
-
-    public void setMass(float mass)
-    {
-        this.mass = mass;
-    }
-
-    public String getTexturePath()
-    {
-        return texturePath;
-    }
-
-    public void setTexturePath(String texturePath)
-    {
-        this.texturePath = texturePath;
-    }
-
-    public int getX()
-    {
-        return x;
-    }
-
-    public void setX(int x)
-    {
-        this.x = x;
-    }
-
-    public int getY()
-    {
-        return y;
-    }
-
-    public void setY(int y)
-    {
-        this.y = y;
-    }
-
-    public float getRadius()
-    {
-        return radius;
-    }
-
-    public void setRadius(int radius)
-    {
-        this.radius = radius;
     }
 }

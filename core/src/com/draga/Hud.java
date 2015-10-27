@@ -27,8 +27,6 @@ public class Hud implements Screen
     private Stack<Image> grayStars;
     private Table        starsTable;
 
-    private float        shipVelocity;
-
     public Hud()
     {
         Constants.EVENT_BUS.register(this);
@@ -139,7 +137,7 @@ public class Hud implements Screen
 
     public void addStar()
     {
-        Texture starTexture = AssMan.getAssetManager().get("star/starGray64.png");
+        Texture starTexture = AssMan.getAssMan().get(AssMan.getAssList().starGray);
         Image starImage = new Image(starTexture);
 
         grayStars.add(starImage);
@@ -152,7 +150,7 @@ public class Hud implements Screen
     {
         Image firstGrayStar = grayStars.pop();
 
-        Texture goldStarTexture = AssMan.getAssetManager().get("star/starGold64.png");
+        Texture goldStarTexture = AssMan.getAssMan().get(AssMan.getAssList().starGold);
 
         firstGrayStar.setDrawable(new TextureRegionDrawable(new TextureRegion(goldStarTexture)));
     }

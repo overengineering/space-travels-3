@@ -37,19 +37,19 @@ public class LoadingScreen implements Screen
         serialisableLevel = LevelManager.getSerialisedLevelFromName(levelName);
         
         AssMan.DisposeAllAndClear();
-        AssMan.getAssetManager().load(
-            serialisableLevel.serialisedBackground.getTexturePath(), Texture.class);
-        AssMan.getAssetManager().load(
-            serialisableLevel.serialisedShip.getShipTexturePath(), Texture.class);
-        AssMan.getAssetManager().load(
-            serialisableLevel.serialisedShip.getThrusterTextureAtlasPath(), TextureAtlas.class);
+        AssMan.getAssMan().load(
+            serialisableLevel.serialisedBackground.texturePath, Texture.class);
+        AssMan.getAssMan().load(
+            AssMan.getAssList().ship, Texture.class);
+        AssMan.getAssMan().load(
+            AssMan.getAssList().thruster, TextureAtlas.class);
         for (SerialisablePlanet serialisablePlanet : serialisableLevel.serialisedPlanets)
         {
-            AssMan.getAssetManager().load(serialisablePlanet.getTexturePath(), Texture.class);
+            AssMan.getAssMan().load(serialisablePlanet.texturePath, Texture.class);
         }
-        AssMan.getAssetManager().load("explosion/explosion.atlas", TextureAtlas.class);
-        AssMan.getAssetManager().load("star/starGold64.png", Texture.class);
-        AssMan.getAssetManager().load("star/starGray64.png", Texture.class);
+        AssMan.getAssMan().load(AssMan.getAssList().explosion, TextureAtlas.class);
+        AssMan.getAssMan().load(AssMan.getAssList().starGold, Texture.class);
+        AssMan.getAssMan().load(AssMan.getAssList().starGray, Texture.class);
 
         stage = new Stage();
 
@@ -83,12 +83,12 @@ public class LoadingScreen implements Screen
     @Override
     public void render(float deltaTime)
     {
-        if (AssMan.getAssetManager().update())
+        if (AssMan.getAssMan().update())
         {
             if (Constants.IS_DEBUGGING)
             {
                 Gdx.app.debug(
-                    LOGGING_TAG, Joiner.on(", ").join(AssMan.getAssetManager().getAssetNames()));
+                    LOGGING_TAG, Joiner.on(", ").join(AssMan.getAssMan().getAssetNames()));
             }
 
             GameScreen gameScreen = LevelManager.getLevelGameScreen(
@@ -107,9 +107,9 @@ public class LoadingScreen implements Screen
     {
         progressBar.setRange(
             0,
-            AssMan.getAssetManager().getQueuedAssets() + AssMan.getAssetManager()
+            AssMan.getAssMan().getQueuedAssets() + AssMan.getAssMan()
                 .getLoadedAssets());
-        progressBar.setValue(AssMan.getAssetManager().getLoadedAssets());
+        progressBar.setValue(AssMan.getAssMan().getLoadedAssets());
     }
 
     @Override
@@ -166,7 +166,7 @@ public class LoadingScreen implements Screen
 
         ProgressBar progressBar = new ProgressBar(
             0,
-            AssMan.getAssetManager().getQueuedAssets() + AssMan.getAssetManager().getLoadedAssets(),
+            AssMan.getAssMan().getQueuedAssets() + AssMan.getAssMan().getLoadedAssets(),
             1,
             false,
             progressBarStyle);

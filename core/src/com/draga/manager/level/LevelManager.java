@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Json;
 import com.draga.entity.Planet;
 import com.draga.entity.Ship;
 import com.draga.entity.Star;
+import com.draga.manager.AssMan;
 import com.draga.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.manager.level.serialisableEntities.SerialisablePlanet;
 import com.draga.manager.level.serialisableEntities.SerialisableStar;
@@ -26,30 +27,30 @@ public abstract class LevelManager
         SerialisableLevel serialisableLevel, SpriteBatch spriteBatch)
     {
         GameScreen gameScreen = new GameScreen(
-            serialisableLevel.serialisedBackground.getTexturePath(),
+            serialisableLevel.serialisedBackground.texturePath,
             spriteBatch,
             serialisableLevel.width,
             serialisableLevel.height);
 
         Ship ship = new Ship(
-            serialisableLevel.serialisedShip.getX(),
-            serialisableLevel.serialisedShip.getY(),
-            serialisableLevel.serialisedShip.getShipTexturePath(),
-            serialisableLevel.serialisedShip.getThrusterTextureAtlasPath());
+            serialisableLevel.serialisedShip.x,
+            serialisableLevel.serialisedShip.y,
+            AssMan.getAssList().ship,
+            AssMan.getAssList().thruster);
         gameScreen.addShip(ship);
 
         for (SerialisablePlanet serialisablePlanet : serialisableLevel.serialisedPlanets)
         {
             Planet planet = new Planet(
-                serialisablePlanet.getMass(),
-                serialisablePlanet.getRadius(),
-                serialisablePlanet.getX(),
-                serialisablePlanet.getY(),
-                serialisablePlanet.getTexturePath());
+                serialisablePlanet.mass,
+                serialisablePlanet.radius,
+                serialisablePlanet.x,
+                serialisablePlanet.y,
+                serialisablePlanet.texturePath);
 
             gameScreen.addPlanet(planet);
 
-            if (serialisablePlanet.isDestination())
+            if (serialisablePlanet.destination)
             {
                 gameScreen.setDestinationPlanet(planet);
             }
@@ -58,7 +59,7 @@ public abstract class LevelManager
         for (SerialisableStar serialisableStar : serialisableLevel.serialisedStars)
         {
             Star star =
-                new Star(serialisableStar.getX(), serialisableStar.getY(), "star/starGold64.png");
+                new Star(serialisableStar.x, serialisableStar.y, AssMan.getAssList().starGold);
             gameScreen.addStar(star);
         }
 

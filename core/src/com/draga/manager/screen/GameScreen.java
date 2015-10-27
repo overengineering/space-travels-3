@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.draga.Constants;
 import com.draga.Hud;
@@ -45,7 +44,7 @@ public class GameScreen implements Screen
         box2dWorld = new World(new Vector2(), true);
         box2dWorld.setContactListener(new GameContactListener());
         planets = new ArrayList<>();
-        this.backgroundTexture = AssMan.getAssetManager().get(backgroundTexturePath, Texture.class);
+        this.backgroundTexture = AssMan.getAssMan().get(backgroundTexturePath, Texture.class);
         this.width = width;
         this.height = height;
         this.spriteBatch = spriteBatch;
