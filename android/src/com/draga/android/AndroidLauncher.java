@@ -7,9 +7,11 @@ import com.draga.SpaceTravels3;
 
 public class AndroidLauncher extends AndroidApplication
 {
-    @Override protected void onCreate(Bundle savedInstanceState)
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
         config.useCompass = false;
         config.useAccelerometer = true;
