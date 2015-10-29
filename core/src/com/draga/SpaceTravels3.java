@@ -3,6 +3,7 @@ package com.draga;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.draga.manager.AssMan;
@@ -66,6 +67,7 @@ public class SpaceTravels3 extends Game
         {
             logOutputScheduler.shutdown();
         }
+        FontManager.destroy();
         super.dispose();
     }
 

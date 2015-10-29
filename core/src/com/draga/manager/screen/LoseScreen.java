@@ -53,8 +53,7 @@ public class LoseScreen implements Screen
     @Override
     public void render(float delta)
     {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK)
-            || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
         {
             parentGameScreen.pause();
             parentGameScreen.dispose();
