@@ -36,7 +36,6 @@ public class GameScreen implements Screen
     private int                height;
     private ArrayList<Planet>  planets;
     private Planet             destinationPlanet;
-    private boolean doUpdate = true;
 
     public GameScreen(String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height)
     {
@@ -263,10 +262,7 @@ public class GameScreen implements Screen
             return;
         }
 
-        if (doUpdate)
-        {
-            update(deltaTime);
-        }
+        update(deltaTime);
         draw();
 
         hud.render(deltaTime);
@@ -288,11 +284,6 @@ public class GameScreen implements Screen
     public void hide()
     {
 
-    }
-
-    public void setDoUpdate(boolean doUpdate)
-    {
-        this.doUpdate = doUpdate;
     }
 
     @Subscribe

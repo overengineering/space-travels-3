@@ -77,11 +77,6 @@ public class LoseScreen implements Screen
     {
         backgroundColour.lerp(fadeToColour, FADE_PER_SECOND * delta);
 
-        if (fadeToColour.equals(backgroundColour))
-        {
-            parentGameScreen.setDoUpdate(false);
-        }
-
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
@@ -110,6 +105,7 @@ public class LoseScreen implements Screen
     @Override
     public void pause()
     {
+
 
     }
 
