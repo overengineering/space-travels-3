@@ -125,7 +125,7 @@ public class GameScreen implements Screen
 
     private void addGameEntity(GameEntity gameEntity)
     {
-        GameEntityManager.addGameEntity(gameEntity);
+        GameEntityManager.getGameEntities().add(gameEntity);
         gameEntity.createBody(getBox2dWorld());
     }
 
@@ -289,7 +289,7 @@ public class GameScreen implements Screen
     @Subscribe
     public void starCollected(StarCollectedEvent starCollectedEvent)
     {
-        GameEntityManager.addGameEntityToDestroy(starCollectedEvent.star);
+        GameEntityManager.getGameEntitiesToDestroy().add(starCollectedEvent.star);
     }
 
     @Subscribe
@@ -310,9 +310,9 @@ public class GameScreen implements Screen
                 shipPlanetCollisionEvent.ship.getX(),
                 shipPlanetCollisionEvent.ship.getY(),
                 AssMan.getAssList().explosion);
-            GameEntityManager.addGameEntityToCreate(explosion);
+            GameEntityManager.getGameEntitiesToCreate().add(explosion);
 
-            GameEntityManager.addGameEntityToDestroy(ship);
+            GameEntityManager.getGameEntitiesToDestroy().add(ship);
             ScreenManager.setActiveScreen(new LoseScreen(this), false);
         }
         // Win.

@@ -53,7 +53,7 @@ public class Explosion extends GameEntity
         stateTime += deltaTime;
         if (animation.isAnimationFinished(stateTime))
         {
-            GameEntityManager.addGameEntityToDestroy(this);
+            GameEntityManager.getGameEntitiesToDestroy().add(this);
         }
     }
 
