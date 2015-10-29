@@ -38,7 +38,7 @@ public class Star extends GameEntity
         this.bodyDef.angle = 0;
 
 
-        this.texture = AssMan.getAssetManager().get(texturePath);
+        this.texture = AssMan.getAssMan().get(texturePath);
     }
 
     @Override

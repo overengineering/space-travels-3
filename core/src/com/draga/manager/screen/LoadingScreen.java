@@ -5,17 +5,17 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.draga.Constants;
 import com.draga.manager.AssMan;
+import com.draga.manager.FontManager;
 import com.draga.manager.ScreenManager;
 import com.draga.manager.level.LevelManager;
 import com.draga.manager.level.serialisableEntities.SerialisableLevel;
@@ -25,47 +25,50 @@ import com.google.common.base.Joiner;
 public class LoadingScreen implements Screen
 {
     private static final String LOGGING_TAG = LoadingScreen.class.getSimpleName();
-    private final Stage                 stage;
-    private final FreeTypeFontGenerator freeTypeFontGenerator;
-    private final BitmapFont            pDark24Font;
-    private final long                  startTime;
-    private       ProgressBar           progressBar;
-    private       SerialisableLevel     serialisableLevel;
+    private final Stage             stage;
+    private final long              startTime;
+    private       ProgressBar       progressBar;
+    private       SerialisableLevel serialisableLevel;
     
-    public LoadingScreen(String levelJsonPath)
+    public LoadingScreen(String levelName)
     {
         startTime = System.nanoTime();
         
-        serialisableLevel = LevelManager.getSerialisedLevelFromFile(levelJsonPath);
+        serialisableLevel = LevelManager.getSerialisedLevelFromName(levelName);
         
         AssMan.DisposeAllAndClear();
-        AssMan.getAssetManager().load(
-            serialisableLevel.serialisedBackground.getTexturePath(), Texture.class);
-        AssMan.getAssetManager().load(
-            serialisableLevel.serialisedShip.getShipTexturePath(), Texture.class);
-        AssMan.getAssetManager().load(
-            serialisableLevel.serialisedShip.getThrusterTextureAtlasPath(), TextureAtlas.class);
+        AssMan.getAssMan().load(
+            serialisableLevel.serialisedBackground.texturePath, Texture.class);
+        AssMan.getAssMan().load(
+            AssMan.getAssList().ship, Texture.class);
+        AssMan.getAssMan().load(
+            AssMan.getAssList().thruster, TextureAtlas.class);
         for (SerialisablePlanet serialisablePlanet : serialisableLevel.serialisedPlanets)
         {
-            AssMan.getAssetManager().load(serialisablePlanet.getTexturePath(), Texture.class);
+            AssMan.getAssMan().load(serialisablePlanet.texturePath, Texture.class);
         }
-        AssMan.getAssetManager().load("explosion/explosion.atlas", TextureAtlas.class);
-        AssMan.getAssetManager().load("star/starGold64.png", Texture.class);
-        AssMan.getAssetManager().load("star/starGray64.png", Texture.class);
-
-
-        freeTypeFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font/pdark.ttf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter =
-            new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 64;
-        pDark24Font = freeTypeFontGenerator.generateFont(parameter);
+        AssMan.getAssMan().load(AssMan.getAssList().explosion, TextureAtlas.class);
+        AssMan.getAssMan().load(AssMan.getAssList().starGold, Texture.class);
+        AssMan.getAssMan().load(AssMan.getAssList().starGray, Texture.class);
 
         stage = new Stage();
 
         Actor headerLabel = getHeaderLabel();
-        progressBar = getProgressBar();
-        stage.addActor(headerLabel);
-        stage.addActor(progressBar);
+
+        float progressBarHeight = stage.getHeight() / 20f;
+        progressBar = getProgressBar((int) progressBarHeight);
+
+
+        Table table = new Table();
+        stage.addActor(table);
+        table.setFillParent(true);
+
+        table.add(headerLabel);
+        table.row();
+        table
+            .add(progressBar)
+            .height(progressBarHeight)
+            .width(stage.getWidth() * 0.75f);
 
 
         stage.setDebugAll(Constants.IS_DEBUGGING);
@@ -80,12 +83,12 @@ public class LoadingScreen implements Screen
     @Override
     public void render(float deltaTime)
     {
-        if (AssMan.getAssetManager().update())
+        if (AssMan.getAssMan().update())
         {
             if (Constants.IS_DEBUGGING)
             {
                 Gdx.app.debug(
-                    LOGGING_TAG, Joiner.on(", ").join(AssMan.getAssetManager().getAssetNames()));
+                    LOGGING_TAG, Joiner.on(", ").join(AssMan.getAssMan().getAssetNames()));
             }
 
             GameScreen gameScreen = LevelManager.getLevelGameScreen(
@@ -104,15 +107,14 @@ public class LoadingScreen implements Screen
     {
         progressBar.setRange(
             0,
-            AssMan.getAssetManager().getQueuedAssets() + AssMan.getAssetManager()
+            AssMan.getAssMan().getQueuedAssets() + AssMan.getAssMan()
                 .getLoadedAssets());
-        progressBar.setValue(AssMan.getAssetManager().getLoadedAssets());
+        progressBar.setValue(AssMan.getAssMan().getLoadedAssets());
     }
 
     @Override
     public void dispose()
     {
-        freeTypeFontGenerator.dispose();
         stage.dispose();
     }
 
@@ -142,26 +144,18 @@ public class LoadingScreen implements Screen
     public Label getHeaderLabel()
     {
         Label.LabelStyle labelStyle = new Label.LabelStyle();
-        labelStyle.font = pDark24Font;
+        labelStyle.font = FontManager.getBigFont();
 
         Label headerLabel = new Label("Loading", labelStyle);
-        float height = pDark24Font.getLineHeight() * 2;
-        headerLabel.sizeBy(stage.getWidth(), height);
-        headerLabel.setPosition(
-            stage.getWidth() - headerLabel.getWidth() / 2f, stage.getHeight() - height);
 
         return headerLabel;
     }
 
-    private ProgressBar getProgressBar()
+    private ProgressBar getProgressBar(int height)
     {
-        float height = stage.getHeight() / 20f;
-        float width = stage.getWidth() * 0.75f;
-        float margin = (stage.getWidth() - width) / 2f;
-
         Skin skin = new Skin();
         Pixmap pixmap = new Pixmap(
-            1, (int) Math.ceil(height), Pixmap.Format.RGBA8888);
+            1, height, Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.WHITE);
         pixmap.fill();
         skin.add("white", new Texture(pixmap));
@@ -172,13 +166,10 @@ public class LoadingScreen implements Screen
 
         ProgressBar progressBar = new ProgressBar(
             0,
-            AssMan.getAssetManager().getQueuedAssets() + AssMan.getAssetManager().getLoadedAssets(),
+            AssMan.getAssMan().getQueuedAssets() + AssMan.getAssMan().getLoadedAssets(),
             1,
             false,
             progressBarStyle);
-        progressBar.setSize(width, height);
-        progressBar.setPosition(
-            margin, margin);
 
         return progressBar;
     }

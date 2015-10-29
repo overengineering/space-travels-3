@@ -13,9 +13,9 @@ import com.draga.manager.GameEntityManager;
 public class Explosion extends GameEntity
 {
 
-    private static final int   HEIGHT               = 5;
-    private static final int   WIDTH                = 5;
-    private static final float ANIMATION_TOTAL_TIME = 1f;
+    private static final int   HEIGHT               = 10;
+    private static final int   WIDTH                = 10;
+    private static final float ANIMATION_TOTAL_TIME = 2f;
     private PolygonShape polygonShape;
     private FixtureDef   fixtureDef;
     private float        stateTime;
@@ -42,7 +42,7 @@ public class Explosion extends GameEntity
         bodyDef.angle = 0;
 
         stateTime = 0f;
-        TextureAtlas textureAtlas = AssMan.getAssetManager().get(textureAtlasPath);
+        TextureAtlas textureAtlas = AssMan.getAssMan().get(textureAtlasPath);
         animation = new Animation(
             ANIMATION_TOTAL_TIME / textureAtlas.getRegions().size, textureAtlas.getRegions());
     }
@@ -53,7 +53,7 @@ public class Explosion extends GameEntity
         stateTime += deltaTime;
         if (animation.isAnimationFinished(stateTime))
         {
-            GameEntityManager.addGameEntityToDestroy(this);
+            GameEntityManager.getGameEntitiesToDestroy().add(this);
         }
     }
 

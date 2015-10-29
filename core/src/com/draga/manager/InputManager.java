@@ -3,12 +3,19 @@ package com.draga.manager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Pools;
 import com.draga.Constants;
 
 public class InputManager
 {
-    private static final String LOGGING_TAG = InputManager.class.getSimpleName();
+    /**
+     * Change tilt range.
+     * E.g. 1.0f = 90 degree max. 0.5f = 45 degrees max.
+     */
+    public static final  float   ACCELEROMETER_RANGE         = 0.5f;
+
+    private static final String  LOGGING_TAG                 = InputManager.class.getSimpleName();
+    private static final float   KEYBOARD_ACCELERATION       = 0.05f;
+    private static       Vector2 KEYBOARD_ACCELERATION_DELTA = new Vector2();
 
     /**
      * Returns a vector with length from 0 to 1, representing where the input is pointing to,
@@ -32,7 +39,7 @@ public class InputManager
             default:
                 Gdx.app.error(
                     LOGGING_TAG, "Device type " + Gdx.input.getRotation() + " not implemented.");
-                input = Pools.obtain(Vector2.class);
+                input = new Vector2();
                 break;
         }
         return input;
@@ -40,7 +47,8 @@ public class InputManager
 
     private static Vector2 getAccelerometerInput()
     {
-        Vector2 input = getDeviceAccelerationForDeviceOrientation();
+        Vector2 input = getDeviceAccelerationForDeviceOrientation()
+            .scl(1f / ACCELEROMETER_RANGE);
 
         // Max the gravity by the Earth gravity to avoid excessive force being applied if the device is shaken.
         input = input.clamp(0, Constants.EARTH_GRAVITY);
@@ -53,7 +61,7 @@ public class InputManager
 
     private static Vector2 getDeviceAccelerationForDeviceOrientation()
     {
-        Vector2 input = Pools.obtain(Vector2.class);
+        Vector2 input = new Vector2();
         switch (Gdx.input.getRotation())
         {
             case 0:
@@ -85,38 +93,47 @@ public class InputManager
      */
     private static Vector2 getKeyboardInput()
     {
-        Vector2 input = Pools.obtain(Vector2.class);
+        Vector2 input = new Vector2().setZero();
 
         if (Gdx.input.isKeyPressed(Input.Keys.UP)
             || Gdx.input.isKeyPressed(Input.Keys.W)
             || Gdx.input.isKeyPressed(Input.Keys.DPAD_UP))
         {
-            input.add(0, 1);
+            input.add(0, KEYBOARD_ACCELERATION * 2);
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)
             || Gdx.input.isKeyPressed(Input.Keys.D)
             || Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT))
         {
-            input.add(1, 0);
+            input.add(KEYBOARD_ACCELERATION * 2, 0);
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN)
             || Gdx.input.isKeyPressed(Input.Keys.S)
             || Gdx.input.isKeyPressed(Input.Keys.DPAD_DOWN))
         {
-            input.add(0, -1);
+            input.add(0, -KEYBOARD_ACCELERATION * 2);
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)
             || Gdx.input.isKeyPressed(Input.Keys.A)
             || Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT))
         {
-            input.add(-1, 0);
+            input.add(-KEYBOARD_ACCELERATION * 2, 0);
         }
 
-        input = input.clamp(0, 1);
+        if (input.isZero())
+        {
+            KEYBOARD_ACCELERATION_DELTA.setZero();
+        }
+        else
+        {
+            KEYBOARD_ACCELERATION_DELTA.add(input);
+        }
 
-        return input;
+        KEYBOARD_ACCELERATION_DELTA = KEYBOARD_ACCELERATION_DELTA.clamp(0, 1);
+
+        return KEYBOARD_ACCELERATION_DELTA.cpy();
     }
 }
