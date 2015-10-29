@@ -157,15 +157,6 @@ public class GameScreen implements Screen
         // max frame time to avoid spiral of death (on slow devices)
         float frameTime = Math.min(elapsed, 0.25f);
         box2dWorld.step(frameTime, 6, 2);
-
-        // On death
-        if (ship.isDead())
-        {
-            ship.setIsDead(false);
-
-            removeGameEntity(ship);
-            ScreenManager.setActiveScreen(new LoseScreen(this), false);
-        }
     }
 
     private void checkDebugKeys()
@@ -313,19 +304,29 @@ public class GameScreen implements Screen
     @Subscribe
     public void shipPlanetCollision(ShipPlanetCollisionEvent shipPlanetCollisionEvent)
     {
-        Gdx.app.log(LOGGING_TAG, "Linear velocity on collision: " + ship.getBody().getLinearVelocity().len());
-
-        GameEntity explosion = new Explosion(
-            shipPlanetCollisionEvent.ship.getX(), shipPlanetCollisionEvent.ship.getY(), "explosion/explosion.atlas");
-        GameEntityManager.addGameEntityToCreate(explosion);
-
-        if (getDestinationPlanet() != shipPlanetCollisionEvent.planet)
+        if (Constants.IS_DEBUGGING)
         {
-            shipPlanetCollisionEvent.ship.setIsDead(true);
+            Gdx.app.debug(
+                LOGGING_TAG,
+                "Linear velocity on collision: " + ship.getBody().getLinearVelocity().len());
         }
-        else if (ship.getBody().getLinearVelocity().len() < 15)
+
+        // If wrong planet or too fast then lose.
+        if (getDestinationPlanet() != shipPlanetCollisionEvent.planet
+            || ship.getBody().getLinearVelocity().len() > 15)
         {
-            ship.setIsDead(true);
+            GameEntity explosion = new Explosion(
+                shipPlanetCollisionEvent.ship.getX(),
+                shipPlanetCollisionEvent.ship.getY(),
+                AssMan.getAssList().explosion);
+            GameEntityManager.addGameEntityToCreate(explosion);
+
+            GameEntityManager.addGameEntityToDestroy(ship);
+            ScreenManager.setActiveScreen(new LoseScreen(this), false);
+        }
+        // Win.
+        else
+        {
         }
     }
 }

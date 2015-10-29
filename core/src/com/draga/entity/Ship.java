@@ -60,8 +60,7 @@ public class Ship extends GameEntity
 
     // State.
     private float fuel;
-    private boolean isDead = false;
-    
+
     public Ship(float x, float y, String shipTexturePath, String thrusterTextureAtlasPath)
     {
         collisionResolutionComponent = new ShipBox2dCollisionResolutionComponent(this);
@@ -112,16 +111,6 @@ public class Ship extends GameEntity
         fuel = MAX_FUEL;
     }
     
-    public boolean isDead()
-    {
-        return isDead;
-    }
-    
-    public void setIsDead(boolean isDead)
-    {
-        this.isDead = isDead;
-    }
-
     @Override
     public void update(float deltaTime)
     {
@@ -197,11 +186,6 @@ public class Ship extends GameEntity
     @Override
     public void draw(SpriteBatch spriteBatch)
     {
-        if (isDead())
-        {
-            return;
-        }
-
         float halfThrusterHeight = thrusterHeight / 2f;
         float halfThrusterWidth = thrusterWidth / 2f;
 
