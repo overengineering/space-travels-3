@@ -65,28 +65,29 @@ public class MenuScreen implements Screen
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.font = FontManager.getBigFont();
         textButtonStyle.checkedFontColor = Color.GREEN;
+        textButtonStyle.fontColor = Color.WHITE;
 
         TextButton[] textButtons = new TextButton[] {
-            new TextButton("test1", textButtonStyle),
-            new TextButton("test2", textButtonStyle),
-            new TextButton("test3", textButtonStyle),
-            new TextButton("test4", textButtonStyle),
-            new TextButton("test5", textButtonStyle),
-            new TextButton("test6", textButtonStyle),
-            new TextButton("test7", textButtonStyle),
-            new TextButton("test8", textButtonStyle),
-            new TextButton("test9", textButtonStyle),
-            new TextButton("test10", textButtonStyle),
-            new TextButton("test11", textButtonStyle),
-            new TextButton("test12", textButtonStyle),
-            new TextButton("test13", textButtonStyle),
-            new TextButton("test14", textButtonStyle),
-            new TextButton("test15", textButtonStyle),
-            new TextButton("test16", textButtonStyle),
-            new TextButton("test17", textButtonStyle),
-            new TextButton("test18", textButtonStyle),
-            new TextButton("test19", textButtonStyle),
-            new TextButton("test20", textButtonStyle),
+            new TextButton("test 1", textButtonStyle),
+            new TextButton("test 2", textButtonStyle),
+            new TextButton("test 3", textButtonStyle),
+            new TextButton("test 4", textButtonStyle),
+            new TextButton("test 5", textButtonStyle),
+            new TextButton("test 6", textButtonStyle),
+            new TextButton("test 7", textButtonStyle),
+            new TextButton("test 8", textButtonStyle),
+            new TextButton("test 9", textButtonStyle),
+            new TextButton("test 10", textButtonStyle),
+            new TextButton("test 11", textButtonStyle),
+            new TextButton("test 12", textButtonStyle),
+            new TextButton("test 13", textButtonStyle),
+            new TextButton("test 14", textButtonStyle),
+            new TextButton("test 15", textButtonStyle),
+            new TextButton("test 16", textButtonStyle),
+            new TextButton("test 17", textButtonStyle),
+            new TextButton("test 18", textButtonStyle),
+            new TextButton("test 19", textButtonStyle),
+            new TextButton("test 20", textButtonStyle),
         };
         ButtonGroup<TextButton> buttonGroup = new ButtonGroup<>();
 
@@ -102,7 +103,7 @@ public class MenuScreen implements Screen
         }
 
         ScrollPane scrollPane = new ScrollPane(verticalGroup);
-        
+
         return scrollPane;
     }
 
