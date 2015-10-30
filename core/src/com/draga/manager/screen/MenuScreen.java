@@ -3,6 +3,7 @@ package com.draga.manager.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -17,6 +18,7 @@ import com.draga.manager.ScreenManager;
 public class MenuScreen implements Screen
 {
     private Stage stage;
+    private ButtonGroup<TextButton> buttonGroup;
 
     public MenuScreen()
     {
@@ -67,29 +69,9 @@ public class MenuScreen implements Screen
         textButtonStyle.checkedFontColor = Color.GREEN;
         textButtonStyle.fontColor = Color.WHITE;
 
-        TextButton[] textButtons = new TextButton[] {
-            new TextButton("test 1", textButtonStyle),
-            new TextButton("test 2", textButtonStyle),
-            new TextButton("test 3", textButtonStyle),
-            new TextButton("test 4", textButtonStyle),
-            new TextButton("test 5", textButtonStyle),
-            new TextButton("test 6", textButtonStyle),
-            new TextButton("test 7", textButtonStyle),
-            new TextButton("test 8", textButtonStyle),
-            new TextButton("test 9", textButtonStyle),
-            new TextButton("test 10", textButtonStyle),
-            new TextButton("test 11", textButtonStyle),
-            new TextButton("test 12", textButtonStyle),
-            new TextButton("test 13", textButtonStyle),
-            new TextButton("test 14", textButtonStyle),
-            new TextButton("test 15", textButtonStyle),
-            new TextButton("test 16", textButtonStyle),
-            new TextButton("test 17", textButtonStyle),
-            new TextButton("test 18", textButtonStyle),
-            new TextButton("test 19", textButtonStyle),
-            new TextButton("test 20", textButtonStyle),
-        };
-        ButtonGroup<TextButton> buttonGroup = new ButtonGroup<>();
+        FileHandle[] levelFiles = Gdx.files.internal("level").list();
+
+        buttonGroup = new ButtonGroup<>();
 
         buttonGroup.setMaxCheckCount(1);
         buttonGroup.setMinCheckCount(1);
@@ -97,7 +79,12 @@ public class MenuScreen implements Screen
 
         VerticalGroup verticalGroup = new VerticalGroup();
 
-        for (TextButton textButton:textButtons){
+        for (FileHandle levelFileHandle : levelFiles)
+        {
+            TextButton textButton =
+                new TextButton(levelFileHandle.nameWithoutExtension(), textButtonStyle);
+            // Set path as name so that it can be passed straight to the loading screen later on.
+            textButton.setName(levelFileHandle.path());
             buttonGroup.add(textButton);
             verticalGroup.addActor(textButton);
         }
@@ -182,7 +169,7 @@ public class MenuScreen implements Screen
 
     private void StartGameScreen()
     {
-        ScreenManager.setActiveScreen(new LoadingScreen("level/level1.json"));
+        ScreenManager.setActiveScreen(new LoadingScreen(buttonGroup.getChecked().getName()));
     }
 
     public Actor getHeaderLabel()
