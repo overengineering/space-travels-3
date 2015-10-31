@@ -116,7 +116,6 @@ public class LoadingScreen implements Screen
     @Override
     public void dispose()
     {
-        Gdx.input.setInputProcessor(null);
         stage.dispose();
     }
 

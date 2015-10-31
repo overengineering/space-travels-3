@@ -123,7 +123,6 @@ public class LoseScreen implements Screen
     @Override
     public void dispose()
     {
-        Gdx.input.setInputProcessor(null);
         shapeRenderer.dispose();
         stage.dispose();
     }
