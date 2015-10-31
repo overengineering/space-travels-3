@@ -13,7 +13,7 @@ import com.draga.Constants;
 import com.draga.MaskBits;
 import com.draga.entity.ship.ShipBox2dCollisionResolutionComponent;
 import com.draga.event.FuelChangeEvent;
-import com.draga.manager.AssMan;
+import com.draga.manager.asset.AssMan;
 import com.draga.manager.DebugManager;
 import com.draga.manager.GravityManager;
 import com.draga.manager.InputManager;

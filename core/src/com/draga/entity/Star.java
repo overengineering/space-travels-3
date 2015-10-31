@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.*;
 import com.draga.MaskBits;
-import com.draga.manager.AssMan;
+import com.draga.manager.asset.AssMan;
 
 public class Star extends GameEntity
 {

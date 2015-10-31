@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.*;
 import com.draga.MaskBits;
-import com.draga.manager.AssMan;
+import com.draga.manager.asset.AssMan;
 import com.draga.manager.GameEntityManager;
 
 public class Explosion extends GameEntity

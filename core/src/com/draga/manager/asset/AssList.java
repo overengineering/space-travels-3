@@ -1,4 +1,4 @@
-package com.draga.manager;
+package com.draga.manager.asset;
 
 public class AssList
 {

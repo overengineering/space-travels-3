@@ -1,8 +1,6 @@
 package com.draga.manager.screen;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -17,6 +15,7 @@ import com.draga.entity.*;
 import com.draga.event.ShipPlanetCollisionEvent;
 import com.draga.event.StarCollectedEvent;
 import com.draga.manager.*;
+import com.draga.manager.asset.AssMan;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.ArrayList;
@@ -38,9 +37,15 @@ public class GameScreen implements Screen
     private Planet             destinationPlanet;
     private String             levelPath;
 
-    public GameScreen(String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height, String levelPath)
+    public GameScreen(
+        String backgroundTexturePath,
+        SpriteBatch spriteBatch,
+        int width,
+        int height,
+        String levelPath)
     {
         Constants.EVENT_BUS.register(this);
+        Gdx.input.setInputProcessor(new GameScreenInputProcessor());
         box2dWorld = new World(new Vector2(), true);
         box2dWorld.setContactListener(new GameContactListener());
         planets = new ArrayList<>();

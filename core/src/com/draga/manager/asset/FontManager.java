@@ -1,4 +1,4 @@
-package com.draga.manager;
+package com.draga.manager.asset;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;

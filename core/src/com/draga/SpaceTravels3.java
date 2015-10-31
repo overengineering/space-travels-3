@@ -3,11 +3,10 @@ package com.draga;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.physics.box2d.Box2D;
-import com.draga.manager.AssMan;
-import com.draga.manager.FontManager;
+import com.draga.manager.asset.AssMan;
+import com.draga.manager.asset.FontManager;
 import com.draga.manager.ScreenManager;
 import com.draga.manager.screen.MenuScreen;
 
@@ -23,6 +22,7 @@ public class SpaceTravels3 extends Game
     @Override
     public void create()
     {
+        Gdx.input.setCatchBackKey(true);
         AssMan.getAssList();
         FontManager.create();
         ScreenManager.setGame(this);

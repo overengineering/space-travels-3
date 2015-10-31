@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.draga.event.FuelChangeEvent;
 import com.draga.event.StarCollectedEvent;
-import com.draga.manager.AssMan;
+import com.draga.manager.asset.AssMan;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.Stack;
