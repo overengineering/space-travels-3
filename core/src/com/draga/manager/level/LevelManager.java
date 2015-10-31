@@ -18,7 +18,8 @@ public abstract class LevelManager
     {
         String serialisedLevelString =
             Gdx.files.internal(serialisedLevelName).readString();
-        SerialisableLevel serialisableLevel = getSerialisedLevelFromString(serialisedLevelString);
+        SerialisableLevel serialisableLevel =
+            getSerialisedLevelFromString(serialisedLevelString, serialisedLevelName);
 
         return serialisableLevel;
     }
@@ -30,7 +31,8 @@ public abstract class LevelManager
             serialisableLevel.serialisedBackground.texturePath,
             spriteBatch,
             serialisableLevel.width,
-            serialisableLevel.height);
+            serialisableLevel.height,
+            serialisableLevel.name);
 
         Ship ship = new Ship(
             serialisableLevel.serialisedShip.x,
@@ -66,7 +68,9 @@ public abstract class LevelManager
         return gameScreen;
     }
 
-    private static SerialisableLevel getSerialisedLevelFromString(String serialisedLevel)
+    private static SerialisableLevel getSerialisedLevelFromString(
+        String serialisedLevel,
+        String name)
     {
         Json json = new Json();
 
@@ -74,18 +78,8 @@ public abstract class LevelManager
 
         SerialisableLevel serialisableLevel =
             json.fromJson(SerialisableLevel.class, serialisedLevel);
+        serialisableLevel.name = name;
 
         return serialisableLevel;
-    }
-
-    private static GameScreen getLevelGameScreenFromString(
-        String jsonString, SpriteBatch spriteBatch)
-    {
-        SerialisableLevel serialisableLevel = LevelManager.getSerialisedLevelFromString(
-            jsonString);
-
-        GameScreen gameScreen = LevelManager.getLevelGameScreen(serialisableLevel, spriteBatch);
-
-        return gameScreen;
     }
 }

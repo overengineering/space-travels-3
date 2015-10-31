@@ -155,6 +155,6 @@ public class LoseScreen implements Screen
     {
         parentGameScreen.pause();
         parentGameScreen.dispose();
-        ScreenManager.setActiveScreen(new LoadingScreen("level/level1.json"));
+        ScreenManager.setActiveScreen(new LoadingScreen(parentGameScreen.getLevelPath()));
     }
 }
