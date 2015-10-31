@@ -36,8 +36,9 @@ public class GameScreen implements Screen
     private int                height;
     private ArrayList<Planet>  planets;
     private Planet             destinationPlanet;
+    private String             levelPath;
 
-    public GameScreen(String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height)
+    public GameScreen(String backgroundTexturePath, SpriteBatch spriteBatch, int width, int height, String levelPath)
     {
         Constants.EVENT_BUS.register(this);
         box2dWorld = new World(new Vector2(), true);
@@ -59,6 +60,7 @@ public class GameScreen implements Screen
         }
 
         hud = new Hud();
+        this.levelPath = levelPath;
     }
 
     public Planet getDestinationPlanet()
@@ -319,5 +321,10 @@ public class GameScreen implements Screen
         else
         {
         }
+    }
+
+    public String getLevelPath()
+    {
+        return levelPath;
     }
 }

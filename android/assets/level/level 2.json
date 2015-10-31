@@ -1,0 +1,57 @@
+{
+  "class": "SerialisableLevel",
+  "width": 300,
+  "height": 150,
+  "serialisedBackground": {
+    "texturePath": "background/background1080.jpg"
+  },
+  "serialisedShip": {
+    "x": 150,
+    "y": 75
+  },
+  "serialisedPlanets": [
+    {
+      "texturePath": "planet/earth256.png",
+      "x": 280,
+      "y": 75,
+      "radius": 6.378,
+      "mass": 59700,
+      "destination": true
+    },
+    {
+      "texturePath": "planet/jupiter256.png",
+      "x": 150,
+      "y": 10,
+      "radius": 25,
+      "mass": 190000
+    },
+    {
+      "texturePath": "planet/mars256.png",
+      "x": 50,
+      "y": 30,
+      "radius": 3.397,
+      "mass": 6400
+    },
+    {
+      "texturePath": "planet/venus256.png",
+      "x": 80,
+      "y": 80,
+      "radius": 6.052,
+      "mass": 48700
+    }
+  ],
+  "serialisedStars": [
+    {
+      "x": 10,
+      "y": 10
+    },
+    {
+      "x": 50,
+      "y": 10
+    },
+    {
+      "x": 10,
+      "y": 100
+    }
+  ]
+}

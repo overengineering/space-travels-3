@@ -123,7 +123,6 @@ public class LoseScreen implements Screen
     @Override
     public void dispose()
     {
-        Gdx.input.setInputProcessor(null);
         shapeRenderer.dispose();
         stage.dispose();
     }
@@ -155,6 +154,6 @@ public class LoseScreen implements Screen
     {
         parentGameScreen.pause();
         parentGameScreen.dispose();
-        ScreenManager.setActiveScreen(new LoadingScreen("level1.json"));
+        ScreenManager.setActiveScreen(new LoadingScreen(parentGameScreen.getLevelPath()));
     }
 }

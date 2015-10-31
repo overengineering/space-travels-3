@@ -52,6 +52,7 @@ public class LoadingScreen implements Screen
         AssMan.getAssMan().load(AssMan.getAssList().starGray, Texture.class);
 
         stage = new Stage();
+        Gdx.input.setInputProcessor(stage);
 
         Actor headerLabel = getHeaderLabel();
 

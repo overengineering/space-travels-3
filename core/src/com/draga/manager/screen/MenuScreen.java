@@ -3,14 +3,13 @@ package com.draga.manager.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.Constants;
 import com.draga.manager.FontManager;
@@ -19,6 +18,7 @@ import com.draga.manager.ScreenManager;
 public class MenuScreen implements Screen
 {
     private Stage stage;
+    private ButtonGroup<TextButton> buttonGroup;
 
     public MenuScreen()
     {
@@ -45,11 +45,53 @@ public class MenuScreen implements Screen
             .expand();
 
         table.row();
+        ScrollPane levelsScrollPane = getLevelList();
+        table.add(levelsScrollPane);
+
+        // Add a row with an expanded cell to fill the gap.
+        table.row();
+        table
+            .add()
+            .expand();
+
+        table.row();
         table
             .add(playButton)
             .bottom();
 
         stage.setDebugAll(Constants.IS_DEBUGGING);
+    }
+
+    private ScrollPane getLevelList()
+    {
+        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
+        textButtonStyle.font = FontManager.getBigFont();
+        textButtonStyle.checkedFontColor = Color.GREEN;
+        textButtonStyle.fontColor = Color.WHITE;
+
+        FileHandle[] levelFiles = Gdx.files.internal("level").list();
+
+        buttonGroup = new ButtonGroup<>();
+
+        buttonGroup.setMaxCheckCount(1);
+        buttonGroup.setMinCheckCount(1);
+        buttonGroup.setUncheckLast(true);
+
+        VerticalGroup verticalGroup = new VerticalGroup();
+
+        for (FileHandle levelFileHandle : levelFiles)
+        {
+            TextButton textButton =
+                new TextButton(levelFileHandle.nameWithoutExtension(), textButtonStyle);
+            // Set path as name so that it can be passed straight to the loading screen later on.
+            textButton.setName(levelFileHandle.path());
+            buttonGroup.add(textButton);
+            verticalGroup.addActor(textButton);
+        }
+
+        ScrollPane scrollPane = new ScrollPane(verticalGroup);
+
+        return scrollPane;
     }
 
     @Override
@@ -105,12 +147,12 @@ public class MenuScreen implements Screen
 
     }
 
-    public Actor getPlayButton()
+    public TextButton getPlayButton()
     {
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.font = FontManager.getBigFont();
 
-        Button playButton = new TextButton("Play", textButtonStyle);
+        TextButton playButton = new TextButton("Play", textButtonStyle);
 
         playButton.addListener(
             new ClickListener()
@@ -127,7 +169,7 @@ public class MenuScreen implements Screen
 
     private void StartGameScreen()
     {
-        ScreenManager.setActiveScreen(new LoadingScreen("level1.json"));
+        ScreenManager.setActiveScreen(new LoadingScreen(buttonGroup.getChecked().getName()));
     }
 
     public Actor getHeaderLabel()

@@ -4,6 +4,7 @@ import java.util.List;
 
 public class SerialisableLevel
 {
+    public String                   name;
     public int                      width;
     public int                      height;
     public SerialisableBackground   serialisedBackground;

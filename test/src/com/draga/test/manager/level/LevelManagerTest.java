@@ -42,7 +42,7 @@ public class LevelManagerTest
 
     private String getTestLevelJson()
     {
-        FileHandle testLevelFileHandle = Gdx.files.internal("level1.json");
+        FileHandle testLevelFileHandle = Gdx.files.internal("level/level1.json");
         String testLevelJson = testLevelFileHandle.readString();
 
         return testLevelJson;
