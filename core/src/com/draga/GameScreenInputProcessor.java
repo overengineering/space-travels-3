@@ -1,8 +1,9 @@
-package com.draga.manager.screen;
+package com.draga;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.draga.manager.ScreenManager;
+import com.draga.manager.screen.MenuScreen;
 
 public class GameScreenInputProcessor extends InputAdapter
 {

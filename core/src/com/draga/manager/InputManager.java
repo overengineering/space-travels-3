@@ -7,20 +7,15 @@ import com.draga.Constants;
 
 public class InputManager
 {
-    /**
-     * Change tilt range.
-     * E.g. 1.0f = 90 degree max. 0.5f = 45 degrees max.
-     */
-    public static final  float   ACCELEROMETER_RANGE         = 0.5f;
-
     private static final String  LOGGING_TAG                 = InputManager.class.getSimpleName();
+    /** Change tilt range. E.g. 1.0f = 90 degree max. 0.5f = 45 degrees max.*/
+    private static final float   ACCELEROMETER_RANGE         = 0.5f;
     private static final float   KEYBOARD_ACCELERATION       = 0.05f;
     private static       Vector2 KEYBOARD_ACCELERATION_DELTA = new Vector2();
 
     /**
      * Returns a vector with length from 0 to 1, representing where the input is pointing to,
      * abstracting away the fact that it could be a mobile accelerometer, mouse clicks, etc.
-     *
      * @return A Vector2 of length from 0 to 1 of where the input is pointing
      */
     public static Vector2 getInputForce()
@@ -56,34 +51,6 @@ public class InputManager
         // Scale the input by the Earth's gravity so that I'll be between 1 and 0
         input = input.scl(1 / Constants.EARTH_GRAVITY);
 
-        return input;
-    }
-
-    private static Vector2 getDeviceAccelerationForDeviceOrientation()
-    {
-        Vector2 input = new Vector2();
-        switch (Gdx.input.getRotation())
-        {
-            case 0:
-                input.x = Gdx.input.getAccelerometerX();
-                input.y = Gdx.input.getAccelerometerY();
-                break;
-            case 90:
-                input.x = Gdx.input.getAccelerometerY();
-                input.y = -Gdx.input.getAccelerometerX();
-                break;
-            case 180:
-                input.x = -Gdx.input.getAccelerometerX();
-                input.y = -Gdx.input.getAccelerometerY();
-                break;
-            case 270:
-                input.x = -Gdx.input.getAccelerometerY();
-                input.y = Gdx.input.getAccelerometerX();
-                break;
-            default:
-                Gdx.app.error(
-                    LOGGING_TAG, "Orientation " + Gdx.input.getRotation() + " not implemented.");
-        }
         return input;
     }
 
@@ -135,5 +102,33 @@ public class InputManager
         KEYBOARD_ACCELERATION_DELTA = KEYBOARD_ACCELERATION_DELTA.clamp(0, 1);
 
         return KEYBOARD_ACCELERATION_DELTA.cpy();
+    }
+
+    private static Vector2 getDeviceAccelerationForDeviceOrientation()
+    {
+        Vector2 input = new Vector2();
+        switch (Gdx.input.getRotation())
+        {
+            case 0:
+                input.x = Gdx.input.getAccelerometerX();
+                input.y = Gdx.input.getAccelerometerY();
+                break;
+            case 90:
+                input.x = Gdx.input.getAccelerometerY();
+                input.y = -Gdx.input.getAccelerometerX();
+                break;
+            case 180:
+                input.x = -Gdx.input.getAccelerometerX();
+                input.y = -Gdx.input.getAccelerometerY();
+                break;
+            case 270:
+                input.x = -Gdx.input.getAccelerometerY();
+                input.y = Gdx.input.getAccelerometerX();
+                break;
+            default:
+                Gdx.app.error(
+                    LOGGING_TAG, "Orientation " + Gdx.input.getRotation() + " not implemented.");
+        }
+        return input;
     }
 }
