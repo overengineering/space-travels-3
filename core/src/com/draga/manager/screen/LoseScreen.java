@@ -22,14 +22,14 @@ public class LoseScreen implements Screen
 {
     public static final float FADE_PER_SECOND = 0.7f;
     private final Stage      stage;
-    private final GameScreen parentGameScreen;
     private final Color fadeToColour     = new Color(0, 0, 0, 0.7f);
     private final Color backgroundColour = new Color(0, 0, 0, 0);
     private final ShapeRenderer shapeRenderer;
+    private       String        levelPath;
 
-    public LoseScreen(GameScreen parentScreen)
+    public LoseScreen(String levelPath)
     {
-        this.parentGameScreen = parentScreen;
+        this.levelPath = levelPath;
         this.stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
@@ -56,8 +56,6 @@ public class LoseScreen implements Screen
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
             || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
         {
-            parentGameScreen.pause();
-            parentGameScreen.dispose();
             ScreenManager.setActiveScreen(new MenuScreen());
             return;
         }
@@ -68,7 +66,6 @@ public class LoseScreen implements Screen
             return;
         }
 
-        parentGameScreen.render(delta);
         update(delta);
         draw(delta);
     }
@@ -98,7 +95,6 @@ public class LoseScreen implements Screen
     @Override
     public void resize(int width, int height)
     {
-        parentGameScreen.resize(width, height);
         stage.getViewport().update(width, height);
     }
 
@@ -153,8 +149,6 @@ public class LoseScreen implements Screen
 
     private void Retry()
     {
-        parentGameScreen.pause();
-        parentGameScreen.dispose();
-        ScreenManager.setActiveScreen(new LoadingScreen(parentGameScreen.getLevelPath()));
+        ScreenManager.setActiveScreen(new LoadingScreen(levelPath));
     }
 }

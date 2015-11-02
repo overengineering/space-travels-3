@@ -8,10 +8,7 @@ import com.draga.Constants;
 public class InputManager
 {
     private static final String  LOGGING_TAG                 = InputManager.class.getSimpleName();
-    /**
-     * Change tilt range.
-     * E.g. 1.0f = 90 degree max. 0.5f = 45 degrees max.
-     */
+    /** Change tilt range. E.g. 1.0f = 90 degree max. 0.5f = 45 degrees max.*/
     private static final float   ACCELEROMETER_RANGE         = 0.5f;
     private static final float   KEYBOARD_ACCELERATION       = 0.05f;
     private static       Vector2 KEYBOARD_ACCELERATION_DELTA = new Vector2();
@@ -19,7 +16,6 @@ public class InputManager
     /**
      * Returns a vector with length from 0 to 1, representing where the input is pointing to,
      * abstracting away the fact that it could be a mobile accelerometer, mouse clicks, etc.
-     *
      * @return A Vector2 of length from 0 to 1 of where the input is pointing
      */
     public static Vector2 getInputForce()

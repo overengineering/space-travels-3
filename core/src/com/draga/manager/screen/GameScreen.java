@@ -39,6 +39,7 @@ public class GameScreen implements Screen
     private GameState                gameState;
     private CountdownScreen          countdownScreen;
     private GameScreenInputProcessor gameScreenInputProcessor;
+    private LoseScreen               loseScreen;
 
     public GameScreen(
         String backgroundTexturePath,
@@ -169,7 +170,14 @@ public class GameScreen implements Screen
                 }
                 break;
             case PLAY:
+                update(deltaTime);
+                draw();
+                break;
             case LOSE:
+                update(deltaTime);
+                draw();
+                loseScreen.render(deltaTime);
+                break;
             case WIN:
                 update(deltaTime);
                 draw();
@@ -347,7 +355,7 @@ public class GameScreen implements Screen
             GameEntityManager.getGameEntitiesToCreate().add(explosion);
 
             GameEntityManager.getGameEntitiesToDestroy().add(ship);
-            ScreenManager.setActiveScreen(new LoseScreen(this), false);
+            this.loseScreen = new LoseScreen(levelPath);
         }
         // Win.
         else
