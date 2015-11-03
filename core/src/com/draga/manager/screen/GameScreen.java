@@ -23,23 +23,33 @@ import java.util.ArrayList;
 public class GameScreen implements Screen
 {
     private static final String LOGGING_TAG = GameScreen.class.getSimpleName();
-    private Hud                      hud;
-    private Texture                  backgroundTexture;
-    private Box2DDebugRenderer       box2DDebugRenderer;
-    private World                    box2dWorld;
-    private SpriteBatch              spriteBatch;
-    private OrthographicCamera       orthographicCamera;
-    private ExtendViewport           extendViewport;
-    private Ship                     ship;
+
     private int                      width;
     private int                      height;
+
+    private String                   levelPath;
+
+    private GameState                gameState;
+    private LoseScreen               loseScreen;
+    private CountdownScreen          countdownScreen;
+
+    private Hud                      hud;
+
+    private Texture                  backgroundTexture;
+    private SpriteBatch              spriteBatch;
+
+    private Box2DDebugRenderer       box2DDebugRenderer;
+    private World                    box2dWorld;
+
+    private OrthographicCamera       orthographicCamera;
+    private ExtendViewport           extendViewport;
+
+    private Ship                     ship;
     private ArrayList<Planet>        planets;
     private Planet                   destinationPlanet;
-    private String                   levelPath;
-    private GameState                gameState;
-    private CountdownScreen          countdownScreen;
+
     private GameScreenInputProcessor gameScreenInputProcessor;
-    private LoseScreen               loseScreen;
+
 
     public GameScreen(
         String backgroundTexturePath,
@@ -48,17 +58,23 @@ public class GameScreen implements Screen
         int height,
         String levelPath)
     {
-        this.gameState = GameState.COUNTDOWN;
-        Constants.EVENT_BUS.register(this);
-        gameScreenInputProcessor = new GameScreenInputProcessor();
-        Gdx.input.setInputProcessor(gameScreenInputProcessor);
-        box2dWorld = new World(new Vector2(), true);
-        box2dWorld.setContactListener(new GameContactListener());
-        planets = new ArrayList<>();
         this.backgroundTexture = AssMan.getAssMan().get(backgroundTexturePath, Texture.class);
         this.width = width;
         this.height = height;
         this.spriteBatch = spriteBatch;
+        this.levelPath = levelPath;
+        this.gameState = GameState.COUNTDOWN;
+
+        Constants.EVENT_BUS.register(this);
+
+        gameScreenInputProcessor = new GameScreenInputProcessor();
+        Gdx.input.setInputProcessor(gameScreenInputProcessor);
+
+        box2dWorld = new World(new Vector2(), true);
+        box2dWorld.setContactListener(new GameContactListener());
+
+        planets = new ArrayList<>();
+
         orthographicCamera = new OrthographicCamera();
         extendViewport = new ExtendViewport(
             Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, width, height, orthographicCamera);
@@ -71,7 +87,6 @@ public class GameScreen implements Screen
         }
 
         hud = new Hud();
-        this.levelPath = levelPath;
     }
 
     private void createWalls()
