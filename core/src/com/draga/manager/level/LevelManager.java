@@ -1,6 +1,7 @@
 package com.draga.manager.level;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Json;
 import com.draga.entity.Planet;
@@ -14,12 +15,38 @@ import com.draga.manager.screen.GameScreen;
 
 public abstract class LevelManager
 {
+    private static FileHandle[] levels;
+
+    public static FileHandle[] getLevels()
+    {
+        if (levels == null)
+        {
+            levels = Gdx.files.internal("level").list();
+        }
+        return levels;
+    }
+
     public static SerialisableLevel getSerialisedLevelFromName(String serialisedLevelName)
     {
         String serialisedLevelString =
             Gdx.files.internal(serialisedLevelName).readString();
         SerialisableLevel serialisableLevel =
             getSerialisedLevelFromString(serialisedLevelString, serialisedLevelName);
+
+        return serialisableLevel;
+    }
+
+    private static SerialisableLevel getSerialisedLevelFromString(
+        String serialisedLevel,
+        String name)
+    {
+        Json json = new Json();
+
+        json.addClassTag("SerialisableLevel", SerialisableLevel.class);
+
+        SerialisableLevel serialisableLevel =
+            json.fromJson(SerialisableLevel.class, serialisedLevel);
+        serialisableLevel.name = name;
 
         return serialisableLevel;
     }
@@ -66,20 +93,5 @@ public abstract class LevelManager
         }
 
         return gameScreen;
-    }
-
-    private static SerialisableLevel getSerialisedLevelFromString(
-        String serialisedLevel,
-        String name)
-    {
-        Json json = new Json();
-
-        json.addClassTag("SerialisableLevel", SerialisableLevel.class);
-
-        SerialisableLevel serialisableLevel =
-            json.fromJson(SerialisableLevel.class, serialisedLevel);
-        serialisableLevel.name = name;
-
-        return serialisableLevel;
     }
 }
