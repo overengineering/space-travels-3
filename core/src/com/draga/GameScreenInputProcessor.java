@@ -2,7 +2,7 @@ package com.draga;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
-import com.draga.manager.ScreenManager;
+import com.draga.manager.GameManager;
 import com.draga.manager.screen.MenuScreen;
 
 public class GameScreenInputProcessor extends InputAdapter
@@ -12,7 +12,7 @@ public class GameScreenInputProcessor extends InputAdapter
     {
         if (keycode == Input.Keys.BACK)
         {
-            ScreenManager.setActiveScreen(new MenuScreen());
+            GameManager.getGame().setScreen(new MenuScreen());
             return true;
         }
 

@@ -143,7 +143,7 @@ public class GameScreen implements Screen
     {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
         {
-            ScreenManager.setActiveScreen(new MenuScreen());
+            GameManager.getGame().setScreen(new MenuScreen());
             return;
         }
 
@@ -171,6 +171,9 @@ public class GameScreen implements Screen
                 break;
             case PLAY:
                 update(deltaTime);
+                draw();
+                break;
+            case PAUSE:
                 draw();
                 break;
             case LOSE:
@@ -294,21 +297,27 @@ public class GameScreen implements Screen
     @Override
     public void pause()
     {
-
+        if (gameState == GameState.PLAY){
+            gameState = GameState.PAUSE;
+        }
     }
 
     @Override
     public void resume()
     {
-        gameState = GameState.COUNTDOWN;
+        if (gameState == GameState.PAUSE)
+        {
+            gameState = GameState.COUNTDOWN;
+        }
     }
 
     @Override
     public void hide()
     {
-
+        this.dispose();
     }
 
+    @Override
     public void dispose()
     {
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())

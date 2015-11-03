@@ -5,9 +5,9 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.physics.box2d.Box2D;
+import com.draga.manager.GameManager;
 import com.draga.manager.asset.AssMan;
 import com.draga.manager.asset.FontManager;
-import com.draga.manager.ScreenManager;
 import com.draga.manager.screen.MenuScreen;
 
 import java.util.concurrent.Executors;
@@ -25,20 +25,22 @@ public class SpaceTravels3 extends Game
         Gdx.input.setCatchBackKey(true);
         AssMan.getAssList();
         FontManager.create();
-        ScreenManager.setGame(this);
-        ScreenManager.setActiveScreen(new MenuScreen());
+        GameManager.setGame(this);
 
         if (Constants.IS_DEBUGGING)
         {
             Gdx.app.setLogLevel(Application.LOG_DEBUG);
 
             launchPerformanceLoggerScheduler();
-        } else
+        }
+        else
         {
             Gdx.app.setLogLevel(Application.LOG_ERROR);
         }
 
         Box2D.init();
+
+        this.setScreen(new MenuScreen());
     }
 
     private void launchPerformanceLoggerScheduler()
@@ -48,21 +50,9 @@ public class SpaceTravels3 extends Game
     }
 
     @Override
-    public void render()
-    {
-        float deltaTime = Gdx.graphics.getDeltaTime();
-
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-
-        ScreenManager.getActiveScreen().render(deltaTime);
-    }
-
-    @Override
     public void dispose()
     {
         Gdx.app.debug(LOGGING_TAG, "Dispose");
-        ScreenManager.getActiveScreen().dispose();
         if (Constants.IS_DEBUGGING)
         {
             logOutputScheduler.shutdown();
@@ -75,7 +65,6 @@ public class SpaceTravels3 extends Game
     public void pause()
     {
         Gdx.app.debug(LOGGING_TAG, "Pause");
-        ScreenManager.getActiveScreen().pause();
         if (Constants.IS_DEBUGGING)
         {
             logOutputScheduler.shutdown();
@@ -87,9 +76,17 @@ public class SpaceTravels3 extends Game
     public void resume()
     {
         Gdx.app.debug(LOGGING_TAG, "Resume");
-        ScreenManager.getActiveScreen().resume();
         launchPerformanceLoggerScheduler();
         super.resume();
+    }
+
+    @Override
+    public void render()
+    {
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+
+        super.render();
     }
 
     @Override
@@ -97,8 +94,6 @@ public class SpaceTravels3 extends Game
     {
         String log = String.format("Resize to %4d width x %4d height", width, height);
         Gdx.app.debug(LOGGING_TAG, log);
-
-        ScreenManager.getActiveScreen().resize(width, height);
 
         super.resize(width, height);
     }

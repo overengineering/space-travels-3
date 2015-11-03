@@ -16,7 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.Constants;
 import com.draga.manager.asset.FontManager;
-import com.draga.manager.ScreenManager;
+import com.draga.manager.GameManager;
 
 public class LoseScreen implements Screen
 {
@@ -56,7 +56,7 @@ public class LoseScreen implements Screen
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
             || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
         {
-            ScreenManager.setActiveScreen(new MenuScreen());
+            GameManager.getGame().setScreen(new MenuScreen());
             return;
         }
 
@@ -114,7 +114,7 @@ public class LoseScreen implements Screen
     @Override
     public void hide()
     {
-
+        this.dispose();
     }
 
     @Override
@@ -149,6 +149,6 @@ public class LoseScreen implements Screen
 
     private void Retry()
     {
-        ScreenManager.setActiveScreen(new LoadingScreen(levelPath));
+        GameManager.getGame().setScreen(new LoadingScreen(levelPath));
     }
 }

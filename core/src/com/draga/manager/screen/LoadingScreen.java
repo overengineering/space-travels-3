@@ -16,7 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.draga.Constants;
 import com.draga.manager.asset.AssMan;
 import com.draga.manager.asset.FontManager;
-import com.draga.manager.ScreenManager;
+import com.draga.manager.GameManager;
 import com.draga.manager.level.LevelManager;
 import com.draga.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.manager.level.serialisableEntities.SerialisablePlanet;
@@ -96,7 +96,7 @@ public class LoadingScreen implements Screen
                 serialisableLevel, new SpriteBatch());
             long elapsedNanoTime = System.nanoTime() - startTime;
             Gdx.app.debug(LOGGING_TAG, "Loading time: " + elapsedNanoTime * Constants.NANO + "s");
-            ScreenManager.setActiveScreen(gameScreen);
+            GameManager.getGame().setScreen(gameScreen);
         }
         updateProgressBar();
 
@@ -139,7 +139,7 @@ public class LoadingScreen implements Screen
     @Override
     public void hide()
     {
-
+        this.dispose();
     }
 
     public Label getHeaderLabel()

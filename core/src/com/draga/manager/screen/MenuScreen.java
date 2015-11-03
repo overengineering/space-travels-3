@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.Constants;
 import com.draga.manager.asset.FontManager;
-import com.draga.manager.ScreenManager;
+import com.draga.manager.GameManager;
 
 public class MenuScreen implements Screen
 {
@@ -144,7 +144,7 @@ public class MenuScreen implements Screen
     @Override
     public void hide()
     {
-
+        this.dispose();
     }
 
     public TextButton getPlayButton()
@@ -169,7 +169,7 @@ public class MenuScreen implements Screen
 
     private void StartGameScreen()
     {
-        ScreenManager.setActiveScreen(new LoadingScreen(buttonGroup.getChecked().getName()));
+        GameManager.getGame().setScreen(new LoadingScreen(buttonGroup.getChecked().getName()));
     }
 
     public Actor getHeaderLabel()
