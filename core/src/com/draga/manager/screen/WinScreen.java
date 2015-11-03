@@ -5,43 +5,90 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.Constants;
-import com.draga.manager.asset.FontManager;
 import com.draga.manager.GameManager;
+import com.draga.manager.asset.FontManager;
 
-public class LoseScreen implements Screen
+public class WinScreen implements Screen
 {
     public static final float FADE_PER_SECOND = 0.7f;
-    private final Stage      stage;
+    private final Stage stage;
     private final Color fadeToColour     = new Color(0, 0, 0, 0.7f);
     private final Color backgroundColour = new Color(0, 0, 0, 0);
     private final ShapeRenderer shapeRenderer;
     private       String        levelPath;
 
-    public LoseScreen(String levelPath)
+    public WinScreen(String levelPath)
     {
         this.levelPath = levelPath;
         this.stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-        Actor retryButton = getRetryButton();
+        Label headerLabel = getHeaderLabel();
+        TextButton retryButton = getRetryButton();
 
         Table table = new Table();
-        table.add(retryButton).size(retryButton.getWidth() * 2, retryButton.getHeight() * 3);
+        table.add(headerLabel);
+
+        table.row();
+        table.add(retryButton);
+
         table.setFillParent(true);
         stage.addActor(table);
 
         stage.setDebugAll(Constants.IS_DEBUGGING);
         shapeRenderer = new ShapeRenderer();
+    }
+
+    public Label getHeaderLabel()
+    {
+        Label.LabelStyle labelStyle = new Label.LabelStyle();
+        BitmapFont bigFont = FontManager.getBigFont();
+        labelStyle.font = bigFont;
+
+        Label headerLabel = new Label("You won!", labelStyle);
+        headerLabel.setColor(new Color(1, 1, 1, 0));
+        headerLabel.addAction(Actions.color(new Color(1, 1, 1, 1), 3, Interpolation.pow2In));
+
+        return headerLabel;
+    }
+
+    public TextButton getRetryButton()
+    {
+        TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
+        buttonStyle.font = FontManager.getBigFont();
+
+        TextButton retryButton = new TextButton("Try Again?", buttonStyle);
+
+        retryButton.setColor(new Color(1, 1, 1, 0));
+        retryButton.addAction(Actions.color(new Color(1, 1, 1, 1), 3, Interpolation.pow2In));
+        retryButton.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    Retry();
+                    super.clicked(event, x, y);
+                }
+            });
+
+        return retryButton;
+    }
+
+    private void Retry()
+    {
+        GameManager.getGame().setScreen(new LoadingScreen(levelPath));
     }
 
     @Override
@@ -70,6 +117,11 @@ public class LoseScreen implements Screen
         draw(delta);
     }
 
+    private void update(float delta)
+    {
+        stage.act(delta);
+    }
+
     private void draw(float delta)
     {
         backgroundColour.lerp(fadeToColour, FADE_PER_SECOND * delta);
@@ -85,11 +137,6 @@ public class LoseScreen implements Screen
         Gdx.gl.glDisable(GL20.GL_BLEND);
 
         stage.draw();
-    }
-
-    private void update(float delta)
-    {
-        stage.act(delta);
     }
 
     @Override
@@ -122,33 +169,5 @@ public class LoseScreen implements Screen
     {
         shapeRenderer.dispose();
         stage.dispose();
-    }
-
-    public Actor getRetryButton()
-    {
-        TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
-        buttonStyle.font = FontManager.getBigFont();
-
-        TextButton retryButton = new TextButton("Try Again?", buttonStyle);
-
-        retryButton.setColor(new Color(1, 1, 1, 0));
-        retryButton.addAction(Actions.color(new Color(1, 1, 1, 1), 3, Interpolation.pow2In));
-        retryButton.addListener(
-            new ClickListener()
-            {
-                @Override
-                public void clicked(InputEvent event, float x, float y)
-                {
-                    Retry();
-                    super.clicked(event, x, y);
-                }
-            });
-
-        return retryButton;
-    }
-
-    private void Retry()
-    {
-        GameManager.getGame().setScreen(new LoadingScreen(levelPath));
     }
 }

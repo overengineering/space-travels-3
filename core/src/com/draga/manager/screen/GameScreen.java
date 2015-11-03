@@ -14,7 +14,10 @@ import com.draga.*;
 import com.draga.entity.*;
 import com.draga.event.ShipPlanetCollisionEvent;
 import com.draga.event.StarCollectedEvent;
-import com.draga.manager.*;
+import com.draga.manager.DebugManager;
+import com.draga.manager.GameContactListener;
+import com.draga.manager.GameEntityManager;
+import com.draga.manager.GameManager;
 import com.draga.manager.asset.AssMan;
 import com.google.common.eventbus.Subscribe;
 
@@ -24,29 +27,30 @@ public class GameScreen implements Screen
 {
     private static final String LOGGING_TAG = GameScreen.class.getSimpleName();
 
-    private int                      width;
-    private int                      height;
+    private int width;
+    private int height;
 
-    private String                   levelPath;
+    private String levelPath;
 
-    private GameState                gameState;
-    private LoseScreen               loseScreen;
-    private CountdownScreen          countdownScreen;
+    private GameState       gameState;
+    private LoseScreen      loseScreen;
+    private WinScreen       winScreen;
+    private CountdownScreen countdownScreen;
 
-    private Hud                      hud;
+    private Hud hud;
 
-    private Texture                  backgroundTexture;
-    private SpriteBatch              spriteBatch;
+    private Texture     backgroundTexture;
+    private SpriteBatch spriteBatch;
 
-    private Box2DDebugRenderer       box2DDebugRenderer;
-    private World                    box2dWorld;
+    private Box2DDebugRenderer box2DDebugRenderer;
+    private World              box2dWorld;
 
-    private OrthographicCamera       orthographicCamera;
-    private ExtendViewport           extendViewport;
+    private OrthographicCamera orthographicCamera;
+    private ExtendViewport     extendViewport;
 
-    private Ship                     ship;
-    private ArrayList<Planet>        planets;
-    private Planet                   destinationPlanet;
+    private Ship              ship;
+    private ArrayList<Planet> planets;
+    private Planet            destinationPlanet;
 
     private GameScreenInputProcessor gameScreenInputProcessor;
 
@@ -199,6 +203,7 @@ public class GameScreen implements Screen
             case WIN:
                 update(deltaTime);
                 draw();
+                winScreen.render(deltaTime);
                 break;
             default:
                 Gdx.app.error(
@@ -312,7 +317,8 @@ public class GameScreen implements Screen
     @Override
     public void pause()
     {
-        if (gameState == GameState.PLAY){
+        if (gameState == GameState.PLAY)
+        {
             gameState = GameState.PAUSE;
         }
     }
@@ -381,10 +387,11 @@ public class GameScreen implements Screen
             GameEntityManager.getGameEntitiesToDestroy().add(ship);
             this.loseScreen = new LoseScreen(levelPath);
         }
-        // Win.
         else
         {
+            GameEntityManager.getGameEntitiesToDestroy().add(ship);
             gameState = GameState.WIN;
+            this.winScreen = new WinScreen(levelPath);
         }
     }
 
