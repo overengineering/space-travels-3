@@ -20,4 +20,8 @@ public abstract class Constants
 
     public static final EventBus EVENT_BUS         = new EventBus();
     public static final float    COUNTDOWN_SECONDS = 1f;
+
+    public static final float    FUEL_POINTS       = 1000f;
+    public static final float    TIME_POINTS       = 10f;
+    public static final float    STAR_POINTS       = 1000f;
 }

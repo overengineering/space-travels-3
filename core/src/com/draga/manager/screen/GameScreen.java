@@ -54,6 +54,8 @@ public class GameScreen implements Screen
 
     private GameScreenInputProcessor gameScreenInputProcessor;
 
+    private int   starsCollected;
+    private float elapsedPlayTime;
 
     public GameScreen(
         String backgroundTexturePath,
@@ -189,6 +191,7 @@ public class GameScreen implements Screen
                 }
                 break;
             case PLAY:
+                elapsedPlayTime += deltaTime;
                 update(deltaTime);
                 draw();
                 break;
@@ -360,6 +363,7 @@ public class GameScreen implements Screen
     @Subscribe
     public void starCollected(StarCollectedEvent starCollectedEvent)
     {
+        starsCollected++;
         GameEntityManager.getGameEntitiesToDestroy().add(starCollectedEvent.star);
     }
 
@@ -390,8 +394,9 @@ public class GameScreen implements Screen
         else
         {
             GameEntityManager.getGameEntitiesToDestroy().add(ship);
+            float score = getScore();
             gameState = GameState.WIN;
-            this.winScreen = new WinScreen(levelPath);
+            this.winScreen = new WinScreen(levelPath, score);
         }
     }
 
@@ -408,5 +413,23 @@ public class GameScreen implements Screen
     public String getLevelPath()
     {
         return levelPath;
+    }
+
+    private float getScore()
+    {
+        float starPoints = starsCollected * Constants.STAR_POINTS;
+        float timePoints = elapsedPlayTime * Constants.TIME_POINTS;
+        float fuelPoints = ship.getFuel() * Constants.FUEL_POINTS;
+
+        String message = String.format("Points summary: %f stars - %f time + %f fuel",
+            starPoints,
+            timePoints,
+            fuelPoints);
+        Gdx.app.log(LOGGING_TAG, message);
+
+        float score = starPoints;
+        score -= timePoints;
+        score += fuelPoints;
+        return score;
     }
 }

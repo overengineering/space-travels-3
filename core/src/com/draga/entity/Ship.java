@@ -274,4 +274,9 @@ public class Ship extends GameEntity
 
         body.applyAngularImpulse(diffRotation * ROTATION_FORCE * elapsed * scale, true);
     }
+
+    public float getFuel()
+    {
+        return fuel;
+    }
 }

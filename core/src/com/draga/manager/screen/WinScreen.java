@@ -30,7 +30,7 @@ public class WinScreen implements Screen
     private final ShapeRenderer shapeRenderer;
     private       String        levelPath;
 
-    public WinScreen(String levelPath)
+    public WinScreen(String levelPath, float score)
     {
         this.levelPath = levelPath;
         this.stage = new Stage();
@@ -38,9 +38,13 @@ public class WinScreen implements Screen
 
         Label headerLabel = getHeaderLabel();
         TextButton retryButton = getRetryButton();
+        Label scoreLabel = getScoreLabel(score);
 
         Table table = new Table();
         table.add(headerLabel);
+
+        table.row();
+        table.add(scoreLabel);
 
         table.row();
         table.add(retryButton);
@@ -67,6 +71,19 @@ public class WinScreen implements Screen
 
         stage.setDebugAll(Constants.IS_DEBUGGING);
         shapeRenderer = new ShapeRenderer();
+    }
+
+    private Label getScoreLabel(float score)
+    {
+        Label.LabelStyle labelStyle = new Label.LabelStyle();
+        BitmapFont bigFont = FontManager.getBigFont();
+        labelStyle.font = bigFont;
+
+        Label scoreLabel = new Label("Score: "+ score, labelStyle);
+        scoreLabel.setColor(new Color(1, 1, 1, 0));
+        scoreLabel.addAction(Actions.color(new Color(1, 1, 1, 1), 3, Interpolation.pow2In));
+
+        return scoreLabel;
     }
 
     public Label getHeaderLabel()
