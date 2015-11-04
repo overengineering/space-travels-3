@@ -251,6 +251,8 @@ public class GameScreen implements Screen
 
     public void draw()
     {
+        MiniMap.getShapeRenderer().begin();
+
         spriteBatch.begin();
         spriteBatch.draw(backgroundTexture, 0, 0, width, height);
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
@@ -258,6 +260,8 @@ public class GameScreen implements Screen
             gameEntity.draw(spriteBatch);
         }
         spriteBatch.end();
+
+        MiniMap.getShapeRenderer().end();
 
         if (Constants.DEBUG_DRAW)
         {

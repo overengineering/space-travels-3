@@ -32,6 +32,7 @@ public class Hud implements Screen
     private Stack<Image>       grayStars;
     private Table              starsTable;
     private Ship               ship;
+
     private ShapeRenderer      shapeRenderer;
     private OrthographicCamera orthographicCamera;
 
