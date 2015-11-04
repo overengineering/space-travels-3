@@ -12,9 +12,13 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.draga.*;
 import com.draga.entity.*;
+import com.draga.event.CountdownFinishedEvent;
 import com.draga.event.ShipPlanetCollisionEvent;
 import com.draga.event.StarCollectedEvent;
-import com.draga.manager.*;
+import com.draga.manager.DebugManager;
+import com.draga.manager.GameContactListener;
+import com.draga.manager.GameEntityManager;
+import com.draga.manager.GameManager;
 import com.draga.manager.asset.AssMan;
 import com.google.common.eventbus.Subscribe;
 
@@ -24,32 +28,33 @@ public class GameScreen implements Screen
 {
     private static final String LOGGING_TAG = GameScreen.class.getSimpleName();
 
-    private int                      width;
-    private int                      height;
+    private int width;
+    private int height;
 
-    private String                   levelPath;
+    private String levelPath;
 
-    private GameState                gameState;
-    private LoseScreen               loseScreen;
-    private CountdownScreen          countdownScreen;
+    private GameState gameState;
+    private Screen    overlayScreen;
 
-    private Hud                      hud;
+    private Hud hud;
 
-    private Texture                  backgroundTexture;
-    private SpriteBatch              spriteBatch;
+    private Texture     backgroundTexture;
+    private SpriteBatch spriteBatch;
 
-    private Box2DDebugRenderer       box2DDebugRenderer;
-    private World                    box2dWorld;
+    private Box2DDebugRenderer box2DDebugRenderer;
+    private World              box2dWorld;
 
-    private OrthographicCamera       orthographicCamera;
-    private ExtendViewport           extendViewport;
+    private OrthographicCamera orthographicCamera;
+    private ExtendViewport     extendViewport;
 
-    private Ship                     ship;
-    private ArrayList<Planet>        planets;
-    private Planet                   destinationPlanet;
+    private Ship              ship;
+    private ArrayList<Planet> planets;
+    private Planet            destinationPlanet;
 
     private GameScreenInputProcessor gameScreenInputProcessor;
 
+    private int   starsCollected;
+    private float elapsedPlayTime;
 
     public GameScreen(
         String backgroundTexturePath,
@@ -63,7 +68,9 @@ public class GameScreen implements Screen
         this.height = height;
         this.spriteBatch = spriteBatch;
         this.levelPath = levelPath;
+
         this.gameState = GameState.COUNTDOWN;
+        this.overlayScreen = new CountdownScreen();
 
         Constants.EVENT_BUS.register(this);
 
@@ -83,6 +90,9 @@ public class GameScreen implements Screen
         if (Constants.IS_DEBUGGING)
         {
             createWalls();
+        }
+        if (Constants.DEBUG_DRAW)
+        {
             box2DDebugRenderer = new Box2DDebugRenderer();
         }
 
@@ -122,12 +132,38 @@ public class GameScreen implements Screen
 
         orthographicCamera.position.x = ship.getX();
         orthographicCamera.position.y = ship.getY();
+
+        updateCamera();
     }
 
     private void addGameEntity(GameEntity gameEntity)
     {
         GameEntityManager.getGameEntities().add(gameEntity);
         gameEntity.createBody(getBox2dWorld());
+    }
+
+    private void updateCamera()
+    {
+        float halfWidth = orthographicCamera.viewportWidth / 2f;
+        float halfHeight = orthographicCamera.viewportHeight / 2f;
+
+        float cameraXPosition = MathUtils.clamp(
+            ship.getX(), halfWidth, width - halfWidth);
+        float cameraYPosition = MathUtils.clamp(
+            ship.getY(), halfHeight, height - halfHeight);
+
+        // Soften camera movement.
+        Vector2 cameraVec = new Vector2(cameraXPosition, cameraYPosition);
+        Vector2 softCamera = cameraVec.cpy();
+        Vector2 cameraOffset =
+            cameraVec.sub(orthographicCamera.position.x, orthographicCamera.position.y);
+        softCamera.sub(cameraOffset.scl(0.9f));
+
+        orthographicCamera.position.x = softCamera.x;
+        orthographicCamera.position.y = softCamera.y;
+        orthographicCamera.update();
+
+        spriteBatch.setProjectionMatrix(orthographicCamera.combined);
     }
 
     public World getBox2dWorld()
@@ -162,75 +198,25 @@ public class GameScreen implements Screen
             return;
         }
 
-        switch (this.gameState)
+        if (gameState == GameState.PLAY)
         {
-            case COUNTDOWN:
-                if (this.countdownScreen == null)
-                {
-                    updateCamera();
-                    this.countdownScreen = new CountdownScreen();
-                }
-                if (this.countdownScreen.getSecondsRemaining() <= 0)
-                {
-                    this.gameState = GameState.PLAY;
-                    this.countdownScreen.dispose();
-                    this.countdownScreen = null;
-                    update(deltaTime);
-                    draw();
-                }
-                else
-                {
-                    draw();
-                    this.countdownScreen.render(deltaTime);
-                }
-                break;
-            case PLAY:
-                update(deltaTime);
-                draw();
-                break;
-            case PAUSE:
-                draw();
-                break;
-            case LOSE:
-                update(deltaTime);
-                draw();
-                loseScreen.render(deltaTime);
-                break;
-            case WIN:
-                update(deltaTime);
-                draw();
-                break;
-            default:
-                Gdx.app.error(
-                    LOGGING_TAG,
-                    "Gamestate " + this.gameState.toString() + " is an invalid state!");
+            elapsedPlayTime += deltaTime;
         }
 
+        if (gameState != GameState.PAUSE
+            && gameState != GameState.COUNTDOWN)
+        {
+            update(deltaTime);
+        }
+
+        draw();
+
         hud.render(deltaTime);
-    }
 
-    private void updateCamera()
-    {
-        float halfWidth = orthographicCamera.viewportWidth / 2f;
-        float halfHeight = orthographicCamera.viewportHeight / 2f;
-
-        float cameraXPosition = MathUtils.clamp(
-            ship.getX(), halfWidth, width - halfWidth);
-        float cameraYPosition = MathUtils.clamp(
-            ship.getY(), halfHeight, height - halfHeight);
-
-        // Soften camera movement.
-        Vector2 cameraVec = new Vector2(cameraXPosition, cameraYPosition);
-        Vector2 softCamera = cameraVec.cpy();
-        Vector2 cameraOffset =
-            cameraVec.sub(orthographicCamera.position.x, orthographicCamera.position.y);
-        softCamera.sub(cameraOffset.scl(0.9f));
-
-        orthographicCamera.position.x = softCamera.x;
-        orthographicCamera.position.y = softCamera.y;
-        orthographicCamera.update();
-
-        spriteBatch.setProjectionMatrix(orthographicCamera.combined);
+        if (overlayScreen != null)
+        {
+            overlayScreen.render(deltaTime);
+        }
     }
 
     public void update(float elapsed)
@@ -272,7 +258,7 @@ public class GameScreen implements Screen
         }
         spriteBatch.end();
 
-        if (Constants.IS_DEBUGGING)
+        if (Constants.DEBUG_DRAW)
         {
             box2DDebugRenderer.render(box2dWorld, orthographicCamera.combined);
         }
@@ -312,7 +298,8 @@ public class GameScreen implements Screen
     @Override
     public void pause()
     {
-        if (gameState == GameState.PLAY){
+        if (gameState == GameState.PLAY)
+        {
             gameState = GameState.PAUSE;
         }
     }
@@ -323,6 +310,7 @@ public class GameScreen implements Screen
         if (gameState == GameState.PAUSE)
         {
             gameState = GameState.COUNTDOWN;
+            this.overlayScreen = new CountdownScreen();
         }
     }
 
@@ -343,17 +331,22 @@ public class GameScreen implements Screen
         GameEntityManager.dispose();
         box2dWorld.dispose();
         backgroundTexture.dispose();
-        if (Constants.IS_DEBUGGING)
+        if (Constants.DEBUG_DRAW)
         {
             box2DDebugRenderer.dispose();
         }
         Constants.EVENT_BUS.unregister(this);
         hud.dispose();
+        if (this.overlayScreen != null)
+        {
+            this.overlayScreen.dispose();
+        }
     }
 
     @Subscribe
     public void starCollected(StarCollectedEvent starCollectedEvent)
     {
+        starsCollected++;
         GameEntityManager.getGameEntitiesToDestroy().add(starCollectedEvent.star);
     }
 
@@ -367,9 +360,12 @@ public class GameScreen implements Screen
                 "Linear velocity on collision: " + ship.getBody().getLinearVelocity().len());
         }
 
+        GameEntityManager.getGameEntitiesToDestroy().add(ship);
+
         // If wrong planet or too fast then lose.
         if (getDestinationPlanet() != shipPlanetCollisionEvent.planet
-            || ship.getBody().getLinearVelocity().len() > 15)
+            || ship.getBody().getLinearVelocity().len()
+            > Constants.MAX_DESTINATION_PLANET_APPROACH_SPEED)
         {
             gameState = GameState.LOSE;
             GameEntity explosion = new Explosion(
@@ -378,13 +374,13 @@ public class GameScreen implements Screen
                 AssMan.getAssList().explosion);
             GameEntityManager.getGameEntitiesToCreate().add(explosion);
 
-            GameEntityManager.getGameEntitiesToDestroy().add(ship);
-            this.loseScreen = new LoseScreen(levelPath);
+            this.overlayScreen = new LoseScreen(levelPath);
         }
-        // Win.
         else
         {
+            float score = getScore();
             gameState = GameState.WIN;
+            this.overlayScreen = new WinScreen(levelPath, score);
         }
     }
 
@@ -398,8 +394,35 @@ public class GameScreen implements Screen
         this.destinationPlanet = destinationPlanet;
     }
 
+    private float getScore()
+    {
+        float starPoints = starsCollected * Constants.STAR_POINTS;
+        float timePoints = elapsedPlayTime * Constants.TIME_POINTS;
+        float fuelPoints = ship.getFuel() * Constants.FUEL_POINTS;
+
+        String message = String.format(
+            "Points summary: %f stars - %f time + %f fuel",
+            starPoints,
+            timePoints,
+            fuelPoints);
+        Gdx.app.log(LOGGING_TAG, message);
+
+        float score = starPoints;
+        score -= timePoints;
+        score += fuelPoints;
+        return score;
+    }
+
     public String getLevelPath()
     {
         return levelPath;
+    }
+
+    @Subscribe
+    public void countdownFinished(CountdownFinishedEvent countdownFinishedEvent)
+    {
+        this.gameState = GameState.PLAY;
+        this.overlayScreen.dispose();
+        this.overlayScreen = null;
     }
 }

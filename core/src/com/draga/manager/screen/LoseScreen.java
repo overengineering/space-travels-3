@@ -40,7 +40,7 @@ public class LoseScreen implements Screen
         table.setFillParent(true);
         stage.addActor(table);
 
-        stage.setDebugAll(Constants.IS_DEBUGGING);
+        stage.setDebugAll(Constants.DEBUG_DRAW);
         shapeRenderer = new ShapeRenderer();
     }
 
@@ -132,7 +132,7 @@ public class LoseScreen implements Screen
         TextButton retryButton = new TextButton("Try Again?", buttonStyle);
 
         retryButton.setColor(new Color(1, 1, 1, 0));
-        retryButton.addAction(Actions.color(new Color(1, 1, 1, 1), 5, Interpolation.pow2In));
+        retryButton.addAction(Actions.color(new Color(1, 1, 1, 1), 3, Interpolation.pow2In));
         retryButton.addListener(
             new ClickListener()
             {

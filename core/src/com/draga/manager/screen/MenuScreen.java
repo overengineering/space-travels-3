@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.Constants;
 import com.draga.manager.asset.FontManager;
 import com.draga.manager.GameManager;
+import com.draga.manager.level.LevelManager;
 
 public class MenuScreen implements Screen
 {
@@ -59,7 +60,7 @@ public class MenuScreen implements Screen
             .add(playButton)
             .bottom();
 
-        stage.setDebugAll(Constants.IS_DEBUGGING);
+        stage.setDebugAll(Constants.DEBUG_DRAW);
     }
 
     private ScrollPane getLevelList()
@@ -69,7 +70,7 @@ public class MenuScreen implements Screen
         textButtonStyle.checkedFontColor = Color.GREEN;
         textButtonStyle.fontColor = Color.WHITE;
 
-        FileHandle[] levelFiles = Gdx.files.internal("level").list();
+        FileHandle[] levelFiles = LevelManager.getLevels();
 
         buttonGroup = new ButtonGroup<>();
 
@@ -84,7 +85,8 @@ public class MenuScreen implements Screen
             TextButton textButton =
                 new TextButton(levelFileHandle.nameWithoutExtension(), textButtonStyle);
             // Set path as name so that it can be passed straight to the loading screen later on.
-            textButton.setName(levelFileHandle.path());
+            textButton.
+                setName(levelFileHandle.path());
             buttonGroup.add(textButton);
             verticalGroup.addActor(textButton);
         }

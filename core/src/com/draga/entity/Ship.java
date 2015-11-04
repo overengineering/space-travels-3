@@ -13,10 +13,11 @@ import com.draga.Constants;
 import com.draga.MaskBits;
 import com.draga.entity.ship.ShipBox2dCollisionResolutionComponent;
 import com.draga.event.FuelChangeEvent;
-import com.draga.manager.asset.AssMan;
+import com.draga.event.SpeedChangedEvent;
 import com.draga.manager.DebugManager;
 import com.draga.manager.GravityManager;
 import com.draga.manager.InputManager;
+import com.draga.manager.asset.AssMan;
 
 public class Ship extends GameEntity
 {
@@ -43,14 +44,14 @@ public class Ship extends GameEntity
     private static final float   TOTAL_THRUSTER_ANIMATION_TIME = 1f;
     private static final Vector2 THRUSTER_OFFSET               =
         new Vector2(-HALF_SHIP_HEIGHT / 2f, 0);
-    private       float         thrusterWidth;
-    private       float         thrusterHeight;
-    private       Animation     thrusterAnimation;
-    private       FixtureDef    thrusterFixtureDef;
-    private       Fixture       thrusterFixture;
-    private       float         thrusterAnimationStateTime;
-    private       PolygonShape  thrusterShape;
-    private       TextureAtlas  thrusterTextureAtlas;
+    private float        thrusterWidth;
+    private float        thrusterHeight;
+    private Animation    thrusterAnimation;
+    private FixtureDef   thrusterFixtureDef;
+    private Fixture      thrusterFixture;
+    private float        thrusterAnimationStateTime;
+    private PolygonShape thrusterShape;
+    private TextureAtlas thrusterTextureAtlas;
 
     private Fixture      shipFixture;
     private FixtureDef   shipFixtureDef;
@@ -147,40 +148,11 @@ public class Ship extends GameEntity
 
         inputForce.scl(INPUT_FORCE_MULTIPLIER);
         body.applyForceToCenter(inputForce, true);
-    }
 
-    private void updateThruster(Vector2 inputForce)
-    {
-        float thrusterScale = inputForce.len();
-        thrusterWidth = THRUSTER_MAX_WIDTH * thrusterScale;
-        thrusterHeight = THRUSTER_MAX_HEIGHT * thrusterScale;
-        Vector2 thrusterOffsetFromCentre = THRUSTER_OFFSET
-            .cpy()
-            .sub(thrusterWidth / 2f, 0);
-        thrusterShape.setAsBox(
-            thrusterWidth / 2f, thrusterHeight / 2f, thrusterOffsetFromCentre, 0);
-        thrusterFixtureDef.shape = thrusterShape;
-        body.destroyFixture(thrusterFixture);
-        thrusterFixture = body.createFixture(thrusterFixtureDef);
-    }
-
-    private void updateFuel(Vector2 inputForce, float deltaTime)
-    {
-        float oldFuel = fuel;
-
-        if (DebugManager.infiniteFuel)
-        {
-            fuel = MAX_FUEL;
-        }
-        else
-        {
-            fuel -= inputForce.len() * FUEL_PER_SECOND * deltaTime;
-        }
-
-        FuelChangeEvent fuelChangeEvent = Pools.obtain(FuelChangeEvent.class);
-        fuelChangeEvent.set(oldFuel, fuel, MAX_FUEL);
-        Constants.EVENT_BUS.post(fuelChangeEvent);
-        Pools.free(fuelChangeEvent);
+        SpeedChangedEvent speedChangedEvent = Pools.obtain(SpeedChangedEvent.class);
+        speedChangedEvent.speed = this.body.getLinearVelocity().len();
+        Constants.EVENT_BUS.post(speedChangedEvent);
+        Pools.free(speedChangedEvent);
     }
 
     @Override
@@ -273,5 +245,44 @@ public class Ship extends GameEntity
         float scale = inputForce.len() / 1;
 
         body.applyAngularImpulse(diffRotation * ROTATION_FORCE * elapsed * scale, true);
+    }
+
+    private void updateFuel(Vector2 inputForce, float deltaTime)
+    {
+        float oldFuel = fuel;
+
+        if (DebugManager.infiniteFuel)
+        {
+            fuel = MAX_FUEL;
+        }
+        else
+        {
+            fuel -= inputForce.len() * FUEL_PER_SECOND * deltaTime;
+        }
+
+        FuelChangeEvent fuelChangeEvent = Pools.obtain(FuelChangeEvent.class);
+        fuelChangeEvent.set(oldFuel, fuel, MAX_FUEL);
+        Constants.EVENT_BUS.post(fuelChangeEvent);
+        Pools.free(fuelChangeEvent);
+    }
+
+    private void updateThruster(Vector2 inputForce)
+    {
+        float thrusterScale = inputForce.len();
+        thrusterWidth = THRUSTER_MAX_WIDTH * thrusterScale;
+        thrusterHeight = THRUSTER_MAX_HEIGHT * thrusterScale;
+        Vector2 thrusterOffsetFromCentre = THRUSTER_OFFSET
+            .cpy()
+            .sub(thrusterWidth / 2f, 0);
+        thrusterShape.setAsBox(
+            thrusterWidth / 2f, thrusterHeight / 2f, thrusterOffsetFromCentre, 0);
+        thrusterFixtureDef.shape = thrusterShape;
+        body.destroyFixture(thrusterFixture);
+        thrusterFixture = body.createFixture(thrusterFixtureDef);
+    }
+
+    public float getFuel()
+    {
+        return fuel;
     }
 }
