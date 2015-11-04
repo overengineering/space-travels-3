@@ -73,7 +73,7 @@ public class Hud implements Screen
             .bottom()
             .right();
 
-        stage.setDebugAll(Constants.IS_DEBUGGING);
+        stage.setDebugAll(Constants.DEBUG_DRAW);
     }
 
     private ProgressBar getFuelProgressBar(int height)

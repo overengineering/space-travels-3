@@ -60,7 +60,7 @@ public class MenuScreen implements Screen
             .add(playButton)
             .bottom();
 
-        stage.setDebugAll(Constants.IS_DEBUGGING);
+        stage.setDebugAll(Constants.DEBUG_DRAW);
     }
 
     private ScrollPane getLevelList()

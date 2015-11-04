@@ -32,7 +32,7 @@ public class CountdownScreen implements Screen
             .add(timerLabel)
             .center();
 
-        stage.setDebugAll(Constants.IS_DEBUGGING);
+        stage.setDebugAll(Constants.DEBUG_DRAW);
     }
 
     private Label getTimerLabel()

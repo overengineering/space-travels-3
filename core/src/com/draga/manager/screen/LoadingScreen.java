@@ -72,7 +72,7 @@ public class LoadingScreen implements Screen
             .width(stage.getWidth() * 0.75f);
 
 
-        stage.setDebugAll(Constants.IS_DEBUGGING);
+        stage.setDebugAll(Constants.DEBUG_DRAW);
     }
 
     public Label getHeaderLabel()

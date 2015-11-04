@@ -69,7 +69,7 @@ public class WinScreen implements Screen
         table.setFillParent(true);
         stage.addActor(table);
 
-        stage.setDebugAll(Constants.IS_DEBUGGING);
+        stage.setDebugAll(Constants.DEBUG_DRAW);
         shapeRenderer = new ShapeRenderer();
     }
 
