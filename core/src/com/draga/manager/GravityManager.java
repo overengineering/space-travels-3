@@ -12,7 +12,7 @@ public abstract class GravityManager
     {
         World world = body.getWorld();
 
-        Vector2 totalForce = Pools.obtain(Vector2.class);
+        Vector2 totalForce = new Vector2();
 
         Array<Body> gravitationBodies = new Array<>();
         world.getBodies(gravitationBodies);

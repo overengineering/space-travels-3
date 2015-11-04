@@ -8,7 +8,6 @@
           <option name="XML_LEGACY_SETTINGS_IMPORTED" value="true" />
         </XML>
         <codeStyleSettings language="JAVA">
-          <option name="KEEP_LINE_BREAKS" value="false" />
           <option name="KEEP_FIRST_COLUMN_COMMENT" value="false" />
           <option name="KEEP_CONTROL_STATEMENT_IN_ONE_LINE" value="false" />
           <option name="KEEP_BLANK_LINES_IN_DECLARATIONS" value="3" />
@@ -19,7 +18,7 @@
           <option name="BRACE_STYLE" value="2" />
           <option name="CLASS_BRACE_STYLE" value="2" />
           <option name="METHOD_BRACE_STYLE" value="2" />
-          <option name="SPECIAL_ELSE_IF_TREATMENT" value="false" />
+          <option name="ELSE_ON_NEW_LINE" value="true" />
           <option name="ALIGN_MULTILINE_PARAMETERS" value="false" />
           <option name="ALIGN_MULTILINE_RESOURCES" value="false" />
           <option name="ALIGN_GROUP_FIELD_DECLARATIONS" value="true" />
@@ -38,6 +37,7 @@
           <option name="BINARY_OPERATION_WRAP" value="5" />
           <option name="BINARY_OPERATION_SIGN_ON_NEXT_LINE" value="true" />
           <option name="TERNARY_OPERATION_WRAP" value="5" />
+          <option name="TERNARY_OPERATION_SIGNS_ON_NEXT_LINE" value="true" />
           <option name="ARRAY_INITIALIZER_WRAP" value="5" />
           <option name="ARRAY_INITIALIZER_LBRACE_ON_NEXT_LINE" value="true" />
           <option name="ASSIGNMENT_WRAP" value="1" />
@@ -52,6 +52,22 @@
             <option name="TAB_SIZE" value="2" />
             <option name="KEEP_INDENTS_ON_EMPTY_LINES" value="true" />
           </indentOptions>
+          <arrangement>
+            <groups>
+              <group>
+                <type>GETTERS_AND_SETTERS</type>
+                <order>KEEP</order>
+              </group>
+              <group>
+                <type>OVERRIDDEN_METHODS</type>
+                <order>KEEP</order>
+              </group>
+              <group>
+                <type>DEPENDENT_METHODS</type>
+                <order>BREADTH_FIRST</order>
+              </group>
+            </groups>
+          </arrangement>
         </codeStyleSettings>
       </value>
     </option>

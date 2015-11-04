@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.Json;
 import com.draga.entity.Planet;
 import com.draga.entity.Ship;
 import com.draga.entity.Star;
+import com.draga.manager.asset.AssMan;
 import com.draga.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.manager.level.serialisableEntities.SerialisablePlanet;
 import com.draga.manager.level.serialisableEntities.SerialisableStar;
@@ -14,71 +15,71 @@ import com.draga.manager.screen.GameScreen;
 
 public abstract class LevelManager
 {
-    public static SerialisableLevel getSerialisedLevelFromFile(String serialisedGameScreenFilePath)
+    private static FileHandle[] levels;
+
+    public static FileHandle[] getLevels()
     {
-        String serialisedLevelString = getStringFromFile(serialisedGameScreenFilePath);
-        SerialisableLevel serialisableLevel = getSerialisedLevelFromString(serialisedLevelString);
+        if (levels == null)
+        {
+            levels = Gdx.files.internal("level").list();
+        }
+        return levels;
+    }
+
+    public static SerialisableLevel getSerialisedLevelFromName(String serialisedLevelName)
+    {
+        String serialisedLevelString =
+            Gdx.files.internal(serialisedLevelName).readString();
+        SerialisableLevel serialisableLevel =
+            getSerialisedLevelFromString(serialisedLevelString, serialisedLevelName);
 
         return serialisableLevel;
     }
 
-    private static String getStringFromFile(String filePath)
-    {
-        FileHandle serialisedWorldFileHandle = Gdx.files.internal(filePath);
-        return serialisedWorldFileHandle.readString();
-    }
-
-    public static SerialisableLevel getSerialisedLevelFromString(String serialisedWord)
+    private static SerialisableLevel getSerialisedLevelFromString(
+        String serialisedLevel,
+        String name)
     {
         Json json = new Json();
 
         json.addClassTag("SerialisableLevel", SerialisableLevel.class);
 
         SerialisableLevel serialisableLevel =
-            json.fromJson(SerialisableLevel.class, serialisedWord);
+            json.fromJson(SerialisableLevel.class, serialisedLevel);
+        serialisableLevel.name = name;
 
         return serialisableLevel;
-    }
-    
-    public static GameScreen getLevelGameScreenFromString(
-        String jsonString, SpriteBatch spriteBatch)
-    {
-        SerialisableLevel serialisableLevel = LevelManager.getSerialisedLevelFromString(
-            jsonString);
-
-        GameScreen world = LevelManager.getLevelGameScreen(serialisableLevel, spriteBatch);
-
-        return world;
     }
 
     public static GameScreen getLevelGameScreen(
         SerialisableLevel serialisableLevel, SpriteBatch spriteBatch)
     {
         GameScreen gameScreen = new GameScreen(
-            serialisableLevel.serialisedBackground.getTexturePath(),
+            serialisableLevel.serialisedBackground.texturePath,
             spriteBatch,
             serialisableLevel.width,
-            serialisableLevel.height);
+            serialisableLevel.height,
+            serialisableLevel.name);
 
         Ship ship = new Ship(
-            serialisableLevel.serialisedShip.getX(),
-            serialisableLevel.serialisedShip.getY(),
-            serialisableLevel.serialisedShip.getShipTexturePath(),
-            serialisableLevel.serialisedShip.getThrusterTextureAtlasPath());
+            serialisableLevel.serialisedShip.x,
+            serialisableLevel.serialisedShip.y,
+            AssMan.getAssList().ship,
+            AssMan.getAssList().thruster);
         gameScreen.addShip(ship);
 
         for (SerialisablePlanet serialisablePlanet : serialisableLevel.serialisedPlanets)
         {
             Planet planet = new Planet(
-                serialisablePlanet.getMass(),
-                serialisablePlanet.getRadius(),
-                serialisablePlanet.getX(),
-                serialisablePlanet.getY(),
-                serialisablePlanet.getTexturePath());
+                serialisablePlanet.mass,
+                serialisablePlanet.radius,
+                serialisablePlanet.x,
+                serialisablePlanet.y,
+                serialisablePlanet.texturePath);
 
             gameScreen.addPlanet(planet);
 
-            if (serialisablePlanet.isDestination())
+            if (serialisablePlanet.destination)
             {
                 gameScreen.setDestinationPlanet(planet);
             }
@@ -87,7 +88,7 @@ public abstract class LevelManager
         for (SerialisableStar serialisableStar : serialisableLevel.serialisedStars)
         {
             Star star =
-                new Star(serialisableStar.getX(), serialisableStar.getY(), "star/starGold64.png");
+                new Star(serialisableStar.x, serialisableStar.y, AssMan.getAssList().starGold);
             gameScreen.addStar(star);
         }
 

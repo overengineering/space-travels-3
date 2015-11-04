@@ -3,32 +3,97 @@ package com.draga.manager.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.Constants;
-import com.draga.manager.FontManager;
-import com.draga.manager.ScreenManager;
+import com.draga.manager.asset.FontManager;
+import com.draga.manager.GameManager;
+import com.draga.manager.level.LevelManager;
 
 public class MenuScreen implements Screen
 {
     private Stage stage;
+    private ButtonGroup<TextButton> buttonGroup;
 
     public MenuScreen()
     {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-        stage.addActor(getHeaderLabel());
-        stage.addActor(getPlayButton());
+        Table table = new Table();
+        table.setFillParent(true);
+        table.pad(((stage.getHeight() + stage.getWidth()) / 2f) / 50f);
+        stage.addActor(table);
+
+        Actor headerLabel = getHeaderLabel();
+        Actor playButton = getPlayButton();
 
 
-        stage.setDebugAll(Constants.IS_DEBUGGING);
+        table
+            .add(headerLabel)
+            .top();
+
+        // Add a row with an expanded cell to fill the gap.
+        table.row();
+        table
+            .add()
+            .expand();
+
+        table.row();
+        ScrollPane levelsScrollPane = getLevelList();
+        table.add(levelsScrollPane);
+
+        // Add a row with an expanded cell to fill the gap.
+        table.row();
+        table
+            .add()
+            .expand();
+
+        table.row();
+        table
+            .add(playButton)
+            .bottom();
+
+        stage.setDebugAll(Constants.DEBUG_DRAW);
+    }
+
+    private ScrollPane getLevelList()
+    {
+        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
+        textButtonStyle.font = FontManager.getBigFont();
+        textButtonStyle.checkedFontColor = Color.GREEN;
+        textButtonStyle.fontColor = Color.WHITE;
+
+        FileHandle[] levelFiles = LevelManager.getLevels();
+
+        buttonGroup = new ButtonGroup<>();
+
+        buttonGroup.setMaxCheckCount(1);
+        buttonGroup.setMinCheckCount(1);
+        buttonGroup.setUncheckLast(true);
+
+        VerticalGroup verticalGroup = new VerticalGroup();
+
+        for (FileHandle levelFileHandle : levelFiles)
+        {
+            TextButton textButton =
+                new TextButton(levelFileHandle.nameWithoutExtension(), textButtonStyle);
+            // Set path as name so that it can be passed straight to the loading screen later on.
+            textButton.
+                setName(levelFileHandle.path());
+            buttonGroup.add(textButton);
+            verticalGroup.addActor(textButton);
+        }
+
+        ScrollPane scrollPane = new ScrollPane(verticalGroup);
+
+        return scrollPane;
     }
 
     @Override
@@ -40,7 +105,8 @@ public class MenuScreen implements Screen
     @Override
     public void render(float deltaTime)
     {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
+            || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
         {
             Gdx.app.exit();
         }
@@ -56,7 +122,6 @@ public class MenuScreen implements Screen
     @Override
     public void dispose()
     {
-        Gdx.input.setInputProcessor(null);
         stage.dispose();
     }
 
@@ -81,17 +146,16 @@ public class MenuScreen implements Screen
     @Override
     public void hide()
     {
-
+        this.dispose();
     }
 
-    public Actor getPlayButton()
+    public TextButton getPlayButton()
     {
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.font = FontManager.getBigFont();
 
-        Button playButton = new TextButton("Play", textButtonStyle);
+        TextButton playButton = new TextButton("Play", textButtonStyle);
 
-        playButton.setX((stage.getWidth() / 2) - (playButton.getWidth() / 2));
         playButton.addListener(
             new ClickListener()
             {
@@ -107,7 +171,7 @@ public class MenuScreen implements Screen
 
     private void StartGameScreen()
     {
-        ScreenManager.setActiveScreen(new LoadingScreen("level1.json"));
+        GameManager.getGame().setScreen(new LoadingScreen(buttonGroup.getChecked().getName()));
     }
 
     public Actor getHeaderLabel()
@@ -117,10 +181,6 @@ public class MenuScreen implements Screen
         labelStyle.font = bigFont;
 
         Label headerLabel = new Label("Space Travels 3", labelStyle);
-        float height = bigFont.getLineHeight() * 2;
-        headerLabel.sizeBy(stage.getWidth(), height);
-        headerLabel.setPosition(
-            stage.getWidth() - headerLabel.getWidth() / 2f, stage.getHeight() - height);
 
         return headerLabel;
     }

@@ -4,6 +4,7 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.utils.Pools;
 import com.draga.Constants;
 import com.draga.entity.*;
+import com.draga.event.ShipPlanetCollisionEvent;
 import com.draga.event.StarCollectedEvent;
 import com.draga.manager.GameEntityManager;
 
@@ -23,12 +24,14 @@ public class ShipBox2dCollisionResolutionComponent extends Box2dCollisionResolut
 
         if (collidedEntity instanceof Planet)
         {
-            GameEntity explosion = new Explosion(
-                gameEntity.getX(), gameEntity.getY(), "explosion/explosion.atlas");
-            GameEntityManager.addGameEntityToCreate(explosion);
+            ShipPlanetCollisionEvent shipPlanetCollisionEvent = Pools.obtain(ShipPlanetCollisionEvent.class);
+            shipPlanetCollisionEvent.ship = (Ship)this.gameEntity;
+            shipPlanetCollisionEvent.planet = (Planet)collidedEntity;
 
-            ((Ship) gameEntity).setIsDead(true);
-        } else
+            Constants.EVENT_BUS.post(shipPlanetCollisionEvent);
+            Pools.free(shipPlanetCollisionEvent);
+        }
+        else
         {
             if (collidedEntity instanceof Star)
             {

@@ -5,11 +5,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.*;
 import com.draga.MaskBits;
-import com.draga.manager.AssMan;
+import com.draga.manager.asset.AssMan;
 
 public class Planet extends GameEntity
 {
-
+    private final float MASS_MULTIPLIER = 0.8f;
     private CircleShape circleShape;
     private FixtureDef  fixtureDef;
     private Fixture     fixture;
@@ -24,7 +24,7 @@ public class Planet extends GameEntity
         fixtureDef = new FixtureDef();
         fixtureDef.shape = circleShape;
         float area = radius * radius * MathUtils.PI;
-        fixtureDef.density = mass / area;
+        fixtureDef.density = (mass * MASS_MULTIPLIER) / area;
         fixtureDef.friction = 1f;
         fixtureDef.restitution = 0;
         fixtureDef.filter.categoryBits = MaskBits.PLANET;
@@ -36,7 +36,7 @@ public class Planet extends GameEntity
         bodyDef.angle = 0;
 
 
-        this.texture = AssMan.getAssetManager().get(texturePath);
+        this.texture = AssMan.getAssMan().get(texturePath);
     }
 
 

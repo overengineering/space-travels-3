@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.*;
 import com.draga.MaskBits;
-import com.draga.manager.AssMan;
+import com.draga.manager.asset.AssMan;
 
 public class Star extends GameEntity
 {
@@ -38,7 +38,7 @@ public class Star extends GameEntity
         this.bodyDef.angle = 0;
 
 
-        this.texture = AssMan.getAssetManager().get(texturePath);
+        this.texture = AssMan.getAssMan().get(texturePath);
     }
 
     @Override

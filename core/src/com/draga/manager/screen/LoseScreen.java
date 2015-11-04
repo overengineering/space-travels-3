@@ -15,21 +15,21 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.Constants;
-import com.draga.manager.FontManager;
-import com.draga.manager.ScreenManager;
+import com.draga.manager.asset.FontManager;
+import com.draga.manager.GameManager;
 
 public class LoseScreen implements Screen
 {
     public static final float FADE_PER_SECOND = 0.7f;
     private final Stage      stage;
-    private final GameScreen parentGameScreen;
     private final Color fadeToColour     = new Color(0, 0, 0, 0.7f);
     private final Color backgroundColour = new Color(0, 0, 0, 0);
     private final ShapeRenderer shapeRenderer;
+    private       String        levelPath;
 
-    public LoseScreen(GameScreen parentScreen)
+    public LoseScreen(String levelPath)
     {
-        this.parentGameScreen = parentScreen;
+        this.levelPath = levelPath;
         this.stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
@@ -40,7 +40,7 @@ public class LoseScreen implements Screen
         table.setFillParent(true);
         stage.addActor(table);
 
-        stage.setDebugAll(Constants.IS_DEBUGGING);
+        stage.setDebugAll(Constants.DEBUG_DRAW);
         shapeRenderer = new ShapeRenderer();
     }
 
@@ -53,12 +53,10 @@ public class LoseScreen implements Screen
     @Override
     public void render(float delta)
     {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK)
-            || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
+            || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
         {
-            parentGameScreen.pause();
-            parentGameScreen.dispose();
-            ScreenManager.setActiveScreen(new MenuScreen());
+            GameManager.getGame().setScreen(new MenuScreen());
             return;
         }
 
@@ -68,7 +66,6 @@ public class LoseScreen implements Screen
             return;
         }
 
-        parentGameScreen.render(delta);
         update(delta);
         draw(delta);
     }
@@ -76,11 +73,6 @@ public class LoseScreen implements Screen
     private void draw(float delta)
     {
         backgroundColour.lerp(fadeToColour, FADE_PER_SECOND * delta);
-
-        if (fadeToColour.equals(backgroundColour))
-        {
-            parentGameScreen.setDoUpdate(false);
-        }
 
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -103,13 +95,13 @@ public class LoseScreen implements Screen
     @Override
     public void resize(int width, int height)
     {
-        parentGameScreen.resize(width, height);
         stage.getViewport().update(width, height);
     }
 
     @Override
     public void pause()
     {
+
 
     }
 
@@ -122,13 +114,12 @@ public class LoseScreen implements Screen
     @Override
     public void hide()
     {
-
+        this.dispose();
     }
 
     @Override
     public void dispose()
     {
-        Gdx.input.setInputProcessor(null);
         shapeRenderer.dispose();
         stage.dispose();
     }
@@ -141,7 +132,7 @@ public class LoseScreen implements Screen
         TextButton retryButton = new TextButton("Try Again?", buttonStyle);
 
         retryButton.setColor(new Color(1, 1, 1, 0));
-        retryButton.addAction(Actions.color(new Color(1, 1, 1, 1), 5, Interpolation.pow2In));
+        retryButton.addAction(Actions.color(new Color(1, 1, 1, 1), 3, Interpolation.pow2In));
         retryButton.addListener(
             new ClickListener()
             {
@@ -158,8 +149,6 @@ public class LoseScreen implements Screen
 
     private void Retry()
     {
-        parentGameScreen.pause();
-        parentGameScreen.dispose();
-        ScreenManager.setActiveScreen(new LoadingScreen("level1.json"));
+        GameManager.getGame().setScreen(new LoadingScreen(levelPath));
     }
 }
