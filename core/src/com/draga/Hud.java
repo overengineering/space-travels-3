@@ -14,10 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.draga.entity.Ship;
 import com.draga.event.FuelChangeEvent;
-import com.draga.event.SpeedChangedEvent;
 import com.draga.event.StarCollectedEvent;
 import com.draga.manager.GravityManager;
-import com.draga.manager.InputManager;
 import com.draga.manager.asset.AssMan;
 import com.google.common.eventbus.Subscribe;
 
@@ -30,7 +28,6 @@ public class Hud implements Screen
     private Stage stage;
 
     private ProgressBar fuelProgressBar;
-    private ProgressBar speedProgressBar;
 
     private Stack<Image>       grayStars;
     private Table              starsTable;
@@ -59,24 +56,12 @@ public class Hud implements Screen
             .width(stage.getWidth() / 3f)
             .top()
             .left();
-        table
-            .add()
-            .expandX();
-        speedProgressBar = getSpeedLabel((int) progressBarsHeight);
-        table
-            .add(speedProgressBar)
-            .height(progressBarsHeight)
-            .width(stage.getWidth() / 3f)
-            .top()
-            .right();
 
         // Add an empty row with an expanded cell to fill the gap in the middle.
         table.row();
         table.add().expand();
 
         table.row();
-        table.add();
-        table.add();
         starsTable = new Table();
         starsTable
             .defaults()
@@ -109,25 +94,6 @@ public class Hud implements Screen
         return fuelProgressBar;
     }
 
-    private ProgressBar getSpeedLabel(int height)
-    {
-        Skin skin = new Skin();
-        Pixmap pixmap = new Pixmap(
-            1, height, Pixmap.Format.RGBA8888);
-        pixmap.setColor(Color.WHITE);
-        pixmap.fill();
-        skin.add("white", new Texture(pixmap));
-
-        ProgressBar.ProgressBarStyle speedProgressBarStyle = new ProgressBar.ProgressBarStyle(
-            skin.newDrawable("white", Color.DARK_GRAY), null);
-        speedProgressBarStyle.knobBefore = skin.newDrawable("white", Color.WHITE);
-
-        ProgressBar speedProgressBar = new ProgressBar(
-            0, 120, 1f, false, speedProgressBarStyle);
-
-        return speedProgressBar;
-    }
-
     @Override
     public void show()
     {
@@ -149,7 +115,6 @@ public class Hud implements Screen
         {
             DrawGravityIndicator();
             DrawVelocityIndicator();
-            DrawInputIndicator();
         }
 
         Gdx.gl.glDisable(GL20.GL_BLEND);
@@ -159,36 +124,41 @@ public class Hud implements Screen
     {
         Vector2 gravVector = GravityManager.getForceActingOn(ship.getBody());
 
-        shapeRenderer.setColor(new Color(1, 0, 0, 0.5f));
+        shapeRenderer.setColor(new Color(1, 0, 0, 1));
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.circle(
             ship.getX() + gravVector.x * FORCE_INDICATOR_SCALE,
             ship.getY() + gravVector.y * FORCE_INDICATOR_SCALE,
             0.5f);
         shapeRenderer.end();
+
+        shapeRenderer.setColor(new Color(1, 0, 0, 0.4f));
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.circle(
+            ship.getX(),
+            ship.getY(),
+            gravVector.len() * FORCE_INDICATOR_SCALE,
+            24);
+        shapeRenderer.end();
     }
     
     private void DrawVelocityIndicator()
     {
-        shapeRenderer.setColor(new Color(1, 1, 1, 0.5f));
+        shapeRenderer.setColor(new Color(1, 1, 1, 1));
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.circle(
             ship.getX() + ship.getBody().getLinearVelocity().x * FORCE_INDICATOR_SCALE,
             ship.getY() + ship.getBody().getLinearVelocity().y * FORCE_INDICATOR_SCALE,
             0.5f);
         shapeRenderer.end();
-    }
-    
-    private void DrawInputIndicator()
-    {
-        Vector2 inputVec = InputManager.getInputForce();
 
-        shapeRenderer.setColor(new Color(0, 1, 0, 0.5f));
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(new Color(1, 1, 1, 0.2f));
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.circle(
-            ship.getX() + inputVec.x / FORCE_INDICATOR_SCALE,
-            ship.getY() + inputVec.y / FORCE_INDICATOR_SCALE,
-            0.5f);
+            ship.getX(),
+            ship.getY(),
+            ship.getBody().getLinearVelocity().len() * FORCE_INDICATOR_SCALE,
+            24);
         shapeRenderer.end();
     }
 
@@ -249,12 +219,6 @@ public class Hud implements Screen
         Texture goldStarTexture = AssMan.getAssMan().get(AssMan.getAssList().starGold);
 
         firstGrayStar.setDrawable(new TextureRegionDrawable(new TextureRegion(goldStarTexture)));
-    }
-
-    @Subscribe
-    public void SpeedChanged(SpeedChangedEvent speedChangedEvent)
-    {
-        speedProgressBar.setValue(speedChangedEvent.speed);
     }
 
     public void setShip(Ship ship)
