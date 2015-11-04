@@ -1,16 +1,23 @@
 package com.draga;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.draga.entity.Ship;
 import com.draga.event.FuelChangeEvent;
 import com.draga.event.SpeedChangedEvent;
 import com.draga.event.StarCollectedEvent;
+import com.draga.manager.GravityManager;
+import com.draga.manager.InputManager;
 import com.draga.manager.asset.AssMan;
 import com.google.common.eventbus.Subscribe;
 
@@ -18,16 +25,23 @@ import java.util.Stack;
 
 public class Hud implements Screen
 {
+    private float FORCE_INDICATOR_SCALE = 0.25f;
+
     private Stage stage;
 
     private ProgressBar fuelProgressBar;
     private ProgressBar speedProgressBar;
 
-    private Stack<Image> grayStars;
-    private Table        starsTable;
+    private Stack<Image>       grayStars;
+    private Table              starsTable;
+    private Ship               ship;
+    private ShapeRenderer      shapeRenderer;
+    private OrthographicCamera orthographicCamera;
 
-    public Hud()
+    public Hud(OrthographicCamera orthographicCamera)
     {
+        this.orthographicCamera = orthographicCamera;
+        shapeRenderer = new ShapeRenderer();
         Constants.EVENT_BUS.register(this);
         this.grayStars = new Stack<>();
         stage = new Stage();
@@ -125,6 +139,57 @@ public class Hud implements Screen
     {
         stage.act(delta);
         stage.draw();
+
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
+        shapeRenderer.setProjectionMatrix(orthographicCamera.combined);
+
+        if (Constants.HUD_DRAW_VELOCITY_INDICATORS)
+        {
+            DrawGravityIndicator();
+            DrawVelocityIndicator();
+            DrawInputIndicator();
+        }
+
+        Gdx.gl.glDisable(GL20.GL_BLEND);
+    }
+
+    private void DrawGravityIndicator()
+    {
+        Vector2 gravVector = GravityManager.getForceActingOn(ship.getBody());
+
+        shapeRenderer.setColor(new Color(1, 0, 0, 0.5f));
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.circle(
+            ship.getX() + gravVector.x * FORCE_INDICATOR_SCALE,
+            ship.getY() + gravVector.y * FORCE_INDICATOR_SCALE,
+            0.5f);
+        shapeRenderer.end();
+    }
+    
+    private void DrawVelocityIndicator()
+    {
+        shapeRenderer.setColor(new Color(1, 1, 1, 0.5f));
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.circle(
+            ship.getX() + ship.getBody().getLinearVelocity().x * FORCE_INDICATOR_SCALE,
+            ship.getY() + ship.getBody().getLinearVelocity().y * FORCE_INDICATOR_SCALE,
+            0.5f);
+        shapeRenderer.end();
+    }
+    
+    private void DrawInputIndicator()
+    {
+        Vector2 inputVec = InputManager.getInputForce();
+
+        shapeRenderer.setColor(new Color(0, 1, 0, 0.5f));
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.circle(
+            ship.getX() + inputVec.x / FORCE_INDICATOR_SCALE,
+            ship.getY() + inputVec.y / FORCE_INDICATOR_SCALE,
+            0.5f);
+        shapeRenderer.end();
     }
 
     @Override
@@ -156,6 +221,7 @@ public class Hud implements Screen
     {
         Constants.EVENT_BUS.unregister(this);
         stage.dispose();
+        shapeRenderer.dispose();
     }
 
     @Subscribe
@@ -189,5 +255,10 @@ public class Hud implements Screen
     public void SpeedChanged(SpeedChangedEvent speedChangedEvent)
     {
         speedProgressBar.setValue(speedChangedEvent.speed);
+    }
+
+    public void setShip(Ship ship)
+    {
+        this.ship = ship;
     }
 }

@@ -27,4 +27,6 @@ public abstract class Constants
 
     public static final float STAR_POINTS                           = 1000f;
     public static final float MAX_DESTINATION_PLANET_APPROACH_SPEED = 60f;
+
+    public static final boolean HUD_DRAW_VELOCITY_INDICATORS        = true;
 }

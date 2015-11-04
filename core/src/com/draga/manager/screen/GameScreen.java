@@ -96,7 +96,7 @@ public class GameScreen implements Screen
             box2DDebugRenderer = new Box2DDebugRenderer();
         }
 
-        hud = new Hud();
+        hud = new Hud(orthographicCamera);
     }
 
     private void createWalls()
@@ -128,6 +128,7 @@ public class GameScreen implements Screen
     public void addShip(Ship ship)
     {
         this.ship = ship;
+        hud.setShip(ship);
         addGameEntity(ship);
 
         orthographicCamera.position.x = ship.getX();

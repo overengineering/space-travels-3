@@ -134,6 +134,7 @@ public class Ship extends GameEntity
         body.applyForceToCenter(gravityForce, true);
 
         Vector2 inputForce = InputManager.getInputForce();
+
         // TODO: apply the last part of acceleration properly and maybe then stop updating the
         // thrusters?
         if (fuel <= 0)
