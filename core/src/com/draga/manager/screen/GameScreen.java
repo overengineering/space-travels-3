@@ -139,6 +139,30 @@ public class GameScreen implements Screen
         gameEntity.createBody(getBox2dWorld());
     }
 
+    private void updateCamera()
+    {
+        float halfWidth = orthographicCamera.viewportWidth / 2f;
+        float halfHeight = orthographicCamera.viewportHeight / 2f;
+
+        float cameraXPosition = MathUtils.clamp(
+            ship.getX(), halfWidth, width - halfWidth);
+        float cameraYPosition = MathUtils.clamp(
+            ship.getY(), halfHeight, height - halfHeight);
+
+        // Soften camera movement.
+        Vector2 cameraVec = new Vector2(cameraXPosition, cameraYPosition);
+        Vector2 softCamera = cameraVec.cpy();
+        Vector2 cameraOffset =
+            cameraVec.sub(orthographicCamera.position.x, orthographicCamera.position.y);
+        softCamera.sub(cameraOffset.scl(0.9f));
+
+        orthographicCamera.position.x = softCamera.x;
+        orthographicCamera.position.y = softCamera.y;
+        orthographicCamera.update();
+
+        spriteBatch.setProjectionMatrix(orthographicCamera.combined);
+    }
+
     public World getBox2dWorld()
     {
         return box2dWorld;
@@ -171,46 +195,24 @@ public class GameScreen implements Screen
             return;
         }
 
+        if (gameState == GameState.PLAY)
+        {
+            elapsedPlayTime += deltaTime;
+        }
+
+        if (gameState != GameState.PAUSE
+            && gameState != GameState.COUNTDOWN)
+        {
+            update(deltaTime);
+        }
+
         draw();
 
-        switch (this.gameState)
-        {
-            case COUNTDOWN:
-                this.overlayScreen.render(deltaTime);
-                break;
-            case PLAY:
-                elapsedPlayTime += deltaTime;
-                update(deltaTime);
-                break;
-            case PAUSE:
-                break;
-            case LOSE:
-            case WIN:
-                update(deltaTime);
-                overlayScreen.render(deltaTime);
-                break;
-            default:
-                Gdx.app.error(
-                    LOGGING_TAG,
-                    "Gamestate " + this.gameState.toString() + " is an invalid state!");
-        }
-
         hud.render(deltaTime);
-    }
 
-    public void draw()
-    {
-        spriteBatch.begin();
-        spriteBatch.draw(backgroundTexture, 0, 0, width, height);
-        for (GameEntity gameEntity : GameEntityManager.getGameEntities())
+        if (overlayScreen != null)
         {
-            gameEntity.draw(spriteBatch);
-        }
-        spriteBatch.end();
-
-        if (Constants.IS_DEBUGGING)
-        {
-            box2DDebugRenderer.render(box2dWorld, orthographicCamera.combined);
+            overlayScreen.render(deltaTime);
         }
     }
 
@@ -243,6 +245,22 @@ public class GameScreen implements Screen
         box2dWorld.step(frameTime, 6, 2);
     }
 
+    public void draw()
+    {
+        spriteBatch.begin();
+        spriteBatch.draw(backgroundTexture, 0, 0, width, height);
+        for (GameEntity gameEntity : GameEntityManager.getGameEntities())
+        {
+            gameEntity.draw(spriteBatch);
+        }
+        spriteBatch.end();
+
+        if (Constants.IS_DEBUGGING)
+        {
+            box2DDebugRenderer.render(box2dWorld, orthographicCamera.combined);
+        }
+    }
+
     private void checkDebugKeys()
     {
         if (Gdx.input.isKeyJustPressed(Input.Keys.F1))
@@ -267,30 +285,6 @@ public class GameScreen implements Screen
         box2dWorld.destroyBody(gameEntity.getBody());
         GameEntityManager.getGameEntities().remove(gameEntity);
         gameEntity.dispose();
-    }
-
-    private void updateCamera()
-    {
-        float halfWidth = orthographicCamera.viewportWidth / 2f;
-        float halfHeight = orthographicCamera.viewportHeight / 2f;
-
-        float cameraXPosition = MathUtils.clamp(
-            ship.getX(), halfWidth, width - halfWidth);
-        float cameraYPosition = MathUtils.clamp(
-            ship.getY(), halfHeight, height - halfHeight);
-
-        // Soften camera movement.
-        Vector2 cameraVec = new Vector2(cameraXPosition, cameraYPosition);
-        Vector2 softCamera = cameraVec.cpy();
-        Vector2 cameraOffset =
-            cameraVec.sub(orthographicCamera.position.x, orthographicCamera.position.y);
-        softCamera.sub(cameraOffset.scl(0.9f));
-
-        orthographicCamera.position.x = softCamera.x;
-        orthographicCamera.position.y = softCamera.y;
-        orthographicCamera.update();
-
-        spriteBatch.setProjectionMatrix(orthographicCamera.combined);
     }
 
     public void resize(int width, int height)
