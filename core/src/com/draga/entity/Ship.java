@@ -13,7 +13,6 @@ import com.draga.Constants;
 import com.draga.MaskBits;
 import com.draga.entity.ship.ShipBox2dCollisionResolutionComponent;
 import com.draga.event.FuelChangeEvent;
-import com.draga.event.SpeedChangedEvent;
 import com.draga.manager.DebugManager;
 import com.draga.manager.GravityManager;
 import com.draga.manager.InputManager;
@@ -134,6 +133,7 @@ public class Ship extends GameEntity
         body.applyForceToCenter(gravityForce, true);
 
         Vector2 inputForce = InputManager.getInputForce();
+
         // TODO: apply the last part of acceleration properly and maybe then stop updating the
         // thrusters?
         if (fuel <= 0)
@@ -148,11 +148,6 @@ public class Ship extends GameEntity
 
         inputForce.scl(INPUT_FORCE_MULTIPLIER);
         body.applyForceToCenter(inputForce, true);
-
-        SpeedChangedEvent speedChangedEvent = Pools.obtain(SpeedChangedEvent.class);
-        speedChangedEvent.speed = this.body.getLinearVelocity().len();
-        Constants.EVENT_BUS.post(speedChangedEvent);
-        Pools.free(speedChangedEvent);
     }
 
     @Override
