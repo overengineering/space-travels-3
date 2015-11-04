@@ -12,6 +12,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.draga.*;
 import com.draga.entity.*;
+import com.draga.event.CountdownFinishedEvent;
 import com.draga.event.ShipPlanetCollisionEvent;
 import com.draga.event.StarCollectedEvent;
 import com.draga.manager.DebugManager;
@@ -32,10 +33,8 @@ public class GameScreen implements Screen
 
     private String levelPath;
 
-    private GameState       gameState;
-    private LoseScreen      loseScreen;
-    private WinScreen       winScreen;
-    private CountdownScreen countdownScreen;
+    private GameState gameState;
+    private Screen    overlayScreen;
 
     private Hud hud;
 
@@ -69,7 +68,9 @@ public class GameScreen implements Screen
         this.height = height;
         this.spriteBatch = spriteBatch;
         this.levelPath = levelPath;
+
         this.gameState = GameState.COUNTDOWN;
+        this.overlayScreen = new CountdownScreen();
 
         Constants.EVENT_BUS.register(this);
 
@@ -128,6 +129,8 @@ public class GameScreen implements Screen
 
         orthographicCamera.position.x = ship.getX();
         orthographicCamera.position.y = ship.getY();
+
+        updateCamera();
     }
 
     private void addGameEntity(GameEntity gameEntity)
@@ -168,45 +171,23 @@ public class GameScreen implements Screen
             return;
         }
 
+        draw();
+
         switch (this.gameState)
         {
             case COUNTDOWN:
-                if (this.countdownScreen == null)
-                {
-                    updateCamera();
-                    this.countdownScreen = new CountdownScreen();
-                }
-                if (this.countdownScreen.getSecondsRemaining() <= 0)
-                {
-                    this.gameState = GameState.PLAY;
-                    this.countdownScreen.dispose();
-                    this.countdownScreen = null;
-                    update(deltaTime);
-                    draw();
-                }
-                else
-                {
-                    draw();
-                    this.countdownScreen.render(deltaTime);
-                }
+                this.overlayScreen.render(deltaTime);
                 break;
             case PLAY:
                 elapsedPlayTime += deltaTime;
                 update(deltaTime);
-                draw();
                 break;
             case PAUSE:
-                draw();
                 break;
             case LOSE:
-                update(deltaTime);
-                draw();
-                loseScreen.render(deltaTime);
-                break;
             case WIN:
                 update(deltaTime);
-                draw();
-                winScreen.render(deltaTime);
+                overlayScreen.render(deltaTime);
                 break;
             default:
                 Gdx.app.error(
@@ -217,28 +198,20 @@ public class GameScreen implements Screen
         hud.render(deltaTime);
     }
 
-    private void updateCamera()
+    public void draw()
     {
-        float halfWidth = orthographicCamera.viewportWidth / 2f;
-        float halfHeight = orthographicCamera.viewportHeight / 2f;
+        spriteBatch.begin();
+        spriteBatch.draw(backgroundTexture, 0, 0, width, height);
+        for (GameEntity gameEntity : GameEntityManager.getGameEntities())
+        {
+            gameEntity.draw(spriteBatch);
+        }
+        spriteBatch.end();
 
-        float cameraXPosition = MathUtils.clamp(
-            ship.getX(), halfWidth, width - halfWidth);
-        float cameraYPosition = MathUtils.clamp(
-            ship.getY(), halfHeight, height - halfHeight);
-
-        // Soften camera movement.
-        Vector2 cameraVec = new Vector2(cameraXPosition, cameraYPosition);
-        Vector2 softCamera = cameraVec.cpy();
-        Vector2 cameraOffset =
-            cameraVec.sub(orthographicCamera.position.x, orthographicCamera.position.y);
-        softCamera.sub(cameraOffset.scl(0.9f));
-
-        orthographicCamera.position.x = softCamera.x;
-        orthographicCamera.position.y = softCamera.y;
-        orthographicCamera.update();
-
-        spriteBatch.setProjectionMatrix(orthographicCamera.combined);
+        if (Constants.IS_DEBUGGING)
+        {
+            box2DDebugRenderer.render(box2dWorld, orthographicCamera.combined);
+        }
     }
 
     public void update(float elapsed)
@@ -270,22 +243,6 @@ public class GameScreen implements Screen
         box2dWorld.step(frameTime, 6, 2);
     }
 
-    public void draw()
-    {
-        spriteBatch.begin();
-        spriteBatch.draw(backgroundTexture, 0, 0, width, height);
-        for (GameEntity gameEntity : GameEntityManager.getGameEntities())
-        {
-            gameEntity.draw(spriteBatch);
-        }
-        spriteBatch.end();
-
-        if (Constants.IS_DEBUGGING)
-        {
-            box2DDebugRenderer.render(box2dWorld, orthographicCamera.combined);
-        }
-    }
-
     private void checkDebugKeys()
     {
         if (Gdx.input.isKeyJustPressed(Input.Keys.F1))
@@ -312,6 +269,30 @@ public class GameScreen implements Screen
         gameEntity.dispose();
     }
 
+    private void updateCamera()
+    {
+        float halfWidth = orthographicCamera.viewportWidth / 2f;
+        float halfHeight = orthographicCamera.viewportHeight / 2f;
+
+        float cameraXPosition = MathUtils.clamp(
+            ship.getX(), halfWidth, width - halfWidth);
+        float cameraYPosition = MathUtils.clamp(
+            ship.getY(), halfHeight, height - halfHeight);
+
+        // Soften camera movement.
+        Vector2 cameraVec = new Vector2(cameraXPosition, cameraYPosition);
+        Vector2 softCamera = cameraVec.cpy();
+        Vector2 cameraOffset =
+            cameraVec.sub(orthographicCamera.position.x, orthographicCamera.position.y);
+        softCamera.sub(cameraOffset.scl(0.9f));
+
+        orthographicCamera.position.x = softCamera.x;
+        orthographicCamera.position.y = softCamera.y;
+        orthographicCamera.update();
+
+        spriteBatch.setProjectionMatrix(orthographicCamera.combined);
+    }
+
     public void resize(int width, int height)
     {
         extendViewport.update(width, height);
@@ -332,6 +313,7 @@ public class GameScreen implements Screen
         if (gameState == GameState.PAUSE)
         {
             gameState = GameState.COUNTDOWN;
+            this.overlayScreen = new CountdownScreen();
         }
     }
 
@@ -358,6 +340,10 @@ public class GameScreen implements Screen
         }
         Constants.EVENT_BUS.unregister(this);
         hud.dispose();
+        if (this.overlayScreen != null)
+        {
+            this.overlayScreen.dispose();
+        }
     }
 
     @Subscribe
@@ -391,13 +377,13 @@ public class GameScreen implements Screen
                 AssMan.getAssList().explosion);
             GameEntityManager.getGameEntitiesToCreate().add(explosion);
 
-            this.loseScreen = new LoseScreen(levelPath);
+            this.overlayScreen = new LoseScreen(levelPath);
         }
         else
         {
             float score = getScore();
             gameState = GameState.WIN;
-            this.winScreen = new WinScreen(levelPath, score);
+            this.overlayScreen = new WinScreen(levelPath, score);
         }
     }
 
@@ -433,5 +419,13 @@ public class GameScreen implements Screen
     public String getLevelPath()
     {
         return levelPath;
+    }
+
+    @Subscribe
+    public void countdownFinished(CountdownFinishedEvent countdownFinishedEvent)
+    {
+        this.gameState = GameState.PLAY;
+        this.overlayScreen.dispose();
+        this.overlayScreen = null;
     }
 }
