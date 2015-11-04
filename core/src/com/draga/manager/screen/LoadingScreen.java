@@ -14,9 +14,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.draga.Constants;
+import com.draga.manager.GameManager;
 import com.draga.manager.asset.AssMan;
 import com.draga.manager.asset.FontManager;
-import com.draga.manager.GameManager;
 import com.draga.manager.level.LevelManager;
 import com.draga.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.manager.level.serialisableEntities.SerialisablePlanet;
@@ -75,73 +75,6 @@ public class LoadingScreen implements Screen
         stage.setDebugAll(Constants.IS_DEBUGGING);
     }
 
-    @Override
-    public void show()
-    {
-
-    }
-
-    @Override
-    public void render(float deltaTime)
-    {
-        if (AssMan.getAssMan().update())
-        {
-            if (Constants.IS_DEBUGGING)
-            {
-                Gdx.app.debug(
-                    LOGGING_TAG, Joiner.on(", ").join(AssMan.getAssMan().getAssetNames()));
-            }
-
-            GameScreen gameScreen = LevelManager.getLevelGameScreen(
-                serialisableLevel, new SpriteBatch());
-            long elapsedNanoTime = System.nanoTime() - startTime;
-            Gdx.app.debug(LOGGING_TAG, "Loading time: " + elapsedNanoTime * Constants.NANO + "s");
-            GameManager.getGame().setScreen(gameScreen);
-        }
-        updateProgressBar();
-
-        stage.act(deltaTime);
-        stage.draw();
-    }
-
-    private void updateProgressBar()
-    {
-        progressBar.setRange(
-            0,
-            AssMan.getAssMan().getQueuedAssets() + AssMan.getAssMan()
-                .getLoadedAssets());
-        progressBar.setValue(AssMan.getAssMan().getLoadedAssets());
-    }
-
-    @Override
-    public void dispose()
-    {
-        stage.dispose();
-    }
-
-    @Override
-    public void pause()
-    {
-    }
-
-    @Override
-    public void resize(int width, int height)
-    {
-        stage.getViewport().update(width, height);
-    }
-
-    @Override
-    public void resume()
-    {
-
-    }
-
-    @Override
-    public void hide()
-    {
-        this.dispose();
-    }
-
     public Label getHeaderLabel()
     {
         Label.LabelStyle labelStyle = new Label.LabelStyle();
@@ -173,5 +106,73 @@ public class LoadingScreen implements Screen
             progressBarStyle);
 
         return progressBar;
+    }
+
+    @Override
+    public void show()
+    {
+
+    }
+
+    @Override
+    public void render(float deltaTime)
+    {
+        if (AssMan.getAssMan().update())
+        {
+            if (Constants.IS_DEBUGGING)
+            {
+                Gdx.app.debug(
+                    LOGGING_TAG,
+                    "Assets loaded: " + Joiner.on(", ").join(AssMan.getAssMan().getAssetNames()));
+            }
+
+            GameScreen gameScreen = LevelManager.getLevelGameScreen(
+                serialisableLevel, new SpriteBatch());
+            long elapsedNanoTime = System.nanoTime() - startTime;
+            Gdx.app.debug(LOGGING_TAG, "Loading time: " + elapsedNanoTime * Constants.NANO + "s");
+            GameManager.getGame().setScreen(gameScreen);
+        }
+        updateProgressBar();
+
+        stage.act(deltaTime);
+        stage.draw();
+    }
+
+    private void updateProgressBar()
+    {
+        progressBar.setRange(
+            0,
+            AssMan.getAssMan().getQueuedAssets() + AssMan.getAssMan()
+                .getLoadedAssets());
+        progressBar.setValue(AssMan.getAssMan().getLoadedAssets());
+    }
+
+    @Override
+    public void resize(int width, int height)
+    {
+        stage.getViewport().update(width, height);
+    }
+
+    @Override
+    public void pause()
+    {
+    }
+
+    @Override
+    public void resume()
+    {
+
+    }
+
+    @Override
+    public void hide()
+    {
+        this.dispose();
+    }
+
+    @Override
+    public void dispose()
+    {
+        stage.dispose();
     }
 }

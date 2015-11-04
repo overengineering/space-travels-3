@@ -377,9 +377,12 @@ public class GameScreen implements Screen
                 "Linear velocity on collision: " + ship.getBody().getLinearVelocity().len());
         }
 
+        GameEntityManager.getGameEntitiesToDestroy().add(ship);
+
         // If wrong planet or too fast then lose.
         if (getDestinationPlanet() != shipPlanetCollisionEvent.planet
-            || ship.getBody().getLinearVelocity().len() > 15)
+            || ship.getBody().getLinearVelocity().len()
+            > Constants.MAX_DESTINATION_PLANET_APPROACH_SPEED)
         {
             gameState = GameState.LOSE;
             GameEntity explosion = new Explosion(
@@ -388,12 +391,10 @@ public class GameScreen implements Screen
                 AssMan.getAssList().explosion);
             GameEntityManager.getGameEntitiesToCreate().add(explosion);
 
-            GameEntityManager.getGameEntitiesToDestroy().add(ship);
             this.loseScreen = new LoseScreen(levelPath);
         }
         else
         {
-            GameEntityManager.getGameEntitiesToDestroy().add(ship);
             float score = getScore();
             gameState = GameState.WIN;
             this.winScreen = new WinScreen(levelPath, score);
@@ -410,18 +411,14 @@ public class GameScreen implements Screen
         this.destinationPlanet = destinationPlanet;
     }
 
-    public String getLevelPath()
-    {
-        return levelPath;
-    }
-
     private float getScore()
     {
         float starPoints = starsCollected * Constants.STAR_POINTS;
         float timePoints = elapsedPlayTime * Constants.TIME_POINTS;
         float fuelPoints = ship.getFuel() * Constants.FUEL_POINTS;
 
-        String message = String.format("Points summary: %f stars - %f time + %f fuel",
+        String message = String.format(
+            "Points summary: %f stars - %f time + %f fuel",
             starPoints,
             timePoints,
             fuelPoints);
@@ -431,5 +428,10 @@ public class GameScreen implements Screen
         score -= timePoints;
         score += fuelPoints;
         return score;
+    }
+
+    public String getLevelPath()
+    {
+        return levelPath;
     }
 }
