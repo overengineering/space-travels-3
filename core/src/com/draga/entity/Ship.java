@@ -72,7 +72,7 @@ public class Ship extends GameEntity
         shipFixtureDef.shape = shipShape;
         float area = SHIP_WIDTH * SHIP_HEIGHT;
         shipFixtureDef.density = SHIP_MASS / area;
-        shipFixtureDef.friction = 1f;
+        shipFixtureDef.friction = 0;
         shipFixtureDef.restitution = 0;
         shipFixtureDef.filter.categoryBits = MaskBits.SHIP;
         shipFixtureDef.filter.maskBits = MaskBits.PLANET | MaskBits.BOUNDARIES | MaskBits.STAR;
@@ -85,7 +85,7 @@ public class Ship extends GameEntity
         thrusterFixtureDef = new FixtureDef();
         thrusterFixtureDef.shape = thrusterShape;
         thrusterFixtureDef.density = 0;
-        thrusterFixtureDef.friction = 1f;
+        thrusterFixtureDef.friction = 0;
         thrusterFixtureDef.restitution = 0;
         thrusterFixtureDef.filter.categoryBits = MaskBits.THRUSTER;
         thrusterFixtureDef.filter.maskBits = 0;

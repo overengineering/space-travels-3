@@ -299,7 +299,8 @@ public class GameScreen implements Screen
     @Override
     public void pause()
     {
-        if (gameState == GameState.PLAY)
+        if (gameState == GameState.PLAY
+            || gameState == GameState.COUNTDOWN)
         {
             gameState = GameState.PAUSE;
         }
@@ -422,7 +423,10 @@ public class GameScreen implements Screen
     @Subscribe
     public void countdownFinished(CountdownFinishedEvent countdownFinishedEvent)
     {
-        this.gameState = GameState.PLAY;
+        if (gameState == GameState.COUNTDOWN)
+        {
+            this.gameState = GameState.PLAY;
+        }
         this.overlayScreen.dispose();
         this.overlayScreen = null;
     }
