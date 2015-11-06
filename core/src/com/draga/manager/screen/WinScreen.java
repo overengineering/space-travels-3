@@ -3,7 +3,6 @@ package com.draga.manager.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -20,19 +19,23 @@ import com.draga.Constants;
 import com.draga.manager.GameManager;
 import com.draga.manager.asset.FontManager;
 import com.draga.manager.level.LevelManager;
+import com.draga.manager.level.serialisableEntities.SerialisableLevel;
+
+import java.util.Iterator;
+import java.util.List;
 
 public class WinScreen implements Screen
 {
-    public static final float FADE_PER_SECOND = 0.7f;
+    private static final float FADE_PER_SECOND = 0.7f;
     private final Stage stage;
     private final Color fadeToColour     = new Color(0, 0, 0, 0.7f);
     private final Color backgroundColour = new Color(0, 0, 0, 0);
     private final ShapeRenderer shapeRenderer;
-    private       String        levelPath;
+    private       String        levelName;
 
-    public WinScreen(String levelPath, float score)
+    public WinScreen(String levelName, float score)
     {
-        this.levelPath = levelPath;
+        this.levelName = levelName;
         this.stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
@@ -49,19 +52,12 @@ public class WinScreen implements Screen
         table.row();
         table.add(retryButton);
 
-        FileHandle[] levels = LevelManager.getLevels();
-        int currentLevelIndex = -1;
-        for (int i = 0; i < levels.length && currentLevelIndex == -1; i++)
+        SerialisableLevel nextLevel = LevelManager.getNextLevel(levelName);
+
+        if (nextLevel != null)
         {
-            if (levels[i].path().equals(levelPath))
-            {
-                currentLevelIndex = i;
-            }
-        }
-        if (currentLevelIndex < levels.length - 1)
-        {
-            String nextLevelPath = levels[currentLevelIndex + 1].path();
-            TextButton nextTextButton = getNextButton(nextLevelPath);
+            String nextLevelName = nextLevel.name;
+            TextButton nextTextButton = getNextButton(nextLevelName);
             table.row();
             table.add(nextTextButton);
         }
@@ -71,19 +67,6 @@ public class WinScreen implements Screen
 
         stage.setDebugAll(Constants.DEBUG_DRAW);
         shapeRenderer = new ShapeRenderer();
-    }
-
-    private Label getScoreLabel(float score)
-    {
-        Label.LabelStyle labelStyle = new Label.LabelStyle();
-        BitmapFont bigFont = FontManager.getBigFont();
-        labelStyle.font = bigFont;
-
-        Label scoreLabel = new Label("Score: "+ score, labelStyle);
-        scoreLabel.setColor(new Color(1, 1, 1, 0));
-        scoreLabel.addAction(Actions.color(new Color(1, 1, 1, 1), 3, Interpolation.pow2In));
-
-        return scoreLabel;
     }
 
     public Label getHeaderLabel()
@@ -122,12 +105,20 @@ public class WinScreen implements Screen
         return retryButton;
     }
 
-    private void Retry()
+    private Label getScoreLabel(float score)
     {
-        GameManager.getGame().setScreen(new LoadingScreen(levelPath));
+        Label.LabelStyle labelStyle = new Label.LabelStyle();
+        BitmapFont bigFont = FontManager.getBigFont();
+        labelStyle.font = bigFont;
+
+        Label scoreLabel = new Label("Score: " + score, labelStyle);
+        scoreLabel.setColor(new Color(1, 1, 1, 0));
+        scoreLabel.addAction(Actions.color(new Color(1, 1, 1, 1), 3, Interpolation.pow2In));
+
+        return scoreLabel;
     }
 
-    public TextButton getNextButton(final String levelPath)
+    public TextButton getNextButton(final String levelName)
     {
         TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
         buttonStyle.font = FontManager.getBigFont();
@@ -142,12 +133,17 @@ public class WinScreen implements Screen
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    GameManager.getGame().setScreen(new LoadingScreen(levelPath));
+                    GameManager.getGame().setScreen(new LoadingScreen(levelName));
                     super.clicked(event, x, y);
                 }
             });
 
         return retryButton;
+    }
+
+    private void Retry()
+    {
+        GameManager.getGame().setScreen(new LoadingScreen(levelName));
     }
 
     @Override

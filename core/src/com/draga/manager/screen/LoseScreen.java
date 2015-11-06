@@ -25,11 +25,11 @@ public class LoseScreen implements Screen
     private final Color fadeToColour     = new Color(0, 0, 0, 0.7f);
     private final Color backgroundColour = new Color(0, 0, 0, 0);
     private final ShapeRenderer shapeRenderer;
-    private       String        levelPath;
+    private       String        levelName;
 
-    public LoseScreen(String levelPath)
+    public LoseScreen(String levelName)
     {
-        this.levelPath = levelPath;
+        this.levelName = levelName;
         this.stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
@@ -149,6 +149,6 @@ public class LoseScreen implements Screen
 
     private void Retry()
     {
-        GameManager.getGame().setScreen(new LoadingScreen(levelPath));
+        GameManager.getGame().setScreen(new LoadingScreen(levelName));
     }
 }

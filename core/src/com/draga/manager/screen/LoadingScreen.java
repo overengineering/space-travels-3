@@ -33,17 +33,17 @@ public class LoadingScreen implements Screen
     public LoadingScreen(String levelName)
     {
         startTime = System.nanoTime();
-        
-        serialisableLevel = LevelManager.getSerialisedLevelFromName(levelName);
-        
+
+        this.serialisableLevel = LevelManager.getLevel(levelName);
+
         AssMan.DisposeAllAndClear();
         AssMan.getAssMan().load(
-            serialisableLevel.serialisedBackground.texturePath, Texture.class);
+            this.serialisableLevel.serialisedBackground.texturePath, Texture.class);
         AssMan.getAssMan().load(
             AssMan.getAssList().ship, Texture.class);
         AssMan.getAssMan().load(
             AssMan.getAssList().thruster, TextureAtlas.class);
-        for (SerialisablePlanet serialisablePlanet : serialisableLevel.serialisedPlanets)
+        for (SerialisablePlanet serialisablePlanet : this.serialisableLevel.serialisedPlanets)
         {
             AssMan.getAssMan().load(serialisablePlanet.texturePath, Texture.class);
         }
