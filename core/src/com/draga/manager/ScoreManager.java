@@ -10,10 +10,10 @@ import java.util.HashMap;
 public abstract class ScoreManager
 {
     private static final Json JSON = new Json();
+    private static HashMap<String, Float> levelScores = getLevelScores();
 
     public static void updateScore(String levelName, float score)
     {
-        HashMap<String, Float> levelScores = getLevelScores();
         levelScores.put(levelName, score);
 
         saveScores(levelScores);
@@ -77,8 +77,6 @@ public abstract class ScoreManager
 
     public static float getScore(String levelName)
     {
-        HashMap<String, Float> levelScores = getLevelScores();
-
         float score = 0;
         if (levelScores.containsKey(levelName))
         {

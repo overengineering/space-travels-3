@@ -17,12 +17,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.Constants;
 import com.draga.manager.GameManager;
+import com.draga.manager.ScoreManager;
 import com.draga.manager.asset.FontManager;
 import com.draga.manager.level.LevelManager;
 import com.draga.manager.level.serialisableEntities.SerialisableLevel;
-
-import java.util.Iterator;
-import java.util.List;
 
 public class WinScreen implements Screen
 {
@@ -39,12 +37,19 @@ public class WinScreen implements Screen
         this.stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
+        float previousBestScore = ScoreManager.getScore(levelName);
+
         Label headerLabel = getHeaderLabel();
         TextButton retryButton = getRetryButton();
         Label scoreLabel = getScoreLabel(score);
 
         Table table = new Table();
         table.add(headerLabel);
+
+        ScoreManager.updateScore(levelName, score);
+        table.row();
+        Label newBestScoreLabel = getBestScoreLabel(score, previousBestScore);
+        table.add(newBestScoreLabel);
 
         table.row();
         table.add(scoreLabel);
@@ -116,6 +121,24 @@ public class WinScreen implements Screen
         scoreLabel.addAction(Actions.color(new Color(1, 1, 1, 1), 3, Interpolation.pow2In));
 
         return scoreLabel;
+    }
+
+    private Label getBestScoreLabel(float score, float previousBestScore)
+    {
+        Label.LabelStyle labelStyle = new Label.LabelStyle();
+        BitmapFont bigFont = FontManager.getBigFont();
+        labelStyle.font = bigFont;
+
+        String text = score > previousBestScore
+            ? "New best score! It was: " + previousBestScore
+            : "Previous best score: " + previousBestScore;
+
+        Label newBestScoreLabel =
+            new Label(text, labelStyle);
+        newBestScoreLabel.setColor(new Color(1, 1, 1, 0));
+        newBestScoreLabel.addAction(Actions.color(new Color(1, 1, 1, 1), 3, Interpolation.pow2In));
+
+        return newBestScoreLabel;
     }
 
     public TextButton getNextButton(final String levelName)
