@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.Constants;
 import com.draga.manager.GameManager;
+import com.draga.manager.ScoreManager;
 import com.draga.manager.asset.FontManager;
 import com.draga.manager.level.LevelManager;
 import com.draga.manager.level.serialisableEntities.SerialisableLevel;
@@ -113,8 +114,10 @@ public class MenuScreen implements Screen
 
         for (SerialisableLevel level : levels)
         {
+            String buttonText = level.name + " (" + ScoreManager.getScore(level.name) + ")";
             TextButton textButton =
-                new TextButton(level.name, textButtonStyle);
+                new TextButton(buttonText, textButtonStyle);
+            textButton.setName(level.name);
             buttonGroup.add(textButton);
             verticalGroup.addActor(textButton);
         }
@@ -126,7 +129,7 @@ public class MenuScreen implements Screen
 
     private void StartGameScreen()
     {
-        String levelName = buttonGroup.getChecked().getText().toString();
+        String levelName = buttonGroup.getChecked().getName();
         LoadingScreen loadingScreen = new LoadingScreen(levelName);
         GameManager.getGame().setScreen(loadingScreen);
     }

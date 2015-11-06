@@ -7,6 +7,7 @@ import java.text.DecimalFormat;
 public abstract class Constants
 {
     public static final boolean IS_DEBUGGING = true;
+    @SuppressWarnings("PointlessBooleanExpression")
     public static final boolean DEBUG_DRAW   = IS_DEBUGGING && false;
 
     public static final float VIEWPORT_WIDTH = 100f;
@@ -28,5 +29,8 @@ public abstract class Constants
     public static final float STAR_POINTS                           = 1000f;
     public static final float MAX_DESTINATION_PLANET_APPROACH_SPEED = 60f;
 
-    public static final boolean HUD_DRAW_VELOCITY_INDICATORS        = true;
+    public static final boolean HUD_DRAW_VELOCITY_INDICATORS = true;
+
+    public static final String  SCORES_FOLDER                = SpaceTravels3.class.getSimpleName();
+    public static final String  SCORES_FILENAME              = "Scores.json";
 }
