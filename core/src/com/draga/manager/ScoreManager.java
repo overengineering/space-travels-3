@@ -9,44 +9,33 @@ import java.util.HashMap;
 
 public abstract class ScoreManager
 {
-    private static final Json JSON = new Json();
-    private static HashMap<String, Float> levelScores = getLevelScores();
+    private static final Json                   JSON                  = new Json();
+    private static final FileHandle             levelScoresFileHandle = getScoreFileHandle();
+    private static final HashMap<String, Float> levelScores           = getLevelScores();
 
     public static void updateScore(String levelName, float score)
     {
         levelScores.put(levelName, score);
 
-        saveScores(levelScores);
+        saveLevelScores(levelScores);
+    }
+
+    private static void saveLevelScores(final HashMap<String, Float> levelScores)
+    {
+        Runnable saveLevelScoreRunnable = new SaveLevelScoreRunnable();
+        saveLevelScoreRunnable.run();
     }
 
     private static HashMap<String, Float> getLevelScores()
     {
-        FileHandle scoresFileHandle = getScoreFileHandle();
-        if (scoresFileHandle.exists())
+        if (levelScoresFileHandle.exists())
         {
             HashMap<String, Float> levelScores =
-                JSON.fromJson(HashMap.class, scoresFileHandle.readString());
+                JSON.fromJson(HashMap.class, levelScoresFileHandle.readString());
             return levelScores;
         }
 
         return new HashMap<>();
-    }
-
-    private static void saveScores(HashMap<String, Float> levelScores)
-    {
-        FileHandle scoresFileHandle = getScoreFileHandle();
-
-        String scoresString = null;
-        if (Constants.IS_DEBUGGING)
-        {
-            scoresString = JSON.prettyPrint(levelScores);
-        }
-        else
-        {
-            scoresString = JSON.toJson(levelScores);
-        }
-
-        scoresFileHandle.writeString(scoresString, false);
     }
 
     private static FileHandle getScoreFileHandle()
@@ -84,5 +73,18 @@ public abstract class ScoreManager
         }
 
         return score;
+    }
+
+    private static class SaveLevelScoreRunnable implements Runnable
+    {
+        @Override
+        public void run()
+        {
+            String levelScoresString = Constants.IS_DEBUGGING
+                ? JSON.prettyPrint(levelScores)
+                : JSON.toJson(levelScores);
+
+            levelScoresFileHandle.writeString(levelScoresString, false);
+        }
     }
 }
