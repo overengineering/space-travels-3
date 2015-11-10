@@ -1,56 +1,85 @@
 package com.draga;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.draga.entity.Ship;
 import com.draga.event.FuelChangeEvent;
 import com.draga.event.StarCollectedEvent;
-import com.draga.manager.AssMan;
+import com.draga.manager.GravityManager;
+import com.draga.manager.asset.AssMan;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.Stack;
 
 public class Hud implements Screen
 {
-    private Stage        stage;
+    private float FORCE_INDICATOR_SCALE = 0.25f;
 
-    private ProgressBar  fuelProgressBar;
+    private Stage stage;
 
-    private int          totalStars;
-    private Stack<Image> grayStars;
+    private ProgressBar fuelProgressBar;
 
-    public Hud()
+    private Stack<Image>       grayStars;
+    private Table              starsTable;
+    private Ship               ship;
+    private ShapeRenderer      shapeRenderer;
+    private OrthographicCamera orthographicCamera;
+
+    public Hud(OrthographicCamera orthographicCamera)
     {
+        this.orthographicCamera = orthographicCamera;
+        shapeRenderer = new ShapeRenderer();
         Constants.EVENT_BUS.register(this);
-
-        this.totalStars = 0;
-
         this.grayStars = new Stack<>();
-
         stage = new Stage();
 
-        fuelProgressBar = getFuelProgressBar();
-        stage.addActor(fuelProgressBar);
+        Table table = new Table();
+        table.setFillParent(true);
+        table.pad(((stage.getHeight() + stage.getWidth()) / 2f) / 50f);
+        stage.addActor(table);
 
-        stage.setDebugAll(Constants.IS_DEBUGGING);
+        float progressBarsHeight = stage.getHeight() / 30f;
+        fuelProgressBar = getFuelProgressBar((int) progressBarsHeight);
+        table
+            .add(fuelProgressBar)
+            .height(progressBarsHeight)
+            .width(stage.getWidth() / 3f)
+            .top()
+            .left();
+
+        // Add an empty row with an expanded cell to fill the gap in the middle.
+        table.row();
+        table.add().expand();
+
+        table.row();
+        starsTable = new Table();
+        starsTable
+            .defaults()
+            .width(stage.getViewport().getScreenWidth() / 30f)
+            .height(stage.getViewport().getScreenWidth() / 30f);
+        table
+            .add(starsTable)
+            .bottom()
+            .right();
+
+        stage.setDebugAll(Constants.DEBUG_DRAW);
     }
 
-    private ProgressBar getFuelProgressBar()
+    private ProgressBar getFuelProgressBar(int height)
     {
-        float height = stage.getHeight() / 30f;
-        float width = stage.getWidth() / 3f;
-        float margin = ((stage.getHeight() + stage.getWidth()) / 2f) / 50f;
-
         Skin skin = new Skin();
         Pixmap pixmap = new Pixmap(
-            1, (int) Math.ceil(height), Pixmap.Format.RGBA8888);
+            1, height, Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.WHITE);
         pixmap.fill();
         skin.add("white", new Texture(pixmap));
@@ -61,9 +90,6 @@ public class Hud implements Screen
 
         ProgressBar fuelProgressBar = new ProgressBar(
             0, 1, 0.0001f, false, fuelProgressBarStyle);
-        fuelProgressBar.setSize(width, height);
-        fuelProgressBar.setPosition(
-            margin, stage.getHeight() - margin - height);
 
         return fuelProgressBar;
     }
@@ -79,6 +105,61 @@ public class Hud implements Screen
     {
         stage.act(delta);
         stage.draw();
+
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
+        shapeRenderer.setProjectionMatrix(orthographicCamera.combined);
+
+        if (Constants.HUD_DRAW_VELOCITY_INDICATORS)
+        {
+            DrawGravityIndicator();
+            DrawVelocityIndicator();
+        }
+
+        Gdx.gl.glDisable(GL20.GL_BLEND);
+    }
+
+    private void DrawGravityIndicator()
+    {
+        Vector2 gravVector = GravityManager.getForceActingOn(ship.getBody());
+
+        shapeRenderer.setColor(new Color(1, 0, 0, 1));
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.circle(
+            ship.getX() + gravVector.x * FORCE_INDICATOR_SCALE,
+            ship.getY() + gravVector.y * FORCE_INDICATOR_SCALE,
+            0.5f);
+        shapeRenderer.end();
+
+        shapeRenderer.setColor(new Color(1, 0, 0, 0.4f));
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.circle(
+            ship.getX(),
+            ship.getY(),
+            gravVector.len() * FORCE_INDICATOR_SCALE,
+            24);
+        shapeRenderer.end();
+    }
+    
+    private void DrawVelocityIndicator()
+    {
+        shapeRenderer.setColor(new Color(1, 1, 1, 1));
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.circle(
+            ship.getX() + ship.getBody().getLinearVelocity().x * FORCE_INDICATOR_SCALE,
+            ship.getY() + ship.getBody().getLinearVelocity().y * FORCE_INDICATOR_SCALE,
+            0.5f);
+        shapeRenderer.end();
+
+        shapeRenderer.setColor(new Color(1, 1, 1, 0.2f));
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.circle(
+            ship.getX(),
+            ship.getY(),
+            ship.getBody().getLinearVelocity().len() * FORCE_INDICATOR_SCALE,
+            24);
+        shapeRenderer.end();
     }
 
     @Override
@@ -110,6 +191,7 @@ public class Hud implements Screen
     {
         Constants.EVENT_BUS.unregister(this);
         stage.dispose();
+        shapeRenderer.dispose();
     }
 
     @Subscribe
@@ -121,18 +203,12 @@ public class Hud implements Screen
 
     public void addStar()
     {
-        totalStars++;
-
-        float width = stage.getViewport().getScreenWidth() / 30f;
-        float height = width;
-        Texture starTexture = AssMan.getAssetManager().get("star/starGray64.png");
+        Texture starTexture = AssMan.getAssMan().get(AssMan.getAssList().starGray);
         Image starImage = new Image(starTexture);
-        starImage.setPosition(stage.getViewport().getScreenWidth() - (width * totalStars), 0);
-        starImage.setSize(width, height);
 
         grayStars.add(starImage);
 
-        stage.addActor(starImage);
+        starsTable.add(starImage);
     }
 
     @Subscribe
@@ -140,8 +216,13 @@ public class Hud implements Screen
     {
         Image firstGrayStar = grayStars.pop();
 
-        Texture goldStarTexture = AssMan.getAssetManager().get("star/starGold64.png");
+        Texture goldStarTexture = AssMan.getAssMan().get(AssMan.getAssList().starGold);
 
         firstGrayStar.setDrawable(new TextureRegionDrawable(new TextureRegion(goldStarTexture)));
+    }
+
+    public void setShip(Ship ship)
+    {
+        this.ship = ship;
     }
 }

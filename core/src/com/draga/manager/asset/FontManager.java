@@ -1,4 +1,4 @@
-package com.draga.manager;
+package com.draga.manager.asset;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
@@ -13,8 +13,9 @@ import com.badlogic.gdx.utils.Disposable;
 
 public class FontManager
 {
-    private static final String       LOGGING_TAG  = FontManager.class.getSimpleName();
-    public static        AssetManager assetManager = new AssetManager();
+    private static final String LOGGING_TAG = FontManager.class.getSimpleName();
+    public static final float FONT_SCALE = 0.00005f;
+    public static AssetManager assetManager = new AssetManager();
 
     public static void create()
     {
@@ -29,7 +30,8 @@ public class FontManager
         FreetypeFontLoader.FreeTypeFontLoaderParameter size1Params =
             new FreetypeFontLoader.FreeTypeFontLoaderParameter();
         size1Params.fontFileName = "font/pdark.ttf";
-        size1Params.fontParameters.size = 64;
+        size1Params.fontParameters.size =
+            (int) (Gdx.graphics.getWidth() * Gdx.graphics.getHeight() * FONT_SCALE);
         assetManager.load("bigFont.ttf", BitmapFont.class, size1Params);
 
         FontManager.assetManager.finishLoading();

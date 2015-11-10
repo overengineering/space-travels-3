@@ -1,0 +1,7 @@
+{
+  "ship": "spaceship/destroyer128.png",
+  "thruster": "thruster/thrusterSize256Frames75.txt",
+  "starGold": "star/starGold64.png",
+  "starGray": "star/starGray64.png",
+  "explosion": "explosion/explosion.atlas"
+}

@@ -2,16 +2,10 @@ package com.draga.manager.level.serialisableEntities;
 
 public class SerialisableStar
 {
-    private int x;
-    private int y;
+    public int x;
+    public int y;
 
-    public int getX()
+    public SerialisableStar()
     {
-        return x;
-    }
-
-    public int getY()
-    {
-        return y;
     }
 }

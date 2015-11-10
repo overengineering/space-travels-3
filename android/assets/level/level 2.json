@@ -1,13 +1,12 @@
 {
   "class": "SerialisableLevel",
+  "name": "Level 2",
   "width": 300,
   "height": 150,
   "serialisedBackground": {
     "texturePath": "background/background1080.jpg"
   },
   "serialisedShip": {
-    "shipTexturePath": "spaceship/destroyer128.png",
-    "ThrusterTextureAtlasPath": "thruster/thrusterSize256Frames75.txt",
     "x": 150,
     "y": 75
   },
@@ -22,8 +21,8 @@
     },
     {
       "texturePath": "planet/jupiter256.png",
-      "x": 200,
-      "y": 130,
+      "x": 150,
+      "y": 10,
       "radius": 25,
       "mass": 190000
     },
