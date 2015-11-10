@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.Constants;
+import com.draga.manager.DebugManager;
 import com.draga.manager.asset.FontManager;
 import com.draga.manager.GameManager;
 
@@ -40,7 +41,7 @@ public class LoseScreen implements Screen
         table.setFillParent(true);
         stage.addActor(table);
 
-        stage.setDebugAll(Constants.DEBUG_DRAW);
+        stage.setDebugAll(DebugManager.debugDraw);
         shapeRenderer = new ShapeRenderer();
     }
 

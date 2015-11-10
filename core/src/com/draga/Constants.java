@@ -7,8 +7,6 @@ import java.text.DecimalFormat;
 public abstract class Constants
 {
     public static final boolean IS_DEBUGGING = true;
-    @SuppressWarnings("PointlessBooleanExpression")
-    public static final boolean DEBUG_DRAW   = IS_DEBUGGING && false;
 
     public static final float VIEWPORT_WIDTH = 100f;
 

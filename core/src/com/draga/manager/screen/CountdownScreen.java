@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Pools;
 import com.draga.Constants;
 import com.draga.event.CountdownFinishedEvent;
+import com.draga.manager.DebugManager;
 import com.draga.manager.asset.FontManager;
 
 public class CountdownScreen implements Screen
@@ -32,7 +33,7 @@ public class CountdownScreen implements Screen
             .add(timerLabel)
             .center();
 
-        stage.setDebugAll(Constants.DEBUG_DRAW);
+        stage.setDebugAll(DebugManager.debugDraw);
     }
 
     private Label getTimerLabel()

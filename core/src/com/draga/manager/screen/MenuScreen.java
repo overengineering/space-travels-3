@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.Constants;
+import com.draga.manager.DebugManager;
 import com.draga.manager.GameManager;
 import com.draga.manager.ScoreManager;
 import com.draga.manager.asset.FontManager;
@@ -73,7 +74,7 @@ public class MenuScreen implements Screen
             .add(playButton)
             .bottom();
 
-        stage.setDebugAll(Constants.DEBUG_DRAW);
+        stage.setDebugAll(DebugManager.debugDraw);
     }
 
     public Actor getHeaderLabel()

@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.draga.entity.Ship;
 import com.draga.event.FuelChangeEvent;
 import com.draga.event.StarCollectedEvent;
+import com.draga.manager.DebugManager;
 import com.draga.manager.GravityManager;
 import com.draga.manager.asset.AssMan;
 import com.google.common.eventbus.Subscribe;
@@ -72,7 +73,7 @@ public class Hud implements Screen
             .bottom()
             .right();
 
-        stage.setDebugAll(Constants.DEBUG_DRAW);
+        stage.setDebugAll(DebugManager.debugDraw);
     }
 
     private ProgressBar getFuelProgressBar(int height)

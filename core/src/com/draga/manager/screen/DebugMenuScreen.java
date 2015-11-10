@@ -5,11 +5,10 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.Constants;
+import com.draga.manager.DebugManager;
 import com.draga.manager.GameManager;
 import com.draga.manager.SkinManager;
 
@@ -25,32 +24,42 @@ public class DebugMenuScreen implements Screen
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-        skin = SkinManager.basicSkin;
+        skin = SkinManager.BasicMenuSkin;
 
-        // Create a button with the "default" TextButtonStyle. A 3rd parameter can be used to specify a name other than "default".
-        Button textButton = new TextButton("PLAY", skin.get("default", TextButton.TextButtonStyle.class));
-        textButton.setPosition(200, 200);
-        textButton.setSize(400, 400);
+        Table table = new Table();
+        table.setFillParent(true);
+        table.pad(((stage.getHeight() + stage.getWidth()) / 2f) / 50f);
 
+        table.add(GetButtonScrollPane());
 
-        // Add a listener to the button. ChangeListener is fired when the button's checked state changes, eg when clicked,
-        // Button#setChecked() is called, via a key press, etc. If the event.cancel() is called, the checked state will be reverted.
-        // ClickListener could have been used, but would only fire when clicked. Also, canceling a ClickListener event won't
-        // revert the checked state.
-        textButton.addListener(
+        stage.addActor(table);
+        stage.setDebugAll(DebugManager.debugDraw);
+    }
+
+    public ScrollPane GetButtonScrollPane()
+    {
+        final TextButton debugDrawTextButton = new TextButton("Debug Draw", skin.get("checkTextButton", TextButton.TextButtonStyle.class));
+        debugDrawTextButton.setChecked(DebugManager.debugDraw);
+
+        debugDrawTextButton.addListener(
             new ClickListener()
             {
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    //textButton.setText("splab");
-                    GameManager.getGame().setScreen(new MenuScreen());
+                    DebugManager.debugDraw = !DebugManager.debugDraw;
+                    debugDrawTextButton.setChecked(DebugManager.debugDraw);
                     super.clicked(event, x, y);
                 }
             });
 
-        stage.addActor(textButton);
-        stage.setDebugAll(Constants.IS_DEBUGGING);
+        VerticalGroup verticalGroup = new VerticalGroup();
+
+        verticalGroup.addActor(debugDrawTextButton);
+
+        ScrollPane scrollPane = new ScrollPane(verticalGroup);
+
+        return scrollPane;
     }
 
     @Override

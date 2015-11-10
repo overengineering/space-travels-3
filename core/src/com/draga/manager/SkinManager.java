@@ -7,15 +7,16 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.draga.manager.asset.FontManager;
 
 public class SkinManager
 {
-    public static Skin basicSkin;
+    public static Skin BasicMenuSkin;
 
 
     public static void create()
     {
-        basicSkin = createBasicSkin();
+        BasicMenuSkin = createBasicSkin();
     }
 
     private static Skin createBasicSkin()
@@ -23,15 +24,13 @@ public class SkinManager
         Skin skin = new Skin();
 
         //Create a font
-        BitmapFont font = new BitmapFont();
+        BitmapFont font = FontManager.getBigFont();
         skin.add("default", font);
 
         //Create a texture
-        Pixmap pixmap = new Pixmap(
-            Gdx.graphics.getWidth() / 4,
-            Gdx.graphics.getHeight() / 10,
+        Pixmap pixmap = new Pixmap(0, 0,
             Pixmap.Format.RGB888);
-        pixmap.setColor(Color.WHITE);
+        pixmap.setColor(Color.CLEAR);
         pixmap.fill();
         skin.add("background", new Texture(pixmap));
 
@@ -43,6 +42,13 @@ public class SkinManager
         textButtonStyle.over = skin.newDrawable("background", Color.LIGHT_GRAY);
         textButtonStyle.font = skin.getFont("default");
         skin.add("default", textButtonStyle);
+
+        //Create check text button style
+        TextButton.TextButtonStyle checkTextButtonStyle = new TextButton.TextButtonStyle();
+        checkTextButtonStyle.font = FontManager.getBigFont();
+        checkTextButtonStyle.checkedFontColor = Color.GREEN;
+        checkTextButtonStyle.fontColor = Color.WHITE;
+        skin.add("checkTextButton", checkTextButtonStyle);
 
         return skin;
     }
