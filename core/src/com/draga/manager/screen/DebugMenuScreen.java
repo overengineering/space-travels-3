@@ -3,11 +3,6 @@ package com.draga.manager.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -15,7 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.Constants;
-import com.draga.manager.ScreenManager;
+import com.draga.manager.GameManager;
+import com.draga.manager.SkinManager;
 
 public class DebugMenuScreen implements Screen
 {
@@ -29,7 +25,7 @@ public class DebugMenuScreen implements Screen
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-        createBasicSkin();
+        skin = SkinManager.basicSkin;
 
         // Create a button with the "default" TextButtonStyle. A 3rd parameter can be used to specify a name other than "default".
         Button textButton = new TextButton("PLAY", skin.get("default", TextButton.TextButtonStyle.class));
@@ -48,7 +44,7 @@ public class DebugMenuScreen implements Screen
                 public void clicked(InputEvent event, float x, float y)
                 {
                     //textButton.setText("splab");
-                    ScreenManager.setActiveScreen(new MenuScreen());
+                    GameManager.getGame().setScreen(new MenuScreen());
                     super.clicked(event, x, y);
                 }
             });
@@ -57,38 +53,12 @@ public class DebugMenuScreen implements Screen
         stage.setDebugAll(Constants.IS_DEBUGGING);
     }
 
-    private void createBasicSkin()
-    {
-        //Create a font
-        BitmapFont font = new BitmapFont();
-        skin = new Skin();
-        skin.add("default", font);
-
-        //Create a texture
-        Pixmap pixmap = new Pixmap(
-            (int) Gdx.graphics.getWidth() / 4,
-            (int) Gdx.graphics.getHeight() / 10,
-            Pixmap.Format.RGB888);
-        pixmap.setColor(Color.WHITE);
-        pixmap.fill();
-        skin.add("background", new Texture(pixmap));
-
-        //Create a button style
-        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        textButtonStyle.up = skin.newDrawable("background", Color.GRAY);
-        textButtonStyle.down = skin.newDrawable("background", Color.DARK_GRAY);
-        textButtonStyle.checked = skin.newDrawable("background", Color.DARK_GRAY);
-        textButtonStyle.over = skin.newDrawable("background", Color.LIGHT_GRAY);
-        textButtonStyle.font = skin.getFont("default");
-        skin.add("default", textButtonStyle);
-    }
-
     @Override
     public void render(float delta)
     {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
         {
-            ScreenManager.setActiveScreen(new MenuScreen());
+            GameManager.getGame().setScreen(new MenuScreen());
         }
 /*
         Gdx.gl.glClearColor(0, 0, 0, 1);

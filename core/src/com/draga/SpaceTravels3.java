@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.draga.manager.GameManager;
+import com.draga.manager.SkinManager;
 import com.draga.manager.asset.AssMan;
 import com.draga.manager.asset.FontManager;
 import com.draga.manager.screen.MenuScreen;
@@ -25,6 +26,7 @@ public class SpaceTravels3 extends Game
         Gdx.input.setCatchBackKey(true);
         AssMan.getAssList();
         FontManager.create();
+        SkinManager.create();
         GameManager.setGame(this);
 
         if (Constants.IS_DEBUGGING)

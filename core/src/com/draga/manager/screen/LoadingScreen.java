@@ -36,7 +36,7 @@ public class LoadingScreen implements Screen
 
         this.serialisableLevel = LevelManager.getLevel(levelName);
 
-        AssMan.DisposeAllAndClear();
+        AssMan.getAssMan().clear();
         AssMan.getAssMan().load(
             this.serialisableLevel.serialisedBackground.texturePath, Texture.class);
         AssMan.getAssMan().load(

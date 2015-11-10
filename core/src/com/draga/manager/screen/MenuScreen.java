@@ -57,6 +57,18 @@ public class MenuScreen implements Screen
             .expand();
 
         table.row();
+
+        if (Constants.IS_DEBUGGING)
+        {
+            Actor debugButton = getDebugButton();
+
+            table
+                .add(debugButton)
+                .bottom();
+
+            table.row();
+        }
+
         table
             .add(playButton)
             .bottom();
@@ -67,8 +79,7 @@ public class MenuScreen implements Screen
     public Actor getHeaderLabel()
     {
         Label.LabelStyle labelStyle = new Label.LabelStyle();
-        BitmapFont bigFont = FontManager.getBigFont();
-        labelStyle.font = bigFont;
+        labelStyle.font = FontManager.getBigFont();
 
         Label headerLabel = new Label("Space Travels 3", labelStyle);
 
@@ -125,6 +136,26 @@ public class MenuScreen implements Screen
         ScrollPane scrollPane = new ScrollPane(verticalGroup);
 
         return scrollPane;
+    }
+
+    public Actor getDebugButton()
+    {
+        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
+        textButtonStyle.font = FontManager.getBigFont();
+
+        Button debugButton = new TextButton("Debug", textButtonStyle);
+
+        debugButton.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    GameManager.getGame().setScreen(new DebugMenuScreen());
+                    super.clicked(event, x, y);
+                }
+            });
+        return debugButton;
     }
 
     private void StartGameScreen()
