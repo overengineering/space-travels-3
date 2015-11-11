@@ -31,9 +31,9 @@ public class Hud implements Screen
 
     private ProgressBar fuelProgressBar;
 
-    private Stack<Image>       grayStars;
-    private Table              starsTable;
-    private Ship               ship;
+    private Stack<Image> grayStars;
+    private Table        starsTable;
+    private Ship         ship;
 
     private ShapeRenderer      shapeRenderer;
     private OrthographicCamera orthographicCamera;
@@ -42,6 +42,7 @@ public class Hud implements Screen
     {
         this.orthographicCamera = orthographicCamera;
         shapeRenderer = new ShapeRenderer();
+        shapeRenderer.setAutoShapeType(true);
         Constants.EVENT_BUS.register(this);
         this.grayStars = new Stack<>();
         stage = new Stage();
@@ -112,12 +113,13 @@ public class Hud implements Screen
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
-        shapeRenderer.setProjectionMatrix(orthographicCamera.combined);
-
         if (Constants.HUD_DRAW_VELOCITY_INDICATORS)
         {
+            shapeRenderer.setProjectionMatrix(orthographicCamera.combined);
+            shapeRenderer.begin();
             DrawGravityIndicator();
             DrawVelocityIndicator();
+            shapeRenderer.end();
         }
 
         MiniMap.getShapeRenderer().begin();
@@ -134,42 +136,38 @@ public class Hud implements Screen
     {
         Vector2 gravityVector = GravityManager.getForceActingOn(ship.getBody());
 
-        shapeRenderer.setColor(Color.RED);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(Color.BLUE);
+        shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.circle(
             ship.getX() + gravityVector.x * FORCE_INDICATOR_SCALE,
             ship.getY() + gravityVector.y * FORCE_INDICATOR_SCALE,
             0.5f);
-        shapeRenderer.end();
 
-        shapeRenderer.setColor(new Color(1, 0, 0, 0.4f));
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(new Color(0, 0, 1f, 0.4f));
+        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
         shapeRenderer.circle(
             ship.getX(),
             ship.getY(),
             gravityVector.len() * FORCE_INDICATOR_SCALE,
             24);
-        shapeRenderer.end();
     }
     
     private void DrawVelocityIndicator()
     {
         shapeRenderer.setColor(Color.WHITE);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.circle(
             ship.getX() + ship.getBody().getLinearVelocity().x * FORCE_INDICATOR_SCALE,
             ship.getY() + ship.getBody().getLinearVelocity().y * FORCE_INDICATOR_SCALE,
             0.5f);
-        shapeRenderer.end();
 
-        shapeRenderer.setColor(new Color(1, 1, 1, 0.2f));
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(new Color(1, 1, 1, 0.4f));
         shapeRenderer.circle(
             ship.getX(),
             ship.getY(),
             ship.getBody().getLinearVelocity().len() * FORCE_INDICATOR_SCALE,
             24);
-        shapeRenderer.end();
     }
 
     @Override
