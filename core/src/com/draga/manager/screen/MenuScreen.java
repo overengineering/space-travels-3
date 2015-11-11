@@ -3,7 +3,6 @@ package com.draga.manager.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -12,13 +11,15 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.Constants;
-import com.draga.manager.asset.FontManager;
 import com.draga.manager.GameManager;
+import com.draga.manager.ScoreManager;
+import com.draga.manager.asset.FontManager;
 import com.draga.manager.level.LevelManager;
+import com.draga.manager.level.serialisableEntities.SerialisableLevel;
 
 public class MenuScreen implements Screen
 {
-    private Stage stage;
+    private Stage                   stage;
     private ButtonGroup<TextButton> buttonGroup;
 
     public MenuScreen()
@@ -63,6 +64,37 @@ public class MenuScreen implements Screen
         stage.setDebugAll(Constants.DEBUG_DRAW);
     }
 
+    public Actor getHeaderLabel()
+    {
+        Label.LabelStyle labelStyle = new Label.LabelStyle();
+        BitmapFont bigFont = FontManager.getBigFont();
+        labelStyle.font = bigFont;
+
+        Label headerLabel = new Label("Space Travels 3", labelStyle);
+
+        return headerLabel;
+    }
+
+    public TextButton getPlayButton()
+    {
+        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
+        textButtonStyle.font = FontManager.getBigFont();
+
+        TextButton playButton = new TextButton("Play", textButtonStyle);
+
+        playButton.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    StartGameScreen();
+                    super.clicked(event, x, y);
+                }
+            });
+        return playButton;
+    }
+
     private ScrollPane getLevelList()
     {
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
@@ -70,7 +102,7 @@ public class MenuScreen implements Screen
         textButtonStyle.checkedFontColor = Color.GREEN;
         textButtonStyle.fontColor = Color.WHITE;
 
-        FileHandle[] levelFiles = LevelManager.getLevels();
+        java.util.List<SerialisableLevel> levels = LevelManager.getLevels();
 
         buttonGroup = new ButtonGroup<>();
 
@@ -80,13 +112,12 @@ public class MenuScreen implements Screen
 
         VerticalGroup verticalGroup = new VerticalGroup();
 
-        for (FileHandle levelFileHandle : levelFiles)
+        for (SerialisableLevel level : levels)
         {
+            String buttonText = level.name + " (" + ScoreManager.getScore(level.name) + ")";
             TextButton textButton =
-                new TextButton(levelFileHandle.nameWithoutExtension(), textButtonStyle);
-            // Set path as name so that it can be passed straight to the loading screen later on.
-            textButton.
-                setName(levelFileHandle.path());
+                new TextButton(buttonText, textButtonStyle);
+            textButton.setName(level.name);
             buttonGroup.add(textButton);
             verticalGroup.addActor(textButton);
         }
@@ -94,6 +125,13 @@ public class MenuScreen implements Screen
         ScrollPane scrollPane = new ScrollPane(verticalGroup);
 
         return scrollPane;
+    }
+
+    private void StartGameScreen()
+    {
+        String levelName = buttonGroup.getChecked().getName();
+        LoadingScreen loadingScreen = new LoadingScreen(levelName);
+        GameManager.getGame().setScreen(loadingScreen);
     }
 
     @Override
@@ -120,21 +158,15 @@ public class MenuScreen implements Screen
     }
 
     @Override
-    public void dispose()
+    public void resize(int width, int height)
     {
-        stage.dispose();
+        stage.getViewport().update(width, height);
     }
 
     @Override
     public void pause()
     {
 
-    }
-
-    @Override
-    public void resize(int width, int height)
-    {
-        stage.getViewport().update(width, height);
     }
 
     @Override
@@ -149,39 +181,9 @@ public class MenuScreen implements Screen
         this.dispose();
     }
 
-    public TextButton getPlayButton()
+    @Override
+    public void dispose()
     {
-        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        textButtonStyle.font = FontManager.getBigFont();
-
-        TextButton playButton = new TextButton("Play", textButtonStyle);
-
-        playButton.addListener(
-            new ClickListener()
-            {
-                @Override
-                public void clicked(InputEvent event, float x, float y)
-                {
-                    StartGameScreen();
-                    super.clicked(event, x, y);
-                }
-            });
-        return playButton;
-    }
-
-    private void StartGameScreen()
-    {
-        GameManager.getGame().setScreen(new LoadingScreen(buttonGroup.getChecked().getName()));
-    }
-
-    public Actor getHeaderLabel()
-    {
-        Label.LabelStyle labelStyle = new Label.LabelStyle();
-        BitmapFont bigFont = FontManager.getBigFont();
-        labelStyle.font = bigFont;
-
-        Label headerLabel = new Label("Space Travels 3", labelStyle);
-
-        return headerLabel;
+        stage.dispose();
     }
 }

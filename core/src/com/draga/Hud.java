@@ -123,13 +123,13 @@ public class Hud implements Screen
 
     private void DrawGravityIndicator()
     {
-        Vector2 gravVector = GravityManager.getForceActingOn(ship.getBody());
+        Vector2 gravityVector = GravityManager.getForceActingOn(ship.getBody());
 
-        shapeRenderer.setColor(new Color(1, 0, 0, 1));
+        shapeRenderer.setColor(Color.RED);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.circle(
-            ship.getX() + gravVector.x * FORCE_INDICATOR_SCALE,
-            ship.getY() + gravVector.y * FORCE_INDICATOR_SCALE,
+            ship.getX() + gravityVector.x * FORCE_INDICATOR_SCALE,
+            ship.getY() + gravityVector.y * FORCE_INDICATOR_SCALE,
             0.5f);
         shapeRenderer.end();
 
@@ -138,14 +138,14 @@ public class Hud implements Screen
         shapeRenderer.circle(
             ship.getX(),
             ship.getY(),
-            gravVector.len() * FORCE_INDICATOR_SCALE,
+            gravityVector.len() * FORCE_INDICATOR_SCALE,
             24);
         shapeRenderer.end();
     }
     
     private void DrawVelocityIndicator()
     {
-        shapeRenderer.setColor(new Color(1, 1, 1, 1));
+        shapeRenderer.setColor(Color.WHITE);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.circle(
             ship.getX() + ship.getBody().getLinearVelocity().x * FORCE_INDICATOR_SCALE,

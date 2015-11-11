@@ -27,7 +27,7 @@ public class Star extends GameEntity
         this.fixtureDef = new FixtureDef();
         this.fixtureDef.shape = polygonShape;
         this.fixtureDef.density = 0;
-        this.fixtureDef.friction = 1f;
+        this.fixtureDef.friction = 0;
         this.fixtureDef.restitution = 0;
         this.fixtureDef.filter.categoryBits = MaskBits.STAR;
         this.fixtureDef.filter.maskBits = MaskBits.SHIP;

@@ -25,17 +25,19 @@ public class LoseScreen implements Screen
     private final Color fadeToColour     = new Color(0, 0, 0, 0.7f);
     private final Color backgroundColour = new Color(0, 0, 0, 0);
     private final ShapeRenderer shapeRenderer;
-    private       String        levelPath;
+    private       String        levelName;
 
-    public LoseScreen(String levelPath)
+    public LoseScreen(String levelName)
     {
-        this.levelPath = levelPath;
+        this.levelName = levelName;
         this.stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
         Actor retryButton = getRetryButton();
 
         Table table = new Table();
+        table.addAction(Actions.fadeOut(0));
+        table.addAction(Actions.fadeIn(3, Interpolation.pow2In));
         table.add(retryButton).size(retryButton.getWidth() * 2, retryButton.getHeight() * 3);
         table.setFillParent(true);
         stage.addActor(table);
@@ -131,8 +133,7 @@ public class LoseScreen implements Screen
 
         TextButton retryButton = new TextButton("Try Again?", buttonStyle);
 
-        retryButton.setColor(new Color(1, 1, 1, 0));
-        retryButton.addAction(Actions.color(new Color(1, 1, 1, 1), 3, Interpolation.pow2In));
+        retryButton.setColor(Color.WHITE);
         retryButton.addListener(
             new ClickListener()
             {
@@ -149,6 +150,6 @@ public class LoseScreen implements Screen
 
     private void Retry()
     {
-        GameManager.getGame().setScreen(new LoadingScreen(levelPath));
+        GameManager.getGame().setScreen(new LoadingScreen(levelName));
     }
 }
