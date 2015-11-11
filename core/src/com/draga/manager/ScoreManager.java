@@ -17,10 +17,10 @@ public abstract class ScoreManager
     {
         levelScores.put(levelName, score);
 
-        saveLevelScores(levelScores);
+        saveLevelScores();
     }
 
-    private static void saveLevelScores(final HashMap<String, Float> levelScores)
+    private static void saveLevelScores()
     {
         Runnable saveLevelScoreRunnable = new SaveLevelScoreRunnable();
         saveLevelScoreRunnable.run();
