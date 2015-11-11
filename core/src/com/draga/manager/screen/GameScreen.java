@@ -3,9 +3,12 @@ package com.draga.manager.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -49,7 +52,6 @@ public class GameScreen implements Screen
 
     private Ship              ship;
     private ArrayList<Planet> planets;
-    private Planet            destinationPlanet;
 
     private GameScreenInputProcessor gameScreenInputProcessor;
 
@@ -261,6 +263,22 @@ public class GameScreen implements Screen
         }
         spriteBatch.end();
 
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
+        /*Color minimapBackgroundColor = new Color(0, 0.17f, 0, 0.5f);
+        MiniMap.getShapeRenderer().setColor(minimapBackgroundColor);
+        MiniMap.getShapeRenderer().set(ShapeRenderer.ShapeType.Filled);
+        MiniMap.getShapeRenderer().rect(0, 0, width, height);*/
+
+        Color minimapBorderColor = new Color(0, 0.4f, 0, 1);
+        MiniMap.getShapeRenderer().setColor(minimapBorderColor);
+        MiniMap.getShapeRenderer().set(ShapeRenderer.ShapeType.Line);
+        MiniMap.getShapeRenderer().rect(0, 0, width, height);
+
+        Gdx.gl.glDisable(GL20.GL_BLEND);
+
+
         MiniMap.getShapeRenderer().end();
 
         if (Constants.DEBUG_DRAW)
@@ -369,7 +387,7 @@ public class GameScreen implements Screen
         GameEntityManager.getGameEntitiesToDestroy().add(ship);
 
         // If wrong planet or too fast then lose.
-        if (getDestinationPlanet() != shipPlanetCollisionEvent.planet
+        if (!shipPlanetCollisionEvent.planet.isDestination()
             || ship.getBody().getLinearVelocity().len()
             > Constants.MAX_DESTINATION_PLANET_APPROACH_SPEED)
         {
@@ -388,16 +406,6 @@ public class GameScreen implements Screen
             gameState = GameState.WIN;
             this.overlayScreen = new WinScreen(levelPath, score);
         }
-    }
-
-    public Planet getDestinationPlanet()
-    {
-        return destinationPlanet;
-    }
-
-    public void setDestinationPlanet(Planet destinationPlanet)
-    {
-        this.destinationPlanet = destinationPlanet;
     }
 
     private float getScore()

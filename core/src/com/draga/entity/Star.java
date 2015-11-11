@@ -1,10 +1,14 @@
 package com.draga.entity;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.draga.MaskBits;
+import com.draga.MiniMap;
 import com.draga.manager.asset.AssMan;
 
 public class Star extends GameEntity
@@ -67,6 +71,25 @@ public class Star extends GameEntity
             texture.getHeight(),
             false,
             false);
+
+        MiniMap.getShapeRenderer().set(ShapeRenderer.ShapeType.Filled);
+        MiniMap.getShapeRenderer().setColor(Color.GOLDENROD);
+
+        Vector2 p1 = new Vector2(0, 7);
+        Vector2 p2 = new Vector2(3, 0);
+        Vector2 p3 = new Vector2(-3, 0);
+
+        for (int i = 0; i < 5; i++)
+        {
+            p1.rotate(360 / 5);
+            p2.rotate(360 / 5);
+            p3.rotate(360 / 5);
+
+            MiniMap.getShapeRenderer().triangle(
+                p1.x + getX(), p1.y + getY(),
+                p2.x + getX(), p2.y + getY(),
+                p3.x + getX(), p3.y + getY());
+        }
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.draga.entity;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -200,7 +202,19 @@ public class Ship extends GameEntity
 
 
         MiniMap.getShapeRenderer().set(ShapeRenderer.ShapeType.Filled);
-        MiniMap.getShapeRenderer().circle(getX(), getY(), SHIP_WIDTH);
+        MiniMap.getShapeRenderer().setColor(Color.WHITE);
+
+        Vector2 p1 = new Vector2(8, 0);
+        Vector2 p2 = new Vector2(-5, -5);
+        Vector2 p3 = new Vector2(-5, 5);
+        p1.rotate(body.getAngle() * MathUtils.radiansToDegrees);
+        p2.rotate(body.getAngle() * MathUtils.radiansToDegrees);
+        p3.rotate(body.getAngle() * MathUtils.radiansToDegrees);
+
+        MiniMap.getShapeRenderer().triangle(
+            p1.x + getX(), p1.y + getY(),
+            p2.x + getX(), p2.y + getY(),
+            p3.x + getX(), p3.y + getY());
     }
 
     @Override

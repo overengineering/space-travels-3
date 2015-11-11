@@ -12,17 +12,17 @@ public class MiniMap
 {
     private static ShapeRenderer shapeRenderer = new ShapeRenderer();
     private static Viewport viewport;
+    private static final float MINIMAP_SCALE = 0.25f;
 
     private static final OrthographicCamera orthographicCamera = new OrthographicCamera();
 
     static
     {
-        orthographicCamera.viewportWidth =  Gdx.graphics.getWidth() * 4;
-        orthographicCamera.viewportHeight =  Gdx.graphics.getHeight() * 4;
+        orthographicCamera.viewportWidth =  Gdx.graphics.getWidth() / MINIMAP_SCALE;
+        orthographicCamera.viewportHeight =  Gdx.graphics.getHeight() / MINIMAP_SCALE;
         orthographicCamera.update();
 
         shapeRenderer.setAutoShapeType(true);
-        shapeRenderer.setProjectionMatrix(orthographicCamera.combined);
     }
 
     public static ShapeRenderer getShapeRenderer()
