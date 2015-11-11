@@ -36,6 +36,8 @@ public class LoseScreen implements Screen
         Actor retryButton = getRetryButton();
 
         Table table = new Table();
+        table.addAction(Actions.fadeOut(0));
+        table.addAction(Actions.fadeIn(3, Interpolation.pow2In));
         table.add(retryButton).size(retryButton.getWidth() * 2, retryButton.getHeight() * 3);
         table.setFillParent(true);
         stage.addActor(table);
@@ -131,8 +133,7 @@ public class LoseScreen implements Screen
 
         TextButton retryButton = new TextButton("Try Again?", buttonStyle);
 
-        retryButton.setColor(new Color(1, 1, 1, 0));
-        retryButton.addAction(Actions.color(new Color(1, 1, 1, 1), 3, Interpolation.pow2In));
+        retryButton.setColor(Color.WHITE);
         retryButton.addListener(
             new ClickListener()
             {
