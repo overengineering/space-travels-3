@@ -71,7 +71,25 @@ public class Star extends GameEntity
             texture.getHeight(),
             false,
             false);
+    }
 
+    @Override
+    public void dispose()
+    {
+
+    }
+
+    @Override
+    public void createBody(World world)
+    {
+        body = world.createBody(bodyDef);
+        body.setUserData(this);
+        fixture = body.createFixture(fixtureDef);
+    }
+
+    @Override
+    public void drawMiniMap()
+    {
         MiniMap.getShapeRenderer().set(ShapeRenderer.ShapeType.Filled);
         MiniMap.getShapeRenderer().setColor(Color.GOLDENROD);
 
@@ -90,19 +108,5 @@ public class Star extends GameEntity
                 p2.x + getX(), p2.y + getY(),
                 p3.x + getX(), p3.y + getY());
         }
-    }
-
-    @Override
-    public void dispose()
-    {
-
-    }
-
-    @Override
-    public void createBody(World world)
-    {
-        body = world.createBody(bodyDef);
-        body.setUserData(this);
-        fixture = body.createFixture(fixtureDef);
     }
 }

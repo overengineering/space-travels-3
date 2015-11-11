@@ -57,6 +57,17 @@ public class Planet extends GameEntity
     }
 
     @Override
+    public void drawMiniMap()
+    {
+        MiniMap.getShapeRenderer().set(ShapeRenderer.ShapeType.Line);
+        Color planetMinimapColour = isDestination
+            ? Color.RED
+            : Color.BLUE;
+        MiniMap.getShapeRenderer().setColor(planetMinimapColour);
+        MiniMap.getShapeRenderer().circle(getX(), getY(), circleShape.getRadius());
+    }
+
+    @Override
     public void draw(SpriteBatch spriteBatch)
     {
         spriteBatch.draw(
@@ -76,13 +87,6 @@ public class Planet extends GameEntity
             texture.getHeight(),
             false,
             false);
-
-        MiniMap.getShapeRenderer().set(ShapeRenderer.ShapeType.Filled);
-        Color planetMinimapColour = isDestination
-            ? new Color(0, 0, 1, 1)
-            : new Color(0.6f, 0, 0, 1);
-        MiniMap.getShapeRenderer().setColor(planetMinimapColour);
-        MiniMap.getShapeRenderer().circle(getX(), getY(), circleShape.getRadius());
     }
 
     @Override

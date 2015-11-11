@@ -87,4 +87,10 @@ public class Explosion extends GameEntity
         body.setUserData(this);
         fixture = body.createFixture(fixtureDef);
     }
+
+    @Override
+    public void drawMiniMap()
+    {
+
+    }
 }

@@ -157,6 +157,25 @@ public class Ship extends GameEntity
     }
 
     @Override
+    public void drawMiniMap()
+    {
+        MiniMap.getShapeRenderer().set(ShapeRenderer.ShapeType.Filled);
+        MiniMap.getShapeRenderer().setColor(Color.WHITE);
+
+        Vector2 p1 = new Vector2(8, 0);
+        Vector2 p2 = new Vector2(-5, -5);
+        Vector2 p3 = new Vector2(-5, 5);
+        p1.rotate(body.getAngle() * MathUtils.radiansToDegrees);
+        p2.rotate(body.getAngle() * MathUtils.radiansToDegrees);
+        p3.rotate(body.getAngle() * MathUtils.radiansToDegrees);
+
+        MiniMap.getShapeRenderer().triangle(
+            p1.x + getX(), p1.y + getY(),
+            p2.x + getX(), p2.y + getY(),
+            p3.x + getX(), p3.y + getY());
+    }
+
+    @Override
     public void draw(SpriteBatch spriteBatch)
     {
         float halfThrusterHeight = thrusterHeight / 2f;
@@ -201,20 +220,7 @@ public class Ship extends GameEntity
             false);
 
 
-        MiniMap.getShapeRenderer().set(ShapeRenderer.ShapeType.Filled);
-        MiniMap.getShapeRenderer().setColor(Color.WHITE);
 
-        Vector2 p1 = new Vector2(8, 0);
-        Vector2 p2 = new Vector2(-5, -5);
-        Vector2 p3 = new Vector2(-5, 5);
-        p1.rotate(body.getAngle() * MathUtils.radiansToDegrees);
-        p2.rotate(body.getAngle() * MathUtils.radiansToDegrees);
-        p3.rotate(body.getAngle() * MathUtils.radiansToDegrees);
-
-        MiniMap.getShapeRenderer().triangle(
-            p1.x + getX(), p1.y + getY(),
-            p2.x + getX(), p2.y + getY(),
-            p3.x + getX(), p3.y + getY());
     }
 
     @Override

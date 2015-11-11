@@ -253,23 +253,19 @@ public class GameScreen implements Screen
 
     public void draw()
     {
-        MiniMap.getShapeRenderer().begin();
 
         spriteBatch.begin();
         spriteBatch.draw(backgroundTexture, 0, 0, width, height);
-        for (GameEntity gameEntity : GameEntityManager.getGameEntities())
-        {
-            gameEntity.draw(spriteBatch);
-        }
         spriteBatch.end();
 
+        MiniMap.getShapeRenderer().begin();
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
-        /*Color minimapBackgroundColor = new Color(0, 0.17f, 0, 0.5f);
+        Color minimapBackgroundColor = new Color(0, 0.17f, 0, 0.5f);
         MiniMap.getShapeRenderer().setColor(minimapBackgroundColor);
         MiniMap.getShapeRenderer().set(ShapeRenderer.ShapeType.Filled);
-        MiniMap.getShapeRenderer().rect(0, 0, width, height);*/
+        MiniMap.getShapeRenderer().rect(0, 0, width, height);
 
         Color minimapBorderColor = new Color(0, 0.4f, 0, 1);
         MiniMap.getShapeRenderer().setColor(minimapBorderColor);
@@ -277,9 +273,14 @@ public class GameScreen implements Screen
         MiniMap.getShapeRenderer().rect(0, 0, width, height);
 
         Gdx.gl.glDisable(GL20.GL_BLEND);
-
-
         MiniMap.getShapeRenderer().end();
+
+        spriteBatch.begin();
+        for (GameEntity gameEntity : GameEntityManager.getGameEntities())
+        {
+            gameEntity.draw(spriteBatch);
+        }
+        spriteBatch.end();
 
         if (Constants.DEBUG_DRAW)
         {

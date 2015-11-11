@@ -12,9 +12,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.draga.entity.GameEntity;
 import com.draga.entity.Ship;
 import com.draga.event.FuelChangeEvent;
 import com.draga.event.StarCollectedEvent;
+import com.draga.manager.GameEntityManager;
 import com.draga.manager.GravityManager;
 import com.draga.manager.asset.AssMan;
 import com.google.common.eventbus.Subscribe;
@@ -119,6 +121,13 @@ public class Hud implements Screen
         }
 
         Gdx.gl.glDisable(GL20.GL_BLEND);
+
+        MiniMap.getShapeRenderer().begin();
+        for (GameEntity gameEntity : GameEntityManager.getGameEntities())
+        {
+            gameEntity.drawMiniMap();
+        }
+        MiniMap.getShapeRenderer().end();
     }
 
     private void DrawGravityIndicator()

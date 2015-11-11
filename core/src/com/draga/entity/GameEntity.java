@@ -33,4 +33,6 @@ public abstract class GameEntity
     {
         return body;
     }
+
+    public abstract void drawMiniMap();
 }
