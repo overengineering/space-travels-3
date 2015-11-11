@@ -1,6 +1,5 @@
 package com.draga.manager;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,12 +10,12 @@ import com.draga.manager.asset.FontManager;
 
 public class SkinManager
 {
-    public static Skin BasicMenuSkin;
+    public static Skin BasicSkin;
 
 
     public static void create()
     {
-        BasicMenuSkin = createBasicSkin();
+        BasicSkin = createBasicSkin();
     }
 
     private static Skin createBasicSkin()
@@ -28,8 +27,7 @@ public class SkinManager
         skin.add("default", font);
 
         //Create a texture
-        Pixmap pixmap = new Pixmap(0, 0,
-            Pixmap.Format.RGB888);
+        Pixmap pixmap = new Pixmap(0, 0, Pixmap.Format.RGB888);
         pixmap.setColor(Color.CLEAR);
         pixmap.fill();
         skin.add("background", new Texture(pixmap));

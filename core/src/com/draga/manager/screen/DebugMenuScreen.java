@@ -5,26 +5,23 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.draga.Constants;
 import com.draga.manager.DebugManager;
 import com.draga.manager.GameManager;
 import com.draga.manager.SkinManager;
 
 public class DebugMenuScreen implements Screen
 {
-    private Skin        skin;
-    private Stage       stage;
-    //private SpriteBatch batch;
+    private Stage stage;
 
     public DebugMenuScreen()
     {
-        //batch = new SpriteBatch();
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
-
-        skin = SkinManager.BasicMenuSkin;
 
         Table table = new Table();
         table.setFillParent(true);
@@ -38,7 +35,9 @@ public class DebugMenuScreen implements Screen
 
     public ScrollPane GetButtonScrollPane()
     {
-        final TextButton debugDrawTextButton = new TextButton("Debug Draw", skin.get("checkTextButton", TextButton.TextButtonStyle.class));
+        final TextButton debugDrawTextButton = new TextButton(
+            "Debug Draw",
+            SkinManager.BasicSkin.get("checkTextButton", TextButton.TextButtonStyle.class));
         debugDrawTextButton.setChecked(DebugManager.debugDraw);
 
         debugDrawTextButton.addListener(
@@ -63,15 +62,20 @@ public class DebugMenuScreen implements Screen
     }
 
     @Override
+    public void show()
+    {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
     public void render(float delta)
     {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
+            || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
         {
             GameManager.getGame().setScreen(new MenuScreen());
         }
-/*
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);*/
 
         stage.act(delta);
         stage.draw();
@@ -81,27 +85,6 @@ public class DebugMenuScreen implements Screen
     public void resize(int width, int height)
     {
         stage.getViewport().update(width, height);
-    }
-
-    @Override
-    public void dispose()
-    {
-        stage.dispose();
-        //skin.dispose();
-    }
-
-    @Override
-    public void show()
-    {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void hide()
-    {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -116,5 +99,19 @@ public class DebugMenuScreen implements Screen
     {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public void hide()
+    {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void dispose()
+    {
+        stage.dispose();
+        //skin.dispose();
     }
 }
