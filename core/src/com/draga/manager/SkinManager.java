@@ -36,15 +36,10 @@ public class SkinManager
 
         // Create a text button style
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
+        textButtonStyle.checkedFontColor = Color.GREEN;
+        textButtonStyle.fontColor = Color.WHITE;
         textButtonStyle.font = skin.getFont("bigFont");
         skin.add("default", textButtonStyle);
-
-        // Create check text button style
-        TextButton.TextButtonStyle checkTextButtonStyle = new TextButton.TextButtonStyle();
-        checkTextButtonStyle.font = skin.getFont("bigFont");
-        checkTextButtonStyle.checkedFontColor = Color.GREEN;
-        checkTextButtonStyle.fontColor = Color.WHITE;
-        skin.add("checkTextButton", checkTextButtonStyle);
 
         // Label style
         Label.LabelStyle labelStyle = new Label.LabelStyle();

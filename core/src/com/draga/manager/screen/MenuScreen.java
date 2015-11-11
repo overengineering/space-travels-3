@@ -107,7 +107,7 @@ public class MenuScreen implements Screen
     private ScrollPane getLevelList()
     {
         TextButton.TextButtonStyle textButtonStyle =
-            SkinManager.BasicSkin.get("checkTextButton", TextButton.TextButtonStyle.class);
+            SkinManager.BasicSkin.get(TextButton.TextButtonStyle.class);
 
         java.util.List<SerialisableLevel> levels = LevelManager.getLevels();
 
