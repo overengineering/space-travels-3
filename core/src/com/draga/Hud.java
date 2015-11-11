@@ -120,13 +120,13 @@ public class Hud implements Screen
             DrawVelocityIndicator();
         }
 
-        Gdx.gl.glDisable(GL20.GL_BLEND);
-
         MiniMap.getShapeRenderer().begin();
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
             gameEntity.drawMiniMap();
         }
+
+        Gdx.gl.glDisable(GL20.GL_BLEND);
         MiniMap.getShapeRenderer().end();
     }
 
