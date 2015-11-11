@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.draga.Constants;
+import com.draga.manager.DebugManager;
 import com.draga.manager.GameManager;
 import com.draga.manager.asset.AssMan;
 import com.draga.manager.asset.FontManager;
@@ -36,7 +37,7 @@ public class LoadingScreen implements Screen
 
         this.serialisableLevel = LevelManager.getLevel(levelName);
 
-        AssMan.DisposeAllAndClear();
+        AssMan.getAssMan().clear();
         AssMan.getAssMan().load(
             this.serialisableLevel.serialisedBackground.texturePath, Texture.class);
         AssMan.getAssMan().load(
@@ -72,7 +73,7 @@ public class LoadingScreen implements Screen
             .width(stage.getWidth() * 0.75f);
 
 
-        stage.setDebugAll(Constants.DEBUG_DRAW);
+        stage.setDebugAll(DebugManager.debugDraw);
     }
 
     public Label getHeaderLabel()

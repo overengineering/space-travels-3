@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -14,16 +13,15 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.draga.Constants;
+import com.draga.manager.DebugManager;
+import com.draga.manager.SkinManager;
 import com.draga.manager.asset.FontManager;
 import com.draga.manager.GameManager;
 
 public class LoseScreen implements Screen
 {
-    public static final float FADE_PER_SECOND = 0.7f;
     private final Stage      stage;
     private final Color fadeToColour     = new Color(0, 0, 0, 0.7f);
-    private final Color backgroundColour = new Color(0, 0, 0, 0);
     private final ShapeRenderer shapeRenderer;
     private       String        levelName;
 
@@ -35,14 +33,19 @@ public class LoseScreen implements Screen
 
         Actor retryButton = getRetryButton();
 
+
         Table table = new Table();
-        table.addAction(Actions.fadeOut(0));
-        table.addAction(Actions.fadeIn(3, Interpolation.pow2In));
+        table.setBackground(SkinManager.BasicSkin.newDrawable("background", fadeToColour));
+        table.addAction(Actions.sequence(
+            Actions.fadeOut(0),
+            Actions.fadeIn(3, Interpolation.pow2In)));
+
+
         table.add(retryButton).size(retryButton.getWidth() * 2, retryButton.getHeight() * 3);
         table.setFillParent(true);
         stage.addActor(table);
 
-        stage.setDebugAll(Constants.DEBUG_DRAW);
+        stage.setDebugAll(DebugManager.debugDraw);
         shapeRenderer = new ShapeRenderer();
     }
 
@@ -74,18 +77,6 @@ public class LoseScreen implements Screen
 
     private void draw(float delta)
     {
-        backgroundColour.lerp(fadeToColour, FADE_PER_SECOND * delta);
-
-        Gdx.gl.glEnable(GL20.GL_BLEND);
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-
-        shapeRenderer.setColor(backgroundColour);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.rect(0, 0, stage.getWidth(), stage.getHeight());
-        shapeRenderer.end();
-
-        Gdx.gl.glDisable(GL20.GL_BLEND);
-
         stage.draw();
     }
 

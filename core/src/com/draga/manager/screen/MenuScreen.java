@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.Constants;
+import com.draga.manager.DebugManager;
 import com.draga.manager.GameManager;
 import com.draga.manager.ScoreManager;
 import com.draga.manager.asset.FontManager;
@@ -57,18 +58,29 @@ public class MenuScreen implements Screen
             .expand();
 
         table.row();
+
+        if (Constants.IS_DEBUGGING)
+        {
+            Actor debugButton = getDebugButton();
+
+            table
+                .add(debugButton)
+                .bottom();
+
+            table.row();
+        }
+
         table
             .add(playButton)
             .bottom();
 
-        stage.setDebugAll(Constants.DEBUG_DRAW);
+        stage.setDebugAll(DebugManager.debugDraw);
     }
 
     public Actor getHeaderLabel()
     {
         Label.LabelStyle labelStyle = new Label.LabelStyle();
-        BitmapFont bigFont = FontManager.getBigFont();
-        labelStyle.font = bigFont;
+        labelStyle.font = FontManager.getBigFont();
 
         Label headerLabel = new Label("Space Travels 3", labelStyle);
 
@@ -125,6 +137,26 @@ public class MenuScreen implements Screen
         ScrollPane scrollPane = new ScrollPane(verticalGroup);
 
         return scrollPane;
+    }
+
+    public Actor getDebugButton()
+    {
+        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
+        textButtonStyle.font = FontManager.getBigFont();
+
+        Button debugButton = new TextButton("Debug", textButtonStyle);
+
+        debugButton.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    GameManager.getGame().setScreen(new DebugMenuScreen());
+                    super.clicked(event, x, y);
+                }
+            });
+        return debugButton;
     }
 
     private void StartGameScreen()

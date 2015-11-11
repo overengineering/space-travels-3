@@ -18,8 +18,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.Constants;
+import com.draga.manager.DebugManager;
 import com.draga.manager.GameManager;
 import com.draga.manager.ScoreManager;
+import com.draga.manager.SkinManager;
 import com.draga.manager.asset.FontManager;
 import com.draga.manager.level.LevelManager;
 import com.draga.manager.level.serialisableEntities.SerialisableLevel;
@@ -46,8 +48,11 @@ public class WinScreen implements Screen
         Label scoreLabel = getScoreLabel(score);
 
         Table table = new Table();
-        table.addAction(Actions.fadeOut(0));
-        table.addAction(Actions.fadeIn(3, Interpolation.pow2In));
+        table.setBackground(SkinManager.BasicSkin.newDrawable("background", fadeToColour));
+        table.addAction(Actions.sequence(
+            Actions.fadeOut(0),
+            Actions.fadeIn(3, Interpolation.pow2In)));
+
         table.add(headerLabel);
 
         ScoreManager.updateScore(levelName, score);
@@ -74,7 +79,7 @@ public class WinScreen implements Screen
         table.setFillParent(true);
         stage.addActor(table);
 
-        stage.setDebugAll(Constants.DEBUG_DRAW);
+        stage.setDebugAll(DebugManager.debugDraw);
         shapeRenderer = new ShapeRenderer();
     }
 
@@ -201,18 +206,6 @@ public class WinScreen implements Screen
 
     private void draw(float delta)
     {
-        backgroundColour.lerp(fadeToColour, FADE_PER_SECOND * delta);
-
-        Gdx.gl.glEnable(GL20.GL_BLEND);
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-
-        shapeRenderer.setColor(backgroundColour);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.rect(0, 0, stage.getWidth(), stage.getHeight());
-        shapeRenderer.end();
-
-        Gdx.gl.glDisable(GL20.GL_BLEND);
-
         stage.draw();
     }
 

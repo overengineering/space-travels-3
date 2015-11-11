@@ -91,7 +91,7 @@ public class GameScreen implements Screen
         {
             createWalls();
         }
-        if (Constants.DEBUG_DRAW)
+        if (DebugManager.debugDraw)
         {
             box2DDebugRenderer = new Box2DDebugRenderer();
         }
@@ -259,7 +259,7 @@ public class GameScreen implements Screen
         }
         spriteBatch.end();
 
-        if (Constants.DEBUG_DRAW)
+        if (DebugManager.debugDraw)
         {
             box2DDebugRenderer.render(box2dWorld, orthographicCamera.combined);
         }
@@ -333,7 +333,7 @@ public class GameScreen implements Screen
         GameEntityManager.dispose();
         box2dWorld.dispose();
         backgroundTexture.dispose();
-        if (Constants.DEBUG_DRAW)
+        if (DebugManager.debugDraw)
         {
             box2DDebugRenderer.dispose();
         }

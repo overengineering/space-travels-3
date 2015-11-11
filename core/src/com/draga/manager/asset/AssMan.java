@@ -28,17 +28,4 @@ public class AssMan
 
         return ASSET_LIST;
     }
-
-    public static void DisposeAllAndClear()
-    {
-        Array<Disposable> allAssets = new Array<>();
-        ASSET_MANAGER.getAll(Disposable.class, allAssets);
-
-        for (Disposable asset : allAssets)
-        {
-            asset.dispose();
-        }
-
-        ASSET_MANAGER.clear();
-    }
 }
