@@ -85,24 +85,19 @@ public class WinScreen implements Screen
 
     public Label getHeaderLabel()
     {
-        Label.LabelStyle labelStyle = new Label.LabelStyle();
-        BitmapFont bigFont = FontManager.getBigFont();
-        labelStyle.font = bigFont;
+        Label.LabelStyle labelStyle = SkinManager.BasicSkin.get(Label.LabelStyle.class);
 
         Label headerLabel = new Label("You won!", labelStyle);
-        headerLabel.setColor(Color.WHITE);
 
         return headerLabel;
     }
 
     public TextButton getRetryButton()
     {
-        TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
-        buttonStyle.font = FontManager.getBigFont();
+        TextButton.TextButtonStyle buttonStyle = SkinManager.BasicSkin.get(TextButton.TextButtonStyle.class);
 
         TextButton retryButton = new TextButton("Try Again?", buttonStyle);
 
-        retryButton.setColor(Color.WHITE);
         retryButton.addListener(
             new ClickListener()
             {
@@ -119,21 +114,16 @@ public class WinScreen implements Screen
 
     private Label getScoreLabel(float score)
     {
-        Label.LabelStyle labelStyle = new Label.LabelStyle();
-        BitmapFont bigFont = FontManager.getBigFont();
-        labelStyle.font = bigFont;
+        Label.LabelStyle labelStyle = SkinManager.BasicSkin.get(Label.LabelStyle.class);
 
         Label scoreLabel = new Label("Score: " + score, labelStyle);
-        scoreLabel.setColor(Color.WHITE);
 
         return scoreLabel;
     }
 
     private Label getBestScoreLabel(float score, float previousBestScore)
     {
-        Label.LabelStyle labelStyle = new Label.LabelStyle();
-        BitmapFont bigFont = FontManager.getBigFont();
-        labelStyle.font = bigFont;
+        Label.LabelStyle labelStyle = SkinManager.BasicSkin.get(Label.LabelStyle.class);
 
         String text = score > previousBestScore
             ? "New best score! It was: " + previousBestScore
@@ -141,19 +131,16 @@ public class WinScreen implements Screen
 
         Label newBestScoreLabel =
             new Label(text, labelStyle);
-        newBestScoreLabel.setColor(Color.WHITE);
 
         return newBestScoreLabel;
     }
 
     public TextButton getNextButton(final String levelName)
     {
-        TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
-        buttonStyle.font = FontManager.getBigFont();
+        TextButton.TextButtonStyle buttonStyle = SkinManager.BasicSkin.get(TextButton.TextButtonStyle.class);
 
         TextButton retryButton = new TextButton("Next level", buttonStyle);
 
-        retryButton.setColor(Color.WHITE);
         retryButton.addListener(
             new ClickListener()
             {

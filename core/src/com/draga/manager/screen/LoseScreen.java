@@ -14,9 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.manager.DebugManager;
-import com.draga.manager.SkinManager;
-import com.draga.manager.asset.FontManager;
 import com.draga.manager.GameManager;
+import com.draga.manager.SkinManager;
 
 public class LoseScreen implements Screen
 {
@@ -119,12 +118,11 @@ public class LoseScreen implements Screen
 
     public Actor getRetryButton()
     {
-        TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
-        buttonStyle.font = FontManager.getBigFont();
+        TextButton.TextButtonStyle buttonStyle =
+            SkinManager.BasicSkin.get(TextButton.TextButtonStyle.class);
 
         TextButton retryButton = new TextButton("Try Again?", buttonStyle);
 
-        retryButton.setColor(Color.WHITE);
         retryButton.addListener(
             new ClickListener()
             {

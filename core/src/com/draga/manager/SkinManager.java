@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.draga.manager.asset.FontManager;
@@ -24,7 +25,7 @@ public class SkinManager
 
         //Create a font
         BitmapFont font = FontManager.getBigFont();
-        skin.add("default", font);
+        skin.add("bigFont", font);
 
         //Create a texture
         Pixmap pixmap = new Pixmap(0, 0, Pixmap.Format.RGB888);
@@ -32,21 +33,22 @@ public class SkinManager
         pixmap.fill();
         skin.add("background", new Texture(pixmap));
 
-        //Create a button style
+        //Create a text button style
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        textButtonStyle.up = skin.newDrawable("background", Color.GRAY);
-        textButtonStyle.down = skin.newDrawable("background", Color.DARK_GRAY);
-        textButtonStyle.checked = skin.newDrawable("background", Color.DARK_GRAY);
-        textButtonStyle.over = skin.newDrawable("background", Color.LIGHT_GRAY);
-        textButtonStyle.font = skin.getFont("default");
+        textButtonStyle.font = skin.getFont("bigFont");
         skin.add("default", textButtonStyle);
 
         //Create check text button style
         TextButton.TextButtonStyle checkTextButtonStyle = new TextButton.TextButtonStyle();
-        checkTextButtonStyle.font = FontManager.getBigFont();
+        checkTextButtonStyle.font = skin.getFont("bigFont");
         checkTextButtonStyle.checkedFontColor = Color.GREEN;
         checkTextButtonStyle.fontColor = Color.WHITE;
         skin.add("checkTextButton", checkTextButtonStyle);
+
+        //Label style
+        Label.LabelStyle labelStyle = new Label.LabelStyle();
+        labelStyle.font = FontManager.getBigFont();
+        skin.add("default", labelStyle, Label.LabelStyle.class);
 
         return skin;
     }

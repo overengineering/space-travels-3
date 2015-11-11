@@ -3,8 +3,6 @@ package com.draga.manager.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -14,7 +12,7 @@ import com.draga.Constants;
 import com.draga.manager.DebugManager;
 import com.draga.manager.GameManager;
 import com.draga.manager.ScoreManager;
-import com.draga.manager.asset.FontManager;
+import com.draga.manager.SkinManager;
 import com.draga.manager.level.LevelManager;
 import com.draga.manager.level.serialisableEntities.SerialisableLevel;
 
@@ -79,8 +77,7 @@ public class MenuScreen implements Screen
 
     public Actor getHeaderLabel()
     {
-        Label.LabelStyle labelStyle = new Label.LabelStyle();
-        labelStyle.font = FontManager.getBigFont();
+        Label.LabelStyle labelStyle = SkinManager.BasicSkin.get(Label.LabelStyle.class);
 
         Label headerLabel = new Label("Space Travels 3", labelStyle);
 
@@ -89,8 +86,8 @@ public class MenuScreen implements Screen
 
     public TextButton getPlayButton()
     {
-        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        textButtonStyle.font = FontManager.getBigFont();
+        TextButton.TextButtonStyle textButtonStyle =
+            SkinManager.BasicSkin.get(TextButton.TextButtonStyle.class);
 
         TextButton playButton = new TextButton("Play", textButtonStyle);
 
@@ -109,10 +106,8 @@ public class MenuScreen implements Screen
 
     private ScrollPane getLevelList()
     {
-        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        textButtonStyle.font = FontManager.getBigFont();
-        textButtonStyle.checkedFontColor = Color.GREEN;
-        textButtonStyle.fontColor = Color.WHITE;
+        TextButton.TextButtonStyle textButtonStyle =
+            SkinManager.BasicSkin.get("checkTextButton", TextButton.TextButtonStyle.class);
 
         java.util.List<SerialisableLevel> levels = LevelManager.getLevels();
 
@@ -141,8 +136,8 @@ public class MenuScreen implements Screen
 
     public Actor getDebugButton()
     {
-        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        textButtonStyle.font = FontManager.getBigFont();
+        TextButton.TextButtonStyle textButtonStyle =
+            SkinManager.BasicSkin.get(TextButton.TextButtonStyle.class);
 
         Button debugButton = new TextButton("Debug", textButtonStyle);
 

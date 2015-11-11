@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.draga.Constants;
 import com.draga.manager.DebugManager;
 import com.draga.manager.GameManager;
+import com.draga.manager.SkinManager;
 import com.draga.manager.asset.AssMan;
 import com.draga.manager.asset.FontManager;
 import com.draga.manager.level.LevelManager;
@@ -78,8 +79,7 @@ public class LoadingScreen implements Screen
 
     public Label getHeaderLabel()
     {
-        Label.LabelStyle labelStyle = new Label.LabelStyle();
-        labelStyle.font = FontManager.getBigFont();
+        Label.LabelStyle labelStyle = SkinManager.BasicSkin.get(Label.LabelStyle.class);
 
         Label headerLabel = new Label("Loading", labelStyle);
 
