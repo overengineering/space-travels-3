@@ -58,8 +58,7 @@ public class LoadingScreen implements Screen
 
         Actor headerLabel = getHeaderLabel();
 
-        float progressBarHeight = stage.getHeight() / 20f;
-        progressBar = getProgressBar((int) progressBarHeight);
+        progressBar = getProgressBar();
 
 
         Table table = new Table();
@@ -70,7 +69,6 @@ public class LoadingScreen implements Screen
         table.row();
         table
             .add(progressBar)
-            .height(progressBarHeight)
             .width(stage.getWidth() * 0.75f);
 
 
@@ -86,18 +84,12 @@ public class LoadingScreen implements Screen
         return headerLabel;
     }
 
-    private ProgressBar getProgressBar(int height)
+    private ProgressBar getProgressBar()
     {
-        Skin skin = new Skin();
-        Pixmap pixmap = new Pixmap(
-            1, height, Pixmap.Format.RGBA8888);
-        pixmap.setColor(Color.WHITE);
-        pixmap.fill();
-        skin.add("white", new Texture(pixmap));
-
         ProgressBar.ProgressBarStyle progressBarStyle = new ProgressBar.ProgressBarStyle(
-            skin.newDrawable("white", Color.DARK_GRAY), null);
-        progressBarStyle.knobBefore = skin.newDrawable("white", Color.WHITE);
+            SkinManager.BasicSkin.newDrawable("progressbar", Color.DARK_GRAY), null);
+        progressBarStyle.knobBefore = SkinManager.BasicSkin.newDrawable("progressbar", Color.WHITE);
+
 
         ProgressBar progressBar = new ProgressBar(
             0,

@@ -17,6 +17,7 @@ import com.draga.event.FuelChangeEvent;
 import com.draga.event.StarCollectedEvent;
 import com.draga.manager.DebugManager;
 import com.draga.manager.GravityManager;
+import com.draga.manager.SkinManager;
 import com.draga.manager.asset.AssMan;
 import com.google.common.eventbus.Subscribe;
 
@@ -49,11 +50,9 @@ public class Hud implements Screen
         table.pad(((stage.getHeight() + stage.getWidth()) / 2f) / 50f);
         stage.addActor(table);
 
-        float progressBarsHeight = stage.getHeight() / 30f;
-        fuelProgressBar = getFuelProgressBar((int) progressBarsHeight);
+        fuelProgressBar = getFuelProgressBar();
         table
             .add(fuelProgressBar)
-            .height(progressBarsHeight)
             .width(stage.getWidth() / 3f)
             .top()
             .left();
@@ -76,21 +75,14 @@ public class Hud implements Screen
         stage.setDebugAll(DebugManager.debugDraw);
     }
 
-    private ProgressBar getFuelProgressBar(int height)
+    private ProgressBar getFuelProgressBar()
     {
-        Skin skin = new Skin();
-        Pixmap pixmap = new Pixmap(
-            1, height, Pixmap.Format.RGBA8888);
-        pixmap.setColor(Color.WHITE);
-        pixmap.fill();
-        skin.add("white", new Texture(pixmap));
-
-        ProgressBar.ProgressBarStyle fuelProgressBarStyle = new ProgressBar.ProgressBarStyle(
-            skin.newDrawable("white", Color.DARK_GRAY), null);
-        fuelProgressBarStyle.knobBefore = skin.newDrawable("white", Color.WHITE);
+        ProgressBar.ProgressBarStyle fuelBarStyle = new ProgressBar.ProgressBarStyle(
+            SkinManager.BasicSkin.newDrawable("progressbar", Color.DARK_GRAY), null);
+        fuelBarStyle.knobBefore = SkinManager.BasicSkin.newDrawable("progressbar", Color.WHITE);
 
         ProgressBar fuelProgressBar = new ProgressBar(
-            0, 1, 0.0001f, false, fuelProgressBarStyle);
+            0, 1, 0.0001f, false, fuelBarStyle);
 
         return fuelProgressBar;
     }
