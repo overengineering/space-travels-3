@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
@@ -14,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.Constants;
 import com.draga.manager.DebugManager;
@@ -45,6 +47,8 @@ public class WinScreen implements Screen
         Label scoreLabel = getScoreLabel(score);
 
         Table table = new Table();
+        table.addAction(Actions.fadeOut(0));
+        table.addAction(Actions.fadeIn(3, Interpolation.pow2In));
         table.add(headerLabel);
 
         ScoreManager.updateScore(levelName, score);
@@ -82,8 +86,7 @@ public class WinScreen implements Screen
         labelStyle.font = bigFont;
 
         Label headerLabel = new Label("You won!", labelStyle);
-        headerLabel.setColor(new Color(1, 1, 1, 0));
-        headerLabel.addAction(Actions.color(new Color(1, 1, 1, 1), 3, Interpolation.pow2In));
+        headerLabel.setColor(Color.WHITE);
 
         return headerLabel;
     }
@@ -95,8 +98,7 @@ public class WinScreen implements Screen
 
         TextButton retryButton = new TextButton("Try Again?", buttonStyle);
 
-        retryButton.setColor(new Color(1, 1, 1, 0));
-        retryButton.addAction(Actions.color(new Color(1, 1, 1, 1), 3, Interpolation.pow2In));
+        retryButton.setColor(Color.WHITE);
         retryButton.addListener(
             new ClickListener()
             {
@@ -118,8 +120,7 @@ public class WinScreen implements Screen
         labelStyle.font = bigFont;
 
         Label scoreLabel = new Label("Score: " + score, labelStyle);
-        scoreLabel.setColor(new Color(1, 1, 1, 0));
-        scoreLabel.addAction(Actions.color(new Color(1, 1, 1, 1), 3, Interpolation.pow2In));
+        scoreLabel.setColor(Color.WHITE);
 
         return scoreLabel;
     }
@@ -132,12 +133,11 @@ public class WinScreen implements Screen
 
         String text = score > previousBestScore
             ? "New best score! It was: " + previousBestScore
-            : "Previous best score: " + previousBestScore;
+            : "Best score: " + previousBestScore;
 
         Label newBestScoreLabel =
             new Label(text, labelStyle);
-        newBestScoreLabel.setColor(new Color(1, 1, 1, 0));
-        newBestScoreLabel.addAction(Actions.color(new Color(1, 1, 1, 1), 3, Interpolation.pow2In));
+        newBestScoreLabel.setColor(Color.WHITE);
 
         return newBestScoreLabel;
     }
@@ -149,8 +149,7 @@ public class WinScreen implements Screen
 
         TextButton retryButton = new TextButton("Next level", buttonStyle);
 
-        retryButton.setColor(new Color(1, 1, 1, 0));
-        retryButton.addAction(Actions.color(new Color(1, 1, 1, 1), 3, Interpolation.pow2In));
+        retryButton.setColor(Color.WHITE);
         retryButton.addListener(
             new ClickListener()
             {

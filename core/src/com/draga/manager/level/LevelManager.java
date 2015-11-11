@@ -104,10 +104,9 @@ public abstract class LevelManager
             ArrayList.class,
             levelPackString);
         levels = new ArrayList<>();
+        json.addClassTag("SerialisableLevel", SerialisableLevel.class);
         for (String levelNameWithExtension : levelFileNameWithExtension)
         {
-            json.addClassTag("SerialisableLevel", SerialisableLevel.class);
-
             String levelString = Gdx.files.internal("level/" + levelNameWithExtension).readString();
             SerialisableLevel serialisableLevel =
                 json.fromJson(SerialisableLevel.class, levelString);
