@@ -117,7 +117,7 @@ public class Ship extends GameEntity
             this.thrusterTextureAtlas.getRegions(),
             Animation.PlayMode.LOOP);
 
-        thrusterSound = AssMan.getAssMan().get(AssMan.getAssList().thrusterSound, Sound.class);
+        thrusterSound = AssMan.getAssMan().get(AssMan.getAssList().thrusterSound);
         // TODO: check if this sound is loopable.
         thrusterSoundInstance = thrusterSound.loop(0);
 

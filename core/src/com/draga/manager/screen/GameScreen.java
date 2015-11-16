@@ -3,6 +3,7 @@ package com.draga.manager.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -58,6 +59,8 @@ public class GameScreen implements Screen
     private int   starsCollected;
     private float elapsedPlayTime;
 
+    private Sound starCollectedSound;
+
     public GameScreen(
         String backgroundTexturePath,
         SpriteBatch spriteBatch,
@@ -99,6 +102,8 @@ public class GameScreen implements Screen
         }
 
         hud = new Hud(orthographicCamera);
+
+        starCollectedSound = AssMan.getAssMan().get(AssMan.getAssList().starCollectSound);
     }
 
     private void createWalls()
@@ -366,12 +371,14 @@ public class GameScreen implements Screen
         {
             this.overlayScreen.dispose();
         }
+        starCollectedSound.dispose();
     }
 
     @Subscribe
     public void starCollected(StarCollectedEvent starCollectedEvent)
     {
         starsCollected++;
+        starCollectedSound.play();
         GameEntityManager.getGameEntitiesToDestroy().add(starCollectedEvent.star);
     }
 

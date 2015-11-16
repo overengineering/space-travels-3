@@ -44,6 +44,7 @@ public class LoadingScreen implements Screen
         // Loads sounds first 'cause of weird quirk of Android not loading them in time.
         AssMan.getAssMan().load(AssMan.getAssList().thrusterSound, Sound.class);
         AssMan.getAssMan().load(AssMan.getAssList().explosionSound, Sound.class);
+        AssMan.getAssMan().load(AssMan.getAssList().starCollectSound, Sound.class);
 
         AssMan.getAssMan().load(AssMan.getAssList().starGray, Texture.class);
         AssMan.getAssMan().load(

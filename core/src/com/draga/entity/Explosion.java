@@ -48,7 +48,7 @@ public class Explosion extends GameEntity
         animation = new Animation(
             ANIMATION_TOTAL_TIME / textureAtlas.getRegions().size, textureAtlas.getRegions());
 
-        sound = AssMan.getAssMan().get(AssMan.getAssList().explosionSound, Sound.class);
+        sound = AssMan.getAssMan().get(AssMan.getAssList().explosionSound);
         sound.play();
     }
 
