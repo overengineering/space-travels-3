@@ -8,6 +8,7 @@ public class AssList
     public String starGray;
     public String explosion;
     public String explosionSound;
+    public String thrusterSound;
 
     public AssList()
     {

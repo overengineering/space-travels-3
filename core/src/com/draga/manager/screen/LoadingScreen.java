@@ -39,7 +39,13 @@ public class LoadingScreen implements Screen
 
         this.serialisableLevel = LevelManager.getLevel(levelName);
 
+
         AssMan.getAssMan().clear();
+        // Loads sounds first 'cause of weird quirk of Android not loading them in time.
+        AssMan.getAssMan().load(AssMan.getAssList().thrusterSound, Sound.class);
+        AssMan.getAssMan().load(AssMan.getAssList().explosionSound, Sound.class);
+
+        AssMan.getAssMan().load(AssMan.getAssList().starGray, Texture.class);
         AssMan.getAssMan().load(
             this.serialisableLevel.serialisedBackground.texturePath, Texture.class);
         AssMan.getAssMan().load(
@@ -52,8 +58,6 @@ public class LoadingScreen implements Screen
         }
         AssMan.getAssMan().load(AssMan.getAssList().explosion, TextureAtlas.class);
         AssMan.getAssMan().load(AssMan.getAssList().starGold, Texture.class);
-        AssMan.getAssMan().load(AssMan.getAssList().starGray, Texture.class);
-        AssMan.getAssMan().load(AssMan.getAssList().explosionSound, Sound.class);
 
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);

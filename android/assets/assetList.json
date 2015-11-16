@@ -4,5 +4,6 @@
   "starGold": "star/starGold64.png",
   "starGray": "star/starGray64.png",
   "explosion": "explosion/explosion.atlas",
-  "explosionSound": "sound/DeathFlash.mp3"
+  "explosionSound": "sound/explosion/DeathFlash.mp3",
+  "thrusterSound": "sound/thruster/qubodupFireLoop.mp3"
 }
