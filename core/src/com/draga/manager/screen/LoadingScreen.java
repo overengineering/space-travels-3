@@ -2,6 +2,7 @@ package com.draga.manager.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -52,6 +53,7 @@ public class LoadingScreen implements Screen
         AssMan.getAssMan().load(AssMan.getAssList().explosion, TextureAtlas.class);
         AssMan.getAssMan().load(AssMan.getAssList().starGold, Texture.class);
         AssMan.getAssMan().load(AssMan.getAssList().starGray, Texture.class);
+        AssMan.getAssMan().load(AssMan.getAssList().explosionSound, Sound.class);
 
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);

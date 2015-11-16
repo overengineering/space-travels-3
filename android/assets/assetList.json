@@ -3,5 +3,6 @@
   "thruster": "thruster/thrusterSize256Frames75.txt",
   "starGold": "star/starGold64.png",
   "starGray": "star/starGray64.png",
-  "explosion": "explosion/explosion.atlas"
+  "explosion": "explosion/explosion.atlas",
+  "explosionSound": "sound/DeathFlash.mp3"
 }

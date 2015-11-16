@@ -7,6 +7,7 @@ public class AssList
     public String starGold;
     public String starGray;
     public String explosion;
+    public String explosionSound;
 
     public AssList()
     {
