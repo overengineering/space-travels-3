@@ -1,10 +1,13 @@
 package com.draga.entity;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.*;
 import com.draga.MaskBits;
+import com.draga.MiniMap;
 import com.draga.manager.asset.AssMan;
 
 public class Planet extends GameEntity
@@ -14,9 +17,10 @@ public class Planet extends GameEntity
     private FixtureDef  fixtureDef;
     private Fixture     fixture;
     private Texture     texture;
+    private final boolean     isDestination;
 
     public Planet(
-        float mass, float radius, float x, float y, String texturePath)
+        float mass, float radius, float x, float y, String texturePath, boolean isDestination)
     {
         circleShape = new CircleShape();
         circleShape.setRadius(radius);
@@ -37,13 +41,30 @@ public class Planet extends GameEntity
 
 
         this.texture = AssMan.getAssMan().get(texturePath);
+
+        this.isDestination = isDestination;
     }
 
+    public boolean isDestination()
+    {
+        return isDestination;
+    }
 
     @Override
     public void update(float deltaTime)
     {
 
+    }
+
+    @Override
+    public void drawMiniMap()
+    {
+        MiniMap.getShapeRenderer().set(ShapeRenderer.ShapeType.Line);
+        Color planetMinimapColour = isDestination
+            ? Color.RED
+            : Color.BLUE;
+        MiniMap.getShapeRenderer().setColor(planetMinimapColour);
+        MiniMap.getShapeRenderer().circle(getX(), getY(), circleShape.getRadius());
     }
 
     @Override

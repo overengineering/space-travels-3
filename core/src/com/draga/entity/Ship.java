@@ -1,16 +1,22 @@
 package com.draga.entity;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g3d.particles.values.MeshSpawnShapeValue;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Pools;
 import com.draga.Constants;
 import com.draga.MaskBits;
+import com.draga.MiniMap;
 import com.draga.entity.ship.ShipBox2dCollisionResolutionComponent;
 import com.draga.event.FuelChangeEvent;
 import com.draga.manager.DebugManager;
@@ -151,6 +157,25 @@ public class Ship extends GameEntity
     }
 
     @Override
+    public void drawMiniMap()
+    {
+        MiniMap.getShapeRenderer().set(ShapeRenderer.ShapeType.Filled);
+        MiniMap.getShapeRenderer().setColor(Color.WHITE);
+
+        Vector2 p1 = new Vector2(8, 0);
+        Vector2 p2 = new Vector2(-5, -5);
+        Vector2 p3 = new Vector2(-5, 5);
+        p1.rotate(body.getAngle() * MathUtils.radiansToDegrees);
+        p2.rotate(body.getAngle() * MathUtils.radiansToDegrees);
+        p3.rotate(body.getAngle() * MathUtils.radiansToDegrees);
+
+        MiniMap.getShapeRenderer().triangle(
+            p1.x + getX(), p1.y + getY(),
+            p2.x + getX(), p2.y + getY(),
+            p3.x + getX(), p3.y + getY());
+    }
+
+    @Override
     public void draw(SpriteBatch spriteBatch)
     {
         float halfThrusterHeight = thrusterHeight / 2f;
@@ -193,6 +218,9 @@ public class Ship extends GameEntity
             shipTexture.getHeight(),
             false,
             false);
+
+
+
     }
 
     @Override

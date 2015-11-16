@@ -46,14 +46,10 @@ public abstract class LevelManager
                 serialisablePlanet.radius,
                 serialisablePlanet.x,
                 serialisablePlanet.y,
-                serialisablePlanet.texturePath);
+                serialisablePlanet.texturePath,
+                serialisablePlanet.destination);
 
             gameScreen.addPlanet(planet);
-
-            if (serialisablePlanet.destination)
-            {
-                gameScreen.setDestinationPlanet(planet);
-            }
         }
 
         for (SerialisableStar serialisableStar : serialisableLevel.serialisedStars)
