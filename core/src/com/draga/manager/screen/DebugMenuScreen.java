@@ -37,7 +37,7 @@ public class DebugMenuScreen implements Screen
     {
         final TextButton debugDrawTextButton = new TextButton(
             "Debug Draw",
-            SkinManager.BasicSkin.get("checkTextButton", TextButton.TextButtonStyle.class));
+            SkinManager.BasicSkin.get(TextButton.TextButtonStyle.class));
         debugDrawTextButton.setChecked(DebugManager.debugDraw);
 
         debugDrawTextButton.addListener(

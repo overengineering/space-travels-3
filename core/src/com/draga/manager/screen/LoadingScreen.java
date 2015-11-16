@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.draga.Constants;
 import com.draga.manager.DebugManager;
 import com.draga.manager.GameManager;
+import com.draga.manager.SkinManager;
 import com.draga.manager.asset.AssMan;
 import com.draga.manager.asset.FontManager;
 import com.draga.manager.level.LevelManager;
@@ -57,8 +58,7 @@ public class LoadingScreen implements Screen
 
         Actor headerLabel = getHeaderLabel();
 
-        float progressBarHeight = stage.getHeight() / 20f;
-        progressBar = getProgressBar((int) progressBarHeight);
+        progressBar = getProgressBar();
 
 
         Table table = new Table();
@@ -69,7 +69,6 @@ public class LoadingScreen implements Screen
         table.row();
         table
             .add(progressBar)
-            .height(progressBarHeight)
             .width(stage.getWidth() * 0.75f);
 
 
@@ -78,26 +77,19 @@ public class LoadingScreen implements Screen
 
     public Label getHeaderLabel()
     {
-        Label.LabelStyle labelStyle = new Label.LabelStyle();
-        labelStyle.font = FontManager.getBigFont();
+        Label.LabelStyle labelStyle = SkinManager.BasicSkin.get(Label.LabelStyle.class);
 
         Label headerLabel = new Label("Loading", labelStyle);
 
         return headerLabel;
     }
 
-    private ProgressBar getProgressBar(int height)
+    private ProgressBar getProgressBar()
     {
-        Skin skin = new Skin();
-        Pixmap pixmap = new Pixmap(
-            1, height, Pixmap.Format.RGBA8888);
-        pixmap.setColor(Color.WHITE);
-        pixmap.fill();
-        skin.add("white", new Texture(pixmap));
-
         ProgressBar.ProgressBarStyle progressBarStyle = new ProgressBar.ProgressBarStyle(
-            skin.newDrawable("white", Color.DARK_GRAY), null);
-        progressBarStyle.knobBefore = skin.newDrawable("white", Color.WHITE);
+            SkinManager.BasicSkin.newDrawable("progressbar", Color.DARK_GRAY), null);
+        progressBarStyle.knobBefore = SkinManager.BasicSkin.newDrawable("progressbar", Color.WHITE);
+
 
         ProgressBar progressBar = new ProgressBar(
             0,

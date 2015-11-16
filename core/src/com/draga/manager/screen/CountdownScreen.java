@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Pools;
 import com.draga.Constants;
 import com.draga.event.CountdownFinishedEvent;
 import com.draga.manager.DebugManager;
+import com.draga.manager.SkinManager;
 import com.draga.manager.asset.FontManager;
 
 public class CountdownScreen implements Screen
@@ -38,7 +39,7 @@ public class CountdownScreen implements Screen
 
     private Label getTimerLabel()
     {
-        Label.LabelStyle labelStyle = new Label.LabelStyle(FontManager.getBigFont(), Color.WHITE);
+        Label.LabelStyle labelStyle = SkinManager.BasicSkin.get(Label.LabelStyle.class);
         Label label = new Label(getLabelText(), labelStyle);
         return label;
     }
