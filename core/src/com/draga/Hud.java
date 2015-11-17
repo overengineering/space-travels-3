@@ -9,14 +9,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.draga.entity.GameEntity;
 import com.draga.entity.Ship;
 import com.draga.event.FuelChangeEvent;
 import com.draga.event.StarCollectedEvent;
-import com.draga.manager.DebugManager;
+import com.draga.manager.SettingsManager;
 import com.draga.manager.GameEntityManager;
 import com.draga.manager.GravityManager;
 import com.draga.manager.SkinManager;
@@ -76,7 +75,7 @@ public class Hud implements Screen
             .bottom()
             .right();
 
-        stage.setDebugAll(DebugManager.debugDraw);
+        stage.setDebugAll(SettingsManager.debugDraw);
     }
 
     private ProgressBar getFuelProgressBar()

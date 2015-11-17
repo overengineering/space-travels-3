@@ -1,6 +1,5 @@
 package com.draga.entity;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -8,10 +7,8 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g3d.particles.values.MeshSpawnShapeValue;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Pools;
@@ -20,7 +17,7 @@ import com.draga.MaskBits;
 import com.draga.MiniMap;
 import com.draga.entity.ship.ShipBox2dCollisionResolutionComponent;
 import com.draga.event.FuelChangeEvent;
-import com.draga.manager.DebugManager;
+import com.draga.manager.SettingsManager;
 import com.draga.manager.GravityManager;
 import com.draga.manager.InputManager;
 import com.draga.manager.asset.AssMan;
@@ -135,7 +132,7 @@ public class Ship extends GameEntity
         }
 
         Vector2 gravityForce;
-        if (DebugManager.noGravity)
+        if (SettingsManager.noGravity)
         {
             gravityForce = new Vector2();
         }
@@ -281,7 +278,7 @@ public class Ship extends GameEntity
     {
         float oldFuel = fuel;
 
-        if (DebugManager.infiniteFuel)
+        if (SettingsManager.infiniteFuel)
         {
             fuel = MAX_FUEL;
         }

@@ -1,16 +1,14 @@
 package com.draga.manager.screen;
 
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Pools;
 import com.draga.Constants;
 import com.draga.event.CountdownFinishedEvent;
-import com.draga.manager.DebugManager;
+import com.draga.manager.SettingsManager;
 import com.draga.manager.SkinManager;
-import com.draga.manager.asset.FontManager;
 
 public class CountdownScreen implements Screen
 {
@@ -34,7 +32,7 @@ public class CountdownScreen implements Screen
             .add(timerLabel)
             .center();
 
-        stage.setDebugAll(DebugManager.debugDraw);
+        stage.setDebugAll(SettingsManager.debugDraw);
     }
 
     private Label getTimerLabel()

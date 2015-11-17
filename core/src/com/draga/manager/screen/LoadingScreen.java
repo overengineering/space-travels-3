@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -12,14 +11,12 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.draga.Constants;
-import com.draga.manager.DebugManager;
+import com.draga.manager.SettingsManager;
 import com.draga.manager.GameManager;
 import com.draga.manager.SkinManager;
 import com.draga.manager.asset.AssMan;
-import com.draga.manager.asset.FontManager;
 import com.draga.manager.level.LevelManager;
 import com.draga.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.manager.level.serialisableEntities.SerialisablePlanet;
@@ -79,7 +76,7 @@ public class LoadingScreen implements Screen
             .width(stage.getWidth() * 0.75f);
 
 
-        stage.setDebugAll(DebugManager.debugDraw);
+        stage.setDebugAll(SettingsManager.debugDraw);
     }
 
     public Label getHeaderLabel()
