@@ -1,5 +1,7 @@
 package com.draga.entity;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -56,6 +58,7 @@ public class Explosion extends GameEntity
     public void update(float deltaTime)
     {
         stateTime += deltaTime;
+        // Can't get if the sound if still playing, can be done only with music.
         if (animation.isAnimationFinished(stateTime))
         {
             GameEntityManager.getGameEntitiesToDestroy().add(this);
@@ -82,6 +85,7 @@ public class Explosion extends GameEntity
     @Override
     public void dispose()
     {
+        sound.stop();
         sound.dispose();
         polygonShape.dispose();
     }

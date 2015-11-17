@@ -371,6 +371,8 @@ public class GameScreen implements Screen
         {
             this.overlayScreen.dispose();
         }
+
+        starCollectedSound.stop();
         starCollectedSound.dispose();
     }
 
