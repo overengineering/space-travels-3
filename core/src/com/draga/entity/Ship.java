@@ -1,6 +1,7 @@
 package com.draga.entity;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -58,6 +59,9 @@ public class Ship extends GameEntity
     private PolygonShape thrusterShape;
     private TextureAtlas thrusterTextureAtlas;
 
+    private Sound thrusterSound;
+    private long thrusterSoundInstance;
+
     private Fixture      shipFixture;
     private FixtureDef   shipFixtureDef;
     private PolygonShape shipShape;
@@ -113,6 +117,9 @@ public class Ship extends GameEntity
             this.thrusterTextureAtlas.getRegions(),
             Animation.PlayMode.LOOP);
 
+        thrusterSound = AssMan.getAssMan().get(AssMan.getAssList().thrusterSound);
+        // TODO: check if this sound is loopable.
+        thrusterSoundInstance = thrusterSound.loop(0);
 
         fuel = MAX_FUEL;
     }
@@ -147,6 +154,7 @@ public class Ship extends GameEntity
             inputForce.setZero();
         }
 
+        thrusterSound.setVolume(thrusterSoundInstance, inputForce.len());
         rotateTo(inputForce, deltaTime);
         updateFuel(inputForce, deltaTime);
 
@@ -218,14 +226,13 @@ public class Ship extends GameEntity
             shipTexture.getHeight(),
             false,
             false);
-
-
-
     }
 
     @Override
     public void dispose()
     {
+        thrusterSound.stop();
+        thrusterSound.dispose();
         shipShape.dispose();
         thrusterShape.dispose();
         shipTexture.dispose();

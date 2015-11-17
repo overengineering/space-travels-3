@@ -1,5 +1,8 @@
 package com.draga.entity;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -7,8 +10,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.*;
 import com.draga.MaskBits;
-import com.draga.manager.asset.AssMan;
 import com.draga.manager.GameEntityManager;
+import com.draga.manager.asset.AssMan;
 
 public class Explosion extends GameEntity
 {
@@ -21,6 +24,7 @@ public class Explosion extends GameEntity
     private float        stateTime;
     private Animation    animation;
     private Fixture      fixture;
+    private Sound        sound;
 
     public Explosion(
         float x, float y, String textureAtlasPath)
@@ -45,12 +49,16 @@ public class Explosion extends GameEntity
         TextureAtlas textureAtlas = AssMan.getAssMan().get(textureAtlasPath);
         animation = new Animation(
             ANIMATION_TOTAL_TIME / textureAtlas.getRegions().size, textureAtlas.getRegions());
+
+        sound = AssMan.getAssMan().get(AssMan.getAssList().explosionSound);
+        sound.play();
     }
 
     @Override
     public void update(float deltaTime)
     {
         stateTime += deltaTime;
+        // Can't get if the sound if still playing, can be done only with music.
         if (animation.isAnimationFinished(stateTime))
         {
             GameEntityManager.getGameEntitiesToDestroy().add(this);
@@ -77,6 +85,8 @@ public class Explosion extends GameEntity
     @Override
     public void dispose()
     {
+        sound.stop();
+        sound.dispose();
         polygonShape.dispose();
     }
 
