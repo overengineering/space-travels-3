@@ -7,13 +7,17 @@ import com.draga.Constants;
 
 public class InputManager
 {
-    private static final String  LOGGING_TAG                 = InputManager.class.getSimpleName();
-    /** Change tilt range. E.g. 1.0f = 90 degree max. 0.5f = 45 degrees max.*/
-    private static final float   ACCELEROMETER_RANGE         = 0.5f;
+    private static final String LOGGING_TAG         = InputManager.class.getSimpleName();
+    public static final  float  DEATH_ZONE          = 0.15f;
+    /**
+     * Change tilt range. E.g. 1.0f = 90 degree max. 0.5f = 45 degrees max.
+     */
+    private static final float  ACCELEROMETER_RANGE = 0.5f;
 
     /**
      * Returns a vector with length from 0 to 1, representing where the input is pointing to,
      * abstracting away the fact that it could be a mobile accelerometer, mouse clicks, etc.
+     *
      * @return A Vector2 of length from 0 to 1 of where the input is pointing
      */
     public static Vector2 getInputForce()
@@ -48,6 +52,9 @@ public class InputManager
 
         // Scale the input by the Earth's gravity so that I'll be between 1 and 0
         input = input.scl(1 / Constants.EARTH_GRAVITY);
+
+        input.x = applyDeathZone(input.x);
+        input.y = applyDeathZone(input.y);
 
         return input;
     }
@@ -119,5 +126,21 @@ public class InputManager
                     LOGGING_TAG, "Orientation " + Gdx.input.getRotation() + " not implemented.");
         }
         return input;
+    }
+
+    private static float applyDeathZone(float value)
+    {
+        float sign = Math.signum(value);
+
+        if (Math.abs(value) > DEATH_ZONE)
+        {
+            value -= DEATH_ZONE * sign;
+        }
+        else
+        {
+            value = 0f;
+        }
+
+        return value;
     }
 }
