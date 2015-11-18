@@ -14,7 +14,6 @@ public class SkinManager
 {
     public static Skin BasicSkin;
 
-
     public static void create()
     {
         BasicSkin = createBasicSkin();

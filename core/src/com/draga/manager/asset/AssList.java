@@ -12,6 +12,7 @@ public class AssList
     public String starCollectSound;
     public String loseSound;
     public String winSound;
+    public String buttonSound;
 
     public AssList()
     {

@@ -13,16 +13,16 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.draga.manager.SettingsManager;
+import com.draga.BeepingClickListener;
 import com.draga.manager.GameManager;
+import com.draga.manager.SettingsManager;
 import com.draga.manager.SkinManager;
 import com.draga.manager.asset.AssMan;
 
 public class LoseScreen implements Screen
 {
-    private final Stage      stage;
-    private final Color fadeToColour     = new Color(0, 0, 0, 0.7f);
+    private final Stage stage;
+    private final Color fadeToColour = new Color(0, 0, 0, 0.7f);
     private final ShapeRenderer shapeRenderer;
     private final Sound         sound;
     private       String        levelName;
@@ -54,6 +54,32 @@ public class LoseScreen implements Screen
         sound.play();
     }
 
+    public Actor getRetryButton()
+    {
+        TextButton.TextButtonStyle buttonStyle =
+            SkinManager.BasicSkin.get(TextButton.TextButtonStyle.class);
+
+        TextButton retryButton = new TextButton("Try Again?", buttonStyle);
+
+        retryButton.addListener(
+            new BeepingClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    Retry();
+                    super.clicked(event, x, y);
+                }
+            });
+
+        return retryButton;
+    }
+
+    private void Retry()
+    {
+        GameManager.getGame().setScreen(new LoadingScreen(levelName));
+    }
+
     @Override
     public void show()
     {
@@ -80,14 +106,14 @@ public class LoseScreen implements Screen
         draw(delta);
     }
 
-    private void draw(float delta)
-    {
-        stage.draw();
-    }
-
     private void update(float delta)
     {
         stage.act(delta);
+    }
+
+    private void draw(float delta)
+    {
+        stage.draw();
     }
 
     @Override
@@ -122,31 +148,5 @@ public class LoseScreen implements Screen
         sound.dispose();
         shapeRenderer.dispose();
         stage.dispose();
-    }
-
-    public Actor getRetryButton()
-    {
-        TextButton.TextButtonStyle buttonStyle =
-            SkinManager.BasicSkin.get(TextButton.TextButtonStyle.class);
-
-        TextButton retryButton = new TextButton("Try Again?", buttonStyle);
-
-        retryButton.addListener(
-            new ClickListener()
-            {
-                @Override
-                public void clicked(InputEvent event, float x, float y)
-                {
-                    Retry();
-                    super.clicked(event, x, y);
-                }
-            });
-
-        return retryButton;
-    }
-
-    private void Retry()
-    {
-        GameManager.getGame().setScreen(new LoadingScreen(levelName));
     }
 }
