@@ -46,9 +46,9 @@ public class DebugMenuScreen implements Screen
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
+                    super.clicked(event, x, y);
                     SettingsManager.debugDraw = !SettingsManager.debugDraw;
                     debugDrawTextButton.setChecked(SettingsManager.debugDraw);
-                    super.clicked(event, x, y);
                 }
             });
 
