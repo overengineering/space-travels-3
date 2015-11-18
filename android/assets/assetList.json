@@ -6,5 +6,7 @@
   "explosion": "explosion/explosion.atlas",
   "explosionSound": "sound/explosion/DeathFlash.mp3",
   "thrusterSound": "sound/thruster/qubodupFireLoop.mp3",
-  "starCollectSound": "sound/star/powerUp6.mp3"
+  "starCollectSound": "sound/star/powerUp6.mp3",
+  "loseSound": "sound/lose/lowDown.mp3",
+  "winSound": "sound/win/zapTwoTone2.mp3"
 }

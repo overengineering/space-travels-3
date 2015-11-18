@@ -42,6 +42,8 @@ public class LoadingScreen implements Screen
         AssMan.getAssMan().load(AssMan.getAssList().thrusterSound, Sound.class);
         AssMan.getAssMan().load(AssMan.getAssList().explosionSound, Sound.class);
         AssMan.getAssMan().load(AssMan.getAssList().starCollectSound, Sound.class);
+        AssMan.getAssMan().load(AssMan.getAssList().loseSound, Sound.class);
+        AssMan.getAssMan().load(AssMan.getAssList().winSound, Sound.class);
 
         AssMan.getAssMan().load(AssMan.getAssList().starGray, Texture.class);
         AssMan.getAssMan().load(

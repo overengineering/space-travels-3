@@ -10,6 +10,8 @@ public class AssList
     public String explosionSound;
     public String thrusterSound;
     public String starCollectSound;
+    public String loseSound;
+    public String winSound;
 
     public AssList()
     {
