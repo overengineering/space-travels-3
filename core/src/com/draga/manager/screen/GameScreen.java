@@ -19,7 +19,7 @@ import com.draga.entity.*;
 import com.draga.event.CountdownFinishedEvent;
 import com.draga.event.ShipPlanetCollisionEvent;
 import com.draga.event.StarCollectedEvent;
-import com.draga.manager.DebugManager;
+import com.draga.manager.SettingsManager;
 import com.draga.manager.GameContactListener;
 import com.draga.manager.GameEntityManager;
 import com.draga.manager.GameManager;
@@ -96,7 +96,7 @@ public class GameScreen implements Screen
         {
             createWalls();
         }
-        if (DebugManager.debugDraw)
+        if (SettingsManager.debugDraw)
         {
             box2DDebugRenderer = new Box2DDebugRenderer();
         }
@@ -258,7 +258,6 @@ public class GameScreen implements Screen
 
     public void draw()
     {
-
         spriteBatch.begin();
         spriteBatch.draw(backgroundTexture, 0, 0, width, height);
         spriteBatch.end();
@@ -287,7 +286,7 @@ public class GameScreen implements Screen
         }
         spriteBatch.end();
 
-        if (DebugManager.debugDraw)
+        if (SettingsManager.debugDraw)
         {
             box2DDebugRenderer.render(box2dWorld, orthographicCamera.combined);
         }
@@ -297,12 +296,12 @@ public class GameScreen implements Screen
     {
         if (Gdx.input.isKeyJustPressed(Input.Keys.F1))
         {
-            DebugManager.infiniteFuel = !DebugManager.infiniteFuel;
+            SettingsManager.infiniteFuel = !SettingsManager.infiniteFuel;
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.F2))
         {
-            DebugManager.noGravity = !DebugManager.noGravity;
+            SettingsManager.noGravity = !SettingsManager.noGravity;
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.F3))
@@ -361,7 +360,7 @@ public class GameScreen implements Screen
         GameEntityManager.dispose();
         box2dWorld.dispose();
         backgroundTexture.dispose();
-        if (DebugManager.debugDraw)
+        if (SettingsManager.debugDraw)
         {
             box2DDebugRenderer.dispose();
         }
@@ -399,7 +398,7 @@ public class GameScreen implements Screen
         // If wrong planet or too fast then lose.
         if (!shipPlanetCollisionEvent.planet.isDestination()
             || ship.getBody().getLinearVelocity().len()
-            > Constants.MAX_DESTINATION_PLANET_APPROACH_SPEED)
+                > Constants.MAX_DESTINATION_PLANET_APPROACH_SPEED)
         {
             gameState = GameState.LOSE;
             GameEntity explosion = new Explosion(

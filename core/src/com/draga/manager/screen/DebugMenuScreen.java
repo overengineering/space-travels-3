@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.draga.manager.DebugManager;
+import com.draga.manager.SettingsManager;
 import com.draga.manager.GameManager;
 import com.draga.manager.SkinManager;
 
@@ -30,7 +30,7 @@ public class DebugMenuScreen implements Screen
         table.add(GetButtonScrollPane());
 
         stage.addActor(table);
-        stage.setDebugAll(DebugManager.debugDraw);
+        stage.setDebugAll(SettingsManager.debugDraw);
     }
 
     public ScrollPane GetButtonScrollPane()
@@ -38,7 +38,7 @@ public class DebugMenuScreen implements Screen
         final TextButton debugDrawTextButton = new TextButton(
             "Debug Draw",
             SkinManager.BasicSkin.get(TextButton.TextButtonStyle.class));
-        debugDrawTextButton.setChecked(DebugManager.debugDraw);
+        debugDrawTextButton.setChecked(SettingsManager.debugDraw);
 
         debugDrawTextButton.addListener(
             new ClickListener()
@@ -46,8 +46,8 @@ public class DebugMenuScreen implements Screen
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    DebugManager.debugDraw = !DebugManager.debugDraw;
-                    debugDrawTextButton.setChecked(DebugManager.debugDraw);
+                    SettingsManager.debugDraw = !SettingsManager.debugDraw;
+                    debugDrawTextButton.setChecked(SettingsManager.debugDraw);
                     super.clicked(event, x, y);
                 }
             });
