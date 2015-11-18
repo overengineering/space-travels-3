@@ -67,8 +67,8 @@ public class LoseScreen implements Screen
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    Retry();
                     super.clicked(event, x, y);
+                    Retry();
                 }
             });
 

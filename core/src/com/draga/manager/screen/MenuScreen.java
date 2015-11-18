@@ -94,9 +94,8 @@ public class MenuScreen implements Screen
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    SoundManager.buttonSound.play();
-                    StartGameScreen();
                     super.clicked(event, x, y);
+                    StartGameScreen();
                 }
             });
 
@@ -147,8 +146,8 @@ public class MenuScreen implements Screen
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    GameManager.getGame().setScreen(new DebugMenuScreen());
                     super.clicked(event, x, y);
+                    GameManager.getGame().setScreen(new DebugMenuScreen());
                 }
             });
         return debugButton;

@@ -105,8 +105,8 @@ public class WinScreen implements Screen
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    Retry();
                     super.clicked(event, x, y);
+                    Retry();
                 }
             });
 
@@ -149,8 +149,8 @@ public class WinScreen implements Screen
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    GameManager.getGame().setScreen(new LoadingScreen(levelName));
                     super.clicked(event, x, y);
+                    GameManager.getGame().setScreen(new LoadingScreen(levelName));
                 }
             });
 
