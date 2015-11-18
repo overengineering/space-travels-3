@@ -7,8 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.draga.Constants;
 import com.draga.BeepingClickListener;
+import com.draga.Constants;
 import com.draga.manager.*;
 import com.draga.manager.level.LevelManager;
 import com.draga.manager.level.serialisableEntities.SerialisableLevel;
@@ -31,7 +31,6 @@ public class MenuScreen implements Screen
 
         Actor headerLabel = getHeaderLabel();
         playButton = getPlayButton();
-
 
         table
             .add(headerLabel)
@@ -100,6 +99,7 @@ public class MenuScreen implements Screen
                     super.clicked(event, x, y);
                 }
             });
+
         return playButton;
     }
 
