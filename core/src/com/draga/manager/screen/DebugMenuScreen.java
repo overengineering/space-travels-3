@@ -9,9 +9,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.draga.manager.SettingsManager;
+import com.draga.BeepingClickListener;
 import com.draga.manager.GameManager;
+import com.draga.manager.SettingsManager;
 import com.draga.manager.SkinManager;
 
 public class DebugMenuScreen implements Screen
@@ -41,7 +41,7 @@ public class DebugMenuScreen implements Screen
         debugDrawTextButton.setChecked(SettingsManager.debugDraw);
 
         debugDrawTextButton.addListener(
-            new ClickListener()
+            new BeepingClickListener()
             {
                 @Override
                 public void clicked(InputEvent event, float x, float y)
@@ -64,8 +64,6 @@ public class DebugMenuScreen implements Screen
     @Override
     public void show()
     {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -90,28 +88,21 @@ public class DebugMenuScreen implements Screen
     @Override
     public void pause()
     {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void resume()
     {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void hide()
     {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void dispose()
     {
         stage.dispose();
-        //skin.dispose();
     }
 }

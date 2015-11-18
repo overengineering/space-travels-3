@@ -7,19 +7,17 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.Constants;
-import com.draga.manager.SettingsManager;
-import com.draga.manager.GameManager;
-import com.draga.manager.ScoreManager;
-import com.draga.manager.SkinManager;
+import com.draga.BeepingClickListener;
+import com.draga.manager.*;
 import com.draga.manager.level.LevelManager;
 import com.draga.manager.level.serialisableEntities.SerialisableLevel;
 
 public class MenuScreen implements Screen
 {
-    private Stage                   stage;
-    private ButtonGroup<TextButton> buttonGroup;
+    private final TextButton              playButton;
+    private       Stage                   stage;
+    private       ButtonGroup<TextButton> buttonGroup;
 
     public MenuScreen()
     {
@@ -32,7 +30,7 @@ public class MenuScreen implements Screen
         stage.addActor(table);
 
         Actor headerLabel = getHeaderLabel();
-        Actor playButton = getPlayButton();
+        playButton = getPlayButton();
 
 
         table
@@ -92,11 +90,12 @@ public class MenuScreen implements Screen
         TextButton playButton = new TextButton("Play", textButtonStyle);
 
         playButton.addListener(
-            new ClickListener()
+            new BeepingClickListener()
             {
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
+                    SoundManager.buttonSound.play();
                     StartGameScreen();
                     super.clicked(event, x, y);
                 }
@@ -125,6 +124,7 @@ public class MenuScreen implements Screen
             TextButton textButton =
                 new TextButton(buttonText, textButtonStyle);
             textButton.setName(level.name);
+            textButton.addListener(new BeepingClickListener());
             buttonGroup.add(textButton);
             verticalGroup.addActor(textButton);
         }
@@ -142,7 +142,7 @@ public class MenuScreen implements Screen
         Button debugButton = new TextButton("Debug", textButtonStyle);
 
         debugButton.addListener(
-            new ClickListener()
+            new BeepingClickListener()
             {
                 @Override
                 public void clicked(InputEvent event, float x, float y)

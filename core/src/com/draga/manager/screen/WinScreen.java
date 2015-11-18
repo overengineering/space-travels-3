@@ -3,6 +3,7 @@ package com.draga.manager.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
@@ -12,11 +13,12 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.draga.manager.SettingsManager;
+import com.draga.BeepingClickListener;
 import com.draga.manager.GameManager;
 import com.draga.manager.ScoreManager;
+import com.draga.manager.SettingsManager;
 import com.draga.manager.SkinManager;
+import com.draga.manager.asset.AssMan;
 import com.draga.manager.level.LevelManager;
 import com.draga.manager.level.serialisableEntities.SerialisableLevel;
 
@@ -27,6 +29,7 @@ public class WinScreen implements Screen
     private final Color fadeToColour     = new Color(0, 0, 0, 0.7f);
     private final Color backgroundColour = new Color(0, 0, 0, 0);
     private final ShapeRenderer shapeRenderer;
+    private final Sound         sound;
     private       String        levelName;
 
     public WinScreen(String levelName, float score)
@@ -75,6 +78,9 @@ public class WinScreen implements Screen
 
         stage.setDebugAll(SettingsManager.debugDraw);
         shapeRenderer = new ShapeRenderer();
+
+        sound = AssMan.getAssMan().get(AssMan.getAssList().winSound);
+        sound.play();
     }
 
     public Label getHeaderLabel()
@@ -88,12 +94,13 @@ public class WinScreen implements Screen
 
     public TextButton getRetryButton()
     {
-        TextButton.TextButtonStyle buttonStyle = SkinManager.BasicSkin.get(TextButton.TextButtonStyle.class);
+        TextButton.TextButtonStyle buttonStyle =
+            SkinManager.BasicSkin.get(TextButton.TextButtonStyle.class);
 
         TextButton retryButton = new TextButton("Try Again?", buttonStyle);
 
         retryButton.addListener(
-            new ClickListener()
+            new BeepingClickListener()
             {
                 @Override
                 public void clicked(InputEvent event, float x, float y)
@@ -131,12 +138,13 @@ public class WinScreen implements Screen
 
     public TextButton getNextButton(final String levelName)
     {
-        TextButton.TextButtonStyle buttonStyle = SkinManager.BasicSkin.get(TextButton.TextButtonStyle.class);
+        TextButton.TextButtonStyle buttonStyle =
+            SkinManager.BasicSkin.get(TextButton.TextButtonStyle.class);
 
         TextButton retryButton = new TextButton("Next level", buttonStyle);
 
         retryButton.addListener(
-            new ClickListener()
+            new BeepingClickListener()
             {
                 @Override
                 public void clicked(InputEvent event, float x, float y)
@@ -218,6 +226,8 @@ public class WinScreen implements Screen
     @Override
     public void dispose()
     {
+        sound.stop();
+        sound.dispose();
         shapeRenderer.dispose();
         stage.dispose();
     }
