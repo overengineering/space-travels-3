@@ -105,7 +105,8 @@ public class Hud implements Screen
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
-        if (Constants.HUD_DRAW_VELOCITY_INDICATORS)
+        if (Constants.HUD_DRAW_VELOCITY_INDICATORS
+            && ship.getBody().isActive())
         {
             shapeRenderer.setProjectionMatrix(orthographicCamera.combined);
             shapeRenderer.begin();

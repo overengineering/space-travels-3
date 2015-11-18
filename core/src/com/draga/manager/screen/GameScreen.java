@@ -258,7 +258,6 @@ public class GameScreen implements Screen
 
     public void draw()
     {
-
         spriteBatch.begin();
         spriteBatch.draw(backgroundTexture, 0, 0, width, height);
         spriteBatch.end();
@@ -399,7 +398,7 @@ public class GameScreen implements Screen
         // If wrong planet or too fast then lose.
         if (!shipPlanetCollisionEvent.planet.isDestination()
             || ship.getBody().getLinearVelocity().len()
-            > Constants.MAX_DESTINATION_PLANET_APPROACH_SPEED)
+                > Constants.MAX_DESTINATION_PLANET_APPROACH_SPEED)
         {
             gameState = GameState.LOSE;
             GameEntity explosion = new Explosion(
