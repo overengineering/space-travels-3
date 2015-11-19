@@ -9,11 +9,11 @@ import java.util.HashMap;
 
 public abstract class ScoreManager
 {
-    private static final Json                   JSON                  = new Json();
-    private static final FileHandle             levelScoresFileHandle = getScoreFileHandle();
-    private static final HashMap<String, Float> levelScores           = getLevelScores();
+    private static final Json                     JSON                  = new Json();
+    private static final FileHandle               levelScoresFileHandle = getScoreFileHandle();
+    private static final HashMap<String, Integer> levelScores           = getLevelScores();
 
-    public static void updateScore(String levelName, float score)
+    public static void updateScore(String levelName, int score)
     {
         levelScores.put(levelName, score);
 
@@ -26,13 +26,20 @@ public abstract class ScoreManager
         saveLevelScoreRunnable.run();
     }
 
-    private static HashMap<String, Float> getLevelScores()
+    private static HashMap<String, Integer> getLevelScores()
     {
         if (levelScoresFileHandle.exists())
         {
-            HashMap<String, Float> levelScores =
+            HashMap<String, Integer> levelScores =
                 JSON.fromJson(HashMap.class, levelScoresFileHandle.readString());
-            return levelScores;
+
+            // Check the type of the first value if any is present because they used to be saved in
+            // float and for some reason they successfully make it into the HashMap but then
+            // failing to retrieve it.
+            if (!levelScores.isEmpty() && (levelScores.values().toArray()[0] instanceof Integer))
+            {
+                return levelScores;
+            }
         }
 
         return new HashMap<>();
@@ -64,12 +71,12 @@ public abstract class ScoreManager
         return scoresFileHandle;
     }
 
-    public static float getScore(String levelName)
+    public static int getScore(String levelName)
     {
-        float score = 0;
+        int score = 0;
         if (levelScores.containsKey(levelName))
         {
-            score = levelScores.get(levelName);
+            score = Math.round(levelScores.get(levelName));
         }
 
         return score;

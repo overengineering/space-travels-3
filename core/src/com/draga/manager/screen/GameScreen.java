@@ -434,7 +434,7 @@ public class GameScreen implements Screen
         }
         else
         {
-            float score = getScore();
+            int score = getScore();
             gameState = GameState.WIN;
             this.overlayScreen = new WinScreen(levelPath, score);
         }
