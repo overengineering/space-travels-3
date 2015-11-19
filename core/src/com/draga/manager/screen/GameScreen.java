@@ -13,16 +13,18 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.draga.*;
 import com.draga.entity.*;
 import com.draga.event.CountdownFinishedEvent;
+import com.draga.event.ScoreEvent;
 import com.draga.event.ShipPlanetCollisionEvent;
 import com.draga.event.StarCollectedEvent;
-import com.draga.manager.SettingsManager;
 import com.draga.manager.GameContactListener;
 import com.draga.manager.GameEntityManager;
 import com.draga.manager.GameManager;
+import com.draga.manager.SettingsManager;
 import com.draga.manager.asset.AssMan;
 import com.google.common.eventbus.Subscribe;
 
@@ -254,6 +256,7 @@ public class GameScreen implements Screen
         // max frame time to avoid spiral of death (on slow devices)
         float frameTime = Math.min(elapsed, 0.25f);
         box2dWorld.step(frameTime, 6, 2);
+        updateScore();
     }
 
     public void draw()
@@ -316,6 +319,26 @@ public class GameScreen implements Screen
         box2dWorld.destroyBody(gameEntity.getBody());
         GameEntityManager.getGameEntities().remove(gameEntity);
         gameEntity.dispose();
+    }
+
+    private void updateScore()
+    {
+        ScoreEvent scoreEvent = Pools.obtain(ScoreEvent.class);
+        scoreEvent.setScore(getScore());
+        Constants.EVENT_BUS.post(scoreEvent);
+        Pools.free(scoreEvent);
+    }
+
+    private int getScore()
+    {
+        float starPoints = starsCollected * Constants.STAR_POINTS;
+        float timePoints = elapsedPlayTime * Constants.TIME_POINTS;
+        float fuelPoints = ship.getFuel() * Constants.FUEL_POINTS;
+
+        float score = starPoints;
+        score -= timePoints;
+        score += fuelPoints;
+        return Math.round(score);
     }
 
     public void resize(int width, int height)
@@ -398,7 +421,7 @@ public class GameScreen implements Screen
         // If wrong planet or too fast then lose.
         if (!shipPlanetCollisionEvent.planet.isDestination()
             || ship.getBody().getLinearVelocity().len()
-                > Constants.MAX_DESTINATION_PLANET_APPROACH_SPEED)
+            > Constants.MAX_DESTINATION_PLANET_APPROACH_SPEED)
         {
             gameState = GameState.LOSE;
             GameEntity explosion = new Explosion(
@@ -415,25 +438,6 @@ public class GameScreen implements Screen
             gameState = GameState.WIN;
             this.overlayScreen = new WinScreen(levelPath, score);
         }
-    }
-
-    private float getScore()
-    {
-        float starPoints = starsCollected * Constants.STAR_POINTS;
-        float timePoints = elapsedPlayTime * Constants.TIME_POINTS;
-        float fuelPoints = ship.getFuel() * Constants.FUEL_POINTS;
-
-        String message = String.format(
-            "Points summary: %f stars - %f time + %f fuel",
-            starPoints,
-            timePoints,
-            fuelPoints);
-        Gdx.app.log(LOGGING_TAG, message);
-
-        float score = starPoints;
-        score -= timePoints;
-        score += fuelPoints;
-        return score;
     }
 
     public String getLevelPath()

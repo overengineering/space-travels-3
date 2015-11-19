@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -20,12 +21,15 @@ import com.draga.manager.GameEntityManager;
 import com.draga.manager.GravityManager;
 import com.draga.manager.SkinManager;
 import com.draga.manager.asset.AssMan;
+import com.draga.event.ScoreEvent;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.Stack;
 
 public class Hud implements Screen
 {
+    private final Label scoreLabel;
+
     private float FORCE_INDICATOR_SCALE = 0.25f;
 
     private Stage stage;
@@ -34,6 +38,7 @@ public class Hud implements Screen
 
     private Stack<Image> grayStars;
     private Table        starsTable;
+
     private Ship         ship;
 
     private ShapeRenderer      shapeRenderer;
@@ -53,6 +58,7 @@ public class Hud implements Screen
         table.pad(((stage.getHeight() + stage.getWidth()) / 2f) / 50f);
         stage.addActor(table);
 
+        // Top row left column
         fuelProgressBar = getFuelProgressBar();
         table
             .add(fuelProgressBar)
@@ -60,11 +66,22 @@ public class Hud implements Screen
             .top()
             .left();
 
+        // Top row right column.
+        scoreLabel = getScoreLabel();
+        table
+            .add(scoreLabel)
+            .top()
+            .right();
+
         // Add an empty row with an expanded cell to fill the gap in the middle.
         table.row();
         table.add().expand();
 
         table.row();
+        // Bottom row left column
+        table.add();
+
+        // Bottom row right column;
         starsTable = new Table();
         starsTable
             .defaults()
@@ -76,6 +93,13 @@ public class Hud implements Screen
             .right();
 
         stage.setDebugAll(SettingsManager.debugDraw);
+    }
+
+    private Label getScoreLabel()
+    {
+        Label scoreLabel = new Label("", SkinManager.BasicSkin.get(Label.LabelStyle.class));
+
+        return scoreLabel;
     }
 
     private ProgressBar getFuelProgressBar()
@@ -225,5 +249,11 @@ public class Hud implements Screen
     public void setShip(Ship ship)
     {
         this.ship = ship;
+    }
+
+    @Subscribe
+    public void setScoreLabel(ScoreEvent scoreEvent)
+    {
+        scoreLabel.setText(String.valueOf(scoreEvent.getScore()));
     }
 }
