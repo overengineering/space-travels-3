@@ -8,7 +8,6 @@ import com.badlogic.gdx.physics.box2d.Box2D;
 import com.draga.manager.GameManager;
 import com.draga.manager.SkinManager;
 import com.draga.manager.asset.AssMan;
-import com.draga.manager.asset.FontManager;
 import com.draga.manager.screen.MenuScreen;
 
 import java.util.concurrent.Executors;
@@ -25,7 +24,6 @@ public class SpaceTravels3 extends Game
     {
         Gdx.input.setCatchBackKey(true);
         AssMan.getAssList();
-        FontManager.create();
         SkinManager.create();
         GameManager.setGame(this);
 
@@ -59,7 +57,7 @@ public class SpaceTravels3 extends Game
         {
             logOutputScheduler.shutdown();
         }
-        FontManager.destroy();
+        SkinManager.BasicSkin.dispose();
         super.dispose();
     }
 

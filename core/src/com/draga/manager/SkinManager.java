@@ -7,14 +7,15 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.draga.manager.asset.AssMan;
-import com.draga.manager.asset.FontManager;
 
 public class SkinManager
 {
+    public static final float FONT_SCALE = 0.00005f;
+
     public static Skin BasicSkin;
 
     public static void create()
@@ -26,43 +27,83 @@ public class SkinManager
     {
         Skin skin = new Skin();
 
-        // Create a font
-        BitmapFont font = FontManager.getBigFont();
-        skin.add("bigFont", font);
+        BitmapFont bitmapFont = getBitmapFont();
+        skin.add("default", bitmapFont);
 
         // Create a texture
-        Pixmap pixmap = new Pixmap(0, 0, Pixmap.Format.RGB888);
-        pixmap.setColor(Color.CLEAR);
-        pixmap.fill();
+        Pixmap pixmap = getTexture();
         skin.add("background", new Texture(pixmap));
 
         // Create a button 9 patch
-        TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("button/button.pack"));
-        NinePatch buttonNinePatch = textureAtlas.createPatch("button");
+        NinePatch buttonNinePatch = getNinePatch();
         skin.add("button", buttonNinePatch);
 
         // Create a text button style
-        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        textButtonStyle.checkedFontColor = Color.GREEN;
-        textButtonStyle.fontColor = Color.BLACK;
-        textButtonStyle.font = skin.getFont("bigFont");
-        textButtonStyle.down = skin.getDrawable("button");
-        textButtonStyle.up = skin.getDrawable("button");
+        TextButton.TextButtonStyle textButtonStyle = getTextButtonStyle(skin);
         skin.add("default", textButtonStyle);
 
         // Label style
-        Label.LabelStyle labelStyle = new Label.LabelStyle();
-        labelStyle.font = skin.getFont("bigFont");
+        Label.LabelStyle labelStyle = getLabelStyle(skin);
         skin.add("default", labelStyle, Label.LabelStyle.class);
 
         // Progress bar texture
+        Pixmap progressBarPixmap = getProgressBarTexture();
+        skin.add("progressbar", new Texture(progressBarPixmap));
+
+        return skin;
+    }
+
+    private static Pixmap getTexture()
+    {
+        Pixmap pixmap = new Pixmap(0, 0, Pixmap.Format.RGB888);
+        pixmap.setColor(Color.CLEAR);
+        pixmap.fill();
+        return pixmap;
+    }
+
+    private static NinePatch getNinePatch()
+    {
+        TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("button/button.pack"));
+        return textureAtlas.createPatch("button");
+    }
+
+    private static TextButton.TextButtonStyle getTextButtonStyle(Skin skin)
+    {
+        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
+        textButtonStyle.checkedFontColor = Color.GREEN;
+        textButtonStyle.fontColor = Color.BLACK;
+        textButtonStyle.font = skin.getFont("default");
+        textButtonStyle.down = skin.getDrawable("button");
+        textButtonStyle.up = skin.getDrawable("button");
+        return textButtonStyle;
+    }
+
+    private static Label.LabelStyle getLabelStyle(Skin skin)
+    {
+        Label.LabelStyle labelStyle = new Label.LabelStyle();
+        labelStyle.font = skin.getFont("default");
+        return labelStyle;
+    }
+
+    private static Pixmap getProgressBarTexture()
+    {
         Pixmap progressBarPixmap =
             new Pixmap(1, (int) (Gdx.graphics.getHeight() / 30f), Pixmap.Format.RGBA8888);
         progressBarPixmap.setColor(Color.WHITE);
         progressBarPixmap.fill();
-        skin.add("progressbar", new Texture(progressBarPixmap));
+        return progressBarPixmap;
+    }
 
+    private static BitmapFont getBitmapFont()
+    {
+        FreeTypeFontGenerator generator =
+            new FreeTypeFontGenerator(Gdx.files.internal("font/pdark.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter =
+            new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size =
+            (int) (Gdx.graphics.getWidth() * Gdx.graphics.getHeight() * FONT_SCALE);
+        BitmapFont bitmapFont = generator.generateFont(parameter);
 
-        return skin;
+        return bitmapFont;
     }
 }
