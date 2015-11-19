@@ -32,7 +32,7 @@ public class WinScreen implements Screen
     private final Sound         sound;
     private       String        levelName;
 
-    public WinScreen(String levelName, float score)
+    public WinScreen(String levelName, int score)
     {
         this.levelName = levelName;
         this.stage = new Stage();
