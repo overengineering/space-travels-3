@@ -97,7 +97,7 @@ public class SkinManager
     private static BitmapFont getBitmapFont()
     {
         FreeTypeFontGenerator generator =
-            new FreeTypeFontGenerator(Gdx.files.internal("font/pdark.ttf"));
+            new FreeTypeFontGenerator(Gdx.files.internal("font/Akashi.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter =
             new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size =
