@@ -14,7 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 public class SkinManager
 {
-    public static final float FONT_SCALE = 0.00005f;
+    public static final float FONT_SCALE = 0.05f;
 
     public static Skin BasicSkin;
 
@@ -101,7 +101,7 @@ public class SkinManager
         FreeTypeFontGenerator.FreeTypeFontParameter parameter =
             new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size =
-            (int) (Gdx.graphics.getWidth() * Gdx.graphics.getHeight() * FONT_SCALE);
+            (int) (Math.sqrt(Gdx.graphics.getWidth() * Gdx.graphics.getHeight()) * FONT_SCALE);
         BitmapFont bitmapFont = generator.generateFont(parameter);
 
         return bitmapFont;

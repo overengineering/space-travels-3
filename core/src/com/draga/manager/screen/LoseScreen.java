@@ -43,7 +43,9 @@ public class LoseScreen implements Screen
             Actions.fadeIn(3, Interpolation.pow2In)));
 
 
-        table.add(retryButton).size(retryButton.getWidth() * 2, retryButton.getHeight() * 3);
+        table
+            .add(retryButton)
+            .size(retryButton.getWidth() * 2, retryButton.getHeight() * 3);
         table.setFillParent(true);
         stage.addActor(table);
 
