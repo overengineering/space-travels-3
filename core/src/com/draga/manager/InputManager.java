@@ -2,6 +2,7 @@ package com.draga.manager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.draga.Constants;
 
@@ -94,7 +95,7 @@ public class InputManager
             input.x = applyDeadZone(input.x);
             input.y = applyDeadZone(input.y);
 
-            Gdx.app.log(LOGGING_TAG, input.x + " - " + input.y);
+            input.clamp(0, 1);
         }
         else
         {
