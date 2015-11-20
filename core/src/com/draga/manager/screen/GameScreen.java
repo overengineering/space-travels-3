@@ -71,6 +71,7 @@ public class GameScreen implements Screen
         String levelPath)
     {
         this.backgroundTexture = AssMan.getAssMan().get(backgroundTexturePath, Texture.class);
+        this.backgroundTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
         this.width = width;
         this.height = height;
         this.spriteBatch = spriteBatch;
@@ -94,10 +95,10 @@ public class GameScreen implements Screen
             Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, width, height, orthographicCamera);
         extendViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        if (Constants.IS_DEBUGGING)
+        /*if (Constants.IS_DEBUGGING)
         {
             createWalls();
-        }
+        }*/
         if (SettingsManager.debugDraw)
         {
             box2DDebugRenderer = new Box2DDebugRenderer();
@@ -157,13 +158,13 @@ public class GameScreen implements Screen
         float halfWidth = orthographicCamera.viewportWidth / 2f;
         float halfHeight = orthographicCamera.viewportHeight / 2f;
 
-        float cameraXPosition = MathUtils.clamp(
+        /*float cameraXPosition = MathUtils.clamp(
             ship.getX(), halfWidth, width - halfWidth);
         float cameraYPosition = MathUtils.clamp(
-            ship.getY(), halfHeight, height - halfHeight);
+            ship.getY(), halfHeight, height - halfHeight);*/
 
         // Soften camera movement.
-        Vector2 cameraVec = new Vector2(cameraXPosition, cameraYPosition);
+        Vector2 cameraVec = new Vector2(ship.getX(), ship.getY());
         Vector2 softCamera = cameraVec.cpy();
         Vector2 cameraOffset =
             cameraVec.sub(orthographicCamera.position.x, orthographicCamera.position.y);
@@ -262,9 +263,40 @@ public class GameScreen implements Screen
     public void draw()
     {
         spriteBatch.begin();
-        spriteBatch.draw(backgroundTexture, 0, 0, width, height);
+
+        float centerCellX = (float) Math.ceil(ship.getX() / width);
+        float centerCellY = (float) Math.ceil(ship.getY() / height);
+
+        for (int i = -1; i <= 1; i++)
+        for (int j = -1; j <= 1; j++)
+        {
+            spriteBatch.draw(
+                backgroundTexture,
+                (i + centerCellX) * width,
+                (j + centerCellY) * height,
+                width,
+                height);
+        }
+
         spriteBatch.end();
 
+        drawMiniMap();
+
+        spriteBatch.begin();
+        for (GameEntity gameEntity : GameEntityManager.getGameEntities())
+        {
+            gameEntity.draw(spriteBatch);
+        }
+        spriteBatch.end();
+
+        if (SettingsManager.debugDraw)
+        {
+            box2DDebugRenderer.render(box2dWorld, orthographicCamera.combined);
+        }
+    }
+
+    private void drawMiniMap()
+    {
         MiniMap.getShapeRenderer().begin();
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -281,18 +313,6 @@ public class GameScreen implements Screen
 
         Gdx.gl.glDisable(GL20.GL_BLEND);
         MiniMap.getShapeRenderer().end();
-
-        spriteBatch.begin();
-        for (GameEntity gameEntity : GameEntityManager.getGameEntities())
-        {
-            gameEntity.draw(spriteBatch);
-        }
-        spriteBatch.end();
-
-        if (SettingsManager.debugDraw)
-        {
-            box2DDebugRenderer.render(box2dWorld, orthographicCamera.combined);
-        }
     }
 
     private void checkDebugKeys()
