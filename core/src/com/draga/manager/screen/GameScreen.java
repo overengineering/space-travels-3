@@ -255,7 +255,8 @@ public class GameScreen implements Screen
         // TODO: investigate this
         // max frame time to avoid spiral of death (on slow devices)
         float frameTime = Math.min(elapsed, 0.25f);
-        box2dWorld.step(frameTime, 6, 2);
+        //box2dWorld.step(frameTime, 6, 2);
+        PhysicsEngine.update(elapsed);
         updateScore();
     }
 

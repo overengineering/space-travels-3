@@ -119,6 +119,8 @@ public class Ship extends GameEntity
         thrusterSoundInstance = thrusterSound.loop(0);
 
         fuel = MAX_FUEL;
+
+        this.physicsComponent = new PhysicsComponent(new Circle(10));
     }
     
     @Override
@@ -141,6 +143,7 @@ public class Ship extends GameEntity
             gravityForce = GravityManager.getForceActingOn(body);
         }
         body.applyForceToCenter(gravityForce, true);
+        //this.physicsComponent.getVelocity().add(gravityForce);
 
         Vector2 inputForce = InputManager.getInputForce();
 
@@ -157,8 +160,10 @@ public class Ship extends GameEntity
 
         updateThruster(inputForce);
 
-        inputForce.scl(INPUT_FORCE_MULTIPLIER);
+        //inputForce.scl(INPUT_FORCE_MULTIPLIER);
         body.applyForceToCenter(inputForce, true);
+
+        this.physicsComponent.getVelocity().add(inputForce);
     }
 
     @Override
@@ -178,6 +183,18 @@ public class Ship extends GameEntity
             p1.x + getX(), p1.y + getY(),
             p2.x + getX(), p2.y + getY(),
             p3.x + getX(), p3.y + getY());
+    }
+
+    @Override
+    public float getX()
+    {
+        return physicsComponent.getPosition().x;
+    }
+
+    @Override
+    public float getY()
+    {
+        return physicsComponent.getPosition().y;
     }
 
     @Override
