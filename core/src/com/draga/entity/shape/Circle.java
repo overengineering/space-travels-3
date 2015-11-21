@@ -1,4 +1,4 @@
-package com.draga.entity;
+package com.draga.entity.shape;
 
 public class Circle extends Shape
 {

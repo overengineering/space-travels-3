@@ -10,16 +10,13 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Pools;
 import com.draga.Constants;
-import com.draga.MaskBits;
 import com.draga.MiniMap;
-import com.draga.entity.ship.ShipBox2dCollisionResolutionComponent;
+import com.draga.entity.shape.Circle;
 import com.draga.event.FuelChangeEvent;
-import com.draga.manager.SettingsManager;
-import com.draga.manager.GravityManager;
 import com.draga.manager.InputManager;
+import com.draga.manager.SettingsManager;
 import com.draga.manager.asset.AssMan;
 
 public class Ship extends GameEntity
@@ -47,65 +44,22 @@ public class Ship extends GameEntity
     private static final float   TOTAL_THRUSTER_ANIMATION_TIME = 1f;
     private static final Vector2 THRUSTER_OFFSET               =
         new Vector2(-HALF_SHIP_HEIGHT / 2f, 0);
+    private static final float   GRAVITY_SCALE                 = 0.005f;
+    private static final float   TURN_DEGREES_PER_SEC          = 360f;
     private float        thrusterWidth;
     private float        thrusterHeight;
     private Animation    thrusterAnimation;
-    private FixtureDef   thrusterFixtureDef;
-    private Fixture      thrusterFixture;
     private float        thrusterAnimationStateTime;
-    private PolygonShape thrusterShape;
     private TextureAtlas thrusterTextureAtlas;
-
-    private Sound thrusterSound;
-    private long thrusterSoundInstance;
-
-    private Fixture      shipFixture;
-    private FixtureDef   shipFixtureDef;
-    private PolygonShape shipShape;
-
-    private Texture shipTexture;
-
+    private Sound        thrusterSound;
+    private long         thrusterSoundInstance;
+    private Texture      shipTexture;
     // State.
-    private float fuel;
+    private float        fuel;
 
     public Ship(float x, float y, String shipTexturePath, String thrusterTextureAtlasPath)
     {
-        collisionResolutionComponent = new ShipBox2dCollisionResolutionComponent(this);
-
-        shipShape = new PolygonShape();
-        shipShape.setAsBox(SHIP_WIDTH / 2f, SHIP_HEIGHT / 2f);
-
-        shipFixtureDef = new FixtureDef();
-        shipFixtureDef.shape = shipShape;
-        float area = SHIP_WIDTH * SHIP_HEIGHT;
-        shipFixtureDef.density = SHIP_MASS / area;
-        shipFixtureDef.friction = 0;
-        shipFixtureDef.restitution = 0;
-        shipFixtureDef.filter.categoryBits = MaskBits.SHIP;
-        shipFixtureDef.filter.maskBits = MaskBits.PLANET | MaskBits.BOUNDARIES | MaskBits.STAR;
-
-
-        thrusterShape = new PolygonShape();
-        thrusterShape.setAsBox(
-            THRUSTER_MAX_WIDTH / 2f, THRUSTER_MAX_HEIGHT / 2f, THRUSTER_OFFSET, 0);
-
-        thrusterFixtureDef = new FixtureDef();
-        thrusterFixtureDef.shape = thrusterShape;
-        thrusterFixtureDef.density = 0;
-        thrusterFixtureDef.friction = 0;
-        thrusterFixtureDef.restitution = 0;
-        thrusterFixtureDef.filter.categoryBits = MaskBits.THRUSTER;
-        thrusterFixtureDef.filter.maskBits = 0;
-
-
-        bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(x, y);
-        bodyDef.angle = 0;
-
-
         this.shipTexture = AssMan.getAssMan().get(shipTexturePath);
-
 
         thrusterAnimationStateTime = 0f;
         this.thrusterTextureAtlas = AssMan.getAssMan().get(thrusterTextureAtlasPath);
@@ -120,7 +74,8 @@ public class Ship extends GameEntity
 
         fuel = MAX_FUEL;
 
-        this.physicsComponent = new PhysicsComponent(new Circle(10));
+        this.physicsComponent = new PhysicsComponent(x, y, SHIP_MASS, new Circle(10));
+        PhysicsEngine.register(this.physicsComponent);
     }
     
     @Override
@@ -140,10 +95,9 @@ public class Ship extends GameEntity
         }
         else
         {
-            gravityForce = GravityManager.getForceActingOn(body);
+            gravityForce = PhysicsEngine.getForceActingOn(physicsComponent);
         }
-        body.applyForceToCenter(gravityForce, true);
-        //this.physicsComponent.getVelocity().add(gravityForce);
+        this.physicsComponent.getVelocity().add(gravityForce.scl(GRAVITY_SCALE));
 
         Vector2 inputForce = InputManager.getInputForce();
 
@@ -160,41 +114,7 @@ public class Ship extends GameEntity
 
         updateThruster(inputForce);
 
-        //inputForce.scl(INPUT_FORCE_MULTIPLIER);
-        body.applyForceToCenter(inputForce, true);
-
         this.physicsComponent.getVelocity().add(inputForce);
-    }
-
-    @Override
-    public void drawMiniMap()
-    {
-        MiniMap.getShapeRenderer().set(ShapeRenderer.ShapeType.Filled);
-        MiniMap.getShapeRenderer().setColor(Color.WHITE);
-
-        Vector2 p1 = new Vector2(8, 0);
-        Vector2 p2 = new Vector2(-5, -5);
-        Vector2 p3 = new Vector2(-5, 5);
-        p1.rotate(body.getAngle() * MathUtils.radiansToDegrees);
-        p2.rotate(body.getAngle() * MathUtils.radiansToDegrees);
-        p3.rotate(body.getAngle() * MathUtils.radiansToDegrees);
-
-        MiniMap.getShapeRenderer().triangle(
-            p1.x + getX(), p1.y + getY(),
-            p2.x + getX(), p2.y + getY(),
-            p3.x + getX(), p3.y + getY());
-    }
-
-    @Override
-    public float getX()
-    {
-        return physicsComponent.getPosition().x;
-    }
-
-    @Override
-    public float getY()
-    {
-        return physicsComponent.getPosition().y;
     }
 
     @Override
@@ -207,9 +127,9 @@ public class Ship extends GameEntity
         Vector2 thrusterOffsetFromCentre = THRUSTER_OFFSET
             .cpy()
             .sub(thrusterWidth / 2f, 0);
-        Vector2 thrusterPosition = new Vector2(body.getPosition());
+        Vector2 thrusterPosition = new Vector2(this.physicsComponent.getPosition());
         Vector2 thrusterRotateOffset =
-            new Vector2(thrusterOffsetFromCentre).rotateRad(body.getAngle());
+            new Vector2(thrusterOffsetFromCentre).rotate(this.physicsComponent.getAngle());
         thrusterPosition.add(thrusterRotateOffset);
         spriteBatch.draw(
             textureRegion,
@@ -221,19 +141,19 @@ public class Ship extends GameEntity
             thrusterHeight,
             1,
             1,
-            body.getAngle() * MathUtils.radiansToDegrees);
+            this.physicsComponent.getAngle());
 
         spriteBatch.draw(
             shipTexture,
-            getX() - HALF_SHIP_WIDTH,
-            getY() - HALF_SHIP_HEIGHT,
+            this.physicsComponent.getPosition().x - HALF_SHIP_WIDTH,
+            this.physicsComponent.getPosition().y - HALF_SHIP_HEIGHT,
             HALF_SHIP_WIDTH,
             HALF_SHIP_HEIGHT,
             SHIP_WIDTH,
             SHIP_HEIGHT,
             1,
             1,
-            body.getAngle() * MathUtils.radiansToDegrees,
+            this.physicsComponent.getAngle(),
             0,
             0,
             shipTexture.getWidth(),
@@ -245,21 +165,34 @@ public class Ship extends GameEntity
     @Override
     public void dispose()
     {
+        PhysicsEngine.unregister(this.physicsComponent);
+        physicsComponent.dispose();
         thrusterSound.stop();
         thrusterSound.dispose();
-        shipShape.dispose();
-        thrusterShape.dispose();
         shipTexture.dispose();
         thrusterTextureAtlas.dispose();
     }
 
     @Override
-    public void createBody(World world)
+    public void drawMiniMap()
     {
-        body = world.createBody(bodyDef);
-        body.setUserData(this);
-        shipFixture = body.createFixture(shipFixtureDef);
-        thrusterFixture = body.createFixture(thrusterFixtureDef);
+        MiniMap.getShapeRenderer().set(ShapeRenderer.ShapeType.Filled);
+        MiniMap.getShapeRenderer().setColor(Color.WHITE);
+
+        Vector2 p1 = new Vector2(8, 0);
+        Vector2 p2 = new Vector2(-5, -5);
+        Vector2 p3 = new Vector2(-5, 5);
+        p1.rotate(this.physicsComponent.getAngle());
+        p2.rotate(this.physicsComponent.getAngle());
+        p3.rotate(this.physicsComponent.getAngle());
+
+        MiniMap.getShapeRenderer().triangle(
+            p1.x + this.physicsComponent.getPosition().x,
+            p1.y + this.physicsComponent.getPosition().y,
+            p2.x + this.physicsComponent.getPosition().x,
+            p2.y + this.physicsComponent.getPosition().y,
+            p3.x + this.physicsComponent.getPosition().x,
+            p3.y + this.physicsComponent.getPosition().y);
     }
 
     /**
@@ -269,26 +202,40 @@ public class Ship extends GameEntity
      */
     private void rotateTo(Vector2 inputForce, float elapsed)
     {
-        // Ref. http://www.iforce2d.net/b2dtut/rotate-to-angle
-        float nextAngle = body.getAngle() + body.getAngularVelocity() / 2f;
-        float directionAngle = inputForce.angleRad();
-
-        float diffRotation = directionAngle - nextAngle;
-
-        // Brings the desired rotation between -180 and 180 degrees to find the closest way to turn.
-        // E.g.: rotates - 10 degrees instead of 350.
-        while (diffRotation < -180 * MathUtils.degreesToRadians)
+        if (inputForce.len() == 0)
         {
-            diffRotation += 360 * MathUtils.degreesToRadians;
-        }
-        while (diffRotation > 180 * MathUtils.degreesToRadians)
-        {
-            diffRotation -= 360 * MathUtils.degreesToRadians;
+            return;
         }
 
-        float scale = inputForce.len() / 1;
+        float diffRotation =
+            inputForce.angle() - this.physicsComponent.getAngle();
+        // Avoid ship turning 360 when rotation close to 0 degrees
+        if (diffRotation < -180)
+        {
+            diffRotation += 360;
+        }
+        else if (diffRotation > 180)
+        {
+            diffRotation -= 360;
+        }
+        // bring the rotation to the max if it's over it
+        float maxTurn = TURN_DEGREES_PER_SEC * elapsed * inputForce.len();
+        if (Math.abs(diffRotation) > maxTurn)
+        {
+            diffRotation = diffRotation > 0 ? maxTurn : -maxTurn;
+        }
+        float finalRotation = this.physicsComponent.getAngle() + diffRotation;
+        //Brings the finalRotation between 0 and 360
+        if (finalRotation > 360)
+        {
+            finalRotation %= 360;
+        }
+        else if (finalRotation < 0)
+        {
+            finalRotation += 360;
+        }
 
-        body.applyAngularImpulse(diffRotation * ROTATION_FORCE * elapsed * scale, true);
+        this.physicsComponent.setAngle(finalRotation);
     }
 
     private void updateFuel(Vector2 inputForce, float deltaTime)
@@ -318,11 +265,9 @@ public class Ship extends GameEntity
         Vector2 thrusterOffsetFromCentre = THRUSTER_OFFSET
             .cpy()
             .sub(thrusterWidth / 2f, 0);
-        thrusterShape.setAsBox(
-            thrusterWidth / 2f, thrusterHeight / 2f, thrusterOffsetFromCentre, 0);
-        thrusterFixtureDef.shape = thrusterShape;
-        body.destroyFixture(thrusterFixture);
-        thrusterFixture = body.createFixture(thrusterFixtureDef);
+        //        thrusterShape.setAsBox(
+        //            thrusterWidth / 2f, thrusterHeight / 2f, thrusterOffsetFromCentre, 0);
+        //        thrusterFixtureDef.shape = thrusterShape;
     }
 
     public float getFuel()

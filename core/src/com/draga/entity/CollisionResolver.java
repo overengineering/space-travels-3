@@ -1,5 +1,6 @@
 package com.draga.entity;
 
+import com.draga.entity.shape.Circle;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class CollisionResolver

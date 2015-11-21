@@ -4,7 +4,6 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.physics.box2d.Box2D;
 import com.draga.manager.GameManager;
 import com.draga.manager.SkinManager;
 import com.draga.manager.asset.AssMan;
@@ -37,8 +36,6 @@ public class SpaceTravels3 extends Game
         {
             Gdx.app.setLogLevel(Application.LOG_ERROR);
         }
-
-        Box2D.init();
 
         this.setScreen(new MenuScreen());
     }
