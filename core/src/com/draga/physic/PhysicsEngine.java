@@ -34,6 +34,15 @@ public class PhysicsEngine
         GAME_ENTITIES.addAll(GAME_ENTITIES_TO_CREATE);
         GAME_ENTITIES_TO_CREATE.clear();
 
+        int steps = 10;
+        for (float step = 0; step < steps; step++)
+        {
+            step(elapsed / steps);
+        }
+    }
+
+    private static void step(float elapsed)
+    {
         // Updates all position according to the game entity velocity.
         for (GameEntity gameEntity : GAME_ENTITIES)
         {

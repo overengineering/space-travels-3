@@ -5,6 +5,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.draga.entity.GameEntity;
 import com.draga.entity.shape.Circle;
 
+/**
+ * Draw all the game entities bounds
+ */
 public class PhysicDebugDrawer
 {
     private static ShapeRenderer shapeRenderer;
@@ -14,6 +17,10 @@ public class PhysicDebugDrawer
         shapeRenderer = new ShapeRenderer();
     }
 
+    /**
+     * Draw all the game entities bounds.
+     * @param camera The camera to use the projection from
+     */
     public static void draw(Camera camera)
     {
         shapeRenderer.setProjectionMatrix(camera.combined);
