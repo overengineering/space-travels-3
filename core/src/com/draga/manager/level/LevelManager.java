@@ -112,7 +112,7 @@ public abstract class LevelManager
             levels.add(serialisableLevel);
         }
 
-        timer.stop(LOGGING_TAG, "Time to read the level pack serialised levels: %fs");
+        timer.elapsed(LOGGING_TAG, "Time to read the level pack serialised levels: %fs");
     }
 
     /**

@@ -17,13 +17,22 @@ public class Timer
     }
 
     /**
-     * Stop the timer and log in GDX the time taken.
+     * Log in GDX the elapsed time.
      * @param loggingTag The tag to log the message under.
      * @param message The message to log, must contain a "%f" to print the time taken.
      */
-    public void stop(String loggingTag, String message)
+    public void elapsed(String loggingTag, String message)
     {
         long elapsedNanoTime = System.nanoTime() - startTime;
         Gdx.app.log(loggingTag, String.format(message, elapsedNanoTime * Constants.NANO));
+    }
+
+    /**
+     * @return the elapsed seconds.
+     */
+    public float elapsed()
+    {
+        float elapsedTime = (System.nanoTime() - startTime)  * Constants.NANO;
+        return elapsedTime;
     }
 }

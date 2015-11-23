@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class PhysicsEngine
 {
-    private static final String                LOGGING_TAG             =
+    private static final String LOGGING_TAG =
         PhysicsEngine.class.getSimpleName();
 
     private static final ArrayList<GameEntity> GAME_ENTITIES           = new ArrayList<>();
@@ -28,10 +28,24 @@ public class PhysicsEngine
     private static final int MIN_STEPS     = 1;
     private static final int MAX_STEPS     = 10;
     private static final int FPS_GOAL      = 60;
+    private static final Timer TIMER = new Timer();
     private static       int CURRENT_STEPS = MIN_STEPS;
+    private static float updateTime;
+
+    public static float getUpdateTime()
+    {
+        return updateTime;
+    }
+
+    public static int getCurrentSteps()
+    {
+        return CURRENT_STEPS;
+    }
 
     public static void update(float elapsed)
     {
+        TIMER.start();
+
         // Remove all game entities marked for removal.
         GAME_ENTITIES.removeAll(GAME_ENTITIES_TO_REMOVE);
         for (GameEntity gameEntity : GAME_ENTITIES_TO_REMOVE)
@@ -48,7 +62,7 @@ public class PhysicsEngine
         {
             if (CURRENT_STEPS < MAX_STEPS)
             {
-                CURRENT_STEPS ++;
+                CURRENT_STEPS++;
             }
         }
         else
@@ -63,6 +77,8 @@ public class PhysicsEngine
         {
             step(elapsed / CURRENT_STEPS);
         }
+
+        updateTime = TIMER.elapsed();
     }
 
     private static void step(float elapsed)

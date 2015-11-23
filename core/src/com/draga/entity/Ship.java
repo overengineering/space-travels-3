@@ -101,7 +101,7 @@ public class Ship extends GameEntity
 
         Vector2 inputForce = InputManager.getInputForce();
 
-        // TODO: apply the last part of acceleration properly and maybe then stop updating the
+        // TODO: apply the last part of acceleration properly and maybe then elapsed updating the
         // thrusters?
         if (fuel <= 0)
         {

@@ -129,7 +129,7 @@ public class LoadingScreen implements Screen
 
             GameScreen gameScreen = LevelManager.getLevelGameScreen(
                 serialisableLevel, new SpriteBatch());
-            timer.stop(LOGGING_TAG, "Loading time: %fs");
+            timer.elapsed(LOGGING_TAG, "Loading time: %fs");
             GameManager.getGame().setScreen(gameScreen);
         }
         updateProgressBar();

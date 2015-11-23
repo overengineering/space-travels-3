@@ -9,10 +9,6 @@ import com.draga.manager.SkinManager;
 import com.draga.manager.asset.AssMan;
 import com.draga.manager.screen.MenuScreen;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 public class SpaceTravels3 extends Game
 {
     private final static String LOGGING_TAG = SpaceTravels3.class.getSimpleName();

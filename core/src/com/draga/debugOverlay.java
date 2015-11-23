@@ -8,13 +8,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.draga.manager.SettingsManager;
 import com.draga.manager.SkinManager;
+import com.draga.physic.PhysicsEngine;
 
-import java.sql.Timestamp;
-import java.util.Date;
+import javax.swing.plaf.metal.MetalBorders;
 
 public class DebugOverlay implements Screen
 {
-    private final Label messageLabel;
+    private final Label generalLabel;
+    private final Label physicEngineLabel;
 
     private Stage stage;
 
@@ -30,15 +31,24 @@ public class DebugOverlay implements Screen
             .add()
             .expand();
 
-        messageLabel = getMessageLabel();
+        physicEngineLabel = getLabel();
+        table.row();
         table
-            .add(messageLabel)
-            .bottom();
+            .add(physicEngineLabel)
+            .bottom()
+            .right();
+
+        generalLabel = getLabel();
+        table.row();
+        table
+            .add(generalLabel)
+            .bottom()
+            .right();
 
         stage.setDebugAll(SettingsManager.debugDraw);
     }
 
-    private Label getMessageLabel()
+    private Label getLabel()
     {
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = SkinManager.BasicSkin.getFont("debugFont");
@@ -59,12 +69,13 @@ public class DebugOverlay implements Screen
     @Override
     public void render(float delta)
     {
-        setMessageLabel();
+        setGeneralLabel();
+        setPhysicEngineLabel();
         stage.act(delta);
         stage.draw();
     }
 
-    public void setMessageLabel()
+    public void setGeneralLabel()
     {
         String formattedJavaHeap = Constants.COMMA_SEPARATED_THOUSANDS_FORMATTER.format(
             Gdx.app.getJavaHeap());
@@ -75,7 +86,16 @@ public class DebugOverlay implements Screen
             Gdx.graphics.getFramesPerSecond(),
             formattedJavaHeap,
             formattedNativeHeap);
-        messageLabel.setText(message);
+        generalLabel.setText(message);
+    }
+
+    public void setPhysicEngineLabel()
+    {
+        String message = String.format(
+            "Engine update time: %9f | Steps: %d\r\n",
+            PhysicsEngine.getUpdateTime(),
+            PhysicsEngine.getCurrentSteps());
+        physicEngineLabel.setText(message);
     }
 
     @Override
