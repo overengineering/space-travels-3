@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pools;
 import com.draga.Constants;
@@ -18,6 +17,8 @@ import com.draga.event.FuelChangeEvent;
 import com.draga.manager.InputManager;
 import com.draga.manager.SettingsManager;
 import com.draga.manager.asset.AssMan;
+import com.draga.physic.PhysicsComponent;
+import com.draga.physic.PhysicsEngine;
 
 public class Ship extends GameEntity
 {
@@ -34,7 +35,7 @@ public class Ship extends GameEntity
     private static final float HALF_SHIP_HEIGHT = SHIP_HEIGHT / 2f;
 
     // Physic.
-    private static final float ROTATION_FORCE         = 2000;
+    private static final float ROTATION_SCALE         = 5f;
     private static final float SHIP_MASS              = 1f;
     private static final float INPUT_FORCE_MULTIPLIER = 100f;
 
@@ -44,8 +45,8 @@ public class Ship extends GameEntity
     private static final float   TOTAL_THRUSTER_ANIMATION_TIME = 1f;
     private static final Vector2 THRUSTER_OFFSET               =
         new Vector2(-HALF_SHIP_HEIGHT / 2f, 0);
-    private static final float   GRAVITY_SCALE                 = 0.005f;
-    private static final float   TURN_DEGREES_PER_SEC          = 360f;
+    //    private static final float   GRAVITY_SCALE                 = 0.005f;
+    private static final float   MAX_ROTATION_DEGREES_PER_SEC  = 360f;
     private float        thrusterWidth;
     private float        thrusterHeight;
     private Animation    thrusterAnimation;
@@ -74,8 +75,7 @@ public class Ship extends GameEntity
 
         fuel = MAX_FUEL;
 
-        this.physicsComponent = new PhysicsComponent(x, y, SHIP_MASS, new Circle(10));
-        PhysicsEngine.register(this.physicsComponent);
+        this.physicsComponent = new PhysicsComponent(x, y, SHIP_MASS, new Circle(5));
     }
     
     @Override
@@ -95,9 +95,9 @@ public class Ship extends GameEntity
         }
         else
         {
-            gravityForce = PhysicsEngine.getForceActingOn(physicsComponent);
+            gravityForce = PhysicsEngine.getForceActingOn(this);
         }
-        this.physicsComponent.getVelocity().add(gravityForce.scl(GRAVITY_SCALE));
+        this.physicsComponent.getVelocity().add(gravityForce.scl(deltaTime));
 
         Vector2 inputForce = InputManager.getInputForce();
 
@@ -165,7 +165,6 @@ public class Ship extends GameEntity
     @Override
     public void dispose()
     {
-        PhysicsEngine.unregister(this.physicsComponent);
         physicsComponent.dispose();
         thrusterSound.stop();
         thrusterSound.dispose();
@@ -207,8 +206,8 @@ public class Ship extends GameEntity
             return;
         }
 
-        float diffRotation =
-            inputForce.angle() - this.physicsComponent.getAngle();
+        float diffRotation = inputForce.angle() - this.physicsComponent.getAngle();
+
         // Avoid ship turning 360 when rotation close to 0 degrees
         if (diffRotation < -180)
         {
@@ -218,11 +217,16 @@ public class Ship extends GameEntity
         {
             diffRotation -= 360;
         }
+
+        // Scale the difference of rotation by the elapsed time and input length.
+        diffRotation *= inputForce.len() * elapsed * ROTATION_SCALE;
+
         // bring the rotation to the max if it's over it
-        float maxTurn = TURN_DEGREES_PER_SEC * elapsed * inputForce.len();
-        if (Math.abs(diffRotation) > maxTurn)
+        if (Math.abs(diffRotation) > MAX_ROTATION_DEGREES_PER_SEC)
         {
-            diffRotation = diffRotation > 0 ? maxTurn : -maxTurn;
+            diffRotation = diffRotation > 0
+                ? MAX_ROTATION_DEGREES_PER_SEC
+                : -MAX_ROTATION_DEGREES_PER_SEC;
         }
         float finalRotation = this.physicsComponent.getAngle() + diffRotation;
         //Brings the finalRotation between 0 and 360

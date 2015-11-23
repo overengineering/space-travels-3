@@ -20,10 +20,11 @@ import com.draga.event.CountdownFinishedEvent;
 import com.draga.event.ScoreEvent;
 import com.draga.event.ShipPlanetCollisionEvent;
 import com.draga.event.StarCollectedEvent;
-import com.draga.manager.GameEntityManager;
 import com.draga.manager.GameManager;
 import com.draga.manager.SettingsManager;
 import com.draga.manager.asset.AssMan;
+import com.draga.physic.PhysicDebugDrawer;
+import com.draga.physic.PhysicsEngine;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.ArrayList;
@@ -31,6 +32,8 @@ import java.util.ArrayList;
 public class GameScreen implements Screen
 {
     private static final String LOGGING_TAG = GameScreen.class.getSimpleName();
+
+    private PhysicDebugDrawer physicDebugDrawer;
 
     private int width;
     private int height;
@@ -85,15 +88,15 @@ public class GameScreen implements Screen
         extendViewport = new ExtendViewport(
             Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, width, height, orthographicCamera);
         extendViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-//
-//        if (Constants.IS_DEBUGGING)
-//        {
-//            createWalls();
-//        }
-//        if (SettingsManager.debugDraw)
-//        {
-//            box2DDebugRenderer = new Box2DDebugRenderer();
-//        }
+        //
+        //        if (Constants.IS_DEBUGGING)
+        //        {
+        //            createWalls();
+        //        }
+                if (SettingsManager.debugDraw)
+                {
+                    physicDebugDrawer = new PhysicDebugDrawer();
+                }
 
         hud = new Hud(orthographicCamera);
 
@@ -104,17 +107,12 @@ public class GameScreen implements Screen
     {
         this.ship = ship;
         hud.setShip(ship);
-        addGameEntity(ship);
+        PhysicsEngine.addGameEntity(ship);
 
         orthographicCamera.position.x = ship.physicsComponent.getPosition().x;
         orthographicCamera.position.y = ship.physicsComponent.getPosition().y;
 
         updateCamera();
-    }
-
-    private void addGameEntity(GameEntity gameEntity)
-    {
-        GameEntityManager.getGameEntities().add(gameEntity);
     }
 
     private void updateCamera()
@@ -144,12 +142,12 @@ public class GameScreen implements Screen
     public void addPlanet(Planet planet)
     {
         this.planets.add(planet);
-        addGameEntity(planet);
+        PhysicsEngine.addGameEntity(planet);
     }
 
     public void addStar(Star star)
     {
-        addGameEntity(star);
+        PhysicsEngine.addGameEntity(star);
         hud.addStar();
     }
 
@@ -178,6 +176,10 @@ public class GameScreen implements Screen
         {
             update(deltaTime);
         }
+        else
+        {
+            update(0);
+        }
 
         draw();
 
@@ -196,26 +198,13 @@ public class GameScreen implements Screen
             checkDebugKeys();
         }
 
-        while (!GameEntityManager.getGameEntitiesToCreate().isEmpty())
-        {
-            addGameEntity(GameEntityManager.getGameEntitiesToCreate().poll());
-        }
-        while (!GameEntityManager.getGameEntitiesToDestroy().isEmpty())
-        {
-            removeGameEntity(GameEntityManager.getGameEntitiesToDestroy().poll());
-        }
-
         updateCamera();
 
-        for (GameEntity gameEntity : GameEntityManager.getGameEntities())
+        for (GameEntity gameEntity : PhysicsEngine.getGameEntities())
         {
             gameEntity.update(elapsed);
         }
 
-        // TODO: investigate this
-        // max frame time to avoid spiral of death (on slow devices)
-        float frameTime = Math.min(elapsed, 0.25f);
-        //box2dWorld.step(frameTime, 6, 2);
         PhysicsEngine.update(elapsed);
         updateScore();
     }
@@ -244,16 +233,16 @@ public class GameScreen implements Screen
         MiniMap.getShapeRenderer().end();
 
         spriteBatch.begin();
-        for (GameEntity gameEntity : GameEntityManager.getGameEntities())
+        for (GameEntity gameEntity : PhysicsEngine.getGameEntities())
         {
             gameEntity.draw(spriteBatch);
         }
         spriteBatch.end();
 
-//        if (SettingsManager.debugDraw)
-//        {
-//            box2DDebugRenderer.render(box2dWorld, orthographicCamera.combined);
-//        }
+        if (SettingsManager.debugDraw)
+        {
+            physicDebugDrawer.draw(orthographicCamera);
+        }
     }
 
     private void checkDebugKeys()
@@ -273,12 +262,6 @@ public class GameScreen implements Screen
             ship.physicsComponent.getVelocity().set(0, 0);
             //ship.physicsComponent.setAngularVelocity(0);
         }
-    }
-
-    private void removeGameEntity(GameEntity gameEntity)
-    {
-        GameEntityManager.getGameEntities().remove(gameEntity);
-        gameEntity.dispose();
     }
 
     private void updateScore()
@@ -335,17 +318,15 @@ public class GameScreen implements Screen
     @Override
     public void dispose()
     {
-        for (GameEntity gameEntity : GameEntityManager.getGameEntities())
+        PhysicsEngine.dispose();
+
+        backgroundTexture.dispose();
+
+        if (SettingsManager.debugDraw)
         {
-            gameEntity.dispose();
+            physicDebugDrawer.dispose();
         }
 
-        GameEntityManager.dispose();
-        backgroundTexture.dispose();
-//        if (SettingsManager.debugDraw)
-//        {
-//            box2DDebugRenderer.dispose();
-//        }
         Constants.EVENT_BUS.unregister(this);
         hud.dispose();
         if (this.overlayScreen != null)
@@ -362,7 +343,7 @@ public class GameScreen implements Screen
     {
         starsCollected++;
         starCollectedSound.play();
-        GameEntityManager.getGameEntitiesToDestroy().add(starCollectedEvent.star);
+        PhysicsEngine.removeGameEntity(starCollectedEvent.star);
     }
 
     @Subscribe
@@ -375,7 +356,7 @@ public class GameScreen implements Screen
                 "Linear velocity on collision: " + ship.physicsComponent.getVelocity().len());
         }
 
-        GameEntityManager.getGameEntitiesToDestroy().add(ship);
+        PhysicsEngine.removeGameEntity(ship);
 
         // If wrong planet or too fast then lose.
         if (!shipPlanetCollisionEvent.planet.isDestination()
@@ -387,7 +368,7 @@ public class GameScreen implements Screen
                 shipPlanetCollisionEvent.ship.physicsComponent.getPosition().x,
                 shipPlanetCollisionEvent.ship.physicsComponent.getPosition().y,
                 AssMan.getAssList().explosion);
-            GameEntityManager.getGameEntitiesToCreate().add(explosion);
+            PhysicsEngine.addGameEntity(explosion);
 
             this.overlayScreen = new LoseScreen(levelPath);
         }

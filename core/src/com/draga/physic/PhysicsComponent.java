@@ -1,4 +1,4 @@
-package com.draga.entity;
+package com.draga.physic;
 
 import com.badlogic.gdx.math.Vector2;
 import com.draga.entity.shape.Shape;
@@ -17,8 +17,6 @@ public class PhysicsComponent
         this.shape = shape;
         this.mass = mass;
         this.velocity = new Vector2();
-
-        PhysicsEngine.register(this);
     }
 
     public Vector2 getPosition()
@@ -46,14 +44,8 @@ public class PhysicsComponent
         return shape;
     }
 
-    public boolean collides(PhysicsComponent otherPhysicsComponent)
-    {
-        return CollisionResolver.resolve(this, otherPhysicsComponent);
-    }
-
     public void dispose()
     {
-        PhysicsEngine.unregister(this);
     }
 
     public float getMass()

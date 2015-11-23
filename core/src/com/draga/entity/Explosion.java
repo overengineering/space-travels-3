@@ -7,8 +7,9 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.draga.entity.shape.Circle;
-import com.draga.manager.GameEntityManager;
 import com.draga.manager.asset.AssMan;
+import com.draga.physic.PhysicsComponent;
+import com.draga.physic.PhysicsEngine;
 
 public class Explosion extends GameEntity
 {
@@ -24,7 +25,6 @@ public class Explosion extends GameEntity
         float x, float y, String textureAtlasPath)
     {
         this.physicsComponent = new PhysicsComponent(x, y, 0, new Circle((HEIGHT + WIDTH) / 2f));
-        PhysicsEngine.register(this.physicsComponent);
 
         stateTime = 0f;
         TextureAtlas textureAtlas = AssMan.getAssMan().get(textureAtlasPath);
@@ -42,7 +42,7 @@ public class Explosion extends GameEntity
         // Can't get if the sound if still playing, can be done only with music.
         if (animation.isAnimationFinished(stateTime))
         {
-            GameEntityManager.getGameEntitiesToDestroy().add(this);
+            PhysicsEngine.removeGameEntity(this);
         }
     }
 
@@ -66,7 +66,6 @@ public class Explosion extends GameEntity
     @Override
     public void dispose()
     {
-        PhysicsEngine.unregister(this.physicsComponent);
         sound.stop();
         sound.dispose();
     }

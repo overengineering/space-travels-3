@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.draga.MiniMap;
 import com.draga.entity.shape.Circle;
 import com.draga.manager.asset.AssMan;
+import com.draga.physic.PhysicsComponent;
 
 public class Planet extends GameEntity
 {
@@ -20,7 +21,6 @@ public class Planet extends GameEntity
     {
         this.radius = radius;
         this.physicsComponent = new PhysicsComponent(x, y, mass, new Circle(radius));
-        PhysicsEngine.register(this.physicsComponent);
         this.texture = AssMan.getAssMan().get(texturePath);
 
         this.isDestination = isDestination;
@@ -62,7 +62,6 @@ public class Planet extends GameEntity
     @Override
     public void dispose()
     {
-        PhysicsEngine.unregister(this.physicsComponent);
         texture.dispose();
     }
 

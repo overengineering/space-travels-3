@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.draga.MiniMap;
 import com.draga.entity.shape.Circle;
 import com.draga.manager.asset.AssMan;
+import com.draga.physic.PhysicsComponent;
 
 public class Star extends GameEntity
 {
@@ -21,8 +22,7 @@ public class Star extends GameEntity
 
     public Star(float x, float y, String texturePath)
     {
-        this.physicsComponent = new PhysicsComponent(x, y, 0, new Circle(WIDTH));
-        PhysicsEngine.register(this.physicsComponent);
+        this.physicsComponent = new PhysicsComponent(x, y, 0, new Circle(HALF_WIDTH));
         this.texture = AssMan.getAssMan().get(texturePath);
     }
 
@@ -57,7 +57,6 @@ public class Star extends GameEntity
     @Override
     public void dispose()
     {
-        PhysicsEngine.unregister(this.physicsComponent);
     }
 
     @Override

@@ -13,12 +13,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.draga.entity.GameEntity;
-import com.draga.entity.PhysicsEngine;
+import com.draga.physic.PhysicsEngine;
 import com.draga.entity.Ship;
 import com.draga.event.FuelChangeEvent;
 import com.draga.event.StarCollectedEvent;
 import com.draga.manager.SettingsManager;
-import com.draga.manager.GameEntityManager;
 import com.draga.manager.SkinManager;
 import com.draga.manager.asset.AssMan;
 import com.draga.event.ScoreEvent;
@@ -140,7 +139,7 @@ public class Hud implements Screen
         }
 
         MiniMap.getShapeRenderer().begin();
-        for (GameEntity gameEntity : GameEntityManager.getGameEntities())
+        for (GameEntity gameEntity : PhysicsEngine.getGameEntities())
         {
             gameEntity.drawMiniMap();
         }
@@ -151,7 +150,7 @@ public class Hud implements Screen
 
     private void DrawGravityIndicator()
     {
-        Vector2 gravityVector = PhysicsEngine.getForceActingOn(ship.physicsComponent);
+        Vector2 gravityVector = PhysicsEngine.getForceActingOn(ship);
 
         shapeRenderer.setColor(Color.BLUE);
         shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
