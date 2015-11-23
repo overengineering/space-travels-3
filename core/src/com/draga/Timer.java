@@ -4,11 +4,16 @@ import com.badlogic.gdx.Gdx;
 
 public class Timer
 {
-    private final long startTime;
+    private long startTime;
 
-    public Timer()
+    /**
+     * Start the timer.
+     * @return The timer for chaining
+     */
+    public Timer start()
     {
         this.startTime = System.nanoTime();
+        return this;
     }
 
     /**

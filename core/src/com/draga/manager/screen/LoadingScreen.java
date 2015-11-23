@@ -14,8 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.draga.Constants;
 import com.draga.Timer;
-import com.draga.manager.SettingsManager;
 import com.draga.manager.GameManager;
+import com.draga.manager.SettingsManager;
 import com.draga.manager.SkinManager;
 import com.draga.manager.asset.AssMan;
 import com.draga.manager.level.LevelManager;
@@ -29,11 +29,12 @@ public class LoadingScreen implements Screen
     private final Stage             stage;
     private       ProgressBar       progressBar;
     private       SerialisableLevel serialisableLevel;
-    private Timer timer;
+    private       Timer             timer;
     
     public LoadingScreen(String levelName)
     {
-        timer = new Timer();
+        timer = new Timer()
+            .start();
 
         this.serialisableLevel = LevelManager.getLevel(levelName);
 

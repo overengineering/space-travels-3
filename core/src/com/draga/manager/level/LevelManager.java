@@ -3,7 +3,6 @@ package com.draga.manager.level;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Json;
-import com.draga.Constants;
 import com.draga.Timer;
 import com.draga.entity.Planet;
 import com.draga.entity.Ship;
@@ -90,10 +89,13 @@ public abstract class LevelManager
         return levels;
     }
 
-    /** Load the levels from the level pack file in order */
+    /**
+     * Load the levels from the level pack file in order
+     */
     private static void loadLevels()
     {
-        Timer timer = new Timer();
+        Timer timer = new Timer()
+            .start();
 
         Json json = new Json();
         String levelPackString = Gdx.files.internal("level/levelPack.json").readString();
@@ -113,8 +115,10 @@ public abstract class LevelManager
         timer.stop(LOGGING_TAG, "Time to read the level pack serialised levels: %fs");
     }
 
-    /** Get the serialisable level immediately after the level specified as a parameter.
-     * Null if it was the last level. */
+    /**
+     * Get the serialisable level immediately after the level specified as a parameter.
+     * Null if it was the last level.
+     */
     public static SerialisableLevel getNextLevel(String levelName)
     {
         Iterator<SerialisableLevel> serialisableLevelIterator = LevelManager.getLevels().iterator();

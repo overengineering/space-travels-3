@@ -1,8 +1,10 @@
 package com.draga.physic;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pools;
 import com.draga.Constants;
+import com.draga.Timer;
 import com.draga.entity.GameEntity;
 import com.draga.entity.Planet;
 import com.draga.entity.Ship;
@@ -16,10 +18,17 @@ import java.util.ArrayList;
 
 public class PhysicsEngine
 {
+    private static final String                LOGGING_TAG             =
+        PhysicsEngine.class.getSimpleName();
     private static final ArrayList<GameEntity> GAME_ENTITIES           = new ArrayList<>();
     private static final ArrayList<GameEntity> GAME_ENTITIES_TO_REMOVE = new ArrayList<>();
     private static final ArrayList<GameEntity> GAME_ENTITIES_TO_CREATE = new ArrayList<>();
-    
+
+    private static final int MIN_STEPS     = 1;
+    private static final int MAX_STEPS     = 10;
+    private static final int FPS_GOAL      = 60;
+    private static       int CURRENT_STEPS = MIN_STEPS;
+
     public static void update(float elapsed)
     {
         // Remove all game entities marked for removal.
@@ -34,10 +43,24 @@ public class PhysicsEngine
         GAME_ENTITIES.addAll(GAME_ENTITIES_TO_CREATE);
         GAME_ENTITIES_TO_CREATE.clear();
 
-        int steps = 10;
-        for (float step = 0; step < steps; step++)
+        if (Gdx.graphics.getFramesPerSecond() >= FPS_GOAL)
         {
-            step(elapsed / steps);
+            if (CURRENT_STEPS < MAX_STEPS)
+            {
+                CURRENT_STEPS ++;
+            }
+        }
+        else
+        {
+            if (CURRENT_STEPS > MIN_STEPS)
+            {
+                CURRENT_STEPS--;
+            }
+        }
+
+        for (float step = 0; step < CURRENT_STEPS; step++)
+        {
+            step(elapsed / CURRENT_STEPS);
         }
     }
 
