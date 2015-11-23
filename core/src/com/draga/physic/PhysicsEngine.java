@@ -90,8 +90,14 @@ public class PhysicsEngine
                 .add(gameEntity.physicsComponent.getVelocity().cpy().scl(elapsed));
         }
 
-        // Check for collisions.
-        for (int x = 0; x < GAME_ENTITIES.size(); x++)
+        /** Check for collisions following this pattern to avoid duplicates:
+         *
+         *    \ X0 \ X1 \ X2
+         * Y0 \    \    \
+         * Y1 \ X  \    \
+         * Y2 \ X  \ X  \
+         */
+        for (int x = 1; x < GAME_ENTITIES.size(); x++)
         {
             GameEntity gameEntityA = GAME_ENTITIES.get(x);
             for (int y = 0; y < x; y++)
