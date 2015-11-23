@@ -25,11 +25,11 @@ public class PhysicsEngine
     private static final ArrayList<GameEntity> GAME_ENTITIES_TO_REMOVE = new ArrayList<>();
     private static final ArrayList<GameEntity> GAME_ENTITIES_TO_CREATE = new ArrayList<>();
 
-    private static final int MIN_STEPS     = 1;
-    private static final int MAX_STEPS     = 10;
-    private static final int FPS_GOAL      = 60;
-    private static final Timer TIMER = new Timer();
-    private static       int CURRENT_STEPS = MIN_STEPS;
+    private static final int   MIN_STEPS     = 1;
+    private static final int   MAX_STEPS     = 10;
+    private static final int   FPS_GOAL      = 60;
+    private static final Timer TIMER         = new Timer();
+    private static       int   CURRENT_STEPS = MIN_STEPS;
     private static float updateTime;
 
     public static float getUpdateTime()
@@ -73,15 +73,24 @@ public class PhysicsEngine
             }
         }
 
+        ArrayList<Integer> collidedGameEntities = new ArrayList<>();
         for (float step = 0; step < CURRENT_STEPS; step++)
         {
-            step(elapsed / CURRENT_STEPS);
+            step(elapsed / CURRENT_STEPS, collidedGameEntities);
         }
 
         updateTime = TIMER.elapsed();
     }
 
-    private static void step(float elapsed)
+    /**
+     * Performs a physic step.
+     * @param elapsed
+     * @param collidedGameEntities A list of game entities that are already collided and therefore
+     *                             will not be checked.
+     */
+    private static void step(
+        float elapsed,
+        ArrayList<Integer> collidedGameEntities)
     {
         // Updates all position according to the game entity velocity.
         for (GameEntity gameEntity : GAME_ENTITIES)
@@ -99,16 +108,27 @@ public class PhysicsEngine
          */
         for (int x = 1; x < GAME_ENTITIES.size(); x++)
         {
-            GameEntity gameEntityA = GAME_ENTITIES.get(x);
-            for (int y = 0; y < x; y++)
+            if (!collidedGameEntities.contains(x))
             {
-                GameEntity gameEntityB = GAME_ENTITIES.get(y);
-                checkCollision(gameEntityA, gameEntityB);
+                GameEntity gameEntityA = GAME_ENTITIES.get(x);
+                for (int y = 0; y < x; y++)
+                {
+                    if (!collidedGameEntities.contains(y))
+                    {
+                        GameEntity gameEntityB = GAME_ENTITIES.get(y);
+                        if (areColliding(gameEntityA, gameEntityB))
+                        {
+                            resolveCollision(gameEntityA, gameEntityB);
+                            collidedGameEntities.add(x);
+                            collidedGameEntities.add(y);
+                        }
+                    }
+                }
             }
         }
     }
 
-    private static void checkCollision(
+    private static boolean areColliding(
         GameEntity gameEntityA,
         GameEntity gameEntityB)
     {
@@ -126,8 +146,10 @@ public class PhysicsEngine
         if (gameEntityA.physicsComponent.getPosition()
             .dst(gameEntityB.physicsComponent.getPosition()) < maxDistance)
         {
-            resolveCollision(gameEntityA, gameEntityB);
+            return true;
         }
+
+        return false;
     }
 
     private static void resolveCollision(

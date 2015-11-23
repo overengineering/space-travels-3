@@ -1,6 +1,7 @@
 package com.draga.physic;
 
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.draga.entity.GameEntity;
 import com.draga.entity.shape.Circle;
@@ -15,6 +16,7 @@ public class PhysicDebugDrawer
     public PhysicDebugDrawer()
     {
         shapeRenderer = new ShapeRenderer();
+        shapeRenderer.setColor(Color.RED);
     }
 
     /**
