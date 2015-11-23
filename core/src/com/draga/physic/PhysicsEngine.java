@@ -14,6 +14,8 @@ import com.draga.event.ShipPlanetCollisionEvent;
 import com.draga.event.StarCollectedEvent;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 public class PhysicsEngine
@@ -84,6 +86,7 @@ public class PhysicsEngine
 
     /**
      * Performs a physic step.
+     *
      * @param elapsed
      * @param collidedGameEntities A list of game entities that are already collided and therefore
      *                             will not be checked.
@@ -156,26 +159,148 @@ public class PhysicsEngine
         GameEntity gameEntityA,
         GameEntity gameEntityB)
     {
-        if (gameEntityA instanceof Ship
-            && gameEntityB instanceof Planet)
+        boolean solved = twoWayInstanceSolver(
+            gameEntityA,
+            gameEntityB,
+            Ship.class,
+            Planet.class,
+            "resolveShipPlanetCollision");
+        if (!solved)
         {
-            resolveShipPlanetCollision((Ship) gameEntityA, (Planet) gameEntityB);
+        twoWayInstanceSolver(
+            gameEntityA,
+            gameEntityB,
+            Star.class,
+            "resolveShipStarCollision");
         }
-        else if (gameEntityA instanceof Planet
-            && gameEntityB instanceof Ship)
+//        if (gameEntityA instanceof Ship
+//            && gameEntityB instanceof Planet)
+//        {
+//            resolveShipPlanetCollision((Ship) gameEntityA, (Planet) gameEntityB);
+//        }
+//        else if (gameEntityA instanceof Planet
+//            && gameEntityB instanceof Ship)
+//        {
+//            resolveShipPlanetCollision((Ship) gameEntityB, (Planet) gameEntityA);
+//        }
+        // else
+//        if (gameEntityA instanceof Star
+//            && gameEntityB instanceof Ship)
+//        {
+//            resolveShipStarCollision((Star) gameEntityA);
+//        }
+//        else if (gameEntityA instanceof Ship
+//            && gameEntityB instanceof Star)
+//        {
+//            resolveShipStarCollision((Star) gameEntityB);
+//        }
+    }
+
+    private static boolean twoWayInstanceSolver(
+        GameEntity gameEntityA,
+        GameEntity gameEntityB,
+        Class<? extends GameEntity> classA,
+        Class<? extends GameEntity> classB,
+        String methodName)
+    {
+        if (classA.isInstance(gameEntityA)
+            && classB.isInstance(gameEntityB))
         {
-            resolveShipPlanetCollision((Ship) gameEntityB, (Planet) gameEntityA);
+            try
+            {
+                Method method =
+                    PhysicsEngine.class.getDeclaredMethod(methodName, classA, classB);
+                try
+                {
+                    method.invoke(null, gameEntityA, gameEntityB);
+                    return true;
+                } catch (IllegalAccessException e)
+                {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e)
+                {
+                    e.printStackTrace();
+                }
+            } catch (NoSuchMethodException e)
+            {
+                e.printStackTrace();
+            }
         }
-        else if (gameEntityA instanceof Star
-            && gameEntityB instanceof Ship)
+        else if (classA.isInstance(gameEntityB)
+            && classB.isInstance(gameEntityA))
         {
-            resolveShipStarCollision((Star) gameEntityA);
+            try
+            {
+                Method method = PhysicsEngine.class.getDeclaredMethod(methodName, classA, classB);
+                try
+                {
+                    method.invoke(null, gameEntityB, gameEntityA);
+                    return true;
+                } catch (IllegalAccessException e)
+                {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e)
+                {
+                    e.printStackTrace();
+                }
+            } catch (NoSuchMethodException e)
+            {
+                e.printStackTrace();
+            }
         }
-        else if (gameEntityA instanceof Ship
-            && gameEntityB instanceof Star)
+        return false;
+    }
+
+    private static boolean twoWayInstanceSolver(
+        GameEntity gameEntityA,
+        GameEntity gameEntityB,
+        Class<? extends GameEntity> classA,
+        String methodName)
+    {
+        if (classA.isInstance(gameEntityA))
         {
-            resolveShipStarCollision((Star) gameEntityB);
+            try
+            {
+                Method method =
+                    PhysicsEngine.class.getDeclaredMethod(methodName, classA);
+                try
+                {
+                    method.invoke(null, gameEntityA);
+                    return true;
+                } catch (IllegalAccessException e)
+                {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e)
+                {
+                    e.printStackTrace();
+                }
+            } catch (NoSuchMethodException e)
+            {
+                e.printStackTrace();
+            }
         }
+        else if (classA.isInstance(gameEntityB))
+        {
+            try
+            {
+                Method method = PhysicsEngine.class.getDeclaredMethod(methodName, classA);
+                try
+                {
+                    method.invoke(null, gameEntityB);
+                    return true;
+                } catch (IllegalAccessException e)
+                {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e)
+                {
+                    e.printStackTrace();
+                }
+            } catch (NoSuchMethodException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        return false;
     }
 
     private static void resolveShipPlanetCollision(Ship ship, Planet planet)
