@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 public class SkinManager
 {
     public static final float FONT_SCALE = 0.05f;
+    public static final float DEBUG_FONT_SCALE = 0.02f;
 
     public static Skin BasicSkin;
 
@@ -27,8 +28,11 @@ public class SkinManager
     {
         Skin skin = new Skin();
 
-        BitmapFont bitmapFont = getBitmapFont();
-        skin.add("default", bitmapFont);
+        BitmapFont defaultFont = getBitmapFont();
+        skin.add("default", defaultFont);
+
+        BitmapFont debugFont = getDebugFont();
+        skin.add("debugFont", debugFont);
 
         // Create a texture
         Pixmap pixmap = getTexture();
@@ -51,6 +55,34 @@ public class SkinManager
         skin.add("progressbar", new Texture(progressBarPixmap));
 
         return skin;
+    }
+
+    private static BitmapFont getBitmapFont()
+    {
+        FreeTypeFontGenerator generator =
+            new FreeTypeFontGenerator(Gdx.files.internal("font/Akashi.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter =
+            new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size =
+            (int) (Math.sqrt(Gdx.graphics.getWidth() * Gdx.graphics.getHeight()) * FONT_SCALE);
+        BitmapFont bitmapFont = generator.generateFont(parameter);
+
+        return bitmapFont;
+    }
+
+    private static BitmapFont getDebugFont()
+    {
+        FreeTypeFontGenerator generator =
+            new FreeTypeFontGenerator(Gdx.files.internal("font/DroidSansMono.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter =
+            new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size =
+            (int) (
+                Math.sqrt(Gdx.graphics.getWidth() * Gdx.graphics.getHeight())
+                    * DEBUG_FONT_SCALE);
+        BitmapFont bitmapFont = generator.generateFont(parameter);
+
+        return bitmapFont;
     }
 
     private static Pixmap getTexture()
@@ -92,18 +124,5 @@ public class SkinManager
         progressBarPixmap.setColor(Color.WHITE);
         progressBarPixmap.fill();
         return progressBarPixmap;
-    }
-
-    private static BitmapFont getBitmapFont()
-    {
-        FreeTypeFontGenerator generator =
-            new FreeTypeFontGenerator(Gdx.files.internal("font/Akashi.ttf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter =
-            new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size =
-            (int) (Math.sqrt(Gdx.graphics.getWidth() * Gdx.graphics.getHeight()) * FONT_SCALE);
-        BitmapFont bitmapFont = generator.generateFont(parameter);
-
-        return bitmapFont;
     }
 }

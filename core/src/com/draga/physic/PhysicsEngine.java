@@ -20,6 +20,7 @@ public class PhysicsEngine
 {
     private static final String                LOGGING_TAG             =
         PhysicsEngine.class.getSimpleName();
+
     private static final ArrayList<GameEntity> GAME_ENTITIES           = new ArrayList<>();
     private static final ArrayList<GameEntity> GAME_ENTITIES_TO_REMOVE = new ArrayList<>();
     private static final ArrayList<GameEntity> GAME_ENTITIES_TO_CREATE = new ArrayList<>();
