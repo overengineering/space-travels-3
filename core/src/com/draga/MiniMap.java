@@ -33,19 +33,26 @@ public class MiniMap
             newCameraBounds.merge(mergeRectangle);
         }
 
-        // Draw a background and border
+        // Draw a background and border.
         MiniMap.drawBackground();
 
+        // Zooms out enough to see the entire width and height of the new camera bounds, while
+        // keeping the aspect ratio.
         orthographicCamera.zoom =
             Math.max(
                 newCameraBounds.width / orthographicCamera.viewportWidth,
-                newCameraBounds.height / orthographicCamera.viewportHeight) / MINIMAP_SCALE;
+                newCameraBounds.height / orthographicCamera.viewportHeight);
+        orthographicCamera.zoom /= MINIMAP_SCALE;
+
+        // Moves the camera so that the bottom left corner of the screen corresponds to the
+        // bottom left corner of the new camera bounds.
         orthographicCamera.position.set(
             newCameraBounds.x + ((orthographicCamera.viewportWidth / 2f) * orthographicCamera.zoom),
             newCameraBounds.y + (
                 (orthographicCamera.viewportHeight / 2f)
                     * orthographicCamera.zoom),
             0);
+
         orthographicCamera.update();
         shapeRenderer.setProjectionMatrix(orthographicCamera.combined);
     }
