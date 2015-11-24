@@ -20,6 +20,7 @@ import com.draga.event.CountdownFinishedEvent;
 import com.draga.event.ScoreEvent;
 import com.draga.event.ShipPlanetCollisionEvent;
 import com.draga.event.StarCollectedEvent;
+import com.draga.manager.GameEntityManager;
 import com.draga.manager.GameManager;
 import com.draga.manager.SettingsManager;
 import com.draga.manager.asset.AssMan;
@@ -107,7 +108,7 @@ public class GameScreen implements Screen
     {
         this.ship = ship;
         hud.setShip(ship);
-        PhysicsEngine.addGameEntity(ship);
+        GameEntityManager.addGameEntity(ship);
 
         orthographicCamera.position.x = ship.physicsComponent.getPosition().x;
         orthographicCamera.position.y = ship.physicsComponent.getPosition().y;
@@ -142,12 +143,12 @@ public class GameScreen implements Screen
     public void addPlanet(Planet planet)
     {
         this.planets.add(planet);
-        PhysicsEngine.addGameEntity(planet);
+        GameEntityManager.addGameEntity(planet);
     }
 
     public void addStar(Star star)
     {
-        PhysicsEngine.addGameEntity(star);
+        GameEntityManager.addGameEntity(star);
         hud.addStar();
     }
 
@@ -200,7 +201,7 @@ public class GameScreen implements Screen
 
         updateCamera();
 
-        for (GameEntity gameEntity : PhysicsEngine.getGameEntities())
+        for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
             gameEntity.update(elapsed);
         }
@@ -233,7 +234,7 @@ public class GameScreen implements Screen
         MiniMap.getShapeRenderer().end();
 
         spriteBatch.begin();
-        for (GameEntity gameEntity : PhysicsEngine.getGameEntities())
+        for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
             gameEntity.draw(spriteBatch);
         }
@@ -318,7 +319,7 @@ public class GameScreen implements Screen
     @Override
     public void dispose()
     {
-        PhysicsEngine.dispose();
+        GameEntityManager.dispose();
 
         backgroundTexture.dispose();
 
@@ -343,7 +344,7 @@ public class GameScreen implements Screen
     {
         starsCollected++;
         starCollectedSound.play();
-        PhysicsEngine.removeGameEntity(starCollectedEvent.star);
+        GameEntityManager.removeGameEntity(starCollectedEvent.star);
     }
 
     @Subscribe
@@ -356,7 +357,7 @@ public class GameScreen implements Screen
                 "Linear velocity on collision: " + ship.physicsComponent.getVelocity().len());
         }
 
-        PhysicsEngine.removeGameEntity(ship);
+        GameEntityManager.removeGameEntity(ship);
 
         // If wrong planet or too fast then lose.
         if (!shipPlanetCollisionEvent.planet.isDestination()
@@ -368,7 +369,7 @@ public class GameScreen implements Screen
                 shipPlanetCollisionEvent.ship.physicsComponent.getPosition().x,
                 shipPlanetCollisionEvent.ship.physicsComponent.getPosition().y,
                 AssMan.getAssList().explosion);
-            PhysicsEngine.addGameEntity(explosion);
+            GameEntityManager.addGameEntity(explosion);
 
             this.overlayScreen = new LoseScreen(levelPath);
         }

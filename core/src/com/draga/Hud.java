@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.draga.entity.GameEntity;
+import com.draga.manager.GameEntityManager;
 import com.draga.physic.PhysicsEngine;
 import com.draga.entity.Ship;
 import com.draga.event.FuelChangeEvent;
@@ -139,7 +140,7 @@ public class Hud implements Screen
         }
 
         MiniMap.getShapeRenderer().begin();
-        for (GameEntity gameEntity : PhysicsEngine.getGameEntities())
+        for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
             gameEntity.drawMiniMap();
         }

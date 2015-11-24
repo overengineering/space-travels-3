@@ -37,7 +37,6 @@ public class Ship extends GameEntity
     // Physic.
     private static final float ROTATION_SCALE         = 5f;
     private static final float SHIP_MASS              = 1f;
-    private static final float INPUT_FORCE_MULTIPLIER = 100f;
 
     // Thruster.
     private static final float   THRUSTER_MAX_WIDTH            = 5;
@@ -45,7 +44,7 @@ public class Ship extends GameEntity
     private static final float   TOTAL_THRUSTER_ANIMATION_TIME = 1f;
     private static final Vector2 THRUSTER_OFFSET               =
         new Vector2(-HALF_SHIP_HEIGHT / 2f, 0);
-    //    private static final float   GRAVITY_SCALE                 = 0.005f;
+
     private static final float   MAX_ROTATION_DEGREES_PER_SEC  = 360f;
     private float        thrusterWidth;
     private float        thrusterHeight;

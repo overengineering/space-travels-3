@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.draga.entity.GameEntity;
 import com.draga.entity.shape.Circle;
+import com.draga.manager.GameEntityManager;
 
 /**
  * Draw all the game entities bounds
@@ -28,7 +29,7 @@ public class PhysicDebugDrawer
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
-        for (GameEntity gameEntity : PhysicsEngine.getGameEntities())
+        for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
             if (gameEntity.physicsComponent.getShape() instanceof Circle)
             {

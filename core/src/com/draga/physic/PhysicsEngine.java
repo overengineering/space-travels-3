@@ -12,6 +12,7 @@ import com.draga.entity.Star;
 import com.draga.entity.shape.Circle;
 import com.draga.event.ShipPlanetCollisionEvent;
 import com.draga.event.StarCollectedEvent;
+import com.draga.manager.GameEntityManager;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.lang.reflect.InvocationTargetException;
@@ -22,10 +23,6 @@ public class PhysicsEngine
 {
     private static final String LOGGING_TAG =
         PhysicsEngine.class.getSimpleName();
-
-    private static final ArrayList<GameEntity> GAME_ENTITIES           = new ArrayList<>();
-    private static final ArrayList<GameEntity> GAME_ENTITIES_TO_REMOVE = new ArrayList<>();
-    private static final ArrayList<GameEntity> GAME_ENTITIES_TO_CREATE = new ArrayList<>();
 
     private static final int   MIN_STEPS     = 1;
     private static final int   MAX_STEPS     = 10;
@@ -48,17 +45,7 @@ public class PhysicsEngine
     {
         TIMER.start();
 
-        // Remove all game entities marked for removal.
-        GAME_ENTITIES.removeAll(GAME_ENTITIES_TO_REMOVE);
-        for (GameEntity gameEntity : GAME_ENTITIES_TO_REMOVE)
-        {
-            gameEntity.dispose();
-        }
-        GAME_ENTITIES_TO_REMOVE.clear();
-
-        // Add game entities.
-        GAME_ENTITIES.addAll(GAME_ENTITIES_TO_CREATE);
-        GAME_ENTITIES_TO_CREATE.clear();
+        GameEntityManager.update();
 
         if (Gdx.graphics.getFramesPerSecond() >= FPS_GOAL)
         {
@@ -96,7 +83,7 @@ public class PhysicsEngine
         ArrayList<Integer> collidedGameEntities)
     {
         // Updates all position according to the game entity velocity.
-        for (GameEntity gameEntity : GAME_ENTITIES)
+        for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
             gameEntity.physicsComponent.getPosition()
                 .add(gameEntity.physicsComponent.getVelocity().cpy().scl(elapsed));
@@ -109,16 +96,16 @@ public class PhysicsEngine
          * Y1 \ X  \    \
          * Y2 \ X  \ X  \
          */
-        for (int x = 1; x < GAME_ENTITIES.size(); x++)
+        for (int x = 1; x < GameEntityManager.getGameEntities().size(); x++)
         {
             if (!collidedGameEntities.contains(x))
             {
-                GameEntity gameEntityA = GAME_ENTITIES.get(x);
+                GameEntity gameEntityA = GameEntityManager.getGameEntities().get(x);
                 for (int y = 0; y < x; y++)
                 {
                     if (!collidedGameEntities.contains(y))
                     {
-                        GameEntity gameEntityB = GAME_ENTITIES.get(y);
+                        GameEntity gameEntityB = GameEntityManager.getGameEntities().get(y);
                         if (areColliding(gameEntityA, gameEntityB))
                         {
                             resolveCollision(gameEntityA, gameEntityB);
@@ -326,7 +313,7 @@ public class PhysicsEngine
     {
         Vector2 totalForce = new Vector2();
         
-        for (GameEntity otherGameEntity : GAME_ENTITIES)
+        for (GameEntity otherGameEntity : GameEntityManager.getGameEntities())
         {
             if (!gameEntity.equals(otherGameEntity))
             {
@@ -353,33 +340,5 @@ public class PhysicsEngine
                 / distanceLen2;
         distance = distance.scl(forceMagnitude);
         return distance;
-    }
-
-    public static ArrayList<GameEntity> getGameEntities()
-    {
-        return GAME_ENTITIES;
-    }
-
-    public static void addGameEntity(GameEntity gameEntity)
-    {
-        GAME_ENTITIES_TO_CREATE.add(gameEntity);
-    }
-
-    public static void removeGameEntity(GameEntity gameEntity)
-    {
-        GAME_ENTITIES_TO_REMOVE.add(gameEntity);
-    }
-
-    public static void dispose()
-    {
-
-        for (GameEntity gameEntity : GAME_ENTITIES)
-        {
-            gameEntity.dispose();
-        }
-
-        GAME_ENTITIES.clear();
-        GAME_ENTITIES_TO_REMOVE.clear();
-        GAME_ENTITIES_TO_CREATE.clear();
     }
 }

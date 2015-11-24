@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.draga.entity.shape.Circle;
+import com.draga.manager.GameEntityManager;
 import com.draga.manager.asset.AssMan;
 import com.draga.physic.PhysicsComponent;
 import com.draga.physic.PhysicsEngine;
@@ -42,7 +43,7 @@ public class Explosion extends GameEntity
         // Can't get if the sound if still playing, can be done only with music.
         if (animation.isAnimationFinished(stateTime))
         {
-            PhysicsEngine.removeGameEntity(this);
+            GameEntityManager.removeGameEntity(this);
         }
     }
 
