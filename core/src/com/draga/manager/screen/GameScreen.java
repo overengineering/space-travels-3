@@ -177,10 +177,6 @@ public class GameScreen implements Screen
         {
             update(deltaTime);
         }
-        else
-        {
-            update(0);
-        }
 
         draw();
 

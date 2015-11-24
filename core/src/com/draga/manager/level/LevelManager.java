@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Json;
 import com.draga.entity.Planet;
 import com.draga.entity.Ship;
 import com.draga.entity.Star;
+import com.draga.manager.GameEntityManager;
 import com.draga.manager.asset.AssMan;
 import com.draga.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.manager.level.serialisableEntities.SerialisablePlanet;
@@ -58,6 +59,8 @@ public abstract class LevelManager
             gameScreen.addStar(star);
         }
 
+        // Run one update so everything is in place for the countdown
+        GameEntityManager.update();
         return gameScreen;
     }
 

@@ -82,7 +82,7 @@ public class Ship extends GameEntity
         collidesWith.add(Planet.class);
         collidesWith.add(Star.class);
         this.physicsComponent =
-            new PhysicsComponent(x, y, SHIP_MASS, new Circle(5), new GameEntityGroup(collidesWith));
+            new PhysicsComponent(x, y, SHIP_MASS, new Circle(4), new GameEntityGroup(collidesWith));
     }
     
     @Override
