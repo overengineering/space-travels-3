@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pools;
 import com.draga.Constants;
-import com.draga.Timer;
 import com.draga.entity.GameEntity;
 import com.draga.entity.Planet;
 import com.draga.entity.Ship;
@@ -13,22 +12,24 @@ import com.draga.entity.shape.Circle;
 import com.draga.event.ShipPlanetCollisionEvent;
 import com.draga.event.StarCollectedEvent;
 import com.draga.manager.GameEntityManager;
+import com.google.common.base.Stopwatch;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class PhysicsEngine
 {
     private static final String LOGGING_TAG =
         PhysicsEngine.class.getSimpleName();
 
-    private static final int   MIN_STEPS     = 1;
-    private static final int   MAX_STEPS     = 10;
-    private static final int   FPS_GOAL      = 60;
-    private static final Timer TIMER         = new Timer();
-    private static       int   CURRENT_STEPS = MIN_STEPS;
+    private static final int       MIN_STEPS     = 1;
+    private static final int       MAX_STEPS     = 10;
+    private static final int       FPS_GOAL      = 60;
+    private static final Stopwatch UPDATE_TIMER  = Stopwatch.createUnstarted();
+    private static       int       CURRENT_STEPS = MIN_STEPS;
     private static float updateTime;
 
     public static float getUpdateTime()
@@ -43,7 +44,7 @@ public class PhysicsEngine
 
     public static void update(float elapsed)
     {
-        TIMER.start();
+        UPDATE_TIMER.start();
 
         GameEntityManager.update();
 
@@ -68,7 +69,8 @@ public class PhysicsEngine
             step(elapsed / CURRENT_STEPS, collidedGameEntities);
         }
 
-        updateTime = TIMER.elapsed();
+        UPDATE_TIMER.stop();
+        updateTime = UPDATE_TIMER.elapsed(TimeUnit.NANOSECONDS) * Constants.NANO;
     }
 
     /**
@@ -154,33 +156,33 @@ public class PhysicsEngine
             "resolveShipPlanetCollision");
         if (!solved)
         {
-        twoWayInstanceSolver(
-            gameEntityA,
-            gameEntityB,
-            Star.class,
-            "resolveShipStarCollision");
+            twoWayInstanceSolver(
+                gameEntityA,
+                gameEntityB,
+                Star.class,
+                "resolveShipStarCollision");
         }
-//        if (gameEntityA instanceof Ship
-//            && gameEntityB instanceof Planet)
-//        {
-//            resolveShipPlanetCollision((Ship) gameEntityA, (Planet) gameEntityB);
-//        }
-//        else if (gameEntityA instanceof Planet
-//            && gameEntityB instanceof Ship)
-//        {
-//            resolveShipPlanetCollision((Ship) gameEntityB, (Planet) gameEntityA);
-//        }
+        //        if (gameEntityA instanceof Ship
+        //            && gameEntityB instanceof Planet)
+        //        {
+        //            resolveShipPlanetCollision((Ship) gameEntityA, (Planet) gameEntityB);
+        //        }
+        //        else if (gameEntityA instanceof Planet
+        //            && gameEntityB instanceof Ship)
+        //        {
+        //            resolveShipPlanetCollision((Ship) gameEntityB, (Planet) gameEntityA);
+        //        }
         // else
-//        if (gameEntityA instanceof Star
-//            && gameEntityB instanceof Ship)
-//        {
-//            resolveShipStarCollision((Star) gameEntityA);
-//        }
-//        else if (gameEntityA instanceof Ship
-//            && gameEntityB instanceof Star)
-//        {
-//            resolveShipStarCollision((Star) gameEntityB);
-//        }
+        //        if (gameEntityA instanceof Star
+        //            && gameEntityB instanceof Ship)
+        //        {
+        //            resolveShipStarCollision((Star) gameEntityA);
+        //        }
+        //        else if (gameEntityA instanceof Ship
+        //            && gameEntityB instanceof Star)
+        //        {
+        //            resolveShipStarCollision((Star) gameEntityB);
+        //        }
     }
 
     private static boolean twoWayInstanceSolver(

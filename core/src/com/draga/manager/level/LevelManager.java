@@ -3,7 +3,6 @@ package com.draga.manager.level;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Json;
-import com.draga.Timer;
 import com.draga.entity.Planet;
 import com.draga.entity.Ship;
 import com.draga.entity.Star;
@@ -94,9 +93,6 @@ public abstract class LevelManager
      */
     private static void loadLevels()
     {
-        Timer timer = new Timer()
-            .start();
-
         Json json = new Json();
         String levelPackString = Gdx.files.internal("level/levelPack.json").readString();
         ArrayList<String> levelFileNameWithExtension = json.fromJson(
@@ -111,8 +107,6 @@ public abstract class LevelManager
                 json.fromJson(SerialisableLevel.class, levelString);
             levels.add(serialisableLevel);
         }
-
-        timer.elapsed(LOGGING_TAG, "Time to read the level pack serialised levels: %fs");
     }
 
     /**
