@@ -29,7 +29,7 @@ public class PhysicsEngine
     private static final int       MAX_STEPS     = 10;
     private static final int       FPS_GOAL      = 60;
     private static final Stopwatch UPDATE_TIMER  = Stopwatch.createUnstarted();
-    private static       int       CURRENT_STEPS = MIN_STEPS;
+    private static       int       CURRENT_STEPS = MAX_STEPS;
     private static float updateTime;
 
     public static float getUpdateTime()
@@ -69,8 +69,8 @@ public class PhysicsEngine
             step(elapsed / CURRENT_STEPS, collidedGameEntities);
         }
 
-        UPDATE_TIMER.stop();
         updateTime = UPDATE_TIMER.elapsed(TimeUnit.NANOSECONDS) * Constants.NANO;
+        UPDATE_TIMER.reset();
     }
 
     /**
