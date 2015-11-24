@@ -17,7 +17,6 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class PhysicsEngine
@@ -46,7 +45,6 @@ public class PhysicsEngine
     {
         UPDATE_TIMER.start();
 
-        GameEntityManager.update();
 
         if (Gdx.graphics.getFramesPerSecond() >= FPS_GOAL)
         {
@@ -63,10 +61,10 @@ public class PhysicsEngine
             }
         }
 
-        ArrayList<Integer> collidedGameEntities = new ArrayList<>();
         for (float step = 0; step < CURRENT_STEPS; step++)
         {
-            step(elapsed / CURRENT_STEPS, collidedGameEntities);
+            GameEntityManager.update();
+            step(elapsed / CURRENT_STEPS);
         }
 
         updateTime = UPDATE_TIMER.elapsed(TimeUnit.NANOSECONDS) * Constants.NANO;
@@ -77,12 +75,8 @@ public class PhysicsEngine
      * Performs a physic step.
      *
      * @param elapsed
-     * @param collidedGameEntities A list of game entities that are already collided and therefore
-     *                             will not be checked.
      */
-    private static void step(
-        float elapsed,
-        ArrayList<Integer> collidedGameEntities)
+    private static void step(float elapsed)
     {
         // Updates all position according to the game entity velocity.
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
@@ -100,21 +94,13 @@ public class PhysicsEngine
          */
         for (int x = 1; x < GameEntityManager.getGameEntities().size(); x++)
         {
-            if (!collidedGameEntities.contains(x))
+            GameEntity gameEntityA = GameEntityManager.getGameEntities().get(x);
+            for (int y = 0; y < x; y++)
             {
-                GameEntity gameEntityA = GameEntityManager.getGameEntities().get(x);
-                for (int y = 0; y < x; y++)
+                GameEntity gameEntityB = GameEntityManager.getGameEntities().get(y);
+                if (areColliding(gameEntityA, gameEntityB))
                 {
-                    if (!collidedGameEntities.contains(y))
-                    {
-                        GameEntity gameEntityB = GameEntityManager.getGameEntities().get(y);
-                        if (areColliding(gameEntityA, gameEntityB))
-                        {
-                            resolveCollision(gameEntityA, gameEntityB);
-                            collidedGameEntities.add(x);
-                            collidedGameEntities.add(y);
-                        }
-                    }
+                    resolveCollision(gameEntityA, gameEntityB);
                 }
             }
         }
