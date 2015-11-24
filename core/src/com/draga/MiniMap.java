@@ -26,6 +26,8 @@ public class MiniMap
 
     public static void update(Rectangle... keepInView)
     {
+        // Lee said that when we'll came to refactor this we ain't going to be too upset about it.
+
         // Create a rectangle encompassing all the rectangles that needs to be kept into view.
         Rectangle newCameraBounds = new Rectangle();
         for (Rectangle mergeRectangle : keepInView)
