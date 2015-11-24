@@ -10,9 +10,12 @@ import com.draga.entity.shape.Circle;
 import com.draga.manager.asset.AssMan;
 import com.draga.physic.PhysicsComponent;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Planet extends GameEntity
 {
-    private final float radius;
+    private final float   radius;
     private final boolean isDestination;
     private       Texture texture;
 
@@ -20,7 +23,10 @@ public class Planet extends GameEntity
         float mass, float radius, float x, float y, String texturePath, boolean isDestination)
     {
         this.radius = radius;
-        this.physicsComponent = new PhysicsComponent(x, y, mass, new Circle(radius));
+        List<Class<? extends GameEntity>> collidesWith = new ArrayList<>();
+        collidesWith.add(Ship.class);
+        this.physicsComponent =
+            new PhysicsComponent(x, y, mass, new Circle(radius), new GameEntityGroup(collidesWith));
         this.texture = AssMan.getAssMan().get(texturePath);
 
         this.isDestination = isDestination;
@@ -74,7 +80,8 @@ public class Planet extends GameEntity
             : Color.BLUE;
         MiniMap.getShapeRenderer().setColor(planetMinimapColour);
         MiniMap.getShapeRenderer()
-            .circle(this.physicsComponent.getPosition().x,
+            .circle(
+                this.physicsComponent.getPosition().x,
                 this.physicsComponent.getPosition().y,
                 radius);
     }

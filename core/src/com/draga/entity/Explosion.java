@@ -10,7 +10,8 @@ import com.draga.entity.shape.Circle;
 import com.draga.manager.GameEntityManager;
 import com.draga.manager.asset.AssMan;
 import com.draga.physic.PhysicsComponent;
-import com.draga.physic.PhysicsEngine;
+
+import java.util.ArrayList;
 
 public class Explosion extends GameEntity
 {
@@ -25,7 +26,12 @@ public class Explosion extends GameEntity
     public Explosion(
         float x, float y, String textureAtlasPath)
     {
-        this.physicsComponent = new PhysicsComponent(x, y, 0, new Circle((HEIGHT + WIDTH) / 2f));
+        this.physicsComponent = new PhysicsComponent(
+            x,
+            y,
+            0,
+            new Circle((HEIGHT + WIDTH) / 2f),
+            new GameEntityGroup(GameEntityGroup.GroupOverride.NONE));
 
         stateTime = 0f;
         TextureAtlas textureAtlas = AssMan.getAssMan().get(textureAtlasPath);

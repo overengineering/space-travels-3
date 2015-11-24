@@ -20,6 +20,10 @@ import com.draga.manager.asset.AssMan;
 import com.draga.physic.PhysicsComponent;
 import com.draga.physic.PhysicsEngine;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class Ship extends GameEntity
 {
     public static final String LOGGING_TAG = Ship.class.getSimpleName();
@@ -35,8 +39,8 @@ public class Ship extends GameEntity
     private static final float HALF_SHIP_HEIGHT = SHIP_HEIGHT / 2f;
 
     // Physic.
-    private static final float ROTATION_SCALE         = 5f;
-    private static final float SHIP_MASS              = 1f;
+    private static final float ROTATION_SCALE = 5f;
+    private static final float SHIP_MASS      = 1f;
 
     // Thruster.
     private static final float   THRUSTER_MAX_WIDTH            = 5;
@@ -45,7 +49,7 @@ public class Ship extends GameEntity
     private static final Vector2 THRUSTER_OFFSET               =
         new Vector2(-HALF_SHIP_HEIGHT / 2f, 0);
 
-    private static final float   MAX_ROTATION_DEGREES_PER_SEC  = 360f;
+    private static final float MAX_ROTATION_DEGREES_PER_SEC = 360f;
     private float        thrusterWidth;
     private float        thrusterHeight;
     private Animation    thrusterAnimation;
@@ -74,7 +78,11 @@ public class Ship extends GameEntity
 
         fuel = MAX_FUEL;
 
-        this.physicsComponent = new PhysicsComponent(x, y, SHIP_MASS, new Circle(5));
+        List<Class<? extends GameEntity>> collidesWith = new ArrayList<>();
+        collidesWith.add(Planet.class);
+        collidesWith.add(Star.class);
+        this.physicsComponent =
+            new PhysicsComponent(x, y, SHIP_MASS, new Circle(5), new GameEntityGroup(collidesWith));
     }
     
     @Override

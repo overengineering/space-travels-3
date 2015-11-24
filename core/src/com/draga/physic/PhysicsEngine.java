@@ -2,15 +2,9 @@ package com.draga.physic;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Pools;
 import com.draga.Constants;
 import com.draga.entity.GameEntity;
-import com.draga.entity.Planet;
-import com.draga.entity.Ship;
-import com.draga.entity.Star;
 import com.draga.entity.shape.Circle;
-import com.draga.event.ShipPlanetCollisionEvent;
-import com.draga.event.StarCollectedEvent;
 import com.draga.manager.GameEntityManager;
 import com.google.common.base.Stopwatch;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -96,7 +90,9 @@ public class PhysicsEngine
             for (int y = 0; y < x; y++)
             {
                 GameEntity gameEntityB = GameEntityManager.getGameEntities().get(y);
-                if (areColliding(gameEntityA, gameEntityB))
+                if (gameEntityA.physicsComponent.getCollisionGroup().contains(gameEntityB)
+                    && gameEntityB.physicsComponent.getCollisionGroup().contains(gameEntityA)
+                    && areColliding(gameEntityA, gameEntityB))
                 {
                     Gdx.app.debug(
                         LOGGING_TAG,

@@ -11,6 +11,9 @@ import com.draga.entity.shape.Circle;
 import com.draga.manager.asset.AssMan;
 import com.draga.physic.PhysicsComponent;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Star extends GameEntity
 {
 
@@ -22,7 +25,13 @@ public class Star extends GameEntity
 
     public Star(float x, float y, String texturePath)
     {
-        this.physicsComponent = new PhysicsComponent(x, y, 0, new Circle(HALF_WIDTH));
+        List<Class<? extends GameEntity>> collidesWith = new ArrayList<>();
+        collidesWith.add(Ship.class);
+        this.physicsComponent = new PhysicsComponent(x,
+            y,
+            0,
+            new Circle(HALF_WIDTH),
+            new GameEntityGroup(collidesWith));
         this.texture = AssMan.getAssMan().get(texturePath);
     }
 
