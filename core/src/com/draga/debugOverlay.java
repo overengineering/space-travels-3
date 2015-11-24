@@ -10,8 +10,6 @@ import com.draga.manager.SettingsManager;
 import com.draga.manager.SkinManager;
 import com.draga.physic.PhysicsEngine;
 
-import javax.swing.plaf.metal.MetalBorders;
-
 public class DebugOverlay implements Screen
 {
     private final Label generalLabel;
@@ -69,13 +67,13 @@ public class DebugOverlay implements Screen
     @Override
     public void render(float delta)
     {
-        setGeneralLabel();
-        setPhysicEngineLabel();
+        updateGeneralLabel();
+        updatePhysicEngineLabel();
         stage.act(delta);
         stage.draw();
     }
 
-    public void setGeneralLabel()
+    public void updateGeneralLabel()
     {
         String formattedJavaHeap = Constants.COMMA_SEPARATED_THOUSANDS_FORMATTER.format(
             Gdx.app.getJavaHeap());
@@ -89,7 +87,7 @@ public class DebugOverlay implements Screen
         generalLabel.setText(message);
     }
 
-    public void setPhysicEngineLabel()
+    public void updatePhysicEngineLabel()
     {
         String message = String.format(
             "Engine update time: %9f | Steps: %d\r\n",

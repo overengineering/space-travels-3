@@ -21,7 +21,7 @@ public class PhysicDebugDrawer
     }
 
     /**
-     * Draw all the game entities bounds.
+     * Draw all the game entities bounds. Uses ShapeRenderer.
      * @param camera The camera to use the projection from
      */
     public static void draw(Camera camera)
