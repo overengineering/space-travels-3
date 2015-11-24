@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -94,10 +95,10 @@ public class GameScreen implements Screen
         //        {
         //            createWalls();
         //        }
-                if (SettingsManager.debugDraw)
-                {
-                    physicDebugDrawer = new PhysicDebugDrawer();
-                }
+        if (SettingsManager.debugDraw)
+        {
+            physicDebugDrawer = new PhysicDebugDrawer();
+        }
 
         hud = new Hud(orthographicCamera);
 
@@ -118,16 +119,8 @@ public class GameScreen implements Screen
 
     private void updateCamera()
     {
-        float halfWidth = orthographicCamera.viewportWidth / 2f;
-        float halfHeight = orthographicCamera.viewportHeight / 2f;
-
-        float cameraXPosition = MathUtils.clamp(
-            ship.physicsComponent.getPosition().x, halfWidth, width - halfWidth);
-        float cameraYPosition = MathUtils.clamp(
-            ship.physicsComponent.getPosition().y, halfHeight, height - halfHeight);
-
         // Soften camera movement.
-        Vector2 cameraVec = new Vector2(cameraXPosition, cameraYPosition);
+        Vector2 cameraVec = new Vector2(ship.physicsComponent.getPosition().x, ship.physicsComponent.getPosition().y);
         Vector2 softCamera = cameraVec.cpy();
         Vector2 cameraOffset =
             cameraVec.sub(orthographicCamera.position.x, orthographicCamera.position.y);
@@ -195,7 +188,6 @@ public class GameScreen implements Screen
             checkDebugKeys();
         }
 
-        updateCamera();
 
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
@@ -206,11 +198,16 @@ public class GameScreen implements Screen
         updateScore();
     }
 
-    public void draw()
+    private void updateMiniMap()
     {
-        spriteBatch.begin();
-        spriteBatch.draw(backgroundTexture, 0, 0, width, height);
-        spriteBatch.end();
+        Rectangle shipRect = new Rectangle(
+            ship.physicsComponent.getPosition().x,
+            ship.physicsComponent.getPosition().y,
+            0,
+            0);
+
+        Rectangle worldRect = new Rectangle(0, 0, this.width, this.height);
+        MiniMap.update(shipRect, worldRect);
 
         MiniMap.getShapeRenderer().begin();
         Gdx.gl.glEnable(GL20.GL_BLEND);
@@ -228,6 +225,17 @@ public class GameScreen implements Screen
 
         Gdx.gl.glDisable(GL20.GL_BLEND);
         MiniMap.getShapeRenderer().end();
+    }
+
+    public void draw()
+    {
+        updateCamera();
+
+        spriteBatch.begin();
+        spriteBatch.draw(backgroundTexture, 0, 0, width, height);
+        spriteBatch.end();
+
+        updateMiniMap();
 
         spriteBatch.begin();
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
