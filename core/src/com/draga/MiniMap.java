@@ -1,5 +1,8 @@
 package com.draga;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
@@ -7,7 +10,7 @@ import com.badlogic.gdx.math.Rectangle;
 public class MiniMap
 {
     private static final float              MINIMAP_SCALE      = 0.25f;
-    private static final OrthographicCamera orthographicCamera = new OrthographicCamera(300, 150);
+    private static final OrthographicCamera orthographicCamera = new OrthographicCamera();
     private static       ShapeRenderer      shapeRenderer      = new ShapeRenderer();
 
     static
@@ -15,47 +18,70 @@ public class MiniMap
         shapeRenderer.setAutoShapeType(true);
     }
 
-    public static ShapeRenderer getShapeRenderer()
+    public static void setWorldSize(float width, float height)
     {
-        return shapeRenderer;
+        orthographicCamera.viewportWidth = width;
+        orthographicCamera.viewportHeight = height;
     }
 
     public static void update(Rectangle... keepInView)
     {
+        // Create a rectangle encompassing all the rectangles that needs to be kept into view.
         Rectangle newCameraBounds = new Rectangle();
         for (Rectangle mergeRectangle : keepInView)
         {
             newCameraBounds.merge(mergeRectangle);
         }
 
-        //        float screenAspectRatio = (float) 300 / 150;
-        //
-        //        if (newCameraBounds.getAspectRatio() > screenAspectRatio)
-        //        {
-        //            newCameraBounds.height *= newCameraBounds.getAspectRatio() / screenAspectRatio;
-        //        }
-        //        else if (newCameraBounds.getAspectRatio() < screenAspectRatio)
-        //        {
-        //            newCameraBounds.width *= screenAspectRatio / newCameraBounds.getAspectRatio();
-        //        }
-        //        //
-        //        newCameraBounds.width = 300;
-        //        newCameraBounds.height = 150;
+        // Draw a background and border
+        MiniMap.drawBackground();
 
-
-        //        if (newCameraBounds.x - (newCameraBounds.width / 2f))
-
-        //        orthographicCamera.setToOrtho(false, newCameraBounds.width, newCameraBounds.height);
-        //        orthographicCamera.setToOrtho(false, 300, 150);
         orthographicCamera.zoom =
-            Math.max(newCameraBounds.width / 300, newCameraBounds.height / 150);
+            Math.max(
+                newCameraBounds.width / orthographicCamera.viewportWidth,
+                newCameraBounds.height / orthographicCamera.viewportHeight) / MINIMAP_SCALE;
         orthographicCamera.position.set(
-            newCameraBounds.x + 150,
-            newCameraBounds.y + 75,
+            newCameraBounds.x + ((orthographicCamera.viewportWidth / 2f) * orthographicCamera.zoom),
+            newCameraBounds.y + (
+                (orthographicCamera.viewportHeight / 2f)
+                    * orthographicCamera.zoom),
             0);
-        //        orthographicCamera.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2,0);
-        //        orthographicCamera.zoom = 1 / MINIMAP_SCALE;
         orthographicCamera.update();
         shapeRenderer.setProjectionMatrix(orthographicCamera.combined);
+    }
+
+    public static void drawBackground()
+    {
+        orthographicCamera.zoom = 1 / MINIMAP_SCALE;
+        orthographicCamera.position.set(
+            (orthographicCamera.viewportWidth / 2f) * orthographicCamera.zoom,
+            (orthographicCamera.viewportHeight / 2f) * orthographicCamera.zoom,
+            0);
+        orthographicCamera.update();
+        shapeRenderer.setProjectionMatrix(orthographicCamera.combined);
+
+        MiniMap.getShapeRenderer().begin();
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
+        Color minimapBackgroundColor = new Color(0, 0.17f, 0, 0.5f);
+        MiniMap.getShapeRenderer().setColor(minimapBackgroundColor);
+        MiniMap.getShapeRenderer().set(ShapeRenderer.ShapeType.Filled);
+        MiniMap.getShapeRenderer()
+            .rect(0, 0, orthographicCamera.viewportWidth, orthographicCamera.viewportHeight);
+
+        Color minimapBorderColor = new Color(0, 0.4f, 0, 1);
+        MiniMap.getShapeRenderer().setColor(minimapBorderColor);
+        MiniMap.getShapeRenderer().set(ShapeRenderer.ShapeType.Line);
+        MiniMap.getShapeRenderer()
+            .rect(0, 0, orthographicCamera.viewportWidth, orthographicCamera.viewportHeight);
+
+        Gdx.gl.glDisable(GL20.GL_BLEND);
+        MiniMap.getShapeRenderer().end();
+    }
+
+    public static ShapeRenderer getShapeRenderer()
+    {
+        return shapeRenderer;
     }
 }

@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.draga.*;
 import com.draga.entity.*;
+import com.draga.entity.shape.Circle;
 import com.draga.event.CountdownFinishedEvent;
 import com.draga.event.ScoreEvent;
 import com.draga.event.ShipPlanetCollisionEvent;
@@ -78,6 +79,8 @@ public class GameScreen implements Screen
 
         this.gameState = GameState.COUNTDOWN;
         this.overlayScreen = new CountdownScreen();
+
+        MiniMap.setWorldSize(width, height);
 
         Constants.EVENT_BUS.register(this);
 
@@ -201,30 +204,13 @@ public class GameScreen implements Screen
     private void updateMiniMap()
     {
         Rectangle shipRect = new Rectangle(
-            ship.physicsComponent.getPosition().x,
-            ship.physicsComponent.getPosition().y,
-            0,
-            0);
+            ship.physicsComponent.getPosition().x - ((Circle)ship.physicsComponent.getShape()).radius,
+            ship.physicsComponent.getPosition().y - ((Circle)ship.physicsComponent.getShape()).radius,
+            ((Circle)ship.physicsComponent.getShape()).radius * 2,
+            ((Circle)ship.physicsComponent.getShape()).radius * 2);
 
         Rectangle worldRect = new Rectangle(0, 0, this.width, this.height);
         MiniMap.update(shipRect, worldRect);
-
-        MiniMap.getShapeRenderer().begin();
-        Gdx.gl.glEnable(GL20.GL_BLEND);
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-
-        Color minimapBackgroundColor = new Color(0, 0.17f, 0, 0.5f);
-        MiniMap.getShapeRenderer().setColor(minimapBackgroundColor);
-        MiniMap.getShapeRenderer().set(ShapeRenderer.ShapeType.Filled);
-        MiniMap.getShapeRenderer().rect(0, 0, width, height);
-
-        Color minimapBorderColor = new Color(0, 0.4f, 0, 1);
-        MiniMap.getShapeRenderer().setColor(minimapBorderColor);
-        MiniMap.getShapeRenderer().set(ShapeRenderer.ShapeType.Line);
-        MiniMap.getShapeRenderer().rect(0, 0, width, height);
-
-        Gdx.gl.glDisable(GL20.GL_BLEND);
-        MiniMap.getShapeRenderer().end();
     }
 
     public void draw()
