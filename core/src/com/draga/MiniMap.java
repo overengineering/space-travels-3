@@ -46,12 +46,12 @@ public class MiniMap
 
         // Moves the camera so that the bottom left corner of the screen corresponds to the
         // bottom left corner of the new camera bounds.
-        orthographicCamera.position.set(
-            newCameraBounds.x + ((orthographicCamera.viewportWidth / 2f) * orthographicCamera.zoom),
-            newCameraBounds.y + (
-                (orthographicCamera.viewportHeight / 2f)
-                    * orthographicCamera.zoom),
-            0);
+        orthographicCamera.position.x =
+            newCameraBounds.x
+                + ((orthographicCamera.viewportWidth / 2f) * orthographicCamera.zoom);
+        orthographicCamera.position.y =
+            newCameraBounds.y
+                + ((orthographicCamera.viewportHeight / 2f) * orthographicCamera.zoom);
 
         orthographicCamera.update();
         shapeRenderer.setProjectionMatrix(orthographicCamera.combined);
