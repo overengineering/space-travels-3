@@ -2,11 +2,9 @@ package com.draga.entity;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pools;
 import com.draga.Constants;
-import com.draga.MiniMap;
 import com.draga.entity.shape.Circle;
 import com.draga.event.FuelChangeEvent;
 import com.draga.graphicComponent.StaticGraphicComponent;
@@ -51,7 +49,7 @@ public class Ship extends GameEntity
 
         List<Class<? extends GameEntity>> collidesWith = new ArrayList<>();
         collidesWith.add(Planet.class);
-        collidesWith.add(Star.class);
+        collidesWith.add(Pickup.class);
         this.physicsComponent =
             new PhysicsComponent(x, y, SHIP_MASS, new Circle(4), new GameEntityGroup(collidesWith));
 

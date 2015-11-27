@@ -75,6 +75,8 @@ public class PhysicsEngine
         {
             gameEntity.physicsComponent.getPosition()
                 .add(gameEntity.physicsComponent.getVelocity().cpy().scl(elapsed));
+            gameEntity.physicsComponent.setAngle(gameEntity.physicsComponent.getAngle()
+                + gameEntity.physicsComponent.getAngularVelocity() * elapsed);
         }
 
         /** Check for collisions following this pattern to avoid duplicates:

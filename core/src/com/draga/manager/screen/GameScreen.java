@@ -17,7 +17,7 @@ import com.draga.entity.shape.Circle;
 import com.draga.event.CountdownFinishedEvent;
 import com.draga.event.ScoreEvent;
 import com.draga.event.ShipPlanetCollisionEvent;
-import com.draga.event.StarCollectedEvent;
+import com.draga.event.PickupCollectedEvent;
 import com.draga.manager.GameEntityManager;
 import com.draga.manager.GameManager;
 import com.draga.manager.SettingsManager;
@@ -55,10 +55,10 @@ public class GameScreen implements Screen
 
     private GameScreenInputProcessor gameScreenInputProcessor;
 
-    private int   starsCollected;
+    private int   pickupCollected;
     private float elapsedPlayTime;
 
-    private Sound starCollectedSound;
+    private Sound pickupCollectedSound;
 
     public GameScreen(
         String backgroundTexturePath,
@@ -101,7 +101,7 @@ public class GameScreen implements Screen
 
         hud = new Hud(orthographicCamera);
 
-        starCollectedSound = AssMan.getAssMan().get(AssMan.getAssList().starCollectSound);
+        pickupCollectedSound = AssMan.getAssMan().get(AssMan.getAssList().pickupCollectSound);
     }
 
     public void addShip(Ship ship)
@@ -141,10 +141,10 @@ public class GameScreen implements Screen
         GameEntityManager.addGameEntity(planet);
     }
 
-    public void addStar(Star star)
+    public void addPickup(Pickup pickup)
     {
-        GameEntityManager.addGameEntity(star);
-        hud.addStar();
+        GameEntityManager.addGameEntity(pickup);
+        hud.addPickup();
     }
 
     @Override
@@ -265,11 +265,11 @@ public class GameScreen implements Screen
 
     private int getScore()
     {
-        float starPoints = starsCollected * Constants.STAR_POINTS;
+        float pickupPoints = pickupCollected * Constants.PICKUP_POINTS;
         float timePoints = elapsedPlayTime * Constants.TIME_POINTS;
         float fuelPoints = ship.getFuel() * Constants.FUEL_POINTS;
 
-        float score = starPoints;
+        float score = pickupPoints;
         score -= timePoints;
         score += fuelPoints;
         return Math.round(score);
@@ -311,8 +311,6 @@ public class GameScreen implements Screen
     {
         GameEntityManager.dispose();
 
-        backgroundTexture.dispose();
-
         if (SettingsManager.debugDraw)
         {
             physicDebugDrawer.dispose();
@@ -325,18 +323,18 @@ public class GameScreen implements Screen
             this.overlayScreen.dispose();
         }
 
-        starCollectedSound.stop();
-        starCollectedSound.dispose();
+        pickupCollectedSound.stop();
+        pickupCollectedSound.dispose();
 
         AssMan.getAssMan().clear();
     }
 
     @Subscribe
-    public void starCollected(StarCollectedEvent starCollectedEvent)
+    public void pickupCollected(PickupCollectedEvent pickupCollectedEvent)
     {
-        starsCollected++;
-        starCollectedSound.play();
-        GameEntityManager.removeGameEntity(starCollectedEvent.star);
+        pickupCollected++;
+        pickupCollectedSound.play();
+        GameEntityManager.removeGameEntity(pickupCollectedEvent.pickup);
     }
 
     @Subscribe

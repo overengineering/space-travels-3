@@ -1,11 +1,11 @@
 package com.draga.manager.level.serialisableEntities;
 
-public class SerialisableStar
+public class SerialisablePickup
 {
     public int x;
     public int y;
 
-    public SerialisableStar()
+    public SerialisablePickup()
     {
     }
 }

@@ -6,9 +6,9 @@ import com.draga.Constants;
 import com.draga.entity.GameEntity;
 import com.draga.entity.Planet;
 import com.draga.entity.Ship;
-import com.draga.entity.Star;
+import com.draga.entity.Pickup;
 import com.draga.event.ShipPlanetCollisionEvent;
-import com.draga.event.StarCollectedEvent;
+import com.draga.event.PickupCollectedEvent;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -71,12 +71,12 @@ public abstract class CollisionResolver
             Pools.free(shipPlanetCollisionEvent);
         }
 
-        public static void resolveShipStarCollision(Ship ship, Star star)
+        public static void resolveShipPickupCollision(Ship ship, Pickup pickup)
         {
-            StarCollectedEvent starCollectedEvent = Pools.obtain(StarCollectedEvent.class);
-            starCollectedEvent.set(star);
-            Constants.EVENT_BUS.post(starCollectedEvent);
-            Pools.free(starCollectedEvent);
+            PickupCollectedEvent pickupCollectedEvent = Pools.obtain(PickupCollectedEvent.class);
+            pickupCollectedEvent.set(pickup);
+            Constants.EVENT_BUS.post(pickupCollectedEvent);
+            Pools.free(pickupCollectedEvent);
         }
     }
 }
