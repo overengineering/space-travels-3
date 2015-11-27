@@ -1,10 +1,8 @@
 package com.draga.entity;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.draga.entity.shape.Circle;
 import com.draga.graphicComponent.StaticGraphicComponent;
-import com.draga.manager.asset.AssMan;
 import com.draga.physic.PhysicsComponent;
 
 import java.util.ArrayList;

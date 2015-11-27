@@ -51,7 +51,7 @@ public class StaticGraphicComponent extends GraphicComponent
     @Override
     public void dispose()
     {
-        texture.dispose();
+        // Doesn't dispose texture.
     }
 
     @Override

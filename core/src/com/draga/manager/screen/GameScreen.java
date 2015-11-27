@@ -327,6 +327,8 @@ public class GameScreen implements Screen
 
         starCollectedSound.stop();
         starCollectedSound.dispose();
+
+        AssMan.getAssMan().clear();
     }
 
     @Subscribe

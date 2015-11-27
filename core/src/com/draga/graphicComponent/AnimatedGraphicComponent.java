@@ -64,7 +64,7 @@ public class AnimatedGraphicComponent extends GraphicComponent
     @Override
     public void dispose()
     {
-        textureAtlas.dispose();
+        // Doesn't dispose texture atlas.
     }
 
     @Override
