@@ -12,12 +12,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Scaling;
 import com.draga.entity.GameEntity;
 import com.draga.manager.GameEntityManager;
 import com.draga.physic.PhysicsEngine;
 import com.draga.entity.Ship;
 import com.draga.event.FuelChangeEvent;
-import com.draga.event.StarCollectedEvent;
+import com.draga.event.PickupCollectedEvent;
 import com.draga.manager.SettingsManager;
 import com.draga.manager.SkinManager;
 import com.draga.manager.asset.AssMan;
@@ -36,8 +37,8 @@ public class Hud implements Screen
 
     private ProgressBar fuelProgressBar;
 
-    private Stack<Image> grayStars;
-    private Table        starsTable;
+    private Stack<Image> grayPickups;
+    private Table        pickupTable;
 
     private Ship         ship;
 
@@ -50,7 +51,7 @@ public class Hud implements Screen
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setAutoShapeType(true);
         Constants.EVENT_BUS.register(this);
-        this.grayStars = new Stack<>();
+        this.grayPickups = new Stack<>();
         stage = new Stage();
 
         Table table = new Table();
@@ -82,13 +83,12 @@ public class Hud implements Screen
         table.add();
 
         // Bottom row right column;
-        starsTable = new Table();
-        starsTable
+        pickupTable = new Table();
+        pickupTable
             .defaults()
-            .width(stage.getViewport().getScreenWidth() / 30f)
             .height(stage.getViewport().getScreenWidth() / 30f);
         table
-            .add(starsTable)
+            .add(pickupTable)
             .bottom()
             .right();
 
@@ -226,24 +226,26 @@ public class Hud implements Screen
         fuelProgressBar.setValue(fuelChangeEvent.newFuel);
     }
 
-    public void addStar()
+    public void addPickup()
     {
-        Texture starTexture = AssMan.getAssMan().get(AssMan.getAssList().starGray);
-        Image starImage = new Image(starTexture);
+        Texture pickupTexture = AssMan.getAssMan().get(AssMan.getAssList().pickupGrey);
+        Image pickupImage = new Image(pickupTexture);
 
-        grayStars.add(starImage);
+        pickupImage.setScaling(Scaling.fit);
 
-        starsTable.add(starImage);
+        grayPickups.add(pickupImage);
+
+        pickupTable.add(pickupImage);
     }
 
     @Subscribe
-    public void starCollected(StarCollectedEvent starCollectedEvent)
+    public void pickupCollected(PickupCollectedEvent pickupCollectedEvent)
     {
-        Image firstGrayStar = grayStars.pop();
+        Image firstPickup = grayPickups.pop();
 
-        Texture goldStarTexture = AssMan.getAssMan().get(AssMan.getAssList().starGold);
+        Texture pickupTexture = AssMan.getAssMan().get(AssMan.getAssList().pickup);
 
-        firstGrayStar.setDrawable(new TextureRegionDrawable(new TextureRegion(goldStarTexture)));
+        firstPickup.setDrawable(new TextureRegionDrawable(new TextureRegion(pickupTexture)));
     }
 
     public void setShip(Ship ship)

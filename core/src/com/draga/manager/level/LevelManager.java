@@ -5,12 +5,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Json;
 import com.draga.entity.Planet;
 import com.draga.entity.Ship;
-import com.draga.entity.Star;
+import com.draga.entity.Pickup;
 import com.draga.manager.GameEntityManager;
 import com.draga.manager.asset.AssMan;
 import com.draga.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.manager.level.serialisableEntities.SerialisablePlanet;
-import com.draga.manager.level.serialisableEntities.SerialisableStar;
+import com.draga.manager.level.serialisableEntities.SerialisablePickup;
 import com.draga.manager.screen.GameScreen;
 
 import java.util.ArrayList;
@@ -52,11 +52,11 @@ public abstract class LevelManager
             gameScreen.addPlanet(planet);
         }
 
-        for (SerialisableStar serialisableStar : serialisableLevel.serialisedStars)
+        for (SerialisablePickup serialisablePickup : serialisableLevel.serialisedPickups)
         {
-            Star star =
-                new Star(serialisableStar.x, serialisableStar.y, AssMan.getAssList().starGold);
-            gameScreen.addStar(star);
+            Pickup pickup =
+                new Pickup(serialisablePickup.x, serialisablePickup.y, AssMan.getAssList().pickup);
+            gameScreen.addPickup(pickup);
         }
 
         // Run one update so everything is in place for the countdown

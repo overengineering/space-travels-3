@@ -13,6 +13,8 @@ public class PhysicsComponent
     private final GameEntityGroup collisionGroup;
     private       float           angle;
 
+    private float angularVelocity;
+
     public PhysicsComponent(
         float x,
         float y,
@@ -25,6 +27,16 @@ public class PhysicsComponent
         this.shape = shape;
         this.mass = mass;
         this.velocity = new Vector2();
+    }
+
+    public float getAngularVelocity()
+    {
+        return angularVelocity;
+    }
+
+    public void setAngularVelocity(float angularVelocity)
+    {
+        this.angularVelocity = angularVelocity;
     }
 
     public Vector2 getPosition()

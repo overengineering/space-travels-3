@@ -4,12 +4,12 @@ public class AssList
 {
     public String ship;
     public String thruster;
-    public String starGold;
-    public String starGray;
+    public String pickup;
+    public String pickupGrey;
     public String explosion;
     public String explosionSound;
     public String thrusterSound;
-    public String starCollectSound;
+    public String pickupCollectSound;
     public String loseSound;
     public String winSound;
     public String buttonSound;
