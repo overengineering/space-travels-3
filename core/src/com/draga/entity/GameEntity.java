@@ -9,6 +9,8 @@ public abstract class GameEntity
 
     public GraphicComponent graphicComponent;
 
+    public MiniMapGraphicComponent miniMapGraphicComponent;
+
     public abstract void update(float deltaTime);
 
     public void dispose()

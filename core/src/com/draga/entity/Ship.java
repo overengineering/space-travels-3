@@ -61,6 +61,8 @@ public class Ship extends GameEntity
             SHIP_WIDTH,
             SHIP_HEIGHT,
             this.physicsComponent);
+
+        this.miniMapGraphicComponent = new ShipMiniMapGraphicComponent(this.physicsComponent);
     }
     
     @Override
