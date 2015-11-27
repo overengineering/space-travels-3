@@ -10,7 +10,7 @@ public class PhysicsComponent
     private final Vector2         position;
     private final Vector2         velocity;
     private final Shape           shape;
-    private       GameEntityGroup collisionGroup;
+    private final GameEntityGroup collisionGroup;
     private       float           angle;
 
     public PhysicsComponent(

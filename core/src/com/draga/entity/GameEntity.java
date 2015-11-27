@@ -1,17 +1,21 @@
 package com.draga.entity;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.draga.graphicComponent.GraphicComponent;
 import com.draga.physic.PhysicsComponent;
 
 public abstract class GameEntity
 {
     public PhysicsComponent physicsComponent;
 
+    public GraphicComponent graphicComponent;
+
+    public MiniMapGraphicComponent miniMapGraphicComponent = new NullMiniMapGraphicComponent();
+
     public abstract void update(float deltaTime);
 
-    public abstract void draw(SpriteBatch spriteBatch);
-
-    public abstract void dispose();
-
-    public abstract void drawMiniMap();
+    public void dispose()
+    {
+        physicsComponent.dispose();
+        graphicComponent.dispose();
+    }
 }

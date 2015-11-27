@@ -4,13 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pools;
@@ -112,12 +108,15 @@ public class GameScreen implements Screen
     {
         this.ship = ship;
         hud.setShip(ship);
-        GameEntityManager.addGameEntity(ship);
 
         orthographicCamera.position.x = ship.physicsComponent.getPosition().x;
         orthographicCamera.position.y = ship.physicsComponent.getPosition().y;
 
         updateCamera();
+
+        Thruster thruster = new Thruster(ship);
+        GameEntityManager.addGameEntity(thruster);
+        GameEntityManager.addGameEntity(ship);
     }
 
     private void updateCamera()
@@ -195,6 +194,7 @@ public class GameScreen implements Screen
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
             gameEntity.update(elapsed);
+            gameEntity.graphicComponent.update(elapsed);
         }
 
         PhysicsEngine.update(elapsed);
@@ -226,7 +226,7 @@ public class GameScreen implements Screen
         spriteBatch.begin();
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
-            gameEntity.draw(spriteBatch);
+            gameEntity.graphicComponent.draw(spriteBatch);
         }
         spriteBatch.end();
 
@@ -327,6 +327,8 @@ public class GameScreen implements Screen
 
         starCollectedSound.stop();
         starCollectedSound.dispose();
+
+        AssMan.getAssMan().clear();
     }
 
     @Subscribe
@@ -357,8 +359,8 @@ public class GameScreen implements Screen
             gameState = GameState.LOSE;
             GameEntity explosion = new Explosion(
                 shipPlanetCollisionEvent.ship.physicsComponent.getPosition().x,
-                shipPlanetCollisionEvent.ship.physicsComponent.getPosition().y,
-                AssMan.getAssList().explosion);
+                shipPlanetCollisionEvent.ship.physicsComponent.getPosition().y
+            );
             GameEntityManager.addGameEntity(explosion);
 
             this.overlayScreen = new LoseScreen(levelPath);

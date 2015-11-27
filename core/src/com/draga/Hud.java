@@ -142,11 +142,11 @@ public class Hud implements Screen
         MiniMap.getShapeRenderer().begin();
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
-            gameEntity.drawMiniMap();
+            gameEntity.miniMapGraphicComponent.draw(MiniMap.getShapeRenderer());
         }
 
-        Gdx.gl.glDisable(GL20.GL_BLEND);
         MiniMap.getShapeRenderer().end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
     private void DrawGravityIndicator()

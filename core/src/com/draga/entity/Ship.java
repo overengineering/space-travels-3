@@ -2,11 +2,6 @@ package com.draga.entity;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pools;
@@ -14,6 +9,7 @@ import com.draga.Constants;
 import com.draga.MiniMap;
 import com.draga.entity.shape.Circle;
 import com.draga.event.FuelChangeEvent;
+import com.draga.graphicComponent.StaticGraphicComponent;
 import com.draga.manager.InputManager;
 import com.draga.manager.SettingsManager;
 import com.draga.manager.asset.AssMan;
@@ -21,7 +17,6 @@ import com.draga.physic.PhysicsComponent;
 import com.draga.physic.PhysicsEngine;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Ship extends GameEntity
@@ -33,45 +28,21 @@ public class Ship extends GameEntity
     public static final float FUEL_PER_SECOND = 0.3f;
 
     // Size.
-    private static final float SHIP_WIDTH       = 10;
-    private static final float HALF_SHIP_WIDTH  = SHIP_WIDTH / 2f;
-    private static final float SHIP_HEIGHT      = 10;
-    private static final float HALF_SHIP_HEIGHT = SHIP_HEIGHT / 2f;
+    private static final float SHIP_WIDTH  = 10;
+    private static final float SHIP_HEIGHT = 10;
 
     // Physic.
     private static final float ROTATION_SCALE = 5f;
     private static final float SHIP_MASS      = 1f;
 
-    // Thruster.
-    private static final float   THRUSTER_MAX_WIDTH            = 5;
-    private static final float   THRUSTER_MAX_HEIGHT           = 5;
-    private static final float   TOTAL_THRUSTER_ANIMATION_TIME = 1f;
-    private static final Vector2 THRUSTER_OFFSET               =
-        new Vector2(-HALF_SHIP_HEIGHT / 2f, 0);
-
     private static final float MAX_ROTATION_DEGREES_PER_SEC = 360f;
-    private float        thrusterWidth;
-    private float        thrusterHeight;
-    private Animation    thrusterAnimation;
-    private float        thrusterAnimationStateTime;
-    private TextureAtlas thrusterTextureAtlas;
-    private Sound        thrusterSound;
-    private long         thrusterSoundInstance;
-    private Texture      shipTexture;
+    private Sound thrusterSound;
+    private long  thrusterSoundInstance;
     // State.
-    private float        fuel;
+    private float fuel;
 
     public Ship(float x, float y, String shipTexturePath, String thrusterTextureAtlasPath)
     {
-        this.shipTexture = AssMan.getAssMan().get(shipTexturePath);
-
-        thrusterAnimationStateTime = 0f;
-        this.thrusterTextureAtlas = AssMan.getAssMan().get(thrusterTextureAtlasPath);
-        thrusterAnimation = new Animation(
-            TOTAL_THRUSTER_ANIMATION_TIME / this.thrusterTextureAtlas.getRegions().size,
-            this.thrusterTextureAtlas.getRegions(),
-            Animation.PlayMode.LOOP);
-
         thrusterSound = AssMan.getAssMan().get(AssMan.getAssList().thrusterSound);
         // TODO: check if this sound is loopable.
         thrusterSoundInstance = thrusterSound.loop(0);
@@ -83,18 +54,24 @@ public class Ship extends GameEntity
         collidesWith.add(Star.class);
         this.physicsComponent =
             new PhysicsComponent(x, y, SHIP_MASS, new Circle(4), new GameEntityGroup(collidesWith));
+
+        this.graphicComponent = new StaticGraphicComponent(
+            shipTexturePath,
+            SHIP_WIDTH,
+            SHIP_HEIGHT,
+            this.physicsComponent);
+
+        this.miniMapGraphicComponent = new TriangleMiniMapGraphicComponent(
+            this.physicsComponent,
+            Color.WHITE,
+            new Vector2(8, 0),
+            new Vector2(-5, -5),
+            new Vector2(-5, 5));
     }
     
     @Override
     public void update(float deltaTime)
     {
-        // Avoid overflow.
-        thrusterAnimationStateTime += deltaTime;
-        if (thrusterAnimationStateTime > TOTAL_THRUSTER_ANIMATION_TIME)
-        {
-            thrusterAnimationStateTime %= TOTAL_THRUSTER_ANIMATION_TIME;
-        }
-
         Vector2 gravityForce;
         if (SettingsManager.noGravity)
         {
@@ -119,86 +96,15 @@ public class Ship extends GameEntity
         rotateTo(inputForce, deltaTime);
         updateFuel(inputForce, deltaTime);
 
-        updateThruster(inputForce);
-
         this.physicsComponent.getVelocity().add(inputForce);
-    }
-
-    @Override
-    public void draw(SpriteBatch spriteBatch)
-    {
-        float halfThrusterHeight = thrusterHeight / 2f;
-        float halfThrusterWidth = thrusterWidth / 2f;
-
-        TextureRegion textureRegion = thrusterAnimation.getKeyFrame(thrusterAnimationStateTime);
-        Vector2 thrusterOffsetFromCentre = THRUSTER_OFFSET
-            .cpy()
-            .sub(thrusterWidth / 2f, 0);
-        Vector2 thrusterPosition = new Vector2(this.physicsComponent.getPosition());
-        Vector2 thrusterRotateOffset =
-            new Vector2(thrusterOffsetFromCentre).rotate(this.physicsComponent.getAngle());
-        thrusterPosition.add(thrusterRotateOffset);
-        spriteBatch.draw(
-            textureRegion,
-            thrusterPosition.x - halfThrusterWidth,
-            thrusterPosition.y - halfThrusterHeight,
-            halfThrusterWidth,
-            halfThrusterHeight,
-            thrusterWidth,
-            thrusterHeight,
-            1,
-            1,
-            this.physicsComponent.getAngle());
-
-        spriteBatch.draw(
-            shipTexture,
-            this.physicsComponent.getPosition().x - HALF_SHIP_WIDTH,
-            this.physicsComponent.getPosition().y - HALF_SHIP_HEIGHT,
-            HALF_SHIP_WIDTH,
-            HALF_SHIP_HEIGHT,
-            SHIP_WIDTH,
-            SHIP_HEIGHT,
-            1,
-            1,
-            this.physicsComponent.getAngle(),
-            0,
-            0,
-            shipTexture.getWidth(),
-            shipTexture.getHeight(),
-            false,
-            false);
     }
 
     @Override
     public void dispose()
     {
-        physicsComponent.dispose();
+        super.dispose();
         thrusterSound.stop();
         thrusterSound.dispose();
-        shipTexture.dispose();
-        thrusterTextureAtlas.dispose();
-    }
-
-    @Override
-    public void drawMiniMap()
-    {
-        MiniMap.getShapeRenderer().set(ShapeRenderer.ShapeType.Filled);
-        MiniMap.getShapeRenderer().setColor(Color.WHITE);
-
-        Vector2 p1 = new Vector2(8, 0);
-        Vector2 p2 = new Vector2(-5, -5);
-        Vector2 p3 = new Vector2(-5, 5);
-        p1.rotate(this.physicsComponent.getAngle());
-        p2.rotate(this.physicsComponent.getAngle());
-        p3.rotate(this.physicsComponent.getAngle());
-
-        MiniMap.getShapeRenderer().triangle(
-            p1.x + this.physicsComponent.getPosition().x,
-            p1.y + this.physicsComponent.getPosition().y,
-            p2.x + this.physicsComponent.getPosition().x,
-            p2.y + this.physicsComponent.getPosition().y,
-            p3.x + this.physicsComponent.getPosition().x,
-            p3.y + this.physicsComponent.getPosition().y);
     }
 
     /**
@@ -266,19 +172,6 @@ public class Ship extends GameEntity
         fuelChangeEvent.set(oldFuel, fuel, MAX_FUEL);
         Constants.EVENT_BUS.post(fuelChangeEvent);
         Pools.free(fuelChangeEvent);
-    }
-
-    private void updateThruster(Vector2 inputForce)
-    {
-        float thrusterScale = inputForce.len();
-        thrusterWidth = THRUSTER_MAX_WIDTH * thrusterScale;
-        thrusterHeight = THRUSTER_MAX_HEIGHT * thrusterScale;
-        Vector2 thrusterOffsetFromCentre = THRUSTER_OFFSET
-            .cpy()
-            .sub(thrusterWidth / 2f, 0);
-        //        thrusterShape.setAsBox(
-        //            thrusterWidth / 2f, thrusterHeight / 2f, thrusterOffsetFromCentre, 0);
-        //        thrusterFixtureDef.shape = thrusterShape;
     }
 
     public float getFuel()

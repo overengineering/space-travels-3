@@ -1,17 +1,11 @@
 package com.draga.entity;
 
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.MathUtils;
+import com.draga.graphicComponent.AnimatedGraphicComponent;
 import com.draga.entity.shape.Circle;
 import com.draga.manager.GameEntityManager;
 import com.draga.manager.asset.AssMan;
 import com.draga.physic.PhysicsComponent;
-
-import java.util.ArrayList;
 
 public class Explosion extends GameEntity
 {
@@ -19,12 +13,10 @@ public class Explosion extends GameEntity
     private static final int   HEIGHT               = 10;
     private static final int   WIDTH                = 10;
     private static final float ANIMATION_TOTAL_TIME = 2f;
-    private float     stateTime;
-    private Animation animation;
     private Sound     sound;
 
     public Explosion(
-        float x, float y, String textureAtlasPath)
+        float x, float y)
     {
         this.physicsComponent = new PhysicsComponent(
             x,
@@ -33,10 +25,11 @@ public class Explosion extends GameEntity
             new Circle((HEIGHT + WIDTH) / 2f),
             new GameEntityGroup(GameEntityGroup.GroupOverride.NONE));
 
-        stateTime = 0f;
-        TextureAtlas textureAtlas = AssMan.getAssMan().get(textureAtlasPath);
-        animation = new Animation(
-            ANIMATION_TOTAL_TIME / textureAtlas.getRegions().size, textureAtlas.getRegions());
+        this.graphicComponent = new AnimatedGraphicComponent(AssMan.getAssList().explosion,
+            ANIMATION_TOTAL_TIME,
+            WIDTH,
+            HEIGHT,
+            this.physicsComponent);
 
         sound = AssMan.getAssMan().get(AssMan.getAssList().explosionSound);
         sound.play();
@@ -45,41 +38,18 @@ public class Explosion extends GameEntity
     @Override
     public void update(float deltaTime)
     {
-        stateTime += deltaTime;
         // Can't get if the sound if still playing, can be done only with music.
-        if (animation.isAnimationFinished(stateTime))
+        if (this.graphicComponent.isFinished())
         {
             GameEntityManager.removeGameEntity(this);
         }
     }
 
     @Override
-    public void draw(SpriteBatch spriteBatch)
-    {
-        TextureRegion textureRegion = animation.getKeyFrame(stateTime);
-        spriteBatch.draw(
-            textureRegion,
-            this.physicsComponent.getPosition().x - WIDTH / 2f,
-            this.physicsComponent.getPosition().y - HEIGHT / 2f,
-            WIDTH / 2f,
-            HEIGHT / 2f,
-            WIDTH,
-            HEIGHT,
-            1,
-            1,
-            this.physicsComponent.getAngle() * MathUtils.radiansToDegrees);
-    }
-
-    @Override
     public void dispose()
     {
+        super.dispose();
         sound.stop();
         sound.dispose();
-    }
-
-    @Override
-    public void drawMiniMap()
-    {
-
     }
 }
