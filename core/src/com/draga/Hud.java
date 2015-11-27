@@ -86,7 +86,6 @@ public class Hud implements Screen
         pickupTable = new Table();
         pickupTable
             .defaults()
-            //.width(stage.getViewport().getScreenWidth() / 30f)
             .height(stage.getViewport().getScreenWidth() / 30f);
         table
             .add(pickupTable)
