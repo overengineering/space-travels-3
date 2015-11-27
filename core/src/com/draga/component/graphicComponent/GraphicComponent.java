@@ -1,7 +1,7 @@
-package com.draga.graphicComponent;
+package com.draga.component.graphicComponent;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.draga.physic.PhysicsComponent;
+import com.draga.component.PhysicsComponent;
 
 public abstract class GraphicComponent
 {

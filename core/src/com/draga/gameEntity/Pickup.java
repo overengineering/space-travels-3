@@ -1,11 +1,11 @@
-package com.draga.entity;
+package com.draga.gameEntity;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
-import com.draga.entity.shape.Circle;
-import com.draga.graphicComponent.StaticGraphicComponent;
-import com.draga.physic.PhysicsComponent;
+import com.draga.component.miniMapGraphicComponent.StarMiniMapGraphicComponent;
+import com.draga.physic.shape.Circle;
+import com.draga.component.graphicComponent.StaticGraphicComponent;
+import com.draga.component.PhysicsComponent;
 
 import java.util.ArrayList;
 import java.util.List;

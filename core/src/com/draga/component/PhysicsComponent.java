@@ -1,8 +1,8 @@
-package com.draga.physic;
+package com.draga.component;
 
 import com.badlogic.gdx.math.Vector2;
-import com.draga.entity.GameEntityGroup;
-import com.draga.entity.shape.Shape;
+import com.draga.gameEntity.GameEntityGroup;
+import com.draga.physic.shape.Shape;
 
 public class PhysicsComponent
 {

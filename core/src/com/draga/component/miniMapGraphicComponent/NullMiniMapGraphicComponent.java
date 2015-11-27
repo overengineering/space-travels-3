@@ -1,4 +1,4 @@
-package com.draga.entity;
+package com.draga.component.miniMapGraphicComponent;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 

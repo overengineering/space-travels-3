@@ -1,8 +1,8 @@
 package com.draga.event;
 
 import com.badlogic.gdx.utils.Pool;
-import com.draga.entity.Planet;
-import com.draga.entity.Ship;
+import com.draga.gameEntity.Planet;
+import com.draga.gameEntity.Ship;
 
 public class ShipPlanetCollisionEvent implements Pool.Poolable
 {

@@ -1,6 +1,5 @@
-package com.draga.entity;
+package com.draga.gameEntity;
 
-import com.draga.entity.GameEntity;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;

@@ -3,10 +3,10 @@ package com.draga.physic;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Pools;
 import com.draga.Constants;
-import com.draga.entity.GameEntity;
-import com.draga.entity.Planet;
-import com.draga.entity.Ship;
-import com.draga.entity.Pickup;
+import com.draga.gameEntity.GameEntity;
+import com.draga.gameEntity.Planet;
+import com.draga.gameEntity.Ship;
+import com.draga.gameEntity.Pickup;
 import com.draga.event.ShipPlanetCollisionEvent;
 import com.draga.event.PickupCollectedEvent;
 

@@ -1,17 +1,18 @@
-package com.draga.entity;
+package com.draga.gameEntity;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pools;
 import com.draga.Constants;
-import com.draga.entity.shape.Circle;
+import com.draga.component.miniMapGraphicComponent.TriangleMiniMapGraphicComponent;
+import com.draga.physic.shape.Circle;
 import com.draga.event.FuelChangeEvent;
-import com.draga.graphicComponent.StaticGraphicComponent;
+import com.draga.component.graphicComponent.StaticGraphicComponent;
 import com.draga.manager.InputManager;
 import com.draga.manager.SettingsManager;
 import com.draga.manager.asset.AssMan;
-import com.draga.physic.PhysicsComponent;
+import com.draga.component.PhysicsComponent;
 import com.draga.physic.PhysicsEngine;
 
 import java.util.ArrayList;

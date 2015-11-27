@@ -1,11 +1,11 @@
-package com.draga.entity;
+package com.draga.gameEntity;
 
 import com.badlogic.gdx.audio.Sound;
-import com.draga.graphicComponent.AnimatedGraphicComponent;
-import com.draga.entity.shape.Circle;
+import com.draga.component.graphicComponent.AnimatedGraphicComponent;
+import com.draga.physic.shape.Circle;
 import com.draga.manager.GameEntityManager;
 import com.draga.manager.asset.AssMan;
-import com.draga.physic.PhysicsComponent;
+import com.draga.component.PhysicsComponent;
 
 public class Explosion extends GameEntity
 {

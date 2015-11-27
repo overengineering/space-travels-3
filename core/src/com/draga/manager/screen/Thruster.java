@@ -2,14 +2,14 @@ package com.draga.manager.screen;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
-import com.draga.entity.GameEntity;
-import com.draga.entity.GameEntityGroup;
-import com.draga.entity.Ship;
-import com.draga.entity.shape.Circle;
-import com.draga.graphicComponent.AnimatedGraphicComponent;
+import com.draga.gameEntity.GameEntity;
+import com.draga.gameEntity.GameEntityGroup;
+import com.draga.gameEntity.Ship;
+import com.draga.physic.shape.Circle;
+import com.draga.component.graphicComponent.AnimatedGraphicComponent;
 import com.draga.manager.InputManager;
 import com.draga.manager.asset.AssMan;
-import com.draga.physic.PhysicsComponent;
+import com.draga.component.PhysicsComponent;
 
 public class Thruster extends GameEntity
 {

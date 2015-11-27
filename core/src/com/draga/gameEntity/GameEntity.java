@@ -1,7 +1,9 @@
-package com.draga.entity;
+package com.draga.gameEntity;
 
-import com.draga.graphicComponent.GraphicComponent;
-import com.draga.physic.PhysicsComponent;
+import com.draga.component.graphicComponent.GraphicComponent;
+import com.draga.component.miniMapGraphicComponent.MiniMapGraphicComponent;
+import com.draga.component.miniMapGraphicComponent.NullMiniMapGraphicComponent;
+import com.draga.component.PhysicsComponent;
 
 public abstract class GameEntity
 {
