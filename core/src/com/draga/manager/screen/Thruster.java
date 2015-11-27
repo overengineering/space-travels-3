@@ -70,9 +70,9 @@ public class Thruster extends GameEntity
         this.physicsComponent.setAngle(this.ship.physicsComponent.getAngle());
     }
 
-    @Override
+    /*@Override
     public void drawMiniMap()
     {
 
-    }
+    }*/
 }

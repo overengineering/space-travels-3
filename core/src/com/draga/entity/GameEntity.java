@@ -9,7 +9,7 @@ public abstract class GameEntity
 
     public GraphicComponent graphicComponent;
 
-    public MiniMapGraphicComponent miniMapGraphicComponent;
+    public MiniMapGraphicComponent miniMapGraphicComponent = new NullMiniMapGraphicComponent();
 
     public abstract void update(float deltaTime);
 
@@ -18,6 +18,4 @@ public abstract class GameEntity
         physicsComponent.dispose();
         graphicComponent.dispose();
     }
-
-    public abstract void drawMiniMap();
 }

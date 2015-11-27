@@ -1,9 +1,13 @@
 package com.draga.entity;
 
-/**
- * Created by Administrator on 27/11/2015.
- */
-public interface MiniMapGraphicComponent
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.draga.physic.PhysicsComponent;
+
+public abstract class MiniMapGraphicComponent
 {
-    public void draw();
+    protected PhysicsComponent physicsComponent;
+    protected Color            colour;
+
+    public abstract void draw(ShapeRenderer shapeRenderer);
 }

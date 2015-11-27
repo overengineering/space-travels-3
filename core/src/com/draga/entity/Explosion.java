@@ -52,10 +52,4 @@ public class Explosion extends GameEntity
         sound.stop();
         sound.dispose();
     }
-
-    @Override
-    public void drawMiniMap()
-    {
-
-    }
 }

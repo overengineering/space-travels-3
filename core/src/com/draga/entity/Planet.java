@@ -1,8 +1,6 @@
 package com.draga.entity;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.draga.MiniMap;
 import com.draga.entity.shape.Circle;
 import com.draga.graphicComponent.StaticGraphicComponent;
 import com.draga.physic.PhysicsComponent;
@@ -23,10 +21,15 @@ public class Planet extends GameEntity
         collidesWith.add(Ship.class);
         this.physicsComponent =
             new PhysicsComponent(x, y, mass, new Circle(radius), new GameEntityGroup(collidesWith));
-        this.graphicComponent = new StaticGraphicComponent(texturePath,
+        this.graphicComponent = new StaticGraphicComponent(
+            texturePath,
             radius * 2f,
             radius * 2f,
             this.physicsComponent);
+
+        Color miniMapColour = isDestination ? Color.RED : Color.BLUE;
+        this.miniMapGraphicComponent = new CircleMiniMapGraphicsComponent(this.physicsComponent,
+            miniMapColour, radius);
 
         this.isDestination = isDestination;
     }
@@ -40,20 +43,5 @@ public class Planet extends GameEntity
     public void update(float deltaTime)
     {
 
-    }
-
-    @Override
-    public void drawMiniMap()
-    {
-        MiniMap.getShapeRenderer().set(ShapeRenderer.ShapeType.Line);
-        Color planetMinimapColour = isDestination
-            ? Color.RED
-            : Color.BLUE;
-        MiniMap.getShapeRenderer().setColor(planetMinimapColour);
-        MiniMap.getShapeRenderer()
-            .circle(
-                this.physicsComponent.getPosition().x,
-                this.physicsComponent.getPosition().y,
-                radius);
     }
 }

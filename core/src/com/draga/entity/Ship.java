@@ -2,8 +2,6 @@ package com.draga.entity;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pools;
@@ -30,18 +28,18 @@ public class Ship extends GameEntity
     public static final float FUEL_PER_SECOND = 0.3f;
 
     // Size.
-    private static final float SHIP_WIDTH       = 10;
-    private static final float SHIP_HEIGHT      = 10;
+    private static final float SHIP_WIDTH  = 10;
+    private static final float SHIP_HEIGHT = 10;
 
     // Physic.
     private static final float ROTATION_SCALE = 5f;
     private static final float SHIP_MASS      = 1f;
 
     private static final float MAX_ROTATION_DEGREES_PER_SEC = 360f;
-    private Sound        thrusterSound;
-    private long         thrusterSoundInstance;
+    private Sound thrusterSound;
+    private long  thrusterSoundInstance;
     // State.
-    private float        fuel;
+    private float fuel;
 
     public Ship(float x, float y, String shipTexturePath, String thrusterTextureAtlasPath)
     {
@@ -57,12 +55,18 @@ public class Ship extends GameEntity
         this.physicsComponent =
             new PhysicsComponent(x, y, SHIP_MASS, new Circle(4), new GameEntityGroup(collidesWith));
 
-        this.graphicComponent = new StaticGraphicComponent(shipTexturePath,
+        this.graphicComponent = new StaticGraphicComponent(
+            shipTexturePath,
             SHIP_WIDTH,
             SHIP_HEIGHT,
             this.physicsComponent);
 
-        this.miniMapGraphicComponent = new ShipMiniMapGraphicComponent(this.physicsComponent);
+        this.miniMapGraphicComponent = new TriangleMiniMapGraphicComponent(
+            this.physicsComponent,
+            Color.WHITE,
+            new Vector2(8, 0),
+            new Vector2(-5, -5),
+            new Vector2(-5, 5));
     }
     
     @Override
@@ -101,28 +105,6 @@ public class Ship extends GameEntity
         super.dispose();
         thrusterSound.stop();
         thrusterSound.dispose();
-    }
-
-    @Override
-    public void drawMiniMap()
-    {
-        MiniMap.getShapeRenderer().set(ShapeRenderer.ShapeType.Filled);
-        MiniMap.getShapeRenderer().setColor(Color.WHITE);
-
-        Vector2 p1 = new Vector2(8, 0);
-        Vector2 p2 = new Vector2(-5, -5);
-        Vector2 p3 = new Vector2(-5, 5);
-        p1.rotate(this.physicsComponent.getAngle());
-        p2.rotate(this.physicsComponent.getAngle());
-        p3.rotate(this.physicsComponent.getAngle());
-
-        MiniMap.getShapeRenderer().triangle(
-            p1.x + this.physicsComponent.getPosition().x,
-            p1.y + this.physicsComponent.getPosition().y,
-            p2.x + this.physicsComponent.getPosition().x,
-            p2.y + this.physicsComponent.getPosition().y,
-            p3.x + this.physicsComponent.getPosition().x,
-            p3.y + this.physicsComponent.getPosition().y);
     }
 
     /**
