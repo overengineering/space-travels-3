@@ -2,12 +2,11 @@ package com.draga.entity;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.draga.MiniMap;
 import com.draga.entity.shape.Circle;
+import com.draga.graphicComponent.StaticGraphicComponent;
 import com.draga.manager.asset.AssMan;
 import com.draga.physic.PhysicsComponent;
 
@@ -27,11 +26,14 @@ public class Star extends GameEntity
     {
         List<Class<? extends GameEntity>> collidesWith = new ArrayList<>();
         collidesWith.add(Ship.class);
-        this.physicsComponent = new PhysicsComponent(x,
+        this.physicsComponent = new PhysicsComponent(
+            x,
             y,
             0,
             new Circle(HALF_WIDTH),
             new GameEntityGroup(collidesWith));
+        this.graphicComponent =
+            new StaticGraphicComponent(texturePath, WIDTH, HEIGHT, this.physicsComponent);
         this.texture = AssMan.getAssMan().get(texturePath);
     }
 
@@ -39,33 +41,6 @@ public class Star extends GameEntity
     public void update(float deltaTime)
     {
 
-    }
-
-    @Override
-    public void draw(SpriteBatch spriteBatch)
-    {
-        spriteBatch.draw(
-            texture,
-            this.physicsComponent.getPosition().x - HALF_WIDTH,
-            this.physicsComponent.getPosition().y - HALF_HEIGHT,
-            HALF_WIDTH,
-            HALF_HEIGHT,
-            WIDTH,
-            HEIGHT,
-            1,
-            1,
-            this.physicsComponent.getAngle() * MathUtils.radiansToDegrees,
-            0,
-            0,
-            texture.getWidth(),
-            texture.getHeight(),
-            false,
-            false);
-    }
-
-    @Override
-    public void dispose()
-    {
     }
 
     @Override
