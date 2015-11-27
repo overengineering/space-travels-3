@@ -115,6 +115,8 @@ public class GameScreen implements Screen
         updateCamera();
 
         Thruster thruster = new Thruster(ship);
+
+        // Adds the thruster first so that is drawn below the ship.
         GameEntityManager.addGameEntity(thruster);
         GameEntityManager.addGameEntity(ship);
     }
