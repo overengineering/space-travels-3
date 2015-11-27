@@ -11,21 +11,23 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.draga.*;
 import com.draga.entity.*;
+import com.draga.entity.shape.Circle;
 import com.draga.event.CountdownFinishedEvent;
 import com.draga.event.ScoreEvent;
 import com.draga.event.ShipPlanetCollisionEvent;
 import com.draga.event.StarCollectedEvent;
-import com.draga.manager.GameContactListener;
 import com.draga.manager.GameEntityManager;
 import com.draga.manager.GameManager;
 import com.draga.manager.SettingsManager;
 import com.draga.manager.asset.AssMan;
+import com.draga.physic.PhysicDebugDrawer;
+import com.draga.physic.PhysicsEngine;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.ArrayList;
@@ -33,6 +35,8 @@ import java.util.ArrayList;
 public class GameScreen implements Screen
 {
     private static final String LOGGING_TAG = GameScreen.class.getSimpleName();
+
+    private PhysicDebugDrawer physicDebugDrawer;
 
     private int width;
     private int height;
@@ -46,9 +50,6 @@ public class GameScreen implements Screen
 
     private Texture     backgroundTexture;
     private SpriteBatch spriteBatch;
-
-    private Box2DDebugRenderer box2DDebugRenderer;
-    private World              box2dWorld;
 
     private OrthographicCamera orthographicCamera;
     private ExtendViewport     extendViewport;
@@ -79,13 +80,12 @@ public class GameScreen implements Screen
         this.gameState = GameState.COUNTDOWN;
         this.overlayScreen = new CountdownScreen();
 
+        MiniMap.setWorldSize(width, height);
+
         Constants.EVENT_BUS.register(this);
 
         gameScreenInputProcessor = new GameScreenInputProcessor();
         Gdx.input.setInputProcessor(gameScreenInputProcessor);
-
-        box2dWorld = new World(new Vector2(), true);
-        box2dWorld.setContactListener(new GameContactListener());
 
         planets = new ArrayList<>();
 
@@ -93,14 +93,14 @@ public class GameScreen implements Screen
         extendViewport = new ExtendViewport(
             Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, width, height, orthographicCamera);
         extendViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
-        if (Constants.IS_DEBUGGING)
-        {
-            createWalls();
-        }
+        //
+        //        if (Constants.IS_DEBUGGING)
+        //        {
+        //            createWalls();
+        //        }
         if (SettingsManager.debugDraw)
         {
-            box2DDebugRenderer = new Box2DDebugRenderer();
+            physicDebugDrawer = new PhysicDebugDrawer();
         }
 
         hud = new Hud(orthographicCamera);
@@ -108,62 +108,22 @@ public class GameScreen implements Screen
         starCollectedSound = AssMan.getAssMan().get(AssMan.getAssList().starCollectSound);
     }
 
-    private void createWalls()
-    {
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.StaticBody;
-
-        Body body = box2dWorld.createBody(bodyDef);
-
-        Vector2[] wallVertices = new Vector2[] {
-            new Vector2(0, 0),
-            new Vector2(width, 0),
-            new Vector2(width, height),
-            new Vector2(0, height),
-            new Vector2(0, 0),};
-        ChainShape chainShape = new ChainShape();
-        chainShape.createChain(wallVertices);
-
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = chainShape;
-        fixtureDef.restitution = 0;
-        fixtureDef.filter.categoryBits = MaskBits.BOUNDARIES;
-        fixtureDef.filter.maskBits = MaskBits.SHIP;
-
-        body.createFixture(fixtureDef);
-
-    }
-
     public void addShip(Ship ship)
     {
         this.ship = ship;
         hud.setShip(ship);
-        addGameEntity(ship);
+        GameEntityManager.addGameEntity(ship);
 
-        orthographicCamera.position.x = ship.getX();
-        orthographicCamera.position.y = ship.getY();
+        orthographicCamera.position.x = ship.physicsComponent.getPosition().x;
+        orthographicCamera.position.y = ship.physicsComponent.getPosition().y;
 
         updateCamera();
     }
 
-    private void addGameEntity(GameEntity gameEntity)
-    {
-        GameEntityManager.getGameEntities().add(gameEntity);
-        gameEntity.createBody(getBox2dWorld());
-    }
-
     private void updateCamera()
     {
-        float halfWidth = orthographicCamera.viewportWidth / 2f;
-        float halfHeight = orthographicCamera.viewportHeight / 2f;
-
-        float cameraXPosition = MathUtils.clamp(
-            ship.getX(), halfWidth, width - halfWidth);
-        float cameraYPosition = MathUtils.clamp(
-            ship.getY(), halfHeight, height - halfHeight);
-
         // Soften camera movement.
-        Vector2 cameraVec = new Vector2(cameraXPosition, cameraYPosition);
+        Vector2 cameraVec = new Vector2(ship.physicsComponent.getPosition().x, ship.physicsComponent.getPosition().y);
         Vector2 softCamera = cameraVec.cpy();
         Vector2 cameraOffset =
             cameraVec.sub(orthographicCamera.position.x, orthographicCamera.position.y);
@@ -176,20 +136,15 @@ public class GameScreen implements Screen
         spriteBatch.setProjectionMatrix(orthographicCamera.combined);
     }
 
-    public World getBox2dWorld()
-    {
-        return box2dWorld;
-    }
-
     public void addPlanet(Planet planet)
     {
         this.planets.add(planet);
-        addGameEntity(planet);
+        GameEntityManager.addGameEntity(planet);
     }
 
     public void addStar(Star star)
     {
-        addGameEntity(star);
+        GameEntityManager.addGameEntity(star);
         hud.addStar();
     }
 
@@ -236,51 +191,37 @@ public class GameScreen implements Screen
             checkDebugKeys();
         }
 
-        while (!GameEntityManager.getGameEntitiesToCreate().isEmpty())
-        {
-            addGameEntity(GameEntityManager.getGameEntitiesToCreate().poll());
-        }
-        while (!GameEntityManager.getGameEntitiesToDestroy().isEmpty())
-        {
-            removeGameEntity(GameEntityManager.getGameEntitiesToDestroy().poll());
-        }
-
-        updateCamera();
 
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
             gameEntity.update(elapsed);
         }
 
-        // TODO: investigate this
-        // max frame time to avoid spiral of death (on slow devices)
-        float frameTime = Math.min(elapsed, 0.25f);
-        box2dWorld.step(frameTime, 6, 2);
+        PhysicsEngine.update(elapsed);
         updateScore();
+    }
+
+    private void updateMiniMap()
+    {
+        Rectangle shipRect = new Rectangle(
+            ship.physicsComponent.getPosition().x - ((Circle)ship.physicsComponent.getShape()).radius,
+            ship.physicsComponent.getPosition().y - ((Circle)ship.physicsComponent.getShape()).radius,
+            ((Circle)ship.physicsComponent.getShape()).radius * 2,
+            ((Circle)ship.physicsComponent.getShape()).radius * 2);
+
+        Rectangle worldRect = new Rectangle(0, 0, this.width, this.height);
+        MiniMap.update(shipRect, worldRect);
     }
 
     public void draw()
     {
+        updateCamera();
+
         spriteBatch.begin();
         spriteBatch.draw(backgroundTexture, 0, 0, width, height);
         spriteBatch.end();
 
-        MiniMap.getShapeRenderer().begin();
-        Gdx.gl.glEnable(GL20.GL_BLEND);
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-
-        Color minimapBackgroundColor = new Color(0, 0.17f, 0, 0.5f);
-        MiniMap.getShapeRenderer().setColor(minimapBackgroundColor);
-        MiniMap.getShapeRenderer().set(ShapeRenderer.ShapeType.Filled);
-        MiniMap.getShapeRenderer().rect(0, 0, width, height);
-
-        Color minimapBorderColor = new Color(0, 0.4f, 0, 1);
-        MiniMap.getShapeRenderer().setColor(minimapBorderColor);
-        MiniMap.getShapeRenderer().set(ShapeRenderer.ShapeType.Line);
-        MiniMap.getShapeRenderer().rect(0, 0, width, height);
-
-        Gdx.gl.glDisable(GL20.GL_BLEND);
-        MiniMap.getShapeRenderer().end();
+        updateMiniMap();
 
         spriteBatch.begin();
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
@@ -291,7 +232,7 @@ public class GameScreen implements Screen
 
         if (SettingsManager.debugDraw)
         {
-            box2DDebugRenderer.render(box2dWorld, orthographicCamera.combined);
+            physicDebugDrawer.draw(orthographicCamera);
         }
     }
 
@@ -309,16 +250,9 @@ public class GameScreen implements Screen
 
         if (Gdx.input.isKeyPressed(Input.Keys.F3))
         {
-            ship.getBody().setLinearVelocity(0, 0);
-            ship.getBody().setAngularVelocity(0);
+            ship.physicsComponent.getVelocity().set(0, 0);
+            //ship.physicsComponent.setAngularVelocity(0);
         }
-    }
-
-    private void removeGameEntity(GameEntity gameEntity)
-    {
-        box2dWorld.destroyBody(gameEntity.getBody());
-        GameEntityManager.getGameEntities().remove(gameEntity);
-        gameEntity.dispose();
     }
 
     private void updateScore()
@@ -375,18 +309,15 @@ public class GameScreen implements Screen
     @Override
     public void dispose()
     {
-        for (GameEntity gameEntity : GameEntityManager.getGameEntities())
-        {
-            gameEntity.dispose();
-        }
-
         GameEntityManager.dispose();
-        box2dWorld.dispose();
+
         backgroundTexture.dispose();
+
         if (SettingsManager.debugDraw)
         {
-            box2DDebugRenderer.dispose();
+            physicDebugDrawer.dispose();
         }
+
         Constants.EVENT_BUS.unregister(this);
         hud.dispose();
         if (this.overlayScreen != null)
@@ -403,7 +334,7 @@ public class GameScreen implements Screen
     {
         starsCollected++;
         starCollectedSound.play();
-        GameEntityManager.getGameEntitiesToDestroy().add(starCollectedEvent.star);
+        GameEntityManager.removeGameEntity(starCollectedEvent.star);
     }
 
     @Subscribe
@@ -413,22 +344,22 @@ public class GameScreen implements Screen
         {
             Gdx.app.debug(
                 LOGGING_TAG,
-                "Linear velocity on collision: " + ship.getBody().getLinearVelocity().len());
+                "Linear velocity on collision: " + ship.physicsComponent.getVelocity().len());
         }
 
-        GameEntityManager.getGameEntitiesToDestroy().add(ship);
+        GameEntityManager.removeGameEntity(ship);
 
         // If wrong planet or too fast then lose.
         if (!shipPlanetCollisionEvent.planet.isDestination()
-            || ship.getBody().getLinearVelocity().len()
+            || ship.physicsComponent.getVelocity().len()
             > Constants.MAX_DESTINATION_PLANET_APPROACH_SPEED)
         {
             gameState = GameState.LOSE;
             GameEntity explosion = new Explosion(
-                shipPlanetCollisionEvent.ship.getX(),
-                shipPlanetCollisionEvent.ship.getY(),
+                shipPlanetCollisionEvent.ship.physicsComponent.getPosition().x,
+                shipPlanetCollisionEvent.ship.physicsComponent.getPosition().y,
                 AssMan.getAssList().explosion);
-            GameEntityManager.getGameEntitiesToCreate().add(explosion);
+            GameEntityManager.addGameEntity(explosion);
 
             this.overlayScreen = new LoseScreen(levelPath);
         }

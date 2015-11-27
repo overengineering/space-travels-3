@@ -1,17 +1,17 @@
 package com.draga.entity;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.physics.box2d.*;
-import com.draga.MaskBits;
+import com.draga.entity.shape.Circle;
 import com.draga.manager.GameEntityManager;
 import com.draga.manager.asset.AssMan;
+import com.draga.physic.PhysicsComponent;
+
+import java.util.ArrayList;
 
 public class Explosion extends GameEntity
 {
@@ -19,31 +19,19 @@ public class Explosion extends GameEntity
     private static final int   HEIGHT               = 10;
     private static final int   WIDTH                = 10;
     private static final float ANIMATION_TOTAL_TIME = 2f;
-    private PolygonShape polygonShape;
-    private FixtureDef   fixtureDef;
-    private float        stateTime;
-    private Animation    animation;
-    private Fixture      fixture;
-    private Sound        sound;
+    private float     stateTime;
+    private Animation animation;
+    private Sound     sound;
 
     public Explosion(
         float x, float y, String textureAtlasPath)
     {
-        polygonShape = new PolygonShape();
-        polygonShape.setAsBox(WIDTH / 2f, HEIGHT / 2f);
-
-        fixtureDef = new FixtureDef();
-        fixtureDef.shape = polygonShape;
-        fixtureDef.density = 0;
-        fixtureDef.friction = 1f;
-        fixtureDef.restitution = 0;
-        fixtureDef.filter.categoryBits = MaskBits.EXPLOSION;
-        fixtureDef.filter.maskBits = 0;
-
-        bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(x, y);
-        bodyDef.angle = 0;
+        this.physicsComponent = new PhysicsComponent(
+            x,
+            y,
+            0,
+            new Circle((HEIGHT + WIDTH) / 2f),
+            new GameEntityGroup(GameEntityGroup.GroupOverride.NONE));
 
         stateTime = 0f;
         TextureAtlas textureAtlas = AssMan.getAssMan().get(textureAtlasPath);
@@ -61,7 +49,7 @@ public class Explosion extends GameEntity
         // Can't get if the sound if still playing, can be done only with music.
         if (animation.isAnimationFinished(stateTime))
         {
-            GameEntityManager.getGameEntitiesToDestroy().add(this);
+            GameEntityManager.removeGameEntity(this);
         }
     }
 
@@ -71,15 +59,15 @@ public class Explosion extends GameEntity
         TextureRegion textureRegion = animation.getKeyFrame(stateTime);
         spriteBatch.draw(
             textureRegion,
-            getX() - WIDTH / 2f,
-            getY() - HEIGHT / 2f,
+            this.physicsComponent.getPosition().x - WIDTH / 2f,
+            this.physicsComponent.getPosition().y - HEIGHT / 2f,
             WIDTH / 2f,
             HEIGHT / 2f,
             WIDTH,
             HEIGHT,
             1,
             1,
-            body.getAngle() * MathUtils.radiansToDegrees);
+            this.physicsComponent.getAngle() * MathUtils.radiansToDegrees);
     }
 
     @Override
@@ -87,15 +75,6 @@ public class Explosion extends GameEntity
     {
         sound.stop();
         sound.dispose();
-        polygonShape.dispose();
-    }
-
-    @Override
-    public void createBody(World world)
-    {
-        body = world.createBody(bodyDef);
-        body.setUserData(this);
-        fixture = body.createFixture(fixtureDef);
     }
 
     @Override

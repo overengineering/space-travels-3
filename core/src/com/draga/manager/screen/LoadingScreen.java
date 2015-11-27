@@ -13,26 +13,29 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.draga.Constants;
-import com.draga.manager.SettingsManager;
 import com.draga.manager.GameManager;
+import com.draga.manager.SettingsManager;
 import com.draga.manager.SkinManager;
 import com.draga.manager.asset.AssMan;
 import com.draga.manager.level.LevelManager;
 import com.draga.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.manager.level.serialisableEntities.SerialisablePlanet;
 import com.google.common.base.Joiner;
+import com.google.common.base.Stopwatch;
+
+import java.util.concurrent.TimeUnit;
 
 public class LoadingScreen implements Screen
 {
     private static final String LOGGING_TAG = LoadingScreen.class.getSimpleName();
     private final Stage             stage;
-    private final long              startTime;
     private       ProgressBar       progressBar;
     private       SerialisableLevel serialisableLevel;
+    private       Stopwatch         stopwatch;
     
     public LoadingScreen(String levelName)
     {
-        startTime = System.nanoTime();
+        stopwatch = Stopwatch.createStarted();
 
         this.serialisableLevel = LevelManager.getLevel(levelName);
 
@@ -127,8 +130,11 @@ public class LoadingScreen implements Screen
 
             GameScreen gameScreen = LevelManager.getLevelGameScreen(
                 serialisableLevel, new SpriteBatch());
-            long elapsedNanoTime = System.nanoTime() - startTime;
-            Gdx.app.debug(LOGGING_TAG, "Loading time: " + elapsedNanoTime * Constants.NANO + "s");
+            Gdx.app.log(
+                LOGGING_TAG,
+                String.format(
+                    "Loading time: %fs",
+                    stopwatch.elapsed(TimeUnit.NANOSECONDS) * Constants.NANO));
             GameManager.getGame().setScreen(gameScreen);
         }
         updateProgressBar();

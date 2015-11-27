@@ -3,10 +3,10 @@ package com.draga.manager.level;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Json;
-import com.draga.Constants;
 import com.draga.entity.Planet;
 import com.draga.entity.Ship;
 import com.draga.entity.Star;
+import com.draga.manager.GameEntityManager;
 import com.draga.manager.asset.AssMan;
 import com.draga.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.manager.level.serialisableEntities.SerialisablePlanet;
@@ -59,6 +59,8 @@ public abstract class LevelManager
             gameScreen.addStar(star);
         }
 
+        // Run one update so everything is in place for the countdown
+        GameEntityManager.update();
         return gameScreen;
     }
 
@@ -89,11 +91,11 @@ public abstract class LevelManager
         return levels;
     }
 
-    /** Load the levels from the level pack file in order */
+    /**
+     * Load the levels from the level pack file in order
+     */
     private static void loadLevels()
     {
-        long startTime = System.nanoTime();
-
         Json json = new Json();
         String levelPackString = Gdx.files.internal("level/levelPack.json").readString();
         ArrayList<String> levelFileNameWithExtension = json.fromJson(
@@ -108,13 +110,12 @@ public abstract class LevelManager
                 json.fromJson(SerialisableLevel.class, levelString);
             levels.add(serialisableLevel);
         }
-
-        long elapsedNanoTime = System.nanoTime() - startTime;
-        Gdx.app.debug(LOGGING_TAG, "Time to read the level pack serialised levels: " + elapsedNanoTime * Constants.NANO + "s");
     }
 
-    /** Get the serialisable level immediately after the level specified as a parameter.
-     * Null if it was the last level. */
+    /**
+     * Get the serialisable level immediately after the level specified as a parameter.
+     * Null if it was the last level.
+     */
     public static SerialisableLevel getNextLevel(String levelName)
     {
         Iterator<SerialisableLevel> serialisableLevelIterator = LevelManager.getLevels().iterator();

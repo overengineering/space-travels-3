@@ -4,20 +4,15 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.physics.box2d.Box2D;
 import com.draga.manager.GameManager;
 import com.draga.manager.SkinManager;
 import com.draga.manager.asset.AssMan;
 import com.draga.manager.screen.MenuScreen;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 public class SpaceTravels3 extends Game
 {
     private final static String LOGGING_TAG = SpaceTravels3.class.getSimpleName();
-    private ScheduledExecutorService logOutputScheduler;
+    private DebugOverlay debugOverlay;
 
     @Override
     public void create()
@@ -31,22 +26,14 @@ public class SpaceTravels3 extends Game
         {
             Gdx.app.setLogLevel(Application.LOG_DEBUG);
 
-            launchPerformanceLoggerScheduler();
+            this.debugOverlay = new DebugOverlay();
         }
         else
         {
             Gdx.app.setLogLevel(Application.LOG_ERROR);
         }
 
-        Box2D.init();
-
         this.setScreen(new MenuScreen());
-    }
-
-    private void launchPerformanceLoggerScheduler()
-    {
-        logOutputScheduler = Executors.newSingleThreadScheduledExecutor();
-        logOutputScheduler.scheduleAtFixedRate(new PerformanceLogger(), 0, 1, TimeUnit.SECONDS);
     }
 
     @Override
@@ -55,7 +42,7 @@ public class SpaceTravels3 extends Game
         Gdx.app.debug(LOGGING_TAG, "Dispose");
         if (Constants.IS_DEBUGGING)
         {
-            logOutputScheduler.shutdown();
+            this.debugOverlay.dispose();
         }
         SkinManager.BasicSkin.dispose();
         super.dispose();
@@ -65,10 +52,6 @@ public class SpaceTravels3 extends Game
     public void pause()
     {
         Gdx.app.debug(LOGGING_TAG, "Pause");
-        if (Constants.IS_DEBUGGING)
-        {
-            logOutputScheduler.shutdown();
-        }
         super.pause();
     }
 
@@ -76,7 +59,6 @@ public class SpaceTravels3 extends Game
     public void resume()
     {
         Gdx.app.debug(LOGGING_TAG, "Resume");
-        launchPerformanceLoggerScheduler();
         super.resume();
     }
 
@@ -87,6 +69,8 @@ public class SpaceTravels3 extends Game
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
         super.render();
+
+        this.debugOverlay.render(Gdx.graphics.getDeltaTime());
     }
 
     @Override
@@ -96,5 +80,7 @@ public class SpaceTravels3 extends Game
         Gdx.app.debug(LOGGING_TAG, log);
 
         super.resize(width, height);
+
+        this.debugOverlay.resize(width, height);
     }
 }

@@ -13,12 +13,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.draga.entity.GameEntity;
+import com.draga.manager.GameEntityManager;
+import com.draga.physic.PhysicsEngine;
 import com.draga.entity.Ship;
 import com.draga.event.FuelChangeEvent;
 import com.draga.event.StarCollectedEvent;
 import com.draga.manager.SettingsManager;
-import com.draga.manager.GameEntityManager;
-import com.draga.manager.GravityManager;
 import com.draga.manager.SkinManager;
 import com.draga.manager.asset.AssMan;
 import com.draga.event.ScoreEvent;
@@ -129,8 +129,8 @@ public class Hud implements Screen
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
-        if (Constants.HUD_DRAW_VELOCITY_INDICATORS
-            && ship.getBody().isActive())
+        if (Constants.HUD_DRAW_VELOCITY_INDICATORS)
+           // && ship.getBody().isActive())
         {
             shapeRenderer.setProjectionMatrix(orthographicCamera.combined);
             shapeRenderer.begin();
@@ -151,20 +151,20 @@ public class Hud implements Screen
 
     private void DrawGravityIndicator()
     {
-        Vector2 gravityVector = GravityManager.getForceActingOn(ship.getBody());
+        Vector2 gravityVector = PhysicsEngine.getForceActingOn(ship);
 
         shapeRenderer.setColor(Color.BLUE);
         shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.circle(
-            ship.getX() + gravityVector.x * FORCE_INDICATOR_SCALE,
-            ship.getY() + gravityVector.y * FORCE_INDICATOR_SCALE,
+            ship.physicsComponent.getPosition().x + gravityVector.x * FORCE_INDICATOR_SCALE,
+            ship.physicsComponent.getPosition().y + gravityVector.y * FORCE_INDICATOR_SCALE,
             0.5f);
 
         shapeRenderer.setColor(new Color(0, 0, 1f, 0.4f));
         shapeRenderer.set(ShapeRenderer.ShapeType.Line);
         shapeRenderer.circle(
-            ship.getX(),
-            ship.getY(),
+            ship.physicsComponent.getPosition().x,
+            ship.physicsComponent.getPosition().y,
             gravityVector.len() * FORCE_INDICATOR_SCALE,
             24);
     }
@@ -174,16 +174,16 @@ public class Hud implements Screen
         shapeRenderer.setColor(Color.WHITE);
         shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.circle(
-            ship.getX() + ship.getBody().getLinearVelocity().x * FORCE_INDICATOR_SCALE,
-            ship.getY() + ship.getBody().getLinearVelocity().y * FORCE_INDICATOR_SCALE,
+            ship.physicsComponent.getPosition().x + ship.physicsComponent.getVelocity().x * FORCE_INDICATOR_SCALE,
+            ship.physicsComponent.getPosition().y + ship.physicsComponent.getVelocity().y * FORCE_INDICATOR_SCALE,
             0.5f);
 
         shapeRenderer.set(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(new Color(1, 1, 1, 0.4f));
         shapeRenderer.circle(
-            ship.getX(),
-            ship.getY(),
-            ship.getBody().getLinearVelocity().len() * FORCE_INDICATOR_SCALE,
+            ship.physicsComponent.getPosition().x,
+            ship.physicsComponent.getPosition().y,
+            ship.physicsComponent.getVelocity().len() * FORCE_INDICATOR_SCALE,
             24);
     }
 
