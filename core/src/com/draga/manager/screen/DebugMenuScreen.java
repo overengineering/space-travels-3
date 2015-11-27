@@ -35,8 +35,21 @@ public class DebugMenuScreen implements Screen
 
     public ScrollPane GetButtonScrollPane()
     {
+        VerticalGroup verticalGroup = new VerticalGroup();
+
+        verticalGroup.addActor(getDebugDrawTextButton());
+        verticalGroup.addActor(getNoGravityTextButton());
+        verticalGroup.addActor(getInfiniteFuelTextButton());
+
+        ScrollPane scrollPane = new ScrollPane(verticalGroup);
+
+        return scrollPane;
+    }
+
+    private TextButton getDebugDrawTextButton()
+    {
         final TextButton debugDrawTextButton = new TextButton(
-            "Debug Draw",
+            "Debug draw",
             SkinManager.BasicSkin.get(TextButton.TextButtonStyle.class));
         debugDrawTextButton.setChecked(SettingsManager.debugDraw);
 
@@ -51,14 +64,49 @@ public class DebugMenuScreen implements Screen
                     debugDrawTextButton.setChecked(SettingsManager.debugDraw);
                 }
             });
+        return debugDrawTextButton;
+    }
 
-        VerticalGroup verticalGroup = new VerticalGroup();
+    private TextButton getInfiniteFuelTextButton()
+    {
+        final TextButton infiniteFuelTextButton = new TextButton(
+            "Infinite fuel",
+            SkinManager.BasicSkin.get(TextButton.TextButtonStyle.class));
+        infiniteFuelTextButton.setChecked(SettingsManager.infiniteFuel);
 
-        verticalGroup.addActor(debugDrawTextButton);
+        infiniteFuelTextButton.addListener(
+            new BeepingClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    super.clicked(event, x, y);
+                    SettingsManager.infiniteFuel = !SettingsManager.infiniteFuel;
+                    infiniteFuelTextButton.setChecked(SettingsManager.infiniteFuel);
+                }
+            });
+        return infiniteFuelTextButton;
+    }
 
-        ScrollPane scrollPane = new ScrollPane(verticalGroup);
+    private TextButton getNoGravityTextButton()
+    {
+        final TextButton infiniteFuelTextButton = new TextButton(
+            "No gravity",
+            SkinManager.BasicSkin.get(TextButton.TextButtonStyle.class));
+        infiniteFuelTextButton.setChecked(SettingsManager.noGravity);
 
-        return scrollPane;
+        infiniteFuelTextButton.addListener(
+            new BeepingClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    super.clicked(event, x, y);
+                    SettingsManager.noGravity = !SettingsManager.noGravity;
+                    infiniteFuelTextButton.setChecked(SettingsManager.noGravity);
+                }
+            });
+        return infiniteFuelTextButton;
     }
 
     @Override
