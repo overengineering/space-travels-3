@@ -28,19 +28,49 @@ import java.util.concurrent.TimeUnit;
 public class LoadingScreen implements Screen
 {
     private static final String LOGGING_TAG = LoadingScreen.class.getSimpleName();
-    private final Stage             stage;
+    private final String            levelName;
+    private       Stage             stage;
     private       ProgressBar       progressBar;
     private       SerialisableLevel serialisableLevel;
     private       Stopwatch         stopwatch;
     
     public LoadingScreen(String levelName)
     {
+        this.levelName = levelName;
+    }
+
+    @Override
+    public void show()
+    {
         stopwatch = Stopwatch.createStarted();
 
         this.serialisableLevel = LevelManager.getLevel(levelName);
 
+        loadAssets();
 
-        AssMan.getAssMan().clear();
+        stage = new Stage();
+        Gdx.input.setInputProcessor(stage);
+
+        Actor headerLabel = getHeaderLabel();
+
+        progressBar = getProgressBar();
+
+
+        Table table = new Table();
+        stage.addActor(table);
+        table.setFillParent(true);
+
+        table.add(headerLabel);
+        table.row();
+        table
+            .add(progressBar)
+            .width(stage.getWidth() * 0.75f);
+
+        stage.setDebugAll(SettingsManager.debugDraw);
+    }
+
+    private void loadAssets()
+    {
         // Loads sounds first 'cause of weird quirk of Android not loading them in time.
         AssMan.getAssMan().load(AssMan.getAssList().thrusterSound, Sound.class);
         AssMan.getAssMan().load(AssMan.getAssList().explosionSound, Sound.class);
@@ -61,27 +91,6 @@ public class LoadingScreen implements Screen
         }
         AssMan.getAssMan().load(AssMan.getAssList().explosion, TextureAtlas.class);
         AssMan.getAssMan().load(AssMan.getAssList().pickup, Texture.class);
-
-        stage = new Stage();
-        Gdx.input.setInputProcessor(stage);
-
-        Actor headerLabel = getHeaderLabel();
-
-        progressBar = getProgressBar();
-
-
-        Table table = new Table();
-        stage.addActor(table);
-        table.setFillParent(true);
-
-        table.add(headerLabel);
-        table.row();
-        table
-            .add(progressBar)
-            .width(stage.getWidth() * 0.75f);
-
-
-        stage.setDebugAll(SettingsManager.debugDraw);
     }
 
     public Label getHeaderLabel()
@@ -111,12 +120,6 @@ public class LoadingScreen implements Screen
     }
 
     @Override
-    public void show()
-    {
-
-    }
-
-    @Override
     public void render(float deltaTime)
     {
         if (AssMan.getAssMan().update())
@@ -126,15 +129,14 @@ public class LoadingScreen implements Screen
                 Gdx.app.debug(
                     LOGGING_TAG,
                     "Assets loaded: " + Joiner.on(", ").join(AssMan.getAssMan().getAssetNames()));
+                Gdx.app.debug(
+                    LOGGING_TAG,
+                    String.format(
+                        "Loading time: %fs",
+                        stopwatch.elapsed(TimeUnit.NANOSECONDS) * Constants.NANO));
             }
-
             GameScreen gameScreen = LevelManager.getLevelGameScreen(
                 serialisableLevel, new SpriteBatch());
-            Gdx.app.log(
-                LOGGING_TAG,
-                String.format(
-                    "Loading time: %fs",
-                    stopwatch.elapsed(TimeUnit.NANOSECONDS) * Constants.NANO));
             GameManager.getGame().setScreen(gameScreen);
         }
         updateProgressBar();

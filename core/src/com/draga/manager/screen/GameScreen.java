@@ -67,7 +67,7 @@ public class GameScreen implements Screen
         int height,
         String levelPath)
     {
-        this.backgroundTexture = AssMan.getAssMan().get(backgroundTexturePath, Texture.class);
+        this.backgroundTexture = AssMan.getAssMan().get(backgroundTexturePath);
         this.width = width;
         this.height = height;
         this.spriteBatch = spriteBatch;
