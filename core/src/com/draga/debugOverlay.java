@@ -43,7 +43,7 @@ public class DebugOverlay implements Screen
             .bottom()
             .right();
 
-        stage.setDebugAll(SettingsManager.debugDraw);
+        stage.setDebugAll(SettingsManager.getSettings().debugDraw);
     }
 
     private Label getLabel()

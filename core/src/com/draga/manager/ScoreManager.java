@@ -1,6 +1,5 @@
 package com.draga.manager;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
 import com.draga.Constants;
@@ -10,7 +9,8 @@ import java.util.HashMap;
 public abstract class ScoreManager
 {
     private static final Json                     JSON                  = new Json();
-    private static final FileHandle               levelScoresFileHandle = getScoreFileHandle();
+    private static final FileHandle               levelScoresFileHandle =
+        FileManager.getSettingsFileHandle(Constants.FOLDER, Constants.SCORES_FILENAME);
     private static final HashMap<String, Integer> levelScores           = getLevelScores();
 
     public static void updateScore(String levelName, int score)
@@ -43,32 +43,6 @@ public abstract class ScoreManager
         }
 
         return new HashMap<>();
-    }
-
-    private static FileHandle getScoreFileHandle()
-    {
-        FileHandle folderFileHandle;
-        if (Gdx.files.isExternalStorageAvailable())
-        {
-            folderFileHandle = Gdx.files.external(Constants.SCORES_FOLDER);
-        }
-        else if (Gdx.files.isLocalStorageAvailable())
-        {
-            folderFileHandle = Gdx.files.local(Constants.SCORES_FOLDER);
-        }
-        else
-        {
-            throw new RuntimeException("No available storage available to save and load scores!");
-        }
-
-        if (!folderFileHandle.exists())
-        {
-            folderFileHandle.mkdirs();
-        }
-
-        FileHandle scoresFileHandle = folderFileHandle.child(Constants.SCORES_FILENAME);
-
-        return scoresFileHandle;
     }
 
     public static int getScore(String levelName)

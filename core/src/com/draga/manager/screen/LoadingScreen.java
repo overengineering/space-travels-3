@@ -66,7 +66,7 @@ public class LoadingScreen implements Screen
             .add(progressBar)
             .width(stage.getWidth() * 0.75f);
 
-        stage.setDebugAll(SettingsManager.debugDraw);
+        stage.setDebugAll(SettingsManager.getSettings().debugDraw);
     }
 
     private void loadAssets()

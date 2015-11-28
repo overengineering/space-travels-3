@@ -72,7 +72,7 @@ public class Ship extends GameEntity
     public void update(float deltaTime)
     {
         Vector2 gravityForce;
-        if (SettingsManager.noGravity)
+        if (SettingsManager.getSettings().noGravity)
         {
             gravityForce = new Vector2();
         }
@@ -158,7 +158,7 @@ public class Ship extends GameEntity
     {
         float oldFuel = fuel;
 
-        if (SettingsManager.infiniteFuel)
+        if (SettingsManager.getSettings().infiniteFuel)
         {
             fuel = MAX_FUEL;
         }

@@ -94,7 +94,7 @@ public class GameScreen implements Screen
         //        {
         //            createWalls();
         //        }
-        if (SettingsManager.debugDraw)
+        if (SettingsManager.getSettings().debugDraw)
         {
             physicDebugDrawer = new PhysicDebugDrawer();
         }
@@ -230,7 +230,7 @@ public class GameScreen implements Screen
         }
         spriteBatch.end();
 
-        if (SettingsManager.debugDraw)
+        if (SettingsManager.getSettings().debugDraw)
         {
             physicDebugDrawer.draw(orthographicCamera);
         }
@@ -240,12 +240,12 @@ public class GameScreen implements Screen
     {
         if (Gdx.input.isKeyJustPressed(Input.Keys.F1))
         {
-            SettingsManager.infiniteFuel = !SettingsManager.infiniteFuel;
+            SettingsManager.getSettings().infiniteFuel = !SettingsManager.getSettings().infiniteFuel;
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.F2))
         {
-            SettingsManager.noGravity = !SettingsManager.noGravity;
+            SettingsManager.getSettings().noGravity = !SettingsManager.getSettings().noGravity;
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.F3))
@@ -311,7 +311,7 @@ public class GameScreen implements Screen
     {
         GameEntityManager.dispose();
 
-        if (SettingsManager.debugDraw)
+        if (SettingsManager.getSettings().debugDraw)
         {
             physicDebugDrawer.dispose();
         }

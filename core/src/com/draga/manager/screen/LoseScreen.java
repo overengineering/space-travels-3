@@ -49,7 +49,7 @@ public class LoseScreen implements Screen
         table.setFillParent(true);
         stage.addActor(table);
 
-        stage.setDebugAll(SettingsManager.debugDraw);
+        stage.setDebugAll(SettingsManager.getSettings().debugDraw);
         shapeRenderer = new ShapeRenderer();
 
         sound = AssMan.getAssMan().get(AssMan.getAssList().loseSound);

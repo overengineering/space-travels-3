@@ -92,7 +92,7 @@ public class Hud implements Screen
             .bottom()
             .right();
 
-        stage.setDebugAll(SettingsManager.debugDraw);
+        stage.setDebugAll(SettingsManager.getSettings().debugDraw);
     }
 
     private Label getScoreLabel()

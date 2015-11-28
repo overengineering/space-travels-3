@@ -29,7 +29,7 @@ public class InputManager
             // TODO: preferences based with adapters?
             case Android:
             case iOS:
-                switch (SettingsManager.touchInputType)
+                switch (SettingsManager.getSettings().touchInputType)
                 {
                     case ACCELEROMETER:
                         input = getAccelerometerInput();
@@ -40,7 +40,7 @@ public class InputManager
                     default:
                         Gdx.app.error(
                             LOGGING_TAG,
-                            SettingsManager.touchInputType + " input type not implemented.");
+                            SettingsManager.getSettings().touchInputType + " input type not implemented.");
                         input = new Vector2();
                 }
                 break;
