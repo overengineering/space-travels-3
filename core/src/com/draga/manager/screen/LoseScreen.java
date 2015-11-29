@@ -58,10 +58,7 @@ public class LoseScreen implements Screen
 
     public Actor getRetryButton()
     {
-        TextButton.TextButtonStyle buttonStyle =
-            SkinManager.BasicSkin.get(TextButton.TextButtonStyle.class);
-
-        TextButton retryButton = new TextButton("Try Again?", buttonStyle);
+        TextButton retryButton = new TextButton("Try Again?", SkinManager.BasicSkin);
 
         retryButton.addListener(
             new BeepingClickListener()

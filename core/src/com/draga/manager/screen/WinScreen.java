@@ -94,10 +94,7 @@ public class WinScreen implements Screen
 
     public TextButton getRetryButton()
     {
-        TextButton.TextButtonStyle buttonStyle =
-            SkinManager.BasicSkin.get(TextButton.TextButtonStyle.class);
-
-        TextButton retryButton = new TextButton("Try Again?", buttonStyle);
+        TextButton retryButton = new TextButton("Try Again?", SkinManager.BasicSkin);
 
         retryButton.addListener(
             new BeepingClickListener()
@@ -138,10 +135,7 @@ public class WinScreen implements Screen
 
     public TextButton getNextButton(final String levelName)
     {
-        TextButton.TextButtonStyle buttonStyle =
-            SkinManager.BasicSkin.get(TextButton.TextButtonStyle.class);
-
-        TextButton retryButton = new TextButton("Next level", buttonStyle);
+        TextButton retryButton = new TextButton("Next level", SkinManager.BasicSkin);
 
         retryButton.addListener(
             new BeepingClickListener()

@@ -9,7 +9,10 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.draga.BeepingClickListener;
 import com.draga.Constants;
-import com.draga.manager.*;
+import com.draga.manager.GameManager;
+import com.draga.manager.ScoreManager;
+import com.draga.manager.SettingsManager;
+import com.draga.manager.SkinManager;
 import com.draga.manager.level.LevelManager;
 import com.draga.manager.level.serialisableEntities.SerialisableLevel;
 
@@ -52,41 +55,41 @@ public class MenuScreen implements Screen
             .add()
             .expand();
 
-        table.row();
 
         if (Constants.IS_DEBUGGING)
         {
             Actor debugButton = getDebugButton();
 
+            table.row();
             table
                 .add(debugButton)
                 .bottom();
-
-            table.row();
         }
 
+        table.row();
+        TextButton settingsTextButton = getSettingsTextButton();
+        table
+            .add(settingsTextButton)
+            .bottom();
+
+        table.row();
         table
             .add(playButton)
             .bottom();
 
         stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
-
+    
     public Actor getHeaderLabel()
     {
-        Label.LabelStyle labelStyle = SkinManager.BasicSkin.get(Label.LabelStyle.class);
-
-        Label headerLabel = new Label("Space Travels 3", labelStyle);
+        Label headerLabel = new Label("Space Travels 3", SkinManager.BasicSkin);
 
         return headerLabel;
     }
-
+    
     public TextButton getPlayButton()
     {
-        TextButton.TextButtonStyle textButtonStyle =
-            SkinManager.BasicSkin.get(TextButton.TextButtonStyle.class);
-
-        TextButton playButton = new TextButton("Play", textButtonStyle);
+        TextButton playButton = new TextButton("Play", SkinManager.BasicSkin);
 
         playButton.addListener(
             new BeepingClickListener()
@@ -104,9 +107,6 @@ public class MenuScreen implements Screen
 
     private ScrollPane getLevelList()
     {
-        TextButton.TextButtonStyle textButtonStyle =
-            SkinManager.BasicSkin.get(TextButton.TextButtonStyle.class);
-
         java.util.List<SerialisableLevel> levels = LevelManager.getLevels();
 
         buttonGroup = new ButtonGroup<>();
@@ -121,7 +121,7 @@ public class MenuScreen implements Screen
         {
             String buttonText = level.name + " (" + ScoreManager.getScore(level.name) + ")";
             TextButton textButton =
-                new TextButton(buttonText, textButtonStyle);
+                new TextButton(buttonText, SkinManager.BasicSkin);
             textButton.setName(level.name);
             textButton.addListener(new BeepingClickListener());
             buttonGroup.add(textButton);
@@ -135,10 +135,7 @@ public class MenuScreen implements Screen
 
     public Actor getDebugButton()
     {
-        TextButton.TextButtonStyle textButtonStyle =
-            SkinManager.BasicSkin.get(TextButton.TextButtonStyle.class);
-
-        Button debugButton = new TextButton("Debug", textButtonStyle);
+        TextButton debugButton = new TextButton("Debug", SkinManager.BasicSkin);
 
         debugButton.addListener(
             new BeepingClickListener()
@@ -151,6 +148,24 @@ public class MenuScreen implements Screen
                 }
             });
         return debugButton;
+    }
+
+    private TextButton getSettingsTextButton()
+    {
+        TextButton settingsTextButton = new TextButton("Settings", SkinManager.BasicSkin);
+
+        settingsTextButton.addListener(
+            new BeepingClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    super.clicked(event, x, y);
+                    GameManager.getGame().setScreen(new SettingsMenuScreen());
+                }
+            });
+
+        return settingsTextButton;
     }
 
     private void StartGameScreen()
