@@ -97,19 +97,15 @@ public class Hud implements Screen
 
     private Label getScoreLabel()
     {
-        Label scoreLabel = new Label("", SkinManager.BasicSkin.get(Label.LabelStyle.class));
+        Label scoreLabel = new Label("", SkinManager.skin.get(Label.LabelStyle.class));
 
         return scoreLabel;
     }
 
     private ProgressBar getFuelProgressBar()
     {
-        ProgressBar.ProgressBarStyle fuelBarStyle = new ProgressBar.ProgressBarStyle(
-            SkinManager.BasicSkin.newDrawable("progressbar", Color.DARK_GRAY), null);
-        fuelBarStyle.knobBefore = SkinManager.BasicSkin.newDrawable("progressbar", Color.WHITE);
-
         ProgressBar fuelProgressBar = new ProgressBar(
-            0, 1, 0.0001f, false, fuelBarStyle);
+            0, 1, 0.0001f, false, SkinManager.skin);
 
         return fuelProgressBar;
     }

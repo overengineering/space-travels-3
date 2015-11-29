@@ -32,7 +32,7 @@ public class MenuScreen implements Screen
         table.pad(((stage.getHeight() + stage.getWidth()) / 2f) / 50f);
         stage.addActor(table);
 
-        Actor headerLabel = getHeaderLabel();
+        Label headerLabel = getHeaderLabel();
         playButton = getPlayButton();
 
         table
@@ -80,16 +80,16 @@ public class MenuScreen implements Screen
         stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
     
-    public Actor getHeaderLabel()
+    public Label getHeaderLabel()
     {
-        Label headerLabel = new Label("Space Travels 3", SkinManager.BasicSkin);
+        Label headerLabel = new Label("Space Travels 3", SkinManager.skin);
 
         return headerLabel;
     }
     
     public TextButton getPlayButton()
     {
-        TextButton playButton = new TextButton("Play", SkinManager.BasicSkin);
+        TextButton playButton = new TextButton("Play", SkinManager.skin);
 
         playButton.addListener(
             new BeepingClickListener()
@@ -121,7 +121,7 @@ public class MenuScreen implements Screen
         {
             String buttonText = level.name + " (" + ScoreManager.getScore(level.name) + ")";
             TextButton textButton =
-                new TextButton(buttonText, SkinManager.BasicSkin);
+                new TextButton(buttonText, SkinManager.skin);
             textButton.setName(level.name);
             textButton.addListener(new BeepingClickListener());
             buttonGroup.add(textButton);
@@ -135,7 +135,7 @@ public class MenuScreen implements Screen
 
     public Actor getDebugButton()
     {
-        TextButton debugButton = new TextButton("Debug", SkinManager.BasicSkin);
+        TextButton debugButton = new TextButton("Debug", SkinManager.skin);
 
         debugButton.addListener(
             new BeepingClickListener()
@@ -152,7 +152,7 @@ public class MenuScreen implements Screen
 
     private TextButton getSettingsTextButton()
     {
-        TextButton settingsTextButton = new TextButton("Settings", SkinManager.BasicSkin);
+        TextButton settingsTextButton = new TextButton("Settings", SkinManager.skin);
 
         settingsTextButton.addListener(
             new BeepingClickListener()

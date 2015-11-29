@@ -2,5 +2,6 @@ package com.draga;
 
 public class Settings
 {
-    public static TouchInputType touchInputType = TouchInputType.ACCELEROMETER;
+    public InputType inputType = InputType.ACCELEROMETER;
+    public float     volume    = 1f;
 }

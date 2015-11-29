@@ -8,23 +8,16 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 
 public class SkinManager
 {
     private static final float FONT_SCALE       = 0.05f;
     private static final float DEBUG_FONT_SCALE = 0.02f;
 
-    public static Skin BasicSkin;
+    public static Skin skin = getSkin();
 
-    public static void create()
-    {
-        BasicSkin = createBasicSkin();
-    }
-
-    private static Skin createBasicSkin()
+    private static Skin getSkin()
     {
         Skin skin = new Skin();
 
@@ -53,6 +46,13 @@ public class SkinManager
         // Progress bar texture
         Pixmap progressBarPixmap = getProgressBarTexture();
         skin.add("progressbar", new Texture(progressBarPixmap));
+
+
+        ProgressBar.ProgressBarStyle progressBarStyle = getProgressBarStyle(skin);
+        skin.add("default-horizontal", progressBarStyle);
+
+        Slider.SliderStyle sliderStyle = getSliderStyle(skin);
+        skin.add("default-horizontal", sliderStyle);
 
         return skin;
     }
@@ -124,5 +124,25 @@ public class SkinManager
         progressBarPixmap.setColor(Color.WHITE);
         progressBarPixmap.fill();
         return progressBarPixmap;
+    }
+
+    private static ProgressBar.ProgressBarStyle getProgressBarStyle(Skin skin)
+    {
+        ProgressBar.ProgressBarStyle progressBarStyle = new ProgressBar.ProgressBarStyle(
+            skin.newDrawable("progressbar", Color.DARK_GRAY), null);
+        progressBarStyle.knobBefore = skin.newDrawable("progressbar", Color.WHITE);
+
+        return progressBarStyle;
+    }
+
+    private static Slider.SliderStyle getSliderStyle(Skin skin)
+    {
+        Slider.SliderStyle sliderStyle = new Slider.SliderStyle();
+        sliderStyle.background = skin.newDrawable("progressbar", Color.GRAY);
+        sliderStyle.knobAfter = skin.newDrawable("progressbar", Color.LIGHT_GRAY);
+        sliderStyle.knobBefore = skin.newDrawable("progressbar", Color.DARK_GRAY);
+        sliderStyle.knob = skin.newDrawable("progressbar", Color.WHITE);
+
+        return sliderStyle;
     }
 }

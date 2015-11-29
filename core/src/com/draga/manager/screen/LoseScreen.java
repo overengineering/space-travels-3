@@ -37,7 +37,7 @@ public class LoseScreen implements Screen
 
 
         Table table = new Table();
-        table.setBackground(SkinManager.BasicSkin.newDrawable("background", fadeToColour));
+        table.setBackground(SkinManager.skin.newDrawable("background", fadeToColour));
         table.addAction(Actions.sequence(
             Actions.fadeOut(0),
             Actions.fadeIn(3, Interpolation.pow2In)));
@@ -58,7 +58,7 @@ public class LoseScreen implements Screen
 
     public Actor getRetryButton()
     {
-        TextButton retryButton = new TextButton("Try Again?", SkinManager.BasicSkin);
+        TextButton retryButton = new TextButton("Try Again?", SkinManager.skin);
 
         retryButton.addListener(
             new BeepingClickListener()

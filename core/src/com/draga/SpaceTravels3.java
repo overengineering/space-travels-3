@@ -20,7 +20,6 @@ public class SpaceTravels3 extends Game
     {
         Gdx.input.setCatchBackKey(true);
         AssMan.getAssList();
-        SkinManager.create();
         GameManager.setGame(this);
 
         if (Constants.IS_DEBUGGING)
@@ -45,7 +44,7 @@ public class SpaceTravels3 extends Game
         {
             this.debugOverlay.dispose();
         }
-        SkinManager.BasicSkin.dispose();
+        SkinManager.skin.dispose();
         super.dispose();
     }
 

@@ -95,7 +95,7 @@ public class LoadingScreen implements Screen
 
     public Label getHeaderLabel()
     {
-        Label.LabelStyle labelStyle = SkinManager.BasicSkin.get(Label.LabelStyle.class);
+        Label.LabelStyle labelStyle = SkinManager.skin.get(Label.LabelStyle.class);
 
         Label headerLabel = new Label("Loading", labelStyle);
 
@@ -104,17 +104,12 @@ public class LoadingScreen implements Screen
 
     private ProgressBar getProgressBar()
     {
-        ProgressBar.ProgressBarStyle progressBarStyle = new ProgressBar.ProgressBarStyle(
-            SkinManager.BasicSkin.newDrawable("progressbar", Color.DARK_GRAY), null);
-        progressBarStyle.knobBefore = SkinManager.BasicSkin.newDrawable("progressbar", Color.WHITE);
-
-
         ProgressBar progressBar = new ProgressBar(
             0,
             AssMan.getAssMan().getQueuedAssets() + AssMan.getAssMan().getLoadedAssets(),
             1,
             false,
-            progressBarStyle);
+            SkinManager.skin);
 
         return progressBar;
     }

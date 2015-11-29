@@ -52,7 +52,7 @@ public class DebugMenuScreen implements Screen
 
     private TextButton getBackTextButton()
     {
-        TextButton backTextButton = new TextButton("Back", SkinManager.BasicSkin);
+        TextButton backTextButton = new TextButton("Back", SkinManager.skin);
         backTextButton.addListener(new BeepingClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y)
@@ -82,7 +82,7 @@ public class DebugMenuScreen implements Screen
     {
         final TextButton debugDrawTextButton = new TextButton(
             "Debug draw",
-            SkinManager.BasicSkin.get(TextButton.TextButtonStyle.class));
+            SkinManager.skin.get(TextButton.TextButtonStyle.class));
         debugDrawTextButton.setChecked(SettingsManager.getDebugSettings().debugDraw);
 
         debugDrawTextButton.addListener(
@@ -103,7 +103,7 @@ public class DebugMenuScreen implements Screen
     {
         final TextButton infiniteFuelTextButton = new TextButton(
             "Infinite fuel",
-            SkinManager.BasicSkin.get(TextButton.TextButtonStyle.class));
+            SkinManager.skin.get(TextButton.TextButtonStyle.class));
         infiniteFuelTextButton.setChecked(SettingsManager.getDebugSettings().infiniteFuel);
 
         infiniteFuelTextButton.addListener(
@@ -124,7 +124,7 @@ public class DebugMenuScreen implements Screen
     {
         final TextButton infiniteFuelTextButton = new TextButton(
             "No gravity",
-            SkinManager.BasicSkin.get(TextButton.TextButtonStyle.class));
+            SkinManager.skin.get(TextButton.TextButtonStyle.class));
         infiniteFuelTextButton.setChecked(SettingsManager.getDebugSettings().noGravity);
 
         infiniteFuelTextButton.addListener(

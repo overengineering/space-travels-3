@@ -37,7 +37,7 @@ public class CountdownScreen implements Screen
 
     private Label getTimerLabel()
     {
-        Label.LabelStyle labelStyle = SkinManager.BasicSkin.get(Label.LabelStyle.class);
+        Label.LabelStyle labelStyle = SkinManager.skin.get(Label.LabelStyle.class);
         Label label = new Label(getLabelText(), labelStyle);
         return label;
     }

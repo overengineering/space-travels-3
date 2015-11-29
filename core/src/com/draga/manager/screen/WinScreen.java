@@ -45,7 +45,7 @@ public class WinScreen implements Screen
         Label scoreLabel = getScoreLabel(score);
 
         Table table = new Table();
-        table.setBackground(SkinManager.BasicSkin.newDrawable("background", fadeToColour));
+        table.setBackground(SkinManager.skin.newDrawable("background", fadeToColour));
         table.addAction(Actions.sequence(
             Actions.fadeOut(0),
             Actions.fadeIn(3, Interpolation.pow2In)));
@@ -85,7 +85,7 @@ public class WinScreen implements Screen
 
     public Label getHeaderLabel()
     {
-        Label.LabelStyle labelStyle = SkinManager.BasicSkin.get(Label.LabelStyle.class);
+        Label.LabelStyle labelStyle = SkinManager.skin.get(Label.LabelStyle.class);
 
         Label headerLabel = new Label("You won!", labelStyle);
 
@@ -94,7 +94,7 @@ public class WinScreen implements Screen
 
     public TextButton getRetryButton()
     {
-        TextButton retryButton = new TextButton("Try Again?", SkinManager.BasicSkin);
+        TextButton retryButton = new TextButton("Try Again?", SkinManager.skin);
 
         retryButton.addListener(
             new BeepingClickListener()
@@ -112,7 +112,7 @@ public class WinScreen implements Screen
 
     private Label getScoreLabel(float score)
     {
-        Label.LabelStyle labelStyle = SkinManager.BasicSkin.get(Label.LabelStyle.class);
+        Label.LabelStyle labelStyle = SkinManager.skin.get(Label.LabelStyle.class);
 
         Label scoreLabel = new Label("Score: " + score, labelStyle);
 
@@ -121,7 +121,7 @@ public class WinScreen implements Screen
 
     private Label getBestScoreLabel(float score, float previousBestScore)
     {
-        Label.LabelStyle labelStyle = SkinManager.BasicSkin.get(Label.LabelStyle.class);
+        Label.LabelStyle labelStyle = SkinManager.skin.get(Label.LabelStyle.class);
 
         String text = score > previousBestScore
             ? "New best score! It was: " + previousBestScore
@@ -135,7 +135,7 @@ public class WinScreen implements Screen
 
     public TextButton getNextButton(final String levelName)
     {
-        TextButton retryButton = new TextButton("Next level", SkinManager.BasicSkin);
+        TextButton retryButton = new TextButton("Next level", SkinManager.skin);
 
         retryButton.addListener(
             new BeepingClickListener()
