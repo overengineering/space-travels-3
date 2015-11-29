@@ -1,4 +1,4 @@
-package com.draga.manager.screen;
+package com.draga.gameEntity;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;

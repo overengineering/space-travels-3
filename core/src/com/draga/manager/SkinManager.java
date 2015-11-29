@@ -10,12 +10,13 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 public class SkinManager
 {
-    public static final float FONT_SCALE = 0.05f;
-    public static final float DEBUG_FONT_SCALE = 0.02f;
+    private static final float FONT_SCALE = 0.05f;
+    private static final float DEBUG_FONT_SCALE = 0.02f;
 
     public static Skin BasicSkin;
 

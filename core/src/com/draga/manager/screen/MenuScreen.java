@@ -69,7 +69,7 @@ public class MenuScreen implements Screen
             .add(playButton)
             .bottom();
 
-        stage.setDebugAll(SettingsManager.getSettings().debugDraw);
+        stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
     public Actor getHeaderLabel()

@@ -14,11 +14,11 @@ import com.draga.manager.GameManager;
 import com.draga.manager.SettingsManager;
 import com.draga.manager.SkinManager;
 
-public class DebugMenuScreen implements Screen
+public class SettingsMenuScreen implements Screen
 {
     private Stage stage;
 
-    public DebugMenuScreen()
+    public SettingsMenuScreen()
     {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
