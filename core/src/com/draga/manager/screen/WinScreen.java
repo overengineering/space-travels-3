@@ -80,7 +80,7 @@ public class WinScreen implements Screen
         shapeRenderer = new ShapeRenderer();
 
         sound = AssMan.getAssMan().get(AssMan.getAssList().winSound);
-        sound.play();
+        sound.play(SettingsManager.getSettings().volume);
     }
 
     public Label getHeaderLabel()

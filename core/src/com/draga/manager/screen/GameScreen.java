@@ -339,7 +339,7 @@ public class GameScreen implements Screen
     public void pickupCollected(PickupCollectedEvent pickupCollectedEvent)
     {
         pickupCollected++;
-        pickupCollectedSound.play();
+        pickupCollectedSound.play(SettingsManager.getSettings().volume);
         GameEntityManager.removeGameEntity(pickupCollectedEvent.pickup);
     }
 

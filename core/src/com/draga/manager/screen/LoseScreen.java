@@ -53,7 +53,7 @@ public class LoseScreen implements Screen
         shapeRenderer = new ShapeRenderer();
 
         sound = AssMan.getAssMan().get(AssMan.getAssList().loseSound);
-        sound.play();
+        sound.play(SettingsManager.getSettings().volume);
     }
 
     public Actor getRetryButton()
