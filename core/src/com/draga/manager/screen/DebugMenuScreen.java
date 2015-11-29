@@ -27,10 +27,42 @@ public class DebugMenuScreen implements Screen
         table.setFillParent(true);
         table.pad(((stage.getHeight() + stage.getWidth()) / 2f) / 50f);
 
+        table.row();
+        table
+            .add()
+            .expand();
+
+        table.row();
         table.add(GetButtonScrollPane());
+
+        table.row();
+        table
+            .add()
+            .expand();
+
+        TextButton backTextButton = getBackTextButton();
+        table.row();
+        table
+            .add(backTextButton)
+            .bottom();
 
         stage.addActor(table);
         stage.setDebugAll(SettingsManager.getSettings().debugDraw);
+    }
+
+    private TextButton getBackTextButton()
+    {
+        TextButton backTextButton = new TextButton("Back", SkinManager.BasicSkin);
+        backTextButton.addListener(new BeepingClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                super.clicked(event, x, y);
+                GameManager.getGame().setScreen(new MenuScreen());
+            }
+        });
+
+        return backTextButton;
     }
 
     public ScrollPane GetButtonScrollPane()
