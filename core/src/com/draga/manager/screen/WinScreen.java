@@ -73,6 +73,10 @@ public class WinScreen implements Screen
             table.add(nextTextButton);
         }
 
+        TextButton mainMenuTextButton = getMainMenuTextButton();
+        table.row();
+        table.add(mainMenuTextButton);
+
         table.setFillParent(true);
         stage.addActor(table);
 
@@ -81,6 +85,21 @@ public class WinScreen implements Screen
 
         sound = AssMan.getAssMan().get(AssMan.getAssList().winSound);
         sound.play(SettingsManager.getSettings().volume);
+    }
+
+    private TextButton getMainMenuTextButton()
+    {
+        TextButton mainMenuTextButton = new TextButton("Main menu", SkinManager.skin);
+        mainMenuTextButton.addListener(new BeepingClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                super.clicked(event, x, y);
+                GameManager.getGame().setScreen(new MenuScreen());
+            }
+        });
+
+        return mainMenuTextButton;
     }
 
     public Label getHeaderLabel()

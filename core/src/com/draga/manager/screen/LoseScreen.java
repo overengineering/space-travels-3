@@ -7,7 +7,6 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -33,20 +32,22 @@ public class LoseScreen implements Screen
         this.stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-        Actor retryButton = getRetryButton();
-
+        TextButton retryButton = getRetryTextButton();
 
         Table table = new Table();
+        table.setFillParent(true);
         table.setBackground(SkinManager.skin.newDrawable("background", fadeToColour));
         table.addAction(Actions.sequence(
             Actions.fadeOut(0),
             Actions.fadeIn(3, Interpolation.pow2In)));
 
-
         table
-            .add(retryButton)
-            .size(retryButton.getWidth() * 2, retryButton.getHeight() * 3);
-        table.setFillParent(true);
+            .add(retryButton);
+
+        TextButton mainMenuTextButton = getMainMenuTextButton();
+        table.row();
+        table.add(mainMenuTextButton);
+
         stage.addActor(table);
 
         stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
@@ -56,7 +57,22 @@ public class LoseScreen implements Screen
         sound.play(SettingsManager.getSettings().volume);
     }
 
-    public Actor getRetryButton()
+    private TextButton getMainMenuTextButton()
+    {
+        TextButton mainMenuTextButton = new TextButton("Main menu", SkinManager.skin);
+        mainMenuTextButton.addListener(new BeepingClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                super.clicked(event, x, y);
+                GameManager.getGame().setScreen(new MenuScreen());
+            }
+        });
+
+        return mainMenuTextButton;
+    }
+
+    public TextButton getRetryTextButton()
     {
         TextButton retryButton = new TextButton("Try Again?", SkinManager.skin);
 
