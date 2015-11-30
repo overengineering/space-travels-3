@@ -100,7 +100,9 @@ public class SettingsMenuScreen implements Screen
             }
         };
         volumeSlider.addListener(stopTouchDown);
-        table.add(volumeSlider);
+        table
+            .add(volumeSlider)
+            .width(stage.getWidth() / 2f);
 
         ScrollPane scrollPane = new ScrollPane(table);
 

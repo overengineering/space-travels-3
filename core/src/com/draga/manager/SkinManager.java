@@ -47,6 +47,9 @@ public class SkinManager
         Pixmap progressBarPixmap = getProgressBarTexture();
         skin.add("progressbar", new Texture(progressBarPixmap));
 
+        // Progress bar texture
+        Pixmap sliderPixmap = getSliderTexture();
+        skin.add("slider", new Texture(sliderPixmap));
 
         ProgressBar.ProgressBarStyle progressBarStyle = getProgressBarStyle(skin);
         skin.add("default-horizontal", progressBarStyle);
@@ -126,6 +129,15 @@ public class SkinManager
         return progressBarPixmap;
     }
 
+    private static Pixmap getSliderTexture()
+    {
+        Pixmap progressBarPixmap =
+            new Pixmap(1, (int) (Gdx.graphics.getHeight() / 15f), Pixmap.Format.RGBA8888);
+        progressBarPixmap.setColor(Color.WHITE);
+        progressBarPixmap.fill();
+        return progressBarPixmap;
+    }
+
     private static ProgressBar.ProgressBarStyle getProgressBarStyle(Skin skin)
     {
         ProgressBar.ProgressBarStyle progressBarStyle = new ProgressBar.ProgressBarStyle(
@@ -138,10 +150,9 @@ public class SkinManager
     private static Slider.SliderStyle getSliderStyle(Skin skin)
     {
         Slider.SliderStyle sliderStyle = new Slider.SliderStyle();
-        sliderStyle.background = skin.newDrawable("progressbar", Color.GRAY);
-        sliderStyle.knobAfter = skin.newDrawable("progressbar", Color.LIGHT_GRAY);
-        sliderStyle.knobBefore = skin.newDrawable("progressbar", Color.DARK_GRAY);
-        sliderStyle.knob = skin.newDrawable("progressbar", Color.WHITE);
+        sliderStyle.background = skin.newDrawable("slider", Color.DARK_GRAY);
+        sliderStyle.knobBefore = skin.newDrawable("slider", Color.LIGHT_GRAY);
+        sliderStyle.knob = skin.newDrawable("slider", Color.WHITE);
 
         return sliderStyle;
     }
