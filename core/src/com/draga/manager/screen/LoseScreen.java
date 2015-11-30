@@ -15,7 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.draga.BeepingClickListener;
 import com.draga.manager.GameManager;
 import com.draga.manager.SettingsManager;
-import com.draga.manager.SkinManager;
+import com.draga.manager.UIManager;
 import com.draga.manager.asset.AssMan;
 
 public class LoseScreen implements Screen
@@ -34,9 +34,8 @@ public class LoseScreen implements Screen
 
         TextButton retryButton = getRetryTextButton();
 
-        Table table = new Table();
-        table.setFillParent(true);
-        table.setBackground(SkinManager.skin.newDrawable("background", fadeToColour));
+        Table table = UIManager.addDefaultTableToStage(stage);
+        table.setBackground(UIManager.skin.newDrawable("background", fadeToColour));
         table.addAction(Actions.sequence(
             Actions.fadeOut(0),
             Actions.fadeIn(3, Interpolation.pow2In)));
@@ -48,9 +47,8 @@ public class LoseScreen implements Screen
         table.row();
         table.add(mainMenuTextButton);
 
-        stage.addActor(table);
-
         stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
+
         shapeRenderer = new ShapeRenderer();
 
         sound = AssMan.getAssMan().get(AssMan.getAssList().loseSound);
@@ -59,7 +57,7 @@ public class LoseScreen implements Screen
 
     private TextButton getMainMenuTextButton()
     {
-        TextButton mainMenuTextButton = new TextButton("Main menu", SkinManager.skin);
+        TextButton mainMenuTextButton = new TextButton("Main menu", UIManager.skin);
         mainMenuTextButton.addListener(new BeepingClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y)
@@ -74,7 +72,7 @@ public class LoseScreen implements Screen
 
     public TextButton getRetryTextButton()
     {
-        TextButton retryButton = new TextButton("Try Again?", SkinManager.skin);
+        TextButton retryButton = new TextButton("Try Again?", UIManager.skin);
 
         retryButton.addListener(
             new BeepingClickListener()

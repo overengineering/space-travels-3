@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.draga.manager.SettingsManager;
-import com.draga.manager.SkinManager;
+import com.draga.manager.UIManager;
 import com.draga.physic.PhysicsEngine;
 
 public class DebugOverlay implements Screen
@@ -49,9 +49,9 @@ public class DebugOverlay implements Screen
     private Label getLabel()
     {
         Label.LabelStyle labelStyle = new Label.LabelStyle();
-        labelStyle.font = SkinManager.skin.getFont("debugFont");
+        labelStyle.font = UIManager.skin.getFont("debugFont");
         labelStyle.background =
-            SkinManager.skin.newDrawable("background", new Color(0, 0, 0, 0.3f));
+            UIManager.skin.newDrawable("background", new Color(0, 0, 0, 0.3f));
 
         Label scoreLabel = new Label("", labelStyle);
 

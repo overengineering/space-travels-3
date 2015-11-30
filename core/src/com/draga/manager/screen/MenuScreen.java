@@ -12,7 +12,7 @@ import com.draga.Constants;
 import com.draga.manager.GameManager;
 import com.draga.manager.ScoreManager;
 import com.draga.manager.SettingsManager;
-import com.draga.manager.SkinManager;
+import com.draga.manager.UIManager;
 import com.draga.manager.level.LevelManager;
 import com.draga.manager.level.serialisableEntities.SerialisableLevel;
 
@@ -27,10 +27,7 @@ public class MenuScreen implements Screen
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-        Table table = new Table();
-        table.setFillParent(true);
-        table.pad(((stage.getHeight() + stage.getWidth()) / 2f) / 50f);
-        stage.addActor(table);
+        Table table = UIManager.addDefaultTableToStage(stage);
 
         Label headerLabel = getHeaderLabel();
         playButton = getPlayButton();
@@ -82,14 +79,14 @@ public class MenuScreen implements Screen
     
     public Label getHeaderLabel()
     {
-        Label headerLabel = new Label("Space Travels 3", SkinManager.skin);
+        Label headerLabel = new Label("Space Travels 3", UIManager.skin);
 
         return headerLabel;
     }
     
     public TextButton getPlayButton()
     {
-        TextButton playButton = new TextButton("Play", SkinManager.skin);
+        TextButton playButton = new TextButton("Play", UIManager.skin);
 
         playButton.addListener(
             new BeepingClickListener()
@@ -115,27 +112,28 @@ public class MenuScreen implements Screen
         buttonGroup.setMinCheckCount(1);
         buttonGroup.setUncheckLast(true);
 
-        VerticalGroup verticalGroup = new VerticalGroup();
+        Table table = UIManager.getDefaultTable();
 
         for (SerialisableLevel level : levels)
         {
             String buttonText = level.name + " (" + ScoreManager.getScore(level.name) + ")";
             TextButton textButton =
-                new TextButton(buttonText, SkinManager.skin);
+                new TextButton(buttonText, UIManager.skin);
             textButton.setName(level.name);
             textButton.addListener(new BeepingClickListener());
             buttonGroup.add(textButton);
-            verticalGroup.addActor(textButton);
+            table.add(textButton);
+            table.row();
         }
 
-        ScrollPane scrollPane = new ScrollPane(verticalGroup);
+        ScrollPane scrollPane = new ScrollPane(table);
 
         return scrollPane;
     }
 
     public Actor getDebugButton()
     {
-        TextButton debugButton = new TextButton("Debug", SkinManager.skin);
+        TextButton debugButton = new TextButton("Debug", UIManager.skin);
 
         debugButton.addListener(
             new BeepingClickListener()
@@ -152,7 +150,7 @@ public class MenuScreen implements Screen
 
     private TextButton getSettingsTextButton()
     {
-        TextButton settingsTextButton = new TextButton("Settings", SkinManager.skin);
+        TextButton settingsTextButton = new TextButton("Settings", UIManager.skin);
 
         settingsTextButton.addListener(
             new BeepingClickListener()

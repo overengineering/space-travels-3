@@ -6,7 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.draga.manager.GameManager;
 import com.draga.manager.SettingsManager;
-import com.draga.manager.SkinManager;
+import com.draga.manager.UIManager;
 import com.draga.manager.asset.AssMan;
 import com.draga.manager.screen.MenuScreen;
 
@@ -44,7 +44,7 @@ public class SpaceTravels3 extends Game
         {
             this.debugOverlay.dispose();
         }
-        SkinManager.skin.dispose();
+        UIManager.skin.dispose();
         super.dispose();
     }
 

@@ -15,7 +15,7 @@ import com.draga.Constants;
 import com.draga.InputType;
 import com.draga.manager.GameManager;
 import com.draga.manager.SettingsManager;
-import com.draga.manager.SkinManager;
+import com.draga.manager.UIManager;
 
 public class SettingsMenuScreen implements Screen
 {
@@ -26,9 +26,7 @@ public class SettingsMenuScreen implements Screen
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-        Table table = new Table();
-        table.setFillParent(true);
-        table.pad(((stage.getHeight() + stage.getWidth()) / 2f) / 50f);
+        Table table = UIManager.addDefaultTableToStage(stage);
 
         Label headerLabel = getHeaderLabel();
         table.add(headerLabel);
@@ -52,33 +50,32 @@ public class SettingsMenuScreen implements Screen
             .add(backTextButton)
             .bottom();
 
-        stage.addActor(table);
         stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
     public Label getHeaderLabel()
     {
-        Label headerLabel = new Label("Settings", SkinManager.skin);
+        Label headerLabel = new Label("Settings", UIManager.skin);
 
         return headerLabel;
     }
 
     public ScrollPane GetButtonScrollPane()
     {
-        Table table = new Table();
+        Table table = UIManager.getDefaultTable();
 
         //noinspection PointlessBooleanExpression
         if (Constants.IS_DEBUGGING
             || Gdx.app.getType() == Application.ApplicationType.Android
             || Gdx.app.getType() == Application.ApplicationType.iOS)
         {
-            Label inputTypeLabel = new Label("Input type", SkinManager.skin);
+            Label inputTypeLabel = new Label("Input type", UIManager.skin);
             table.add(inputTypeLabel);
             table.add(getInputTypeSelector());
             table.row();
         }
-        table.add(new Label("Volume", SkinManager.skin));
-        final Slider volumeSlider = new Slider(0f, 1f, 0.01f, false, SkinManager.skin);
+        table.add(new Label("Volume", UIManager.skin));
+        final Slider volumeSlider = new Slider(0f, 1f, 0.01f, false, UIManager.skin);
         volumeSlider.setValue(SettingsManager.getSettings().volume);
         volumeSlider.addListener(new ChangeListener()
         {
@@ -111,7 +108,7 @@ public class SettingsMenuScreen implements Screen
 
     private TextButton getBackTextButton()
     {
-        TextButton backTextButton = new TextButton("Back", SkinManager.skin);
+        TextButton backTextButton = new TextButton("Back", UIManager.skin);
         backTextButton.addListener(new BeepingClickListener()
         {
             @Override
@@ -125,13 +122,14 @@ public class SettingsMenuScreen implements Screen
         return backTextButton;
     }
 
-    private VerticalGroup getInputTypeSelector()
+    private Table getInputTypeSelector()
     {
-        VerticalGroup verticalGroup = new VerticalGroup();
+        Table table = UIManager.getDefaultTable();
+
         ButtonGroup<TextButton> buttonGroup = new ButtonGroup<>();
         buttonGroup.setMaxCheckCount(1);
 
-        TextButton touchButton = new TextButton("Touch", SkinManager.skin);
+        TextButton touchButton = new TextButton("Touch", UIManager.skin);
         touchButton.setChecked(SettingsManager.getSettings().inputType == InputType.TOUCH);
         touchButton.addListener(new BeepingClickListener()
         {
@@ -143,11 +141,9 @@ public class SettingsMenuScreen implements Screen
             }
         });
         buttonGroup.add(touchButton);
-        verticalGroup.addActor(touchButton);
+        table.add(touchButton);
 
-
-
-        TextButton accelerometerButton = new TextButton("Accelerometer", SkinManager.skin);
+        TextButton accelerometerButton = new TextButton("Accelerometer", UIManager.skin);
         accelerometerButton.setChecked(SettingsManager.getSettings().inputType
             == InputType.ACCELEROMETER);
         accelerometerButton.addListener(new BeepingClickListener()
@@ -160,16 +156,16 @@ public class SettingsMenuScreen implements Screen
             }
         });
         buttonGroup.add(accelerometerButton);
-        verticalGroup.addActor(accelerometerButton);
+        table.add(accelerometerButton);
 
-        return verticalGroup;
+        return table;
     }
 
     private TextButton getDebugDrawTextButton()
     {
         final TextButton debugDrawTextButton = new TextButton(
             "Debug draw",
-            SkinManager.skin.get(TextButton.TextButtonStyle.class));
+            UIManager.skin.get(TextButton.TextButtonStyle.class));
         debugDrawTextButton.setChecked(SettingsManager.getDebugSettings().debugDraw);
 
         debugDrawTextButton.addListener(

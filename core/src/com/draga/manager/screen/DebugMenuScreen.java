@@ -8,11 +8,10 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.draga.BeepingClickListener;
 import com.draga.manager.GameManager;
 import com.draga.manager.SettingsManager;
-import com.draga.manager.SkinManager;
+import com.draga.manager.UIManager;
 
 public class DebugMenuScreen implements Screen
 {
@@ -23,9 +22,7 @@ public class DebugMenuScreen implements Screen
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-        Table table = new Table();
-        table.setFillParent(true);
-        table.pad(((stage.getHeight() + stage.getWidth()) / 2f) / 50f);
+        Table table = UIManager.addDefaultTableToStage(stage);
 
         table.row();
         table
@@ -46,13 +43,12 @@ public class DebugMenuScreen implements Screen
             .add(backTextButton)
             .bottom();
 
-        stage.addActor(table);
         stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
     private TextButton getBackTextButton()
     {
-        TextButton backTextButton = new TextButton("Back", SkinManager.skin);
+        TextButton backTextButton = new TextButton("Back", UIManager.skin);
         backTextButton.addListener(new BeepingClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y)
@@ -67,13 +63,15 @@ public class DebugMenuScreen implements Screen
 
     public ScrollPane GetButtonScrollPane()
     {
-        VerticalGroup verticalGroup = new VerticalGroup();
+        Table table = UIManager.getDefaultTable();
 
-        verticalGroup.addActor(getDebugDrawTextButton());
-        verticalGroup.addActor(getNoGravityTextButton());
-        verticalGroup.addActor(getInfiniteFuelTextButton());
+        table.add(getDebugDrawTextButton());
+        table.row();
+        table.add(getNoGravityTextButton());
+        table.row();
+        table.add(getInfiniteFuelTextButton());
 
-        ScrollPane scrollPane = new ScrollPane(verticalGroup);
+        ScrollPane scrollPane = new ScrollPane(table);
 
         return scrollPane;
     }
@@ -82,7 +80,7 @@ public class DebugMenuScreen implements Screen
     {
         final TextButton debugDrawTextButton = new TextButton(
             "Debug draw",
-            SkinManager.skin.get(TextButton.TextButtonStyle.class));
+            UIManager.skin.get(TextButton.TextButtonStyle.class));
         debugDrawTextButton.setChecked(SettingsManager.getDebugSettings().debugDraw);
 
         debugDrawTextButton.addListener(
@@ -103,7 +101,7 @@ public class DebugMenuScreen implements Screen
     {
         final TextButton infiniteFuelTextButton = new TextButton(
             "Infinite fuel",
-            SkinManager.skin.get(TextButton.TextButtonStyle.class));
+            UIManager.skin.get(TextButton.TextButtonStyle.class));
         infiniteFuelTextButton.setChecked(SettingsManager.getDebugSettings().infiniteFuel);
 
         infiniteFuelTextButton.addListener(
@@ -124,7 +122,7 @@ public class DebugMenuScreen implements Screen
     {
         final TextButton infiniteFuelTextButton = new TextButton(
             "No gravity",
-            SkinManager.skin.get(TextButton.TextButtonStyle.class));
+            UIManager.skin.get(TextButton.TextButtonStyle.class));
         infiniteFuelTextButton.setChecked(SettingsManager.getDebugSettings().noGravity);
 
         infiniteFuelTextButton.addListener(

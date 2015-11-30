@@ -8,10 +8,16 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 
-public class SkinManager
+public class UIManager
 {
+    private static final float sqrtPixels =
+        (float) Math.sqrt(Gdx.graphics.getWidth() * Gdx.graphics.getHeight());
+
+    private static final float BUTTON_PADDING = sqrtPixels * 0.01f;
+
     private static final float FONT_SCALE       = 0.05f;
     private static final float DEBUG_FONT_SCALE = 0.02f;
 
@@ -67,7 +73,7 @@ public class SkinManager
         FreeTypeFontGenerator.FreeTypeFontParameter parameter =
             new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size =
-            (int) (Math.sqrt(Gdx.graphics.getWidth() * Gdx.graphics.getHeight()) * FONT_SCALE);
+            (int) (sqrtPixels * FONT_SCALE);
         BitmapFont bitmapFont = generator.generateFont(parameter);
 
         return bitmapFont;
@@ -80,9 +86,7 @@ public class SkinManager
         FreeTypeFontGenerator.FreeTypeFontParameter parameter =
             new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size =
-            (int) (
-                Math.sqrt(Gdx.graphics.getWidth() * Gdx.graphics.getHeight())
-                    * DEBUG_FONT_SCALE);
+            (int) (sqrtPixels * DEBUG_FONT_SCALE);
         BitmapFont bitmapFont = generator.generateFont(parameter);
 
         return bitmapFont;
@@ -155,5 +159,23 @@ public class SkinManager
         sliderStyle.knob = skin.newDrawable("slider", Color.WHITE);
 
         return sliderStyle;
+    }
+
+    public static Table getDefaultTable()
+    {
+        Table table = new Table();
+        table.defaults().pad(UIManager.BUTTON_PADDING);
+        table.pad(sqrtPixels / 50f);
+
+        return table;
+    }
+
+    public static Table addDefaultTableToStage(Stage stage)
+    {
+        Table table = getDefaultTable();
+        table.setFillParent(true);
+        stage.addActor(table);
+
+        return table;
     }
 }
