@@ -8,23 +8,22 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 
-public class SkinManager
+public class UIManager
 {
-    public static final float FONT_SCALE = 0.05f;
-    public static final float DEBUG_FONT_SCALE = 0.02f;
+    private static final float sqrtPixels =
+        (float) Math.sqrt(Gdx.graphics.getWidth() * Gdx.graphics.getHeight());
 
-    public static Skin BasicSkin;
+    private static final float BUTTON_PADDING = sqrtPixels * 0.01f;
 
-    public static void create()
-    {
-        BasicSkin = createBasicSkin();
-    }
+    private static final float FONT_SCALE       = 0.05f;
+    private static final float DEBUG_FONT_SCALE = 0.02f;
 
-    private static Skin createBasicSkin()
+    public static Skin skin = getSkin();
+
+    private static Skin getSkin()
     {
         Skin skin = new Skin();
 
@@ -54,6 +53,16 @@ public class SkinManager
         Pixmap progressBarPixmap = getProgressBarTexture();
         skin.add("progressbar", new Texture(progressBarPixmap));
 
+        // Progress bar texture
+        Pixmap sliderPixmap = getSliderTexture();
+        skin.add("slider", new Texture(sliderPixmap));
+
+        ProgressBar.ProgressBarStyle progressBarStyle = getProgressBarStyle(skin);
+        skin.add("default-horizontal", progressBarStyle);
+
+        Slider.SliderStyle sliderStyle = getSliderStyle(skin);
+        skin.add("default-horizontal", sliderStyle);
+
         return skin;
     }
 
@@ -64,7 +73,7 @@ public class SkinManager
         FreeTypeFontGenerator.FreeTypeFontParameter parameter =
             new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size =
-            (int) (Math.sqrt(Gdx.graphics.getWidth() * Gdx.graphics.getHeight()) * FONT_SCALE);
+            (int) (sqrtPixels * FONT_SCALE);
         BitmapFont bitmapFont = generator.generateFont(parameter);
 
         return bitmapFont;
@@ -77,9 +86,7 @@ public class SkinManager
         FreeTypeFontGenerator.FreeTypeFontParameter parameter =
             new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size =
-            (int) (
-                Math.sqrt(Gdx.graphics.getWidth() * Gdx.graphics.getHeight())
-                    * DEBUG_FONT_SCALE);
+            (int) (sqrtPixels * DEBUG_FONT_SCALE);
         BitmapFont bitmapFont = generator.generateFont(parameter);
 
         return bitmapFont;
@@ -124,5 +131,56 @@ public class SkinManager
         progressBarPixmap.setColor(Color.WHITE);
         progressBarPixmap.fill();
         return progressBarPixmap;
+    }
+
+    private static Pixmap getSliderTexture()
+    {
+        Pixmap progressBarPixmap =
+            new Pixmap(1, (int) (Gdx.graphics.getHeight() / 15f), Pixmap.Format.RGBA8888);
+        progressBarPixmap.setColor(Color.WHITE);
+        progressBarPixmap.fill();
+        return progressBarPixmap;
+    }
+
+    private static ProgressBar.ProgressBarStyle getProgressBarStyle(Skin skin)
+    {
+        ProgressBar.ProgressBarStyle progressBarStyle = new ProgressBar.ProgressBarStyle(
+            skin.newDrawable("progressbar", Color.DARK_GRAY), null);
+        progressBarStyle.knobBefore = skin.newDrawable("progressbar", Color.WHITE);
+
+        return progressBarStyle;
+    }
+
+    private static Slider.SliderStyle getSliderStyle(Skin skin)
+    {
+        Slider.SliderStyle sliderStyle = new Slider.SliderStyle();
+        sliderStyle.background = skin.newDrawable("slider", Color.DARK_GRAY);
+        sliderStyle.knobBefore = skin.newDrawable("slider", Color.LIGHT_GRAY);
+        sliderStyle.knob = skin.newDrawable("slider", Color.WHITE);
+
+        return sliderStyle;
+    }
+
+    public static Table getDefaultTable()
+    {
+        Table table = new Table();
+        table.defaults().pad(UIManager.BUTTON_PADDING);
+        table.pad(sqrtPixels / 50f);
+
+        return table;
+    }
+
+    public static Table addDefaultTableToStage(Stage stage)
+    {
+        Table table = getDefaultTable();
+        table.setFillParent(true);
+        stage.addActor(table);
+
+        return table;
+    }
+
+    public static void dispose()
+    {
+        skin.dispose();
     }
 }

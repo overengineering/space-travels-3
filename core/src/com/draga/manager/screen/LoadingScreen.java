@@ -3,7 +3,6 @@ package com.draga.manager.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -15,7 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.draga.Constants;
 import com.draga.manager.GameManager;
 import com.draga.manager.SettingsManager;
-import com.draga.manager.SkinManager;
+import com.draga.manager.UIManager;
 import com.draga.manager.asset.AssMan;
 import com.draga.manager.level.LevelManager;
 import com.draga.manager.level.serialisableEntities.SerialisableLevel;
@@ -56,9 +55,7 @@ public class LoadingScreen implements Screen
         progressBar = getProgressBar();
 
 
-        Table table = new Table();
-        stage.addActor(table);
-        table.setFillParent(true);
+        Table table = UIManager.addDefaultTableToStage(stage);
 
         table.add(headerLabel);
         table.row();
@@ -66,7 +63,7 @@ public class LoadingScreen implements Screen
             .add(progressBar)
             .width(stage.getWidth() * 0.75f);
 
-        stage.setDebugAll(SettingsManager.debugDraw);
+        stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
     private void loadAssets()
@@ -95,7 +92,7 @@ public class LoadingScreen implements Screen
 
     public Label getHeaderLabel()
     {
-        Label.LabelStyle labelStyle = SkinManager.BasicSkin.get(Label.LabelStyle.class);
+        Label.LabelStyle labelStyle = UIManager.skin.get(Label.LabelStyle.class);
 
         Label headerLabel = new Label("Loading", labelStyle);
 
@@ -104,17 +101,12 @@ public class LoadingScreen implements Screen
 
     private ProgressBar getProgressBar()
     {
-        ProgressBar.ProgressBarStyle progressBarStyle = new ProgressBar.ProgressBarStyle(
-            SkinManager.BasicSkin.newDrawable("progressbar", Color.DARK_GRAY), null);
-        progressBarStyle.knobBefore = SkinManager.BasicSkin.newDrawable("progressbar", Color.WHITE);
-
-
         ProgressBar progressBar = new ProgressBar(
             0,
             AssMan.getAssMan().getQueuedAssets() + AssMan.getAssMan().getLoadedAssets(),
             1,
             false,
-            progressBarStyle);
+            UIManager.skin);
 
         return progressBar;
     }

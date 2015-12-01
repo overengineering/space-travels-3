@@ -8,11 +8,10 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.draga.BeepingClickListener;
 import com.draga.manager.GameManager;
 import com.draga.manager.SettingsManager;
-import com.draga.manager.SkinManager;
+import com.draga.manager.UIManager;
 
 public class DebugMenuScreen implements Screen
 {
@@ -23,25 +22,56 @@ public class DebugMenuScreen implements Screen
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-        Table table = new Table();
-        table.setFillParent(true);
-        table.pad(((stage.getHeight() + stage.getWidth()) / 2f) / 50f);
+        Table table = UIManager.addDefaultTableToStage(stage);
 
+        table.row();
+        table
+            .add()
+            .expand();
+
+        table.row();
         table.add(GetButtonScrollPane());
 
-        stage.addActor(table);
-        stage.setDebugAll(SettingsManager.debugDraw);
+        table.row();
+        table
+            .add()
+            .expand();
+
+        TextButton backTextButton = getBackTextButton();
+        table.row();
+        table
+            .add(backTextButton)
+            .bottom();
+
+        stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
+    }
+
+    private TextButton getBackTextButton()
+    {
+        TextButton backTextButton = new TextButton("Back", UIManager.skin);
+        backTextButton.addListener(new BeepingClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                super.clicked(event, x, y);
+                GameManager.getGame().setScreen(new MenuScreen());
+            }
+        });
+
+        return backTextButton;
     }
 
     public ScrollPane GetButtonScrollPane()
     {
-        VerticalGroup verticalGroup = new VerticalGroup();
+        Table table = UIManager.getDefaultTable();
 
-        verticalGroup.addActor(getDebugDrawTextButton());
-        verticalGroup.addActor(getNoGravityTextButton());
-        verticalGroup.addActor(getInfiniteFuelTextButton());
+        table.add(getDebugDrawTextButton());
+        table.row();
+        table.add(getNoGravityTextButton());
+        table.row();
+        table.add(getInfiniteFuelTextButton());
 
-        ScrollPane scrollPane = new ScrollPane(verticalGroup);
+        ScrollPane scrollPane = new ScrollPane(table);
 
         return scrollPane;
     }
@@ -50,8 +80,8 @@ public class DebugMenuScreen implements Screen
     {
         final TextButton debugDrawTextButton = new TextButton(
             "Debug draw",
-            SkinManager.BasicSkin.get(TextButton.TextButtonStyle.class));
-        debugDrawTextButton.setChecked(SettingsManager.debugDraw);
+            UIManager.skin.get(TextButton.TextButtonStyle.class));
+        debugDrawTextButton.setChecked(SettingsManager.getDebugSettings().debugDraw);
 
         debugDrawTextButton.addListener(
             new BeepingClickListener()
@@ -60,8 +90,8 @@ public class DebugMenuScreen implements Screen
                 public void clicked(InputEvent event, float x, float y)
                 {
                     super.clicked(event, x, y);
-                    SettingsManager.debugDraw = !SettingsManager.debugDraw;
-                    debugDrawTextButton.setChecked(SettingsManager.debugDraw);
+                    SettingsManager.getDebugSettings().debugDraw = !SettingsManager.getDebugSettings().debugDraw;
+                    debugDrawTextButton.setChecked(SettingsManager.getDebugSettings().debugDraw);
                 }
             });
         return debugDrawTextButton;
@@ -71,8 +101,8 @@ public class DebugMenuScreen implements Screen
     {
         final TextButton infiniteFuelTextButton = new TextButton(
             "Infinite fuel",
-            SkinManager.BasicSkin.get(TextButton.TextButtonStyle.class));
-        infiniteFuelTextButton.setChecked(SettingsManager.infiniteFuel);
+            UIManager.skin.get(TextButton.TextButtonStyle.class));
+        infiniteFuelTextButton.setChecked(SettingsManager.getDebugSettings().infiniteFuel);
 
         infiniteFuelTextButton.addListener(
             new BeepingClickListener()
@@ -81,8 +111,8 @@ public class DebugMenuScreen implements Screen
                 public void clicked(InputEvent event, float x, float y)
                 {
                     super.clicked(event, x, y);
-                    SettingsManager.infiniteFuel = !SettingsManager.infiniteFuel;
-                    infiniteFuelTextButton.setChecked(SettingsManager.infiniteFuel);
+                    SettingsManager.getDebugSettings().infiniteFuel = !SettingsManager.getDebugSettings().infiniteFuel;
+                    infiniteFuelTextButton.setChecked(SettingsManager.getDebugSettings().infiniteFuel);
                 }
             });
         return infiniteFuelTextButton;
@@ -92,8 +122,8 @@ public class DebugMenuScreen implements Screen
     {
         final TextButton infiniteFuelTextButton = new TextButton(
             "No gravity",
-            SkinManager.BasicSkin.get(TextButton.TextButtonStyle.class));
-        infiniteFuelTextButton.setChecked(SettingsManager.noGravity);
+            UIManager.skin.get(TextButton.TextButtonStyle.class));
+        infiniteFuelTextButton.setChecked(SettingsManager.getDebugSettings().noGravity);
 
         infiniteFuelTextButton.addListener(
             new BeepingClickListener()
@@ -102,8 +132,8 @@ public class DebugMenuScreen implements Screen
                 public void clicked(InputEvent event, float x, float y)
                 {
                     super.clicked(event, x, y);
-                    SettingsManager.noGravity = !SettingsManager.noGravity;
-                    infiniteFuelTextButton.setChecked(SettingsManager.noGravity);
+                    SettingsManager.getDebugSettings().noGravity = !SettingsManager.getDebugSettings().noGravity;
+                    infiniteFuelTextButton.setChecked(SettingsManager.getDebugSettings().noGravity);
                 }
             });
         return infiniteFuelTextButton;

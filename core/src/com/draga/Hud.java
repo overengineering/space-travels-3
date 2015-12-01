@@ -20,7 +20,7 @@ import com.draga.gameEntity.Ship;
 import com.draga.event.FuelChangeEvent;
 import com.draga.event.PickupCollectedEvent;
 import com.draga.manager.SettingsManager;
-import com.draga.manager.SkinManager;
+import com.draga.manager.UIManager;
 import com.draga.manager.asset.AssMan;
 import com.draga.event.ScoreEvent;
 import com.google.common.eventbus.Subscribe;
@@ -54,10 +54,7 @@ public class Hud implements Screen
         this.grayPickups = new Stack<>();
         stage = new Stage();
 
-        Table table = new Table();
-        table.setFillParent(true);
-        table.pad(((stage.getHeight() + stage.getWidth()) / 2f) / 50f);
-        stage.addActor(table);
+        Table table = UIManager.addDefaultTableToStage(stage);
 
         // Top row left column
         fuelProgressBar = getFuelProgressBar();
@@ -92,24 +89,20 @@ public class Hud implements Screen
             .bottom()
             .right();
 
-        stage.setDebugAll(SettingsManager.debugDraw);
+        stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
     private Label getScoreLabel()
     {
-        Label scoreLabel = new Label("", SkinManager.BasicSkin.get(Label.LabelStyle.class));
+        Label scoreLabel = new Label("", UIManager.skin.get(Label.LabelStyle.class));
 
         return scoreLabel;
     }
 
     private ProgressBar getFuelProgressBar()
     {
-        ProgressBar.ProgressBarStyle fuelBarStyle = new ProgressBar.ProgressBarStyle(
-            SkinManager.BasicSkin.newDrawable("progressbar", Color.DARK_GRAY), null);
-        fuelBarStyle.knobBefore = SkinManager.BasicSkin.newDrawable("progressbar", Color.WHITE);
-
         ProgressBar fuelProgressBar = new ProgressBar(
-            0, 1, 0.0001f, false, fuelBarStyle);
+            0, 1, 0.0001f, false, UIManager.skin);
 
         return fuelProgressBar;
     }

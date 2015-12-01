@@ -2,6 +2,7 @@ package com.draga.gameEntity;
 
 import com.badlogic.gdx.audio.Sound;
 import com.draga.component.graphicComponent.AnimatedGraphicComponent;
+import com.draga.manager.SettingsManager;
 import com.draga.physic.shape.Circle;
 import com.draga.manager.GameEntityManager;
 import com.draga.manager.asset.AssMan;
@@ -32,7 +33,7 @@ public class Explosion extends GameEntity
             this.physicsComponent);
 
         sound = AssMan.getAssMan().get(AssMan.getAssList().explosionSound);
-        sound.play();
+        sound.play(SettingsManager.getSettings().volume);
     }
 
     @Override

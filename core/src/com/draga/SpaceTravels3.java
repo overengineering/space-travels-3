@@ -5,7 +5,8 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.draga.manager.GameManager;
-import com.draga.manager.SkinManager;
+import com.draga.manager.SettingsManager;
+import com.draga.manager.UIManager;
 import com.draga.manager.asset.AssMan;
 import com.draga.manager.screen.MenuScreen;
 
@@ -19,7 +20,6 @@ public class SpaceTravels3 extends Game
     {
         Gdx.input.setCatchBackKey(true);
         AssMan.getAssList();
-        SkinManager.create();
         GameManager.setGame(this);
 
         if (Constants.IS_DEBUGGING)
@@ -44,7 +44,8 @@ public class SpaceTravels3 extends Game
         {
             this.debugOverlay.dispose();
         }
-        SkinManager.BasicSkin.dispose();
+        UIManager.dispose();
+        AssMan.getAssMan().dispose();
         super.dispose();
     }
 
@@ -52,6 +53,7 @@ public class SpaceTravels3 extends Game
     public void pause()
     {
         Gdx.app.debug(LOGGING_TAG, "Pause");
+        SettingsManager.saveSettings();
         super.pause();
     }
 
