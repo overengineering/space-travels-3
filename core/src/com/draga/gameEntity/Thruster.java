@@ -19,8 +19,6 @@ public class Thruster extends GameEntity
     private static final float ANIMATION_TIME = 1f;
     private final Ship    ship;
     private       Vector2 offset;
-    private       Sound   thrusterSound;
-    private       long    thrusterSoundInstance;
     private       Circle  shape;
 
     public Thruster(Ship ship)

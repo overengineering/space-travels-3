@@ -10,7 +10,7 @@ public abstract class ScoreManager
 {
     private static final Json                     JSON                  = new Json();
     private static final FileHandle               levelScoresFileHandle =
-        FileManager.getSettingsFileHandle(Constants.FOLDER, Constants.SCORES_FILENAME);
+        FileManager.getFileHandle(Constants.FOLDER, Constants.SCORES_FILENAME);
     private static final HashMap<String, Integer> levelScores           = getLevelScores();
 
     public static void updateScore(String levelName, int score)

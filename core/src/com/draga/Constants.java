@@ -32,5 +32,5 @@ public abstract class Constants
     public static final String FOLDER                  = SpaceTravels3.class.getSimpleName();
     public static final String SCORES_FILENAME         = "Scores.json";
     public static final String DEBUG_SETTINGS_FILENAME = "DebugSettings.json";
-    public static final String SETTINGS_FILENAME = "Settings.json";
+    public static final String SETTINGS_FILENAME       = "Settings.json";
 }

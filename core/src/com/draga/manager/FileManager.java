@@ -6,7 +6,7 @@ import com.draga.Constants;
 
 public abstract class FileManager
 {
-    public static FileHandle getSettingsFileHandle(String folder, String filename)
+    public static FileHandle getFileHandle(String folder, String filename)
     {
         FileHandle folderFileHandle;
         if (Gdx.files.isExternalStorageAvailable())
@@ -15,7 +15,7 @@ public abstract class FileManager
         }
         else if (Gdx.files.isLocalStorageAvailable())
         {
-            folderFileHandle = Gdx.files.local(Constants.FOLDER);
+            folderFileHandle = Gdx.files.local(folder);
         }
         else
         {
@@ -27,8 +27,8 @@ public abstract class FileManager
             folderFileHandle.mkdirs();
         }
 
-        FileHandle scoresFileHandle = folderFileHandle.child(filename);
+        FileHandle fileHandle = folderFileHandle.child(filename);
 
-        return scoresFileHandle;
+        return fileHandle;
     }
 }

@@ -11,9 +11,9 @@ public abstract class SettingsManager
     private static final Json JSON = new Json();
 
     private static final FileHandle    debugSettingsFileHandle =
-        FileManager.getSettingsFileHandle(Constants.FOLDER, Constants.DEBUG_SETTINGS_FILENAME);
+        FileManager.getFileHandle(Constants.FOLDER, Constants.DEBUG_SETTINGS_FILENAME);
     private static final FileHandle settingsFileHandle =
-        FileManager.getSettingsFileHandle(Constants.FOLDER, Constants.SETTINGS_FILENAME);
+        FileManager.getFileHandle(Constants.FOLDER, Constants.SETTINGS_FILENAME);
 
     private static       DebugSettings debugSettings           = getOrCreateDebugSettings();
     private static       Settings   settings           = getOrCreateSettings();
