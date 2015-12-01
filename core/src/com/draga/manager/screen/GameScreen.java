@@ -211,7 +211,14 @@ public class GameScreen implements Screen
         updateCamera();
 
         spriteBatch.begin();
-        spriteBatch.draw(backgroundTexture, 0, 0, width, height);
+
+        // Draw background at ship and parallax 30%.
+        spriteBatch.draw(
+            backgroundTexture,
+            -(width / 2f - orthographicCamera.position.x) / 1.3f ,
+            -(height / 2f - orthographicCamera.position.y) / 1.3f,
+            width,
+            height);
         spriteBatch.end();
 
         updateMiniMap();
