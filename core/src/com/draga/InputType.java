@@ -1,6 +1,6 @@
 package com.draga;
 
-public enum TouchInputType
+public enum InputType
 {
     ACCELEROMETER,
     TOUCH

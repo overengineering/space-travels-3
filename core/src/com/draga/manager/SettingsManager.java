@@ -1,14 +1,69 @@
 package com.draga.manager;
 
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.Json;
 import com.draga.Constants;
-import com.draga.TouchInputType;
+import com.draga.DebugSettings;
+import com.draga.Settings;
 
 public abstract class SettingsManager
 {
-    public static boolean infiniteFuel = false;
-    public static boolean noGravity    = false;
-    public static TouchInputType touchInputType = TouchInputType.TOUCH;
+    private static final Json JSON = new Json();
 
-    @SuppressWarnings("PointlessBooleanExpression")
-    public static boolean debugDraw = Constants.IS_DEBUGGING && false;
+    private static final FileHandle    debugSettingsFileHandle =
+        FileManager.getFileHandle(Constants.FOLDER, Constants.DEBUG_SETTINGS_FILENAME);
+    private static final FileHandle settingsFileHandle =
+        FileManager.getFileHandle(Constants.FOLDER, Constants.SETTINGS_FILENAME);
+
+    private static       DebugSettings debugSettings           = getOrCreateDebugSettings();
+    private static       Settings   settings           = getOrCreateSettings();
+
+    public static Settings getSettings()
+    {
+        return settings;
+    }
+
+    private static Settings getOrCreateSettings()
+    {
+        if (settingsFileHandle.exists())
+        {
+            Settings settings =
+                JSON.fromJson(Settings.class, settingsFileHandle.readString());
+            return settings;
+        }
+
+        return new Settings();
+    }
+
+    public static DebugSettings getDebugSettings()
+    {
+        return debugSettings;
+    }
+
+    private static DebugSettings getOrCreateDebugSettings()
+    {
+        if (debugSettingsFileHandle.exists())
+        {
+            DebugSettings settings =
+                JSON.fromJson(DebugSettings.class, debugSettingsFileHandle.readString());
+            return settings;
+        }
+
+        return new DebugSettings();
+    }
+
+    public static void saveSettings()
+    {
+        String debugSettingsString = Constants.IS_DEBUGGING
+            ? JSON.prettyPrint(debugSettings)
+            : JSON.toJson(debugSettings);
+
+        debugSettingsFileHandle.writeString(debugSettingsString, false);
+
+        String settingsString = Constants.IS_DEBUGGING
+            ? JSON.prettyPrint(settings)
+            : JSON.toJson(settings);
+
+        settingsFileHandle.writeString(settingsString, false);
+    }
 }

@@ -7,7 +7,6 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -16,7 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.draga.BeepingClickListener;
 import com.draga.manager.GameManager;
 import com.draga.manager.SettingsManager;
-import com.draga.manager.SkinManager;
+import com.draga.manager.UIManager;
 import com.draga.manager.asset.AssMan;
 
 public class LoseScreen implements Screen
@@ -33,35 +32,47 @@ public class LoseScreen implements Screen
         this.stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-        Actor retryButton = getRetryButton();
+        TextButton retryButton = getRetryTextButton();
 
-
-        Table table = new Table();
-        table.setBackground(SkinManager.BasicSkin.newDrawable("background", fadeToColour));
+        Table table = UIManager.addDefaultTableToStage(stage);
+        table.setBackground(UIManager.skin.newDrawable("background", fadeToColour));
         table.addAction(Actions.sequence(
             Actions.fadeOut(0),
             Actions.fadeIn(3, Interpolation.pow2In)));
 
-
         table
-            .add(retryButton)
-            .size(retryButton.getWidth() * 2, retryButton.getHeight() * 3);
-        table.setFillParent(true);
-        stage.addActor(table);
+            .add(retryButton);
 
-        stage.setDebugAll(SettingsManager.debugDraw);
+        TextButton mainMenuTextButton = getMainMenuTextButton();
+        table.row();
+        table.add(mainMenuTextButton);
+
+        stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
+
         shapeRenderer = new ShapeRenderer();
 
         sound = AssMan.getAssMan().get(AssMan.getAssList().loseSound);
-        sound.play();
+        sound.play(SettingsManager.getSettings().volume);
     }
 
-    public Actor getRetryButton()
+    private TextButton getMainMenuTextButton()
     {
-        TextButton.TextButtonStyle buttonStyle =
-            SkinManager.BasicSkin.get(TextButton.TextButtonStyle.class);
+        TextButton mainMenuTextButton = new TextButton("Main menu", UIManager.skin);
+        mainMenuTextButton.addListener(new BeepingClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                super.clicked(event, x, y);
+                GameManager.getGame().setScreen(new MenuScreen());
+            }
+        });
 
-        TextButton retryButton = new TextButton("Try Again?", buttonStyle);
+        return mainMenuTextButton;
+    }
+
+    public TextButton getRetryTextButton()
+    {
+        TextButton retryButton = new TextButton("Try Again?", UIManager.skin);
 
         retryButton.addListener(
             new BeepingClickListener()

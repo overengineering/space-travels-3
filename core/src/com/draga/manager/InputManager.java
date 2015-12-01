@@ -2,7 +2,6 @@ package com.draga.manager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.draga.Constants;
 
@@ -29,7 +28,7 @@ public class InputManager
             // TODO: preferences based with adapters?
             case Android:
             case iOS:
-                switch (SettingsManager.touchInputType)
+                switch (SettingsManager.getSettings().inputType)
                 {
                     case ACCELEROMETER:
                         input = getAccelerometerInput();
@@ -40,7 +39,7 @@ public class InputManager
                     default:
                         Gdx.app.error(
                             LOGGING_TAG,
-                            SettingsManager.touchInputType + " input type not implemented.");
+                            SettingsManager.getSettings().inputType + " input type not implemented.");
                         input = new Vector2();
                 }
                 break;

@@ -17,7 +17,7 @@ import com.draga.BeepingClickListener;
 import com.draga.manager.GameManager;
 import com.draga.manager.ScoreManager;
 import com.draga.manager.SettingsManager;
-import com.draga.manager.SkinManager;
+import com.draga.manager.UIManager;
 import com.draga.manager.asset.AssMan;
 import com.draga.manager.level.LevelManager;
 import com.draga.manager.level.serialisableEntities.SerialisableLevel;
@@ -44,8 +44,8 @@ public class WinScreen implements Screen
         TextButton retryButton = getRetryButton();
         Label scoreLabel = getScoreLabel(score);
 
-        Table table = new Table();
-        table.setBackground(SkinManager.BasicSkin.newDrawable("background", fadeToColour));
+        Table table = UIManager.addDefaultTableToStage(stage);
+        table.setBackground(UIManager.skin.newDrawable("background", fadeToColour));
         table.addAction(Actions.sequence(
             Actions.fadeOut(0),
             Actions.fadeIn(3, Interpolation.pow2In)));
@@ -73,19 +73,35 @@ public class WinScreen implements Screen
             table.add(nextTextButton);
         }
 
-        table.setFillParent(true);
-        stage.addActor(table);
+        TextButton mainMenuTextButton = getMainMenuTextButton();
+        table.row();
+        table.add(mainMenuTextButton);
 
-        stage.setDebugAll(SettingsManager.debugDraw);
+        stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
         shapeRenderer = new ShapeRenderer();
 
         sound = AssMan.getAssMan().get(AssMan.getAssList().winSound);
-        sound.play();
+        sound.play(SettingsManager.getSettings().volume);
+    }
+
+    private TextButton getMainMenuTextButton()
+    {
+        TextButton mainMenuTextButton = new TextButton("Main menu", UIManager.skin);
+        mainMenuTextButton.addListener(new BeepingClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                super.clicked(event, x, y);
+                GameManager.getGame().setScreen(new MenuScreen());
+            }
+        });
+
+        return mainMenuTextButton;
     }
 
     public Label getHeaderLabel()
     {
-        Label.LabelStyle labelStyle = SkinManager.BasicSkin.get(Label.LabelStyle.class);
+        Label.LabelStyle labelStyle = UIManager.skin.get(Label.LabelStyle.class);
 
         Label headerLabel = new Label("You won!", labelStyle);
 
@@ -94,10 +110,7 @@ public class WinScreen implements Screen
 
     public TextButton getRetryButton()
     {
-        TextButton.TextButtonStyle buttonStyle =
-            SkinManager.BasicSkin.get(TextButton.TextButtonStyle.class);
-
-        TextButton retryButton = new TextButton("Try Again?", buttonStyle);
+        TextButton retryButton = new TextButton("Try Again?", UIManager.skin);
 
         retryButton.addListener(
             new BeepingClickListener()
@@ -115,7 +128,7 @@ public class WinScreen implements Screen
 
     private Label getScoreLabel(float score)
     {
-        Label.LabelStyle labelStyle = SkinManager.BasicSkin.get(Label.LabelStyle.class);
+        Label.LabelStyle labelStyle = UIManager.skin.get(Label.LabelStyle.class);
 
         Label scoreLabel = new Label("Score: " + score, labelStyle);
 
@@ -124,7 +137,7 @@ public class WinScreen implements Screen
 
     private Label getBestScoreLabel(float score, float previousBestScore)
     {
-        Label.LabelStyle labelStyle = SkinManager.BasicSkin.get(Label.LabelStyle.class);
+        Label.LabelStyle labelStyle = UIManager.skin.get(Label.LabelStyle.class);
 
         String text = score > previousBestScore
             ? "New best score! It was: " + previousBestScore
@@ -138,10 +151,7 @@ public class WinScreen implements Screen
 
     public TextButton getNextButton(final String levelName)
     {
-        TextButton.TextButtonStyle buttonStyle =
-            SkinManager.BasicSkin.get(TextButton.TextButtonStyle.class);
-
-        TextButton retryButton = new TextButton("Next level", buttonStyle);
+        TextButton retryButton = new TextButton("Next level", UIManager.skin);
 
         retryButton.addListener(
             new BeepingClickListener()

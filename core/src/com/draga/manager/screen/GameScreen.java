@@ -12,18 +12,18 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.draga.*;
-import com.draga.gameEntity.*;
-import com.draga.physic.shape.Circle;
 import com.draga.event.CountdownFinishedEvent;
+import com.draga.event.PickupCollectedEvent;
 import com.draga.event.ScoreEvent;
 import com.draga.event.ShipPlanetCollisionEvent;
-import com.draga.event.PickupCollectedEvent;
+import com.draga.gameEntity.*;
 import com.draga.manager.GameEntityManager;
 import com.draga.manager.GameManager;
 import com.draga.manager.SettingsManager;
 import com.draga.manager.asset.AssMan;
 import com.draga.physic.PhysicDebugDrawer;
 import com.draga.physic.PhysicsEngine;
+import com.draga.physic.shape.Circle;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.ArrayList;
@@ -67,7 +67,7 @@ public class GameScreen implements Screen
         int height,
         String levelPath)
     {
-        this.backgroundTexture = AssMan.getAssMan().get(backgroundTexturePath, Texture.class);
+        this.backgroundTexture = AssMan.getAssMan().get(backgroundTexturePath);
         this.width = width;
         this.height = height;
         this.spriteBatch = spriteBatch;
@@ -94,7 +94,7 @@ public class GameScreen implements Screen
         //        {
         //            createWalls();
         //        }
-        if (SettingsManager.debugDraw)
+        if (SettingsManager.getDebugSettings().debugDraw)
         {
             physicDebugDrawer = new PhysicDebugDrawer();
         }
@@ -124,7 +124,9 @@ public class GameScreen implements Screen
     private void updateCamera()
     {
         // Soften camera movement.
-        Vector2 cameraVec = new Vector2(ship.physicsComponent.getPosition().x, ship.physicsComponent.getPosition().y);
+        Vector2 cameraVec = new Vector2(
+            ship.physicsComponent.getPosition().x,
+            ship.physicsComponent.getPosition().y);
         Vector2 softCamera = cameraVec.cpy();
         Vector2 cameraOffset =
             cameraVec.sub(orthographicCamera.position.x, orthographicCamera.position.y);
@@ -203,18 +205,6 @@ public class GameScreen implements Screen
         updateScore();
     }
 
-    private void updateMiniMap()
-    {
-        Rectangle shipRect = new Rectangle(
-            ship.physicsComponent.getPosition().x - ((Circle)ship.physicsComponent.getShape()).radius,
-            ship.physicsComponent.getPosition().y - ((Circle)ship.physicsComponent.getShape()).radius,
-            ((Circle)ship.physicsComponent.getShape()).radius * 2,
-            ((Circle)ship.physicsComponent.getShape()).radius * 2);
-
-        Rectangle worldRect = new Rectangle(0, 0, this.width, this.height);
-        MiniMap.update(shipRect, worldRect);
-    }
-
     public void draw()
     {
         updateCamera();
@@ -232,7 +222,7 @@ public class GameScreen implements Screen
         }
         spriteBatch.end();
 
-        if (SettingsManager.debugDraw)
+        if (SettingsManager.getDebugSettings().debugDraw)
         {
             physicDebugDrawer.draw(orthographicCamera);
         }
@@ -242,12 +232,14 @@ public class GameScreen implements Screen
     {
         if (Gdx.input.isKeyJustPressed(Input.Keys.F1))
         {
-            SettingsManager.infiniteFuel = !SettingsManager.infiniteFuel;
+            SettingsManager.getDebugSettings().infiniteFuel =
+                !SettingsManager.getDebugSettings().infiniteFuel;
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.F2))
         {
-            SettingsManager.noGravity = !SettingsManager.noGravity;
+            SettingsManager.getDebugSettings().noGravity =
+                !SettingsManager.getDebugSettings().noGravity;
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.F3))
@@ -263,6 +255,20 @@ public class GameScreen implements Screen
         scoreEvent.setScore(getScore());
         Constants.EVENT_BUS.post(scoreEvent);
         Pools.free(scoreEvent);
+    }
+
+    private void updateMiniMap()
+    {
+        Rectangle shipRect = new Rectangle(
+            ship.physicsComponent.getPosition().x
+                - ((Circle) ship.physicsComponent.getShape()).radius,
+            ship.physicsComponent.getPosition().y
+                - ((Circle) ship.physicsComponent.getShape()).radius,
+            ((Circle) ship.physicsComponent.getShape()).radius * 2,
+            ((Circle) ship.physicsComponent.getShape()).radius * 2);
+
+        Rectangle worldRect = new Rectangle(0, 0, this.width, this.height);
+        MiniMap.update(shipRect, worldRect);
     }
 
     private int getScore()
@@ -313,7 +319,7 @@ public class GameScreen implements Screen
     {
         GameEntityManager.dispose();
 
-        if (SettingsManager.debugDraw)
+        if (SettingsManager.getDebugSettings().debugDraw)
         {
             physicDebugDrawer.dispose();
         }
@@ -335,7 +341,7 @@ public class GameScreen implements Screen
     public void pickupCollected(PickupCollectedEvent pickupCollectedEvent)
     {
         pickupCollected++;
-        pickupCollectedSound.play();
+        pickupCollectedSound.play(SettingsManager.getSettings().volume);
         GameEntityManager.removeGameEntity(pickupCollectedEvent.pickup);
     }
 
