@@ -46,7 +46,7 @@ public class Hud implements Screen
 
     private Ship ship;
 
-    private ShapeRenderer shapeRenderer;
+    private ShapeRenderer      shapeRenderer;
     private OrthographicCamera orthographicCamera;
 
     public Hud(OrthographicCamera orthographicCamera)
@@ -111,6 +111,12 @@ public class Hud implements Screen
         return scoreLabel;
     }
 
+    @Subscribe
+    public void setScoreLabel(ScoreEvent scoreEvent)
+    {
+        scoreLabel.setText(String.valueOf(scoreEvent.getScore()));
+    }
+
     @Override
     public void show()
     {
@@ -146,19 +152,35 @@ public class Hud implements Screen
         MiniMap.getShapeRenderer().end();
         Gdx.gl.glDisable(GL20.GL_BLEND);
     }
-
+    
     private void drawJoystick()
     {
-        OrthographicCamera orthographicCamera = new OrthographicCamera(100, 100);
+        OrthographicCamera orthographicCamera =
+            new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         shapeRenderer.setProjectionMatrix(orthographicCamera.combined);
-        shapeRenderer.circle(0, 0, 100f * InputManager.DEAD_ZONE / 2f);
-        shapeRenderer.line(
+
+        float smallestDimension =
+            Math.min(orthographicCamera.viewportWidth, orthographicCamera.viewportHeight);
+        float deadZoneHeight = smallestDimension * InputManager.DEAD_ZONE / 2f;
+
+        shapeRenderer.setColor(new Color(1, 1, 1, 0.5f));
+
+        ShapeRendererUtility.dashedCircle(shapeRenderer, 0, 0, deadZoneHeight, 4, 30, 0, 12, 2);
+
+        int numArcs = 8;
+
+        ShapeRendererUtility.dashedCircle(
+            shapeRenderer,
             0,
-            100f * InputManager.DEAD_ZONE / 2f,
             0,
-            100f * InputManager.DEAD_ZONE / 2f + 3f);
+            smallestDimension / 2,
+            numArcs,
+            15,
+            360 / numArcs / 2,
+            24,
+            2);
     }
-    
+
     private void drawGravityIndicator()
     {
         Vector2 gravityVector = PhysicsEngine.getForceActingOn(ship);
@@ -263,11 +285,5 @@ public class Hud implements Screen
     public void setShip(Ship ship)
     {
         this.ship = ship;
-    }
-
-    @Subscribe
-    public void setScoreLabel(ScoreEvent scoreEvent)
-    {
-        scoreLabel.setText(String.valueOf(scoreEvent.getScore()));
     }
 }
