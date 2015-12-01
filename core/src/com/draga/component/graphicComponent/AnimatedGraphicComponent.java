@@ -9,10 +9,8 @@ import com.draga.manager.asset.AssMan;
 
 public class AnimatedGraphicComponent extends GraphicComponent
 {
-    private float animationTotalTime = 2f;
     private float        animationCurrentTime;
     private Animation    animation;
-    private boolean      isFinished;
     private TextureAtlas textureAtlas;
 
     public AnimatedGraphicComponent(
@@ -26,7 +24,6 @@ public class AnimatedGraphicComponent extends GraphicComponent
         super(physicsComponent, width, height);
 
         animationCurrentTime = 0f;
-        this.animationTotalTime = animationTotalTime;
         textureAtlas = AssMan.getAssMan().get(textureAtlasPath);
         animation = new Animation(
             animationTotalTime / textureAtlas.getRegions().size,
@@ -68,6 +65,6 @@ public class AnimatedGraphicComponent extends GraphicComponent
     @Override
     public boolean isFinished()
     {
-        return isFinished;
+        return animation.isAnimationFinished(animationCurrentTime);
     }
 }
