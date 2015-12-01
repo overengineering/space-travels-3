@@ -4,15 +4,13 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.draga.manager.asset.AssMan;
 import com.draga.component.PhysicsComponent;
+import com.draga.manager.asset.AssMan;
 
 public class AnimatedGraphicComponent extends GraphicComponent
 {
-    private float animationTotalTime = 2f;
     private float        animationCurrentTime;
     private Animation    animation;
-    private boolean      isFinished;
     private TextureAtlas textureAtlas;
 
     public AnimatedGraphicComponent(
@@ -20,15 +18,17 @@ public class AnimatedGraphicComponent extends GraphicComponent
         float animationTotalTime,
         float width,
         float height,
-        PhysicsComponent physicsComponent)
+        PhysicsComponent physicsComponent,
+        Animation.PlayMode playMode)
     {
         super(physicsComponent, width, height);
 
         animationCurrentTime = 0f;
-        this.animationTotalTime = animationTotalTime;
         textureAtlas = AssMan.getAssMan().get(textureAtlasPath);
         animation = new Animation(
-            animationTotalTime / textureAtlas.getRegions().size, textureAtlas.getRegions());
+            animationTotalTime / textureAtlas.getRegions().size,
+            textureAtlas.getRegions(),
+            playMode);
     }
 
     @Override
@@ -36,11 +36,6 @@ public class AnimatedGraphicComponent extends GraphicComponent
     {
         // Avoid overflow.
         animationCurrentTime += deltaTime;
-        if (animationCurrentTime > animationTotalTime)
-        {
-            isFinished = true;
-            animationCurrentTime %= animationTotalTime;
-        }
     }
 
     @Override
@@ -70,6 +65,6 @@ public class AnimatedGraphicComponent extends GraphicComponent
     @Override
     public boolean isFinished()
     {
-        return isFinished;
+        return animation.isAnimationFinished(animationCurrentTime);
     }
 }

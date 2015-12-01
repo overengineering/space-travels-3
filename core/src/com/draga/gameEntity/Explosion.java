@@ -1,12 +1,13 @@
 package com.draga.gameEntity;
 
 import com.badlogic.gdx.audio.Sound;
-import com.draga.component.graphicComponent.AnimatedGraphicComponent;
-import com.draga.manager.SettingsManager;
-import com.draga.physic.shape.Circle;
-import com.draga.manager.GameEntityManager;
-import com.draga.manager.asset.AssMan;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.draga.component.PhysicsComponent;
+import com.draga.component.graphicComponent.AnimatedGraphicComponent;
+import com.draga.manager.GameEntityManager;
+import com.draga.manager.SettingsManager;
+import com.draga.manager.asset.AssMan;
+import com.draga.physic.shape.Circle;
 
 public class Explosion extends GameEntity
 {
@@ -14,7 +15,7 @@ public class Explosion extends GameEntity
     private static final int   HEIGHT               = 10;
     private static final int   WIDTH                = 10;
     private static final float ANIMATION_TOTAL_TIME = 2f;
-    private Sound     sound;
+    private Sound sound;
 
     public Explosion(
         float x, float y)
@@ -30,7 +31,8 @@ public class Explosion extends GameEntity
             ANIMATION_TOTAL_TIME,
             WIDTH,
             HEIGHT,
-            this.physicsComponent);
+            this.physicsComponent,
+            Animation.PlayMode.NORMAL);
 
         sound = AssMan.getAssMan().get(AssMan.getAssList().explosionSound);
         sound.play(SettingsManager.getSettings().volume);

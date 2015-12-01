@@ -1,10 +1,7 @@
 package com.draga.gameEntity;
 
-import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.math.Vector2;
-import com.draga.gameEntity.GameEntity;
-import com.draga.gameEntity.GameEntityGroup;
-import com.draga.gameEntity.Ship;
 import com.draga.physic.shape.Circle;
 import com.draga.component.graphicComponent.AnimatedGraphicComponent;
 import com.draga.manager.InputManager;
@@ -38,7 +35,8 @@ public class Thruster extends GameEntity
             ANIMATION_TIME,
             0,
             0,
-            this.physicsComponent);
+            this.physicsComponent,
+            Animation.PlayMode.LOOP);
     }
 
     @Override
