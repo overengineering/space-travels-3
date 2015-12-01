@@ -1,8 +1,12 @@
 package com.draga;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -13,16 +17,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
-import com.draga.gameEntity.GameEntity;
-import com.draga.manager.GameEntityManager;
-import com.draga.physic.PhysicsEngine;
-import com.draga.gameEntity.Ship;
 import com.draga.event.FuelChangeEvent;
 import com.draga.event.PickupCollectedEvent;
+import com.draga.event.ScoreEvent;
+import com.draga.gameEntity.GameEntity;
+import com.draga.gameEntity.Ship;
+import com.draga.manager.GameEntityManager;
+import com.draga.manager.InputManager;
 import com.draga.manager.SettingsManager;
 import com.draga.manager.UIManager;
 import com.draga.manager.asset.AssMan;
-import com.draga.event.ScoreEvent;
+import com.draga.physic.PhysicsEngine;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.Stack;
@@ -40,14 +45,16 @@ public class Hud implements Screen
     private Stack<Image> grayPickups;
     private Table        pickupTable;
 
-    private Ship         ship;
+    private Ship ship;
 
-    private ShapeRenderer      shapeRenderer;
-    private OrthographicCamera orthographicCamera;
-
-    public Hud(OrthographicCamera orthographicCamera)
+    private ShapeRenderer            shapeRenderer;
+    private final OrthographicCamera worldCamera;
+    private final OrthographicCamera joystickCamera =
+        new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    
+    public Hud(OrthographicCamera worldCamera)
     {
-        this.orthographicCamera = orthographicCamera;
+        this.worldCamera = worldCamera;
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setAutoShapeType(true);
         Constants.EVENT_BUS.register(this);
@@ -92,6 +99,14 @@ public class Hud implements Screen
         stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
+    private ProgressBar getFuelProgressBar()
+    {
+        ProgressBar fuelProgressBar = new ProgressBar(
+            0, 1, 0.0001f, false, UIManager.skin);
+
+        return fuelProgressBar;
+    }
+
     private Label getScoreLabel()
     {
         Label scoreLabel = new Label("", UIManager.skin.get(Label.LabelStyle.class));
@@ -99,12 +114,10 @@ public class Hud implements Screen
         return scoreLabel;
     }
 
-    private ProgressBar getFuelProgressBar()
+    @Subscribe
+    public void setScoreLabel(ScoreEvent scoreEvent)
     {
-        ProgressBar fuelProgressBar = new ProgressBar(
-            0, 1, 0.0001f, false, UIManager.skin);
-
-        return fuelProgressBar;
+        scoreLabel.setText(String.valueOf(scoreEvent.getScore()));
     }
 
     @Override
@@ -122,13 +135,21 @@ public class Hud implements Screen
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
-        if (Constants.HUD_DRAW_VELOCITY_INDICATORS)
-           // && ship.getBody().isActive())
+        if (Constants.HUD_DRAW_VELOCITY_INDICATORS
+            && GameEntityManager.getGameEntities().contains(ship))
         {
-            shapeRenderer.setProjectionMatrix(orthographicCamera.combined);
             shapeRenderer.begin();
-            DrawGravityIndicator();
-            DrawVelocityIndicator();
+
+            if (SettingsManager.getSettings().inputType == InputType.TOUCH
+                || Gdx.app.getType() == Application.ApplicationType.Desktop)
+            {
+                shapeRenderer.setProjectionMatrix(joystickCamera.combined);
+                drawJoystick();
+            }
+
+            shapeRenderer.setProjectionMatrix(worldCamera.combined);
+            drawGravityIndicator();
+            drawVelocityIndicator();
             shapeRenderer.end();
         }
 
@@ -141,8 +162,32 @@ public class Hud implements Screen
         MiniMap.getShapeRenderer().end();
         Gdx.gl.glDisable(GL20.GL_BLEND);
     }
+    
+    private void drawJoystick()
+    {
+        float smallestDimension =
+            Math.min(joystickCamera.viewportWidth, joystickCamera.viewportHeight);
+        float deadZoneHeight = smallestDimension * InputManager.DEAD_ZONE / 2f;
 
-    private void DrawGravityIndicator()
+        shapeRenderer.setColor(new Color(1, 1, 1, 0.5f));
+
+        ShapeRendererUtility.dashedCircle(shapeRenderer, 0, 0, deadZoneHeight, 4, 30, 0, 12, 2);
+
+        int numArcs = 8;
+
+        ShapeRendererUtility.dashedCircle(
+            shapeRenderer,
+            0,
+            0,
+            smallestDimension / 2,
+            numArcs,
+            15,
+            360 / numArcs / 2,
+            24,
+            2);
+    }
+
+    private void drawGravityIndicator()
     {
         Vector2 gravityVector = PhysicsEngine.getForceActingOn(ship);
 
@@ -161,14 +206,16 @@ public class Hud implements Screen
             gravityVector.len() * FORCE_INDICATOR_SCALE,
             24);
     }
-    
-    private void DrawVelocityIndicator()
+
+    private void drawVelocityIndicator()
     {
         shapeRenderer.setColor(Color.WHITE);
         shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.circle(
-            ship.physicsComponent.getPosition().x + ship.physicsComponent.getVelocity().x * FORCE_INDICATOR_SCALE,
-            ship.physicsComponent.getPosition().y + ship.physicsComponent.getVelocity().y * FORCE_INDICATOR_SCALE,
+            ship.physicsComponent.getPosition().x
+                + ship.physicsComponent.getVelocity().x * FORCE_INDICATOR_SCALE,
+            ship.physicsComponent.getPosition().y
+                + ship.physicsComponent.getVelocity().y * FORCE_INDICATOR_SCALE,
             0.5f);
 
         shapeRenderer.set(ShapeRenderer.ShapeType.Line);
@@ -244,11 +291,5 @@ public class Hud implements Screen
     public void setShip(Ship ship)
     {
         this.ship = ship;
-    }
-
-    @Subscribe
-    public void setScoreLabel(ScoreEvent scoreEvent)
-    {
-        scoreLabel.setText(String.valueOf(scoreEvent.getScore()));
     }
 }

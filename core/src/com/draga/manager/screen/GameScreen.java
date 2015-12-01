@@ -51,6 +51,7 @@ public class GameScreen implements Screen
     private ExtendViewport     extendViewport;
 
     private Ship              ship;
+    private Thruster          thruster;
     private ArrayList<Planet> planets;
 
     private GameScreenInputProcessor gameScreenInputProcessor;
@@ -114,7 +115,9 @@ public class GameScreen implements Screen
 
         updateCamera();
 
-        Thruster thruster = new Thruster(ship);
+        thruster = new Thruster(ship);
+
+        // Adds the thruster first so that is drawn below the ship.
         GameEntityManager.addGameEntity(thruster);
         GameEntityManager.addGameEntity(ship);
     }
@@ -354,6 +357,7 @@ public class GameScreen implements Screen
         }
 
         GameEntityManager.removeGameEntity(ship);
+        GameEntityManager.removeGameEntity(thruster);
 
         // If wrong planet or too fast then lose.
         if (!shipPlanetCollisionEvent.planet.isDestination()

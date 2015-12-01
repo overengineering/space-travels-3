@@ -39,7 +39,8 @@ public class InputManager
                     default:
                         Gdx.app.error(
                             LOGGING_TAG,
-                            SettingsManager.getSettings().inputType + " input type not implemented.");
+                            SettingsManager.getSettings().inputType
+                                + " input type not implemented.");
                         input = new Vector2();
                 }
                 break;
@@ -81,20 +82,25 @@ public class InputManager
         Vector2 input;
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT))
         {
-            // Height - Y because 0,0 of input is top left, unlike to rest of the API.
+            // Height flipped because 0,0 of input is top left, unlike to rest of the API.
             input = new Vector2(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
 
-            input.x = input.x / Gdx.graphics.getWidth();
-            input.y = input.y / Gdx.graphics.getHeight();
+            float smallestDimension =
+                Math.min(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-            // Change coordinates system from [0,1] to [-1,1].
-            input.x = input.x * 2 - 1;
-            input.y = input.y * 2 - 1;
+            Vector2 screenCenter =
+                new Vector2(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f);
+
+            // This was my idea but before I could put it down Lee totally sneakily
+            // solved just a tiny bit of it. (Stefano)
+
+            // Distance between the click and the center of the screen.
+            input.sub(screenCenter);
+            // Brings it to [-1,1]
+            input.scl(1/(smallestDimension / 2f)).clamp(0, 1);
 
             input.x = applyDeadZone(input.x);
             input.y = applyDeadZone(input.y);
-
-            input.clamp(0, 1);
         }
         else
         {
