@@ -7,7 +7,6 @@ import com.draga.gameEntity.GameEntity;
 import com.draga.physic.shape.Circle;
 import com.draga.manager.GameEntityManager;
 import com.google.common.base.Stopwatch;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.concurrent.TimeUnit;
 
@@ -115,7 +114,7 @@ public class PhysicsEngine
         if (!(gameEntityA.physicsComponent.getShape() instanceof Circle)
             || !(gameEntityB.physicsComponent.getShape() instanceof Circle))
         {
-            throw new NotImplementedException();
+            throw new UnsupportedOperationException();
         }
 
         Circle circleA = (Circle) gameEntityA.physicsComponent.getShape();

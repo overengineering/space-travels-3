@@ -21,7 +21,7 @@ public class UIManager
     private static final float FONT_SCALE       = 0.05f;
     private static final float DEBUG_FONT_SCALE = 0.02f;
 
-    public static Skin skin = getSkin();
+    public static Skin skin;
 
     private static Skin getSkin()
     {
@@ -182,5 +182,10 @@ public class UIManager
     public static void dispose()
     {
         skin.dispose();
+    }
+
+    public static void create()
+    {
+        skin = getSkin();
     }
 }

@@ -8,8 +8,18 @@ import com.badlogic.gdx.utils.Json;
 
 public class AssMan
 {
-    private static final AssetManager ASSET_MANAGER = new AssetManager();
+    private static AssetManager ASSET_MANAGER;
     private static AssList ASSET_LIST;
+
+    public static void create()
+    {
+        ASSET_MANAGER = new AssetManager();
+    }
+
+    public static void dispose()
+    {
+        ASSET_MANAGER.dispose();
+    }
 
     public static AssetManager getAssMan()
     {

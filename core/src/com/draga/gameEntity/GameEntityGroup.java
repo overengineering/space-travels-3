@@ -1,7 +1,5 @@
 package com.draga.gameEntity;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +30,7 @@ public class GameEntityGroup
             case SELECTION:
                 return this.gameEntities.contains(gameEntity.getClass());
             default:
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException();
         }
     }
 

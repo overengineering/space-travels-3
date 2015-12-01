@@ -19,6 +19,8 @@ public class SpaceTravels3 extends Game
     public void create()
     {
         Gdx.input.setCatchBackKey(true);
+        UIManager.create();
+        AssMan.create();
         AssMan.getAssList();
         GameManager.setGame(this);
 
@@ -45,7 +47,7 @@ public class SpaceTravels3 extends Game
             this.debugOverlay.dispose();
         }
         UIManager.dispose();
-        AssMan.getAssMan().dispose();
+        AssMan.dispose();
         super.dispose();
     }
 
