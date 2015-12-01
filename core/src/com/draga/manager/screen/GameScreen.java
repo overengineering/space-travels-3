@@ -125,16 +125,10 @@ public class GameScreen implements Screen
     private void updateCamera()
     {
         // Soften camera movement.
-        Vector2 cameraVec = new Vector2(
-            ship.physicsComponent.getPosition().x,
-            ship.physicsComponent.getPosition().y);
-        Vector2 softCamera = cameraVec.cpy();
-        Vector2 cameraOffset =
-            cameraVec.sub(orthographicCamera.position.x, orthographicCamera.position.y);
-        softCamera.sub(cameraOffset.scl(0.9f));
+        Vector2 cameraVec = ship.physicsComponent.getPosition();
 
-        orthographicCamera.position.x = softCamera.x;
-        orthographicCamera.position.y = softCamera.y;
+        orthographicCamera.position.x = cameraVec.x;
+        orthographicCamera.position.y = cameraVec.y;
         orthographicCamera.update();
 
         spriteBatch.setProjectionMatrix(orthographicCamera.combined);
