@@ -23,6 +23,34 @@ public class UIManager
 
     public static Skin skin;
 
+    public static Table addDefaultTableToStage(Stage stage)
+    {
+        Table table = getDefaultTable();
+        table.setFillParent(true);
+        stage.addActor(table);
+
+        return table;
+    }
+
+    public static Table getDefaultTable()
+    {
+        Table table = new Table();
+        table.defaults().pad(UIManager.BUTTON_PADDING);
+        table.pad(sqrtPixels / 50f);
+
+        return table;
+    }
+
+    public static void dispose()
+    {
+        skin.dispose();
+    }
+
+    public static void create()
+    {
+        skin = getSkin();
+    }
+
     private static Skin getSkin()
     {
         Skin skin = new Skin();
@@ -159,33 +187,5 @@ public class UIManager
         sliderStyle.knob = skin.newDrawable("slider", Color.WHITE);
 
         return sliderStyle;
-    }
-
-    public static Table getDefaultTable()
-    {
-        Table table = new Table();
-        table.defaults().pad(UIManager.BUTTON_PADDING);
-        table.pad(sqrtPixels / 50f);
-
-        return table;
-    }
-
-    public static Table addDefaultTableToStage(Stage stage)
-    {
-        Table table = getDefaultTable();
-        table.setFillParent(true);
-        stage.addActor(table);
-
-        return table;
-    }
-
-    public static void dispose()
-    {
-        skin.dispose();
-    }
-
-    public static void create()
-    {
-        skin = getSkin();
     }
 }
