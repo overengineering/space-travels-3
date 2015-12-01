@@ -1,5 +1,6 @@
 package com.draga;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -46,12 +47,14 @@ public class Hud implements Screen
 
     private Ship ship;
 
-    private ShapeRenderer      shapeRenderer;
-    private OrthographicCamera orthographicCamera;
-
-    public Hud(OrthographicCamera orthographicCamera)
+    private ShapeRenderer            shapeRenderer;
+    private final OrthographicCamera worldCamera;
+    private final OrthographicCamera joystickCamera =
+        new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    
+    public Hud(OrthographicCamera worldCamera)
     {
-        this.orthographicCamera = orthographicCamera;
+        this.worldCamera = worldCamera;
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setAutoShapeType(true);
         Constants.EVENT_BUS.register(this);
@@ -132,12 +135,19 @@ public class Hud implements Screen
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
-        if (Constants.HUD_DRAW_VELOCITY_INDICATORS)
-        // && ship.getBody().isActive())
+        if (Constants.HUD_DRAW_VELOCITY_INDICATORS
+            && GameEntityManager.getGameEntities().contains(ship))
         {
             shapeRenderer.begin();
-            drawJoystick();
-            shapeRenderer.setProjectionMatrix(orthographicCamera.combined);
+
+            if (SettingsManager.getSettings().inputType == InputType.TOUCH
+                || Gdx.app.getType() == Application.ApplicationType.Desktop)
+            {
+                shapeRenderer.setProjectionMatrix(joystickCamera.combined);
+                drawJoystick();
+            }
+
+            shapeRenderer.setProjectionMatrix(worldCamera.combined);
             drawGravityIndicator();
             drawVelocityIndicator();
             shapeRenderer.end();
@@ -155,12 +165,8 @@ public class Hud implements Screen
     
     private void drawJoystick()
     {
-        OrthographicCamera orthographicCamera =
-            new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        shapeRenderer.setProjectionMatrix(orthographicCamera.combined);
-
         float smallestDimension =
-            Math.min(orthographicCamera.viewportWidth, orthographicCamera.viewportHeight);
+            Math.min(joystickCamera.viewportWidth, joystickCamera.viewportHeight);
         float deadZoneHeight = smallestDimension * InputManager.DEAD_ZONE / 2f;
 
         shapeRenderer.setColor(new Color(1, 1, 1, 0.5f));
