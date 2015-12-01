@@ -178,4 +178,9 @@ public class UIManager
 
         return table;
     }
+
+    public static void dispose()
+    {
+        skin.dispose();
+    }
 }

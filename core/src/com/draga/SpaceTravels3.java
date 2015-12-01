@@ -44,7 +44,8 @@ public class SpaceTravels3 extends Game
         {
             this.debugOverlay.dispose();
         }
-        UIManager.skin.dispose();
+        UIManager.dispose();
+        AssMan.getAssMan().dispose();
         super.dispose();
     }
 
