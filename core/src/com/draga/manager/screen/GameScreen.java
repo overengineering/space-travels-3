@@ -77,8 +77,6 @@ public class GameScreen implements Screen
         this.gameState = GameState.COUNTDOWN;
         this.overlayScreen = new CountdownScreen();
 
-        MiniMap.setWorldSize(width, height);
-
         Constants.EVENT_BUS.register(this);
 
         gameScreenInputProcessor = new GameScreenInputProcessor();
@@ -100,7 +98,7 @@ public class GameScreen implements Screen
             physicDebugDrawer = new PhysicDebugDrawer();
         }
 
-        hud = new Hud(orthographicCamera);
+        hud = new Hud(orthographicCamera, width, height);
 
         pickupCollectedSound = AssMan.getAssMan().get(AssMan.getAssList().pickupCollectSound);
     }
@@ -215,8 +213,6 @@ public class GameScreen implements Screen
             height);
         spriteBatch.end();
 
-        updateMiniMap();
-
         spriteBatch.begin();
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
@@ -257,20 +253,6 @@ public class GameScreen implements Screen
         scoreEvent.setScore(getScore());
         Constants.EVENT_BUS.post(scoreEvent);
         Pools.free(scoreEvent);
-    }
-
-    private void updateMiniMap()
-    {
-        Rectangle shipRect = new Rectangle(
-            ship.physicsComponent.getPosition().x
-                - ((Circle) ship.physicsComponent.getShape()).radius,
-            ship.physicsComponent.getPosition().y
-                - ((Circle) ship.physicsComponent.getShape()).radius,
-            ((Circle) ship.physicsComponent.getShape()).radius * 2,
-            ((Circle) ship.physicsComponent.getShape()).radius * 2);
-
-        Rectangle worldRect = new Rectangle(0, 0, this.width, this.height);
-        MiniMap.update(shipRect, worldRect);
     }
 
     private int getScore()

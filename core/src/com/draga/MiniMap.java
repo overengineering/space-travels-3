@@ -6,25 +6,57 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.draga.gameEntity.GameEntity;
+import com.draga.gameEntity.Ship;
+import com.draga.manager.GameEntityManager;
+import com.draga.physic.shape.Circle;
 
 public class MiniMap
 {
-    private static final float              MINIMAP_SCALE      = 0.25f;
-    private static final OrthographicCamera orthographicCamera = new OrthographicCamera();
-    private static       ShapeRenderer      shapeRenderer      = new ShapeRenderer();
+    private static final float MINIMAP_SCALE = 0.25f;
+    private Ship               ship;
+    private OrthographicCamera orthographicCamera;
+    private ShapeRenderer      shapeRenderer;
 
-    static
+    public MiniMap(int worldWidth, int worldHeight)
     {
+        orthographicCamera = new OrthographicCamera(worldWidth, worldHeight);
+        shapeRenderer = new ShapeRenderer();
         shapeRenderer.setAutoShapeType(true);
     }
 
-    public static void setWorldSize(float width, float height)
+    public void draw()
     {
-        orthographicCamera.viewportWidth = width;
-        orthographicCamera.viewportHeight = height;
+        updateMiniMap();
+
+        shapeRenderer.begin();
+        for (GameEntity gameEntity : GameEntityManager.getGameEntities())
+        {
+            gameEntity.miniMapGraphicComponent.draw(shapeRenderer);
+        }
+
+        shapeRenderer.end();
     }
 
-    public static void update(Rectangle... keepInView)
+    public void updateMiniMap()
+    {
+        Rectangle shipRect = new Rectangle(
+            ship.physicsComponent.getPosition().x
+                - ((Circle) ship.physicsComponent.getShape()).radius,
+            ship.physicsComponent.getPosition().y
+                - ((Circle) ship.physicsComponent.getShape()).radius,
+            ((Circle) ship.physicsComponent.getShape()).radius * 2,
+            ((Circle) ship.physicsComponent.getShape()).radius * 2);
+
+        Rectangle worldRect = new Rectangle(
+            0,
+            0,
+            orthographicCamera.viewportWidth,
+            orthographicCamera.viewportHeight);
+        update(shipRect, worldRect);
+    }
+
+    private void update(Rectangle... keepInView)
     {
         // Lee said that when we'll came to refactor this we ain't going to be too upset about it.
 
@@ -36,7 +68,7 @@ public class MiniMap
         }
 
         // Draw a background and border.
-        MiniMap.drawBackground();
+        drawBackground();
 
         // Zooms out enough to see the entire width and height of the new camera bounds, while
         // keeping the aspect ratio.
@@ -59,7 +91,7 @@ public class MiniMap
         shapeRenderer.setProjectionMatrix(orthographicCamera.combined);
     }
 
-    public static void drawBackground()
+    private void drawBackground()
     {
         orthographicCamera.zoom = 1 / MINIMAP_SCALE;
         orthographicCamera.position.set(
@@ -69,28 +101,34 @@ public class MiniMap
         orthographicCamera.update();
         shapeRenderer.setProjectionMatrix(orthographicCamera.combined);
 
-        MiniMap.getShapeRenderer().begin();
+        shapeRenderer.begin();
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
         Color minimapBackgroundColor = new Color(0, 0.17f, 0, 0.5f);
-        MiniMap.getShapeRenderer().setColor(minimapBackgroundColor);
-        MiniMap.getShapeRenderer().set(ShapeRenderer.ShapeType.Filled);
-        MiniMap.getShapeRenderer()
-            .rect(0, 0, orthographicCamera.viewportWidth, orthographicCamera.viewportHeight);
+        shapeRenderer.setColor(minimapBackgroundColor);
+        shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.rect(
+            0,
+            0,
+            orthographicCamera.viewportWidth,
+            orthographicCamera.viewportHeight);
 
         Color minimapBorderColor = new Color(0, 0.4f, 0, 1);
-        MiniMap.getShapeRenderer().setColor(minimapBorderColor);
-        MiniMap.getShapeRenderer().set(ShapeRenderer.ShapeType.Line);
-        MiniMap.getShapeRenderer()
-            .rect(0, 0, orthographicCamera.viewportWidth, orthographicCamera.viewportHeight);
+        shapeRenderer.setColor(minimapBorderColor);
+        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.rect(
+            0,
+            0,
+            orthographicCamera.viewportWidth,
+            orthographicCamera.viewportHeight);
 
         Gdx.gl.glDisable(GL20.GL_BLEND);
-        MiniMap.getShapeRenderer().end();
+        shapeRenderer.end();
     }
 
-    public static ShapeRenderer getShapeRenderer()
+    public void addShip(Ship ship)
     {
-        return shapeRenderer;
+        this.ship = ship;
     }
 }

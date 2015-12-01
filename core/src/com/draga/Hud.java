@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -28,6 +29,7 @@ import com.draga.manager.SettingsManager;
 import com.draga.manager.UIManager;
 import com.draga.manager.asset.AssMan;
 import com.draga.physic.PhysicsEngine;
+import com.draga.physic.shape.Circle;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.Stack;
@@ -51,14 +53,18 @@ public class Hud implements Screen
     private final OrthographicCamera worldCamera;
     private final OrthographicCamera joystickCamera =
         new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+    private MiniMap miniMap;
     
-    public Hud(OrthographicCamera worldCamera)
+    public Hud(OrthographicCamera worldCamera, int worldWidth, int worldHeight)
     {
         this.worldCamera = worldCamera;
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setAutoShapeType(true);
         Constants.EVENT_BUS.register(this);
         this.grayPickups = new Stack<>();
+        this.miniMap = new MiniMap(worldWidth, worldHeight);
+
         stage = new Stage();
 
         Table table = UIManager.addDefaultTableToStage(stage);
@@ -153,13 +159,7 @@ public class Hud implements Screen
             shapeRenderer.end();
         }
 
-        MiniMap.getShapeRenderer().begin();
-        for (GameEntity gameEntity : GameEntityManager.getGameEntities())
-        {
-            gameEntity.miniMapGraphicComponent.draw(MiniMap.getShapeRenderer());
-        }
-
-        MiniMap.getShapeRenderer().end();
+        miniMap.draw();
         Gdx.gl.glDisable(GL20.GL_BLEND);
     }
     
@@ -291,5 +291,6 @@ public class Hud implements Screen
     public void setShip(Ship ship)
     {
         this.ship = ship;
+        miniMap.addShip(ship);
     }
 }
