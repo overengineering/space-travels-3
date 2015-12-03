@@ -79,7 +79,7 @@ public class GameScreen implements Screen
 
         orthographicCamera = new OrthographicCamera();
         extendViewport = new ExtendViewport(
-            Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, width, height, orthographicCamera);
+            Sizes.VIEWPORT_WIDTH, Sizes.VIEWPORT_HEIGHT, width, height, orthographicCamera);
         extendViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         if (SettingsManager.getDebugSettings().debugDraw)
@@ -324,7 +324,9 @@ public class GameScreen implements Screen
             gameState = GameState.LOSE;
             GameEntity explosion = new Explosion(
                 shipPlanetCollisionEvent.ship.physicsComponent.getPosition().x,
-                shipPlanetCollisionEvent.ship.physicsComponent.getPosition().y
+                shipPlanetCollisionEvent.ship.physicsComponent.getPosition().y,
+                shipPlanetCollisionEvent.ship.graphicComponent.getWidth(),
+                shipPlanetCollisionEvent.ship.graphicComponent.getHeight()
             );
             GameEntityManager.addGameEntity(explosion);
 

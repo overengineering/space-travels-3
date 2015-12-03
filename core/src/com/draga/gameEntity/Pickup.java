@@ -2,6 +2,7 @@ package com.draga.gameEntity;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
+import com.draga.Sizes;
 import com.draga.component.PhysicsComponent;
 import com.draga.component.graphicComponent.StaticGraphicComponent;
 import com.draga.component.miniMapGraphicComponent.StarMiniMapGraphicComponent;
@@ -12,12 +13,6 @@ import java.util.List;
 
 public class Pickup extends GameEntity
 {
-
-    private static final float WIDTH       = 5f;
-    private static final float HEIGHT      = 5f * 0.75f;
-    private static final float HALF_WIDTH  = WIDTH / 2f;
-    private static final float HALF_HEIGHT = HEIGHT / 2f;
-
     public Pickup(float x, float y, String texturePath)
     {
         List<Class<? extends GameEntity>> collidesWith = new ArrayList<>();
@@ -26,16 +21,24 @@ public class Pickup extends GameEntity
             x,
             y,
             0,
-            new Circle(HALF_WIDTH),
+            new Circle((Sizes.PICKUP_WIDTH + Sizes.PICKUP_HEIGHT) / 4f),
             new GameEntityGroup(collidesWith),
             false);
-        this.physicsComponent.setAngularVelocity(MathUtils.random(-300, 300));
+        this.physicsComponent.setAngularVelocity(MathUtils.random(100, 300)
+            * MathUtils.randomSign());
 
         this.graphicComponent =
-            new StaticGraphicComponent(texturePath, WIDTH, HEIGHT, this.physicsComponent);
+            new StaticGraphicComponent(
+                texturePath,
+                Sizes.PICKUP_WIDTH,
+                Sizes.PICKUP_HEIGHT,
+                this.physicsComponent);
 
         this.miniMapGraphicComponent =
-            new StarMiniMapGraphicComponent(physicsComponent, Color.GOLDENROD, WIDTH * 1.3f);
+            new StarMiniMapGraphicComponent(
+                physicsComponent,
+                Color.GOLDENROD,
+                Sizes.PICKUP_WIDTH * 1.3f);
     }
 
     @Override
