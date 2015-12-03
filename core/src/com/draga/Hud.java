@@ -18,7 +18,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.draga.event.PickupCollectedEvent;
-import com.draga.event.ScoreEvent;
 import com.draga.gameEntity.Ship;
 import com.draga.manager.GameEntityManager;
 import com.draga.manager.InputManager;
@@ -33,22 +32,15 @@ import java.util.Stack;
 public class Hud implements Screen
 {
     private final Label scoreLabel;
-
-    private float FORCE_INDICATOR_SCALE = 0.25f;
-
-    private Stage stage;
-
-    private ProgressBar fuelProgressBar;
-
-    private Stack<Image> grayPickups;
-    private Table        pickupTable;
-
-    private Ship ship;
-
     private final OrthographicCamera worldCamera;
     private final OrthographicCamera joystickCamera =
         new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
+    private float FORCE_INDICATOR_SCALE = 0.25f;
+    private Stage stage;
+    private ProgressBar fuelProgressBar;
+    private Stack<Image> grayPickups;
+    private Table        pickupTable;
+    private Ship ship;
     private MiniMap miniMap;
     
     public Hud(OrthographicCamera worldCamera, int worldWidth, int worldHeight)
@@ -108,15 +100,19 @@ public class Hud implements Screen
 
     private Label getScoreLabel()
     {
-        Label scoreLabel = new Label("", UIManager.skin.get(Label.LabelStyle.class));
+        Label scoreLabel = new Label("", UIManager.skin);
 
         return scoreLabel;
     }
 
-    @Subscribe
-    public void setScoreLabel(ScoreEvent scoreEvent)
+    private void setScoreLabel(int score)
     {
-        scoreLabel.setText(String.valueOf(scoreEvent.getScore()));
+        scoreLabel.setText(String.valueOf(score));
+    }
+
+    public void setScore(int score)
+    {
+        setScoreLabel(score);
     }
 
     @Override
@@ -172,7 +168,16 @@ public class Hud implements Screen
 
         SpaceTravels3.shapeRenderer.setColor(new Color(1, 1, 1, 0.5f));
 
-        ShapeRendererUtility.dashedCircle(SpaceTravels3.shapeRenderer, 0, 0, deadZoneHeight, 4, 30, 0, 12, 2);
+        ShapeRendererUtility.dashedCircle(
+            SpaceTravels3.shapeRenderer,
+            0,
+            0,
+            deadZoneHeight,
+            4,
+            30,
+            0,
+            12,
+            2);
 
         int numArcs = 8;
 

@@ -6,14 +6,11 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.draga.*;
 import com.draga.event.CountdownFinishedEvent;
 import com.draga.event.PickupCollectedEvent;
-import com.draga.event.ScoreEvent;
 import com.draga.event.ShipPlanetCollisionEvent;
 import com.draga.gameEntity.*;
 import com.draga.manager.GameEntityManager;
@@ -43,7 +40,7 @@ public class GameScreen implements Screen
 
     private Hud hud;
 
-    private Texture     backgroundTexture;
+    private Texture backgroundTexture;
 
     private OrthographicCamera orthographicCamera;
     private ExtendViewport     extendViewport;
@@ -188,7 +185,7 @@ public class GameScreen implements Screen
         }
 
         PhysicsEngine.update(elapsed);
-        updateScore();
+        hud.setScore(getScore());
     }
 
     public void draw()
@@ -200,7 +197,7 @@ public class GameScreen implements Screen
         // Draw background at ship and parallax 30%.
         SpaceTravels3.spriteBatch.draw(
             backgroundTexture,
-            -(width / 2f - orthographicCamera.position.x) / 1.3f ,
+            -(width / 2f - orthographicCamera.position.x) / 1.3f,
             -(height / 2f - orthographicCamera.position.y) / 1.3f,
             width,
             height);
@@ -234,16 +231,8 @@ public class GameScreen implements Screen
         if (Gdx.input.isKeyPressed(Input.Keys.F3))
         {
             ship.physicsComponent.getVelocity().set(0, 0);
-            //ship.physicsComponent.setAngularVelocity(0);
+            ship.physicsComponent.setAngularVelocity(0);
         }
-    }
-
-    private void updateScore()
-    {
-        ScoreEvent scoreEvent = Pools.obtain(ScoreEvent.class);
-        scoreEvent.setScore(getScore());
-        Constants.EVENT_BUS.post(scoreEvent);
-        Pools.free(scoreEvent);
     }
 
     private int getScore()
