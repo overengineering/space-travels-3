@@ -17,8 +17,6 @@ public abstract class GraphicComponent
         setWidth(width);
     }
 
-    public abstract void update(float deltaTime);
-
     public abstract void draw();
 
     public abstract void dispose();

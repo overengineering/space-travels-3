@@ -181,7 +181,6 @@ public class GameScreen implements Screen
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
             gameEntity.update(elapsed);
-            gameEntity.graphicComponent.update(elapsed);
         }
 
         PhysicsEngine.update(elapsed);

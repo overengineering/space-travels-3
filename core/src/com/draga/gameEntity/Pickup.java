@@ -38,7 +38,7 @@ public class Pickup extends GameEntity
             new StarMiniMapGraphicComponent(
                 physicsComponent,
                 Color.GOLDENROD,
-                Sizes.PICKUP_WIDTH * 1.3f);
+                Sizes.PICKUP_MINIMAP_RADIUS);
     }
 
     @Override

@@ -20,12 +20,6 @@ public class StaticGraphicComponent extends GraphicComponent
     }
 
     @Override
-    public void update(float deltaTime)
-    {
-
-    }
-
-    @Override
     public void draw()
     {
         SpaceTravels3.spriteBatch.draw(

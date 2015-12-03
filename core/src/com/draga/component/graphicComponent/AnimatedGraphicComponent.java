@@ -1,17 +1,19 @@
 package com.draga.component.graphicComponent;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.draga.Constants;
 import com.draga.SpaceTravels3;
 import com.draga.component.PhysicsComponent;
-import com.draga.manager.GameManager;
 import com.draga.manager.asset.AssMan;
+import com.google.common.base.Stopwatch;
+
+import java.util.concurrent.TimeUnit;
 
 public class AnimatedGraphicComponent extends GraphicComponent
 {
-    private float        animationCurrentTime;
+    private Stopwatch    animationTime;
     private Animation    animation;
     private TextureAtlas textureAtlas;
 
@@ -25,7 +27,7 @@ public class AnimatedGraphicComponent extends GraphicComponent
     {
         super(physicsComponent, width, height);
 
-        animationCurrentTime = 0f;
+        animationTime = Stopwatch.createStarted();
         textureAtlas = AssMan.getAssMan().get(textureAtlasPath);
         animation = new Animation(
             animationTotalTime / textureAtlas.getRegions().size,
@@ -34,15 +36,10 @@ public class AnimatedGraphicComponent extends GraphicComponent
     }
 
     @Override
-    public void update(float deltaTime)
-    {
-        animationCurrentTime += deltaTime;
-    }
-
-    @Override
     public void draw()
     {
-        TextureRegion textureRegion = animation.getKeyFrame(animationCurrentTime);
+        TextureRegion textureRegion =
+            animation.getKeyFrame(animationTime.elapsed(TimeUnit.NANOSECONDS) * Constants.NANO);
 
         SpaceTravels3.spriteBatch.draw(
             textureRegion,
@@ -65,6 +62,7 @@ public class AnimatedGraphicComponent extends GraphicComponent
 
     public boolean isFinished()
     {
-        return animation.isAnimationFinished(animationCurrentTime);
+        return animation.isAnimationFinished(animationTime.elapsed(TimeUnit.NANOSECONDS)
+            * Constants.NANO);
     }
 }

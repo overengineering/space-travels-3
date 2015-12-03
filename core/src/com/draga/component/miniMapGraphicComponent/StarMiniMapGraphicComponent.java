@@ -1,10 +1,17 @@
 package com.draga.component.miniMapGraphicComponent;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Timer;
+import com.draga.Constants;
 import com.draga.SpaceTravels3;
 import com.draga.component.PhysicsComponent;
+import com.google.common.base.Stopwatch;
+import com.sun.org.apache.xml.internal.utils.ListingErrorHandler;
+
+import java.util.concurrent.TimeUnit;
 
 public class StarMiniMapGraphicComponent extends MiniMapGraphicComponent
 {
