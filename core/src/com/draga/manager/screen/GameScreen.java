@@ -48,6 +48,7 @@ public class GameScreen implements Screen
     private Ship              ship;
     private Thruster          thruster;
     private ArrayList<Planet> planets;
+    private Planet destinationPlanet;
 
     private GameScreenInputProcessor gameScreenInputProcessor;
 
@@ -79,7 +80,7 @@ public class GameScreen implements Screen
 
         orthographicCamera = new OrthographicCamera();
         extendViewport = new ExtendViewport(
-            Sizes.VIEWPORT_WIDTH, Sizes.VIEWPORT_HEIGHT, width, height, orthographicCamera);
+            VisualStyle.VIEWPORT_WIDTH, VisualStyle.VIEWPORT_HEIGHT, width, height, orthographicCamera);
         extendViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         if (SettingsManager.getDebugSettings().debugDraw)
@@ -316,7 +317,7 @@ public class GameScreen implements Screen
         GameEntityManager.removeGameEntity(thruster);
 
         // If wrong planet or too fast then lose.
-        if (!shipPlanetCollisionEvent.planet.isDestination()
+        if (!(shipPlanetCollisionEvent.planet.equals(destinationPlanet))
             || ship.physicsComponent.getVelocity().len()
             > Constants.MAX_DESTINATION_PLANET_APPROACH_SPEED)
         {
@@ -353,5 +354,10 @@ public class GameScreen implements Screen
         }
         this.overlayScreen.dispose();
         this.overlayScreen = null;
+    }
+
+    public void setDestinationPlanet(Planet destinationPlanet)
+    {
+        this.destinationPlanet = destinationPlanet;
     }
 }

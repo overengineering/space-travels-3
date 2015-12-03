@@ -48,6 +48,10 @@ public abstract class LevelManager
                 serialisablePlanet.destination);
 
             gameScreen.addPlanet(planet);
+            if (serialisablePlanet.destination)
+            {
+                gameScreen.setDestinationPlanet(planet);
+            }
         }
 
         for (SerialisablePickup serialisablePickup : serialisableLevel.serialisedPickups)

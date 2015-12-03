@@ -2,6 +2,7 @@ package com.draga.gameEntity;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.draga.VisualStyle;
 import com.draga.component.PhysicsComponent;
 import com.draga.component.graphicComponent.AnimatedGraphicComponent;
 import com.draga.manager.GameEntityManager;
@@ -11,7 +12,6 @@ import com.draga.physic.shape.Circle;
 
 public class Explosion extends GameEntity
 {
-    private static final float LIFETIME = 2f;
     private Sound sound;
 
     public Explosion(float x, float y, float width, float height)
@@ -26,7 +26,7 @@ public class Explosion extends GameEntity
 
         this.graphicComponent = new AnimatedGraphicComponent(
             AssMan.getAssList().explosion,
-            LIFETIME,
+            VisualStyle.EXPLOSION_LIFETIME,
             width,
             height,
             this.physicsComponent,

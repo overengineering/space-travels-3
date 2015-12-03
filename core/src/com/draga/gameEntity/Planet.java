@@ -1,6 +1,7 @@
 package com.draga.gameEntity;
 
 import com.badlogic.gdx.graphics.Color;
+import com.draga.VisualStyle;
 import com.draga.component.PhysicsComponent;
 import com.draga.component.graphicComponent.StaticGraphicComponent;
 import com.draga.component.miniMapGraphicComponent.CircleMiniMapGraphicsComponent;
@@ -11,13 +12,14 @@ import java.util.List;
 
 public class Planet extends GameEntity
 {
-    private final float radius;
-    private final boolean isDestination;
-
     public Planet(
-        float mass, float radius, float x, float y, String texturePath, boolean isDestination)
+        float mass,
+        float radius,
+        float x,
+        float y,
+        String texturePath,
+        boolean isDestination)
     {
-        this.radius = radius;
         List<Class<? extends GameEntity>> collidesWith = new ArrayList<>();
         collidesWith.add(Ship.class);
         this.physicsComponent =
@@ -28,22 +30,21 @@ public class Planet extends GameEntity
                 new Circle(radius),
                 new GameEntityGroup(collidesWith),
                 false);
+
         this.graphicComponent = new StaticGraphicComponent(
             texturePath,
             radius * 2f,
             radius * 2f,
             this.physicsComponent);
 
-        Color miniMapColour = isDestination ? Color.RED : Color.BLUE;
-        this.miniMapGraphicComponent = new CircleMiniMapGraphicsComponent(this.physicsComponent,
-            miniMapColour, radius);
+        Color miniMapColour = isDestination
+            ? VisualStyle.PLANET_MINIMAP_DESTINATION_COLOUR
+            : VisualStyle.PLANET_MINIMAP_COLOUR;
+        this.miniMapGraphicComponent = new CircleMiniMapGraphicsComponent(
+            this.physicsComponent,
+            miniMapColour,
+            radius);
 
-        this.isDestination = isDestination;
-    }
-
-    public boolean isDestination()
-    {
-        return isDestination;
     }
 
     @Override
