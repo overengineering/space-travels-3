@@ -63,7 +63,6 @@ public class AnimatedGraphicComponent extends GraphicComponent
         // Doesn't dispose texture atlas.
     }
 
-    @Override
     public boolean isFinished()
     {
         return animation.isAnimationFinished(animationCurrentTime);

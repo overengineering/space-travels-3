@@ -11,7 +11,6 @@ import com.draga.physic.shape.Circle;
 
 public class Explosion extends GameEntity
 {
-
     private static final int   HEIGHT               = 10;
     private static final int   WIDTH                = 10;
     private static final float ANIMATION_TOTAL_TIME = 2f;
@@ -43,7 +42,7 @@ public class Explosion extends GameEntity
     public void update(float deltaTime)
     {
         // Can't get if the sound if still playing, can be done only with music.
-        if (this.graphicComponent.isFinished())
+        if (((AnimatedGraphicComponent)this.graphicComponent).isFinished())
         {
             GameEntityManager.removeGameEntity(this);
         }

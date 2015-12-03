@@ -52,10 +52,4 @@ public class StaticGraphicComponent extends GraphicComponent
     {
         // Doesn't dispose texture.
     }
-
-    @Override
-    public boolean isFinished()
-    {
-        return false;
-    }
 }

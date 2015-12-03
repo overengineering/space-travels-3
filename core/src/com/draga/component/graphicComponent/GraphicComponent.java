@@ -23,8 +23,6 @@ public abstract class GraphicComponent
 
     public abstract void dispose();
 
-    public abstract boolean isFinished();
-
     public float getWidth()
     {
         return width;
