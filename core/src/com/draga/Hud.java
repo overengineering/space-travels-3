@@ -46,7 +46,6 @@ public class Hud implements Screen
 
     private Ship ship;
 
-    private ShapeRenderer            shapeRenderer;
     private final OrthographicCamera worldCamera;
     private final OrthographicCamera joystickCamera =
         new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -56,8 +55,6 @@ public class Hud implements Screen
     public Hud(OrthographicCamera worldCamera, int worldWidth, int worldHeight)
     {
         this.worldCamera = worldCamera;
-        shapeRenderer = new ShapeRenderer();
-        shapeRenderer.setAutoShapeType(true);
         Constants.EVENT_BUS.register(this);
         this.grayPickups = new Stack<>();
         this.miniMap = new MiniMap(worldWidth, worldHeight);
@@ -141,19 +138,19 @@ public class Hud implements Screen
         if (Constants.HUD_DRAW_VELOCITY_INDICATORS
             && GameEntityManager.getGameEntities().contains(ship))
         {
-            shapeRenderer.begin();
+            SpaceTravels3.shapeRenderer.begin();
 
             if (SettingsManager.getSettings().inputType == InputType.TOUCH
                 || Gdx.app.getType() == Application.ApplicationType.Desktop)
             {
-                shapeRenderer.setProjectionMatrix(joystickCamera.combined);
+                SpaceTravels3.shapeRenderer.setProjectionMatrix(joystickCamera.combined);
                 drawJoystick();
             }
 
-            shapeRenderer.setProjectionMatrix(worldCamera.combined);
+            SpaceTravels3.shapeRenderer.setProjectionMatrix(worldCamera.combined);
             drawGravityIndicator();
             drawVelocityIndicator();
-            shapeRenderer.end();
+            SpaceTravels3.shapeRenderer.end();
         }
 
         miniMap.draw();
@@ -166,14 +163,14 @@ public class Hud implements Screen
             Math.min(joystickCamera.viewportWidth, joystickCamera.viewportHeight);
         float deadZoneHeight = smallestDimension * InputManager.DEAD_ZONE / 2f;
 
-        shapeRenderer.setColor(new Color(1, 1, 1, 0.5f));
+        SpaceTravels3.shapeRenderer.setColor(new Color(1, 1, 1, 0.5f));
 
-        ShapeRendererUtility.dashedCircle(shapeRenderer, 0, 0, deadZoneHeight, 4, 30, 0, 12, 2);
+        ShapeRendererUtility.dashedCircle(SpaceTravels3.shapeRenderer, 0, 0, deadZoneHeight, 4, 30, 0, 12, 2);
 
         int numArcs = 8;
 
         ShapeRendererUtility.dashedCircle(
-            shapeRenderer,
+            SpaceTravels3.shapeRenderer,
             0,
             0,
             smallestDimension / 2,
@@ -188,16 +185,16 @@ public class Hud implements Screen
     {
         Vector2 gravityVector = PhysicsEngine.getGravityForceActingOn(ship);
 
-        shapeRenderer.setColor(Color.BLUE);
-        shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.circle(
+        SpaceTravels3.shapeRenderer.setColor(Color.BLUE);
+        SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
+        SpaceTravels3.shapeRenderer.circle(
             ship.physicsComponent.getPosition().x + gravityVector.x * FORCE_INDICATOR_SCALE,
             ship.physicsComponent.getPosition().y + gravityVector.y * FORCE_INDICATOR_SCALE,
             0.5f);
 
-        shapeRenderer.setColor(new Color(0, 0, 1f, 0.4f));
-        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.circle(
+        SpaceTravels3.shapeRenderer.setColor(new Color(0, 0, 1f, 0.4f));
+        SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Line);
+        SpaceTravels3.shapeRenderer.circle(
             ship.physicsComponent.getPosition().x,
             ship.physicsComponent.getPosition().y,
             gravityVector.len() * FORCE_INDICATOR_SCALE,
@@ -206,18 +203,18 @@ public class Hud implements Screen
 
     private void drawVelocityIndicator()
     {
-        shapeRenderer.setColor(Color.WHITE);
-        shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.circle(
+        SpaceTravels3.shapeRenderer.setColor(Color.WHITE);
+        SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
+        SpaceTravels3.shapeRenderer.circle(
             ship.physicsComponent.getPosition().x
                 + ship.physicsComponent.getVelocity().x * FORCE_INDICATOR_SCALE,
             ship.physicsComponent.getPosition().y
                 + ship.physicsComponent.getVelocity().y * FORCE_INDICATOR_SCALE,
             0.5f);
 
-        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(new Color(1, 1, 1, 0.4f));
-        shapeRenderer.circle(
+        SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Line);
+        SpaceTravels3.shapeRenderer.setColor(new Color(1, 1, 1, 0.4f));
+        SpaceTravels3.shapeRenderer.circle(
             ship.physicsComponent.getPosition().x,
             ship.physicsComponent.getPosition().y,
             ship.physicsComponent.getVelocity().len() * FORCE_INDICATOR_SCALE,
@@ -253,7 +250,6 @@ public class Hud implements Screen
     {
         Constants.EVENT_BUS.unregister(this);
         stage.dispose();
-        shapeRenderer.dispose();
     }
 
     @Subscribe

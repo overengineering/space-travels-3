@@ -22,12 +22,10 @@ public abstract class LevelManager
     private static final String LOGGING_TAG = LevelManager.class.getSimpleName();
     private static ArrayList<SerialisableLevel> levels;
 
-    public static GameScreen getLevelGameScreen(
-        SerialisableLevel serialisableLevel, SpriteBatch spriteBatch)
+    public static GameScreen getLevelGameScreen(SerialisableLevel serialisableLevel)
     {
         GameScreen gameScreen = new GameScreen(
             serialisableLevel.serialisedBackground.texturePath,
-            spriteBatch,
             serialisableLevel.width,
             serialisableLevel.height,
             serialisableLevel.name);

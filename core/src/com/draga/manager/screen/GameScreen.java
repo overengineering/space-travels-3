@@ -44,7 +44,6 @@ public class GameScreen implements Screen
     private Hud hud;
 
     private Texture     backgroundTexture;
-    private SpriteBatch spriteBatch;
 
     private OrthographicCamera orthographicCamera;
     private ExtendViewport     extendViewport;
@@ -62,7 +61,6 @@ public class GameScreen implements Screen
 
     public GameScreen(
         String backgroundTexturePath,
-        SpriteBatch spriteBatch,
         int width,
         int height,
         String levelPath)
@@ -70,7 +68,6 @@ public class GameScreen implements Screen
         this.backgroundTexture = AssMan.getAssMan().get(backgroundTexturePath);
         this.width = width;
         this.height = height;
-        this.spriteBatch = spriteBatch;
         this.levelPath = levelPath;
 
         this.gameState = GameState.COUNTDOWN;
@@ -124,7 +121,7 @@ public class GameScreen implements Screen
         orthographicCamera.position.y = cameraVec.y;
         orthographicCamera.update();
 
-        spriteBatch.setProjectionMatrix(orthographicCamera.combined);
+        SpaceTravels3.spriteBatch.setProjectionMatrix(orthographicCamera.combined);
     }
 
     public void addPlanet(Planet planet)
@@ -198,23 +195,21 @@ public class GameScreen implements Screen
     {
         updateCamera();
 
-        spriteBatch.begin();
+        SpaceTravels3.spriteBatch.begin();
 
         // Draw background at ship and parallax 30%.
-        spriteBatch.draw(
+        SpaceTravels3.spriteBatch.draw(
             backgroundTexture,
             -(width / 2f - orthographicCamera.position.x) / 1.3f ,
             -(height / 2f - orthographicCamera.position.y) / 1.3f,
             width,
             height);
-        spriteBatch.end();
 
-        spriteBatch.begin();
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
-            gameEntity.graphicComponent.draw(spriteBatch);
+            gameEntity.graphicComponent.draw();
         }
-        spriteBatch.end();
+        SpaceTravels3.spriteBatch.end();
 
         if (SettingsManager.getDebugSettings().debugDraw)
         {
@@ -298,12 +293,6 @@ public class GameScreen implements Screen
     public void dispose()
     {
         GameEntityManager.dispose();
-
-        if (SettingsManager.getDebugSettings().debugDraw)
-        {
-            physicDebugDrawer.dispose();
-        }
-
         Constants.EVENT_BUS.unregister(this);
         hud.dispose();
         if (this.overlayScreen != null)

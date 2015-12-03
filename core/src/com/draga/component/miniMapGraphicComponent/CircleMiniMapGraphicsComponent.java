@@ -2,6 +2,7 @@ package com.draga.component.miniMapGraphicComponent;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.draga.SpaceTravels3;
 import com.draga.component.PhysicsComponent;
 
 public class CircleMiniMapGraphicsComponent extends MiniMapGraphicComponent
@@ -20,12 +21,12 @@ public class CircleMiniMapGraphicsComponent extends MiniMapGraphicComponent
     }
 
     @Override
-    public void draw(ShapeRenderer shapeRenderer)
+    public void draw()
     {
-        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
+        SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Line);
 
-        shapeRenderer.setColor(this.colour);
-        shapeRenderer.circle(
+        SpaceTravels3.shapeRenderer.setColor(this.colour);
+        SpaceTravels3.shapeRenderer.circle(
             this.physicsComponent.getPosition().x,
             this.physicsComponent.getPosition().y,
             radius);

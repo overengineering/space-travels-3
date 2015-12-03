@@ -4,6 +4,8 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.draga.manager.GameManager;
 import com.draga.manager.SettingsManager;
 import com.draga.manager.SoundManager;
@@ -17,9 +19,16 @@ public class SpaceTravels3 extends Game
     private final static String LOGGING_TAG = SpaceTravels3.class.getSimpleName();
     private DebugOverlay debugOverlay;
 
+    public static SpriteBatch   spriteBatch;
+    public static ShapeRenderer shapeRenderer;
+
     @Override
     public void create()
     {
+        spriteBatch = new SpriteBatch();
+        shapeRenderer = new ShapeRenderer();
+        shapeRenderer.setAutoShapeType(true);
+
         Gdx.input.setCatchBackKey(true);
         UIManager.create();
         AssMan.create();
@@ -54,6 +63,8 @@ public class SpaceTravels3 extends Game
         AssMan.dispose();
         SoundManager.dispose();
         PhysicsEngine.dispose();
+        spriteBatch.dispose();
+        shapeRenderer.dispose();
         super.dispose();
     }
 

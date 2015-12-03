@@ -1,6 +1,5 @@
 package com.draga.component.graphicComponent;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.draga.component.PhysicsComponent;
 
 public abstract class GraphicComponent
@@ -20,7 +19,7 @@ public abstract class GraphicComponent
 
     public abstract void update(float deltaTime);
 
-    public abstract void draw(SpriteBatch spriteBatch);
+    public abstract void draw();
 
     public abstract void dispose();
 

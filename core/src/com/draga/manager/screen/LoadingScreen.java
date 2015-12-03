@@ -127,8 +127,7 @@ public class LoadingScreen implements Screen
                         "Loading time: %fs",
                         stopwatch.elapsed(TimeUnit.NANOSECONDS) * Constants.NANO));
             }
-            GameScreen gameScreen = LevelManager.getLevelGameScreen(
-                serialisableLevel, new SpriteBatch());
+            GameScreen gameScreen = LevelManager.getLevelGameScreen(serialisableLevel);
             GameManager.getGame().setScreen(gameScreen);
         }
         updateProgressBar();

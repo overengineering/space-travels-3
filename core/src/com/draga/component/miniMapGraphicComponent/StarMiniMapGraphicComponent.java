@@ -3,6 +3,7 @@ package com.draga.component.miniMapGraphicComponent;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.draga.SpaceTravels3;
 import com.draga.component.PhysicsComponent;
 
 public class StarMiniMapGraphicComponent extends MiniMapGraphicComponent
@@ -25,10 +26,10 @@ public class StarMiniMapGraphicComponent extends MiniMapGraphicComponent
     }
 
     @Override
-    public void draw(ShapeRenderer shapeRenderer)
+    public void draw()
     {
-        shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.GOLDENROD);
+        SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
+        SpaceTravels3.shapeRenderer.setColor(Color.GOLDENROD);
 
         Vector2 vertex1Rotated = vertex1.cpy();
         Vector2 vertex2Rotated = vertex2.cpy();
@@ -40,7 +41,7 @@ public class StarMiniMapGraphicComponent extends MiniMapGraphicComponent
             vertex2Rotated.rotate(360 / 5);
             vertex3Rotated.rotate(360 / 5);
 
-            shapeRenderer.triangle(
+            SpaceTravels3.shapeRenderer.triangle(
                 vertex1Rotated.x + this.physicsComponent.getPosition().x,
                 vertex1Rotated.y + this.physicsComponent.getPosition().y,
                 vertex2Rotated.x + this.physicsComponent.getPosition().x,

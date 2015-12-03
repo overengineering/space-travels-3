@@ -22,7 +22,6 @@ public class LoseScreen implements Screen
 {
     private final Stage stage;
     private final Color fadeToColour = new Color(0, 0, 0, 0.7f);
-    private final ShapeRenderer shapeRenderer;
     private final Sound         sound;
     private       String        levelName;
 
@@ -48,8 +47,6 @@ public class LoseScreen implements Screen
         table.add(mainMenuTextButton);
 
         stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
-
-        shapeRenderer = new ShapeRenderer();
 
         sound = AssMan.getAssMan().get(AssMan.getAssList().loseSound);
         sound.play(SettingsManager.getSettings().volume);
@@ -159,7 +156,6 @@ public class LoseScreen implements Screen
     {
         sound.stop();
         sound.dispose();
-        shapeRenderer.dispose();
         stage.dispose();
     }
 }
