@@ -29,7 +29,8 @@ public class Thruster extends GameEntity
             ship.physicsComponent.getPosition().y + this.offset.y,
             0,
             shape,
-            new GameEntityGroup(GameEntityGroup.GroupOverride.NONE));
+            new GameEntityGroup(GameEntityGroup.GroupOverride.NONE),
+            false);
         this.graphicComponent = new AnimatedGraphicComponent(
             AssMan.getAssList().thruster,
             ANIMATION_TIME,

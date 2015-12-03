@@ -12,7 +12,6 @@ import com.draga.event.FuelChangeEvent;
 import com.draga.manager.InputManager;
 import com.draga.manager.SettingsManager;
 import com.draga.manager.asset.AssMan;
-import com.draga.physic.PhysicsEngine;
 import com.draga.physic.shape.Circle;
 
 import java.util.ArrayList;
@@ -52,7 +51,13 @@ public class Ship extends GameEntity
         collidesWith.add(Planet.class);
         collidesWith.add(Pickup.class);
         this.physicsComponent =
-            new PhysicsComponent(x, y, SHIP_MASS, new Circle(4), new GameEntityGroup(collidesWith));
+            new PhysicsComponent(
+                x,
+                y,
+                SHIP_MASS,
+                new Circle(4),
+                new GameEntityGroup(collidesWith),
+                true);
 
         this.graphicComponent = new StaticGraphicComponent(
             shipTexturePath,
@@ -71,17 +76,6 @@ public class Ship extends GameEntity
     @Override
     public void update(float deltaTime)
     {
-        Vector2 gravityForce;
-        if (SettingsManager.getDebugSettings().noGravity)
-        {
-            gravityForce = new Vector2();
-        }
-        else
-        {
-            gravityForce = PhysicsEngine.getForceActingOn(this);
-        }
-        this.physicsComponent.getVelocity().add(gravityForce.scl(deltaTime));
-
         Vector2 inputForce = InputManager.getInputForce();
 
         // TODO: apply the last part of acceleration properly and maybe then elapsed updating the

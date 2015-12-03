@@ -25,7 +25,8 @@ public class Explosion extends GameEntity
             y,
             0,
             new Circle((HEIGHT + WIDTH) / 2f),
-            new GameEntityGroup(GameEntityGroup.GroupOverride.NONE));
+            new GameEntityGroup(GameEntityGroup.GroupOverride.NONE),
+            false);
 
         this.graphicComponent = new AnimatedGraphicComponent(AssMan.getAssList().explosion,
             ANIMATION_TOTAL_TIME,

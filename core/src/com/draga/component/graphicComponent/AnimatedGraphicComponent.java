@@ -34,7 +34,6 @@ public class AnimatedGraphicComponent extends GraphicComponent
     @Override
     public void update(float deltaTime)
     {
-        // Avoid overflow.
         animationCurrentTime += deltaTime;
     }
 
@@ -44,16 +43,15 @@ public class AnimatedGraphicComponent extends GraphicComponent
         TextureRegion textureRegion = animation.getKeyFrame(animationCurrentTime);
         spriteBatch.draw(
             textureRegion,
-            this.physicsComponent.getPosition().x - width / 2f,
-            this.physicsComponent.getPosition().y - height / 2f,
+            physicsComponent.getPosition().x - width / 2f,
+            physicsComponent.getPosition().y - height / 2f,
             width / 2f,
             height / 2f,
             width,
             height,
             1,
             1,
-            this.physicsComponent.getAngle());
-
+            physicsComponent.getAngle());
     }
 
     @Override

@@ -4,8 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.draga.Constants;
 import com.draga.gameEntity.GameEntity;
-import com.draga.physic.shape.Circle;
 import com.draga.manager.GameEntityManager;
+import com.draga.manager.SettingsManager;
+import com.draga.physic.shape.Circle;
 import com.google.common.base.Stopwatch;
 
 import java.util.concurrent.TimeUnit;
@@ -65,17 +66,28 @@ public class PhysicsEngine
     /**
      * Performs a physic step.
      *
-     * @param elapsed
+     * @param deltaTime
      */
-    private static void step(float elapsed)
+    private static void step(float deltaTime)
     {
+        if (!SettingsManager.getDebugSettings().noGravity)
+        {
+            for (GameEntity gameEntity : GameEntityManager.getGameEntities())
+            {
+                if (gameEntity.physicsComponent.AFFECTED_BY_GRAVITY)
+                {
+                    stepGravity(gameEntity, deltaTime);
+                }
+            }
+        }
+
         // Updates all position according to the game entity velocity.
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
             gameEntity.physicsComponent.getPosition()
-                .add(gameEntity.physicsComponent.getVelocity().cpy().scl(elapsed));
+                .add(gameEntity.physicsComponent.getVelocity().cpy().scl(deltaTime));
             gameEntity.physicsComponent.setAngle(gameEntity.physicsComponent.getAngle()
-                + gameEntity.physicsComponent.getAngularVelocity() * elapsed);
+                + gameEntity.physicsComponent.getAngularVelocity() * deltaTime);
         }
 
         /** Check for collisions following this pattern to avoid duplicates:
@@ -105,6 +117,14 @@ public class PhysicsEngine
                 }
             }
         }
+    }
+
+    private static void stepGravity(GameEntity gameEntity, float deltaTime)
+    {
+        Vector2 gravityForce;
+        gravityForce = getForceActingOn(gameEntity);
+
+        gameEntity.physicsComponent.getVelocity().add(gravityForce.scl(deltaTime));
     }
 
     private static boolean areColliding(
