@@ -5,7 +5,7 @@ import java.util.List;
 
 public class GameEntityGroup
 {
-    public  GroupOverride                     groupOverride = GroupOverride.ALL;
+    public  GroupOverride                     groupOverride;
     private List<Class<? extends GameEntity>> gameEntities  = new ArrayList<>();
 
     public GameEntityGroup(List<Class<? extends GameEntity>> gameEntities)

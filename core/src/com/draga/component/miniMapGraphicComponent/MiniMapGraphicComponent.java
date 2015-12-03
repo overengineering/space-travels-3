@@ -26,4 +26,9 @@ public abstract class MiniMapGraphicComponent
     }
 
     public abstract void draw();
+
+    public void dispose()
+    {
+
+    }
 }

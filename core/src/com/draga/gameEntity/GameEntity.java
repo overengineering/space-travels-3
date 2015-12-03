@@ -19,5 +19,6 @@ public abstract class GameEntity
     {
         physicsComponent.dispose();
         graphicComponent.dispose();
+        miniMapGraphicComponent.dispose();
     }
 }
