@@ -7,16 +7,15 @@ import com.draga.component.PhysicsComponent;
 
 public class CircleMiniMapGraphicsComponent extends MiniMapGraphicComponent
 {
-
     private final float radius;
 
     public CircleMiniMapGraphicsComponent(
         PhysicsComponent physicsComponent,
-        Color miniMapColour,
+        Color colour,
         float radius)
     {
-        this.physicsComponent = physicsComponent;
-        this.colour = miniMapColour;
+        super(physicsComponent,colour);
+
         this.radius = radius;
     }
 
@@ -24,8 +23,8 @@ public class CircleMiniMapGraphicsComponent extends MiniMapGraphicComponent
     public void draw()
     {
         SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Line);
-
         SpaceTravels3.shapeRenderer.setColor(this.colour);
+
         SpaceTravels3.shapeRenderer.circle(
             this.physicsComponent.getPosition().x,
             this.physicsComponent.getPosition().y,

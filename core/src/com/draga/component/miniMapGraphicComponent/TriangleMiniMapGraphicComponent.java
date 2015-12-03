@@ -19,18 +19,18 @@ public class TriangleMiniMapGraphicComponent extends MiniMapGraphicComponent
         Vector2 vertex2,
         Vector2 vertex3)
     {
+        super(physicsComponent,color);
+
         this.vertex1 = vertex1;
         this.vertex2 = vertex2;
         this.vertex3 = vertex3;
-        this.physicsComponent = physicsComponent;
-        this.colour = color;
     }
 
     @Override
     public void draw()
     {
         SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
-        SpaceTravels3.shapeRenderer.setColor(colour);
+        SpaceTravels3.shapeRenderer.setColor(this.colour);
 
         Vector2 vertex1Rotated = vertex1.cpy().rotate(this.physicsComponent.getAngle());
         Vector2 vertex2Rotated = vertex2.cpy().rotate(this.physicsComponent.getAngle());
