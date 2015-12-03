@@ -36,12 +36,14 @@ public class TriangleMiniMapGraphicComponent extends MiniMapGraphicComponent
         Vector2 vertex2Rotated = vertex2.cpy().rotate(this.physicsComponent.getAngle());
         Vector2 vertex3Rotated = vertex3.cpy().rotate(this.physicsComponent.getAngle());
 
+        float x = this.physicsComponent.getPosition().x;
+        float y = this.physicsComponent.getPosition().y;
         SpaceTravels3.shapeRenderer.triangle(
-            vertex1Rotated.x + this.physicsComponent.getPosition().x,
-            vertex1Rotated.y + this.physicsComponent.getPosition().y,
-            vertex2Rotated.x + this.physicsComponent.getPosition().x,
-            vertex2Rotated.y + this.physicsComponent.getPosition().y,
-            vertex3Rotated.x + this.physicsComponent.getPosition().x,
-            vertex3Rotated.y + this.physicsComponent.getPosition().y);
+            vertex1Rotated.x + x,
+            vertex1Rotated.y + y,
+            vertex2Rotated.x + x,
+            vertex2Rotated.y + y,
+            vertex3Rotated.x + x,
+            vertex3Rotated.y + y);
     }
 }
