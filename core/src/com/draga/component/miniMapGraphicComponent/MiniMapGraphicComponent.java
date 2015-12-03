@@ -5,6 +5,15 @@ import com.draga.component.PhysicsComponent;
 
 public abstract class MiniMapGraphicComponent
 {
+    public static final MiniMapGraphicComponent NULL_MINI_MAP_GRAPHIC_COMPONENT =
+        new MiniMapGraphicComponent(null, null)
+        {
+            @Override
+            public void draw()
+            {
+
+            }
+        };
     protected PhysicsComponent physicsComponent;
     protected Color            colour;
 
