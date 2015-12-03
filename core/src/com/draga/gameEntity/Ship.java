@@ -8,7 +8,6 @@ import com.draga.Constants;
 import com.draga.component.PhysicsComponent;
 import com.draga.component.graphicComponent.StaticGraphicComponent;
 import com.draga.component.miniMapGraphicComponent.TriangleMiniMapGraphicComponent;
-import com.draga.event.FuelChangeEvent;
 import com.draga.manager.InputManager;
 import com.draga.manager.SettingsManager;
 import com.draga.manager.asset.AssMan;
@@ -152,8 +151,6 @@ public class Ship extends GameEntity
 
     private void updateFuel(Vector2 inputForce, float deltaTime)
     {
-        float oldFuel = fuel;
-
         if (SettingsManager.getDebugSettings().infiniteFuel)
         {
             fuel = MAX_FUEL;
@@ -162,11 +159,6 @@ public class Ship extends GameEntity
         {
             fuel -= inputForce.len() * FUEL_PER_SECOND * deltaTime;
         }
-
-        FuelChangeEvent fuelChangeEvent = Pools.obtain(FuelChangeEvent.class);
-        fuelChangeEvent.set(oldFuel, fuel, MAX_FUEL);
-        Constants.EVENT_BUS.post(fuelChangeEvent);
-        Pools.free(fuelChangeEvent);
     }
 
     public float getFuel()

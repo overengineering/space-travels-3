@@ -17,7 +17,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
-import com.draga.event.FuelChangeEvent;
 import com.draga.event.PickupCollectedEvent;
 import com.draga.event.ScoreEvent;
 import com.draga.gameEntity.Ship;
@@ -129,6 +128,8 @@ public class Hud implements Screen
     @Override
     public void render(float delta)
     {
+        updateFuelProgressBar();
+
         stage.act(delta);
         stage.draw();
 
@@ -155,6 +156,12 @@ public class Hud implements Screen
 
         miniMap.draw();
         Gdx.gl.glDisable(GL20.GL_BLEND);
+    }
+
+    private void updateFuelProgressBar()
+    {
+        fuelProgressBar.setRange(0, ship.MAX_FUEL);
+        fuelProgressBar.setValue(ship.getFuel());
     }
     
     private void drawJoystick()
@@ -250,13 +257,6 @@ public class Hud implements Screen
     {
         Constants.EVENT_BUS.unregister(this);
         stage.dispose();
-    }
-
-    @Subscribe
-    public void FuelChanged(FuelChangeEvent fuelChangeEvent)
-    {
-        fuelProgressBar.setRange(0, fuelChangeEvent.maxFuel);
-        fuelProgressBar.setValue(fuelChangeEvent.newFuel);
     }
 
     public void addPickup()

@@ -1,9 +1,9 @@
 package com.draga.gameEntity;
 
+import com.draga.component.PhysicsComponent;
 import com.draga.component.graphicComponent.GraphicComponent;
 import com.draga.component.miniMapGraphicComponent.MiniMapGraphicComponent;
 import com.draga.component.miniMapGraphicComponent.NullMiniMapGraphicComponent;
-import com.draga.component.PhysicsComponent;
 
 public abstract class GameEntity
 {
@@ -11,7 +11,8 @@ public abstract class GameEntity
 
     public GraphicComponent graphicComponent;
 
-    public MiniMapGraphicComponent miniMapGraphicComponent = new NullMiniMapGraphicComponent();
+    public MiniMapGraphicComponent miniMapGraphicComponent =
+        new NullMiniMapGraphicComponent(null, null);
 
     public abstract void update(float deltaTime);
 
