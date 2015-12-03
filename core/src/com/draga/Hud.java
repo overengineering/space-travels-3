@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -21,7 +20,6 @@ import com.badlogic.gdx.utils.Scaling;
 import com.draga.event.FuelChangeEvent;
 import com.draga.event.PickupCollectedEvent;
 import com.draga.event.ScoreEvent;
-import com.draga.gameEntity.GameEntity;
 import com.draga.gameEntity.Ship;
 import com.draga.manager.GameEntityManager;
 import com.draga.manager.InputManager;
@@ -29,7 +27,6 @@ import com.draga.manager.SettingsManager;
 import com.draga.manager.UIManager;
 import com.draga.manager.asset.AssMan;
 import com.draga.physic.PhysicsEngine;
-import com.draga.physic.shape.Circle;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.Stack;
@@ -189,7 +186,7 @@ public class Hud implements Screen
 
     private void drawGravityIndicator()
     {
-        Vector2 gravityVector = PhysicsEngine.getForceActingOn(ship);
+        Vector2 gravityVector = PhysicsEngine.getGravityForceActingOn(ship);
 
         shapeRenderer.setColor(Color.BLUE);
         shapeRenderer.set(ShapeRenderer.ShapeType.Filled);

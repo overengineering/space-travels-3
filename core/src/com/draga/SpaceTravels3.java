@@ -10,6 +10,7 @@ import com.draga.manager.SoundManager;
 import com.draga.manager.UIManager;
 import com.draga.manager.asset.AssMan;
 import com.draga.manager.screen.MenuScreen;
+import com.draga.physic.PhysicsEngine;
 
 public class SpaceTravels3 extends Game
 {
@@ -25,6 +26,7 @@ public class SpaceTravels3 extends Game
         SoundManager.create();
         AssMan.getAssList();
         GameManager.setGame(this);
+        PhysicsEngine.create();
 
         if (Constants.IS_DEBUGGING)
         {
@@ -51,6 +53,7 @@ public class SpaceTravels3 extends Game
         UIManager.dispose();
         AssMan.dispose();
         SoundManager.dispose();
+        PhysicsEngine.dispose();
         super.dispose();
     }
 
