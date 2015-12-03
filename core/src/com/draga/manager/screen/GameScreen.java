@@ -7,7 +7,6 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -19,11 +18,11 @@ import com.draga.event.ShipPlanetCollisionEvent;
 import com.draga.gameEntity.*;
 import com.draga.manager.GameEntityManager;
 import com.draga.manager.GameManager;
+import com.draga.manager.InputManager;
 import com.draga.manager.SettingsManager;
 import com.draga.manager.asset.AssMan;
 import com.draga.physic.PhysicDebugDrawer;
 import com.draga.physic.PhysicsEngine;
-import com.draga.physic.shape.Circle;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.ArrayList;
@@ -88,11 +87,7 @@ public class GameScreen implements Screen
         extendViewport = new ExtendViewport(
             Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, width, height, orthographicCamera);
         extendViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        //
-        //        if (Constants.IS_DEBUGGING)
-        //        {
-        //            createWalls();
-        //        }
+
         if (SettingsManager.getDebugSettings().debugDraw)
         {
             physicDebugDrawer = new PhysicDebugDrawer();
@@ -187,6 +182,7 @@ public class GameScreen implements Screen
             checkDebugKeys();
         }
 
+        InputManager.update();
 
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {

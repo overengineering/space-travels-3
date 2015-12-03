@@ -13,6 +13,7 @@ public class InputManager
      * Change tilt range. E.g. 1.0f = 90 degree max. 0.5f = 45 degrees max.
      */
     private static final float  ACCELEROMETER_RANGE = 0.5f;
+    private static Vector2 inputForce;
 
     /**
      * Returns a vector with length from 0 to 1, representing where the input is pointing to,
@@ -21,6 +22,11 @@ public class InputManager
      * @return A Vector2 of length from 0 to 1 of where the input is pointing
      */
     public static Vector2 getInputForce()
+    {
+        return inputForce;
+    }
+
+    public static void update()
     {
         Vector2 input;
         switch (Gdx.app.getType())
@@ -57,7 +63,7 @@ public class InputManager
                 input = new Vector2();
                 break;
         }
-        return input;
+        inputForce = input;
     }
 
     private static Vector2 getAccelerometerInput()
