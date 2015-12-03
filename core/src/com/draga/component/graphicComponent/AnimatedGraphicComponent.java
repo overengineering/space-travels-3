@@ -41,14 +41,15 @@ public class AnimatedGraphicComponent extends GraphicComponent
     public void draw(SpriteBatch spriteBatch)
     {
         TextureRegion textureRegion = animation.getKeyFrame(animationCurrentTime);
+
         spriteBatch.draw(
             textureRegion,
-            physicsComponent.getPosition().x - width / 2f,
-            physicsComponent.getPosition().y - height / 2f,
-            width / 2f,
-            height / 2f,
-            width,
-            height,
+            physicsComponent.getPosition().x - getHalfWidth(),
+            physicsComponent.getPosition().y - getHalfHeight(),
+            getHalfWidth(),
+            getHalfHeight(),
+            getWidth(),
+            getHeight(),
             1,
             1,
             physicsComponent.getAngle());

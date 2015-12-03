@@ -22,7 +22,7 @@ public class Thruster extends GameEntity
     {
         this.ship = ship;
         this.offset =
-            new Vector2(-(ship.graphicComponent.height / 2f) / 2f, 0);
+            new Vector2(-ship.graphicComponent.getHalfHeight() / 2f, 0);
         shape = new Circle(0);
         this.physicsComponent = new PhysicsComponent(
             ship.physicsComponent.getPosition().x + this.offset.x,
@@ -50,13 +50,13 @@ public class Thruster extends GameEntity
         }
 
         float thrusterScale = inputForce.len();
-        this.graphicComponent.width = MAX_WIDTH * thrusterScale;
-        this.graphicComponent.height = MAX_HEIGHT * thrusterScale;
+        this.graphicComponent.setWidth(MAX_WIDTH * thrusterScale);
+        this.graphicComponent.setHeight(MAX_HEIGHT * thrusterScale);
         shape.radius = MAX_WIDTH / 2f * thrusterScale;
 
         Vector2 thrusterOffsetFromCentre = offset
             .cpy()
-            .sub(this.graphicComponent.width / 2f, 0);
+            .sub(this.graphicComponent.getHalfWidth(), 0);
         this.physicsComponent.getPosition().set(this.ship.physicsComponent.getPosition().cpy());
         Vector2 thrusterRotateOffset =
             new Vector2(thrusterOffsetFromCentre).rotate(this.ship.physicsComponent.getAngle());
@@ -66,10 +66,4 @@ public class Thruster extends GameEntity
 
         this.physicsComponent.setAngle(this.ship.physicsComponent.getAngle());
     }
-
-    /*@Override
-    public void drawMiniMap()
-    {
-
-    }*/
 }

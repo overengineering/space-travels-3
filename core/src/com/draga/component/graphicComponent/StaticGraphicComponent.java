@@ -30,12 +30,12 @@ public class StaticGraphicComponent extends GraphicComponent
     {
         spriteBatch.draw(
             texture,
-            this.physicsComponent.getPosition().x - (width / 2f),
-            this.physicsComponent.getPosition().y - (height / 2f),
-            width / 2f,
-            height / 2f,
-            width,
-            height,
+            this.physicsComponent.getPosition().x - getHalfWidth(),
+            this.physicsComponent.getPosition().y - getHalfHeight(),
+            getHalfWidth(),
+            getHalfHeight(),
+            getWidth(),
+            getHeight(),
             1,
             1,
             this.physicsComponent.getAngle(),

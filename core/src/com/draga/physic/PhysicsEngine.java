@@ -78,7 +78,7 @@ public class PhysicsEngine
         {
             for (GameEntity gameEntity : GameEntityManager.getGameEntities())
             {
-                if (gameEntity.physicsComponent.AFFECTED_BY_GRAVITY)
+                if (gameEntity.physicsComponent.affectedByGravity)
                 {
                     stepGravity(gameEntity, deltaTime);
                 }
