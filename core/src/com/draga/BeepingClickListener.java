@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.manager.SettingsManager;
 import com.draga.manager.SoundManager;
 
+// TODO: not so convenient, for line of code and robustness may as well play the sound manually.
 public class BeepingClickListener extends ClickListener
 {
     @Override

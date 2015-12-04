@@ -17,10 +17,9 @@ import com.draga.physic.PhysicsEngine;
 public class SpaceTravels3 extends Game
 {
     private final static String LOGGING_TAG = SpaceTravels3.class.getSimpleName();
-    private DebugOverlay debugOverlay;
-
     public static SpriteBatch   spriteBatch;
     public static ShapeRenderer shapeRenderer;
+    private DebugOverlay debugOverlay;
 
     @Override
     public void create()
@@ -91,7 +90,10 @@ public class SpaceTravels3 extends Game
 
         super.render();
 
-        this.debugOverlay.render(Gdx.graphics.getDeltaTime());
+        if (Constants.IS_DEBUGGING)
+        {
+            this.debugOverlay.render(Gdx.graphics.getDeltaTime());
+        }
     }
 
     @Override
@@ -102,6 +104,9 @@ public class SpaceTravels3 extends Game
 
         super.resize(width, height);
 
-        this.debugOverlay.resize(width, height);
+        if (Constants.IS_DEBUGGING)
+        {
+            this.debugOverlay.resize(width, height);
+        }
     }
 }

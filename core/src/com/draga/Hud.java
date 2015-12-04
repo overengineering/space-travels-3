@@ -35,6 +35,7 @@ public class Hud implements Screen
     private final OrthographicCamera worldCamera;
     private final OrthographicCamera joystickCamera =
         new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    // TODO: move to visuals?
     private float FORCE_INDICATOR_SCALE = 0.25f;
     private Stage stage;
     private ProgressBar fuelProgressBar;

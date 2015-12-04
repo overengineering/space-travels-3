@@ -14,15 +14,18 @@ public abstract class Constants
         new DecimalFormat("#,###");
 
     public static final float    NANO      = 0.000000001f;
+
     public static final EventBus EVENT_BUS = new EventBus();
 
     public static final float COUNTDOWN_SECONDS = 1f;
+
     public static final float FUEL_POINTS       = 1000f;
     public static final float TIME_POINTS       = 10f;
-
     public static final float PICKUP_POINTS                         = 1000f;
+
     public static final float MAX_DESTINATION_PLANET_APPROACH_SPEED = 60f;
 
+    // TODO: what is this doing here? Should be a setting maybe?
     public static final boolean HUD_DRAW_VELOCITY_INDICATORS = true;
 
     public static final String FOLDER                  = SpaceTravels3.class.getSimpleName();

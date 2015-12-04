@@ -13,6 +13,7 @@ import com.draga.physic.shape.Circle;
 
 public class MiniMap
 {
+    // TODO: move to visuals?
     private static final float MINIMAP_SCALE = 0.25f;
     private Ship               ship;
     private OrthographicCamera orthographicCamera;

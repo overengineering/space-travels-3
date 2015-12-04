@@ -53,7 +53,7 @@ public class GameEntityManager
     }
 
     /**
-     * dispose all the entities and empty the manager.
+     * Dispose all the entities and empty the manager.
      */
     public static void dispose()
     {

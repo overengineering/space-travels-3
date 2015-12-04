@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.draga.Constants;
 
+// TODO: better name? Doesn't manage anything, just convenience
 public abstract class FileManager
 {
     public static FileHandle getFileHandle(String folder, String filename)

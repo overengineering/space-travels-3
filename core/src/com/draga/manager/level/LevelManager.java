@@ -20,6 +20,7 @@ import java.util.List;
 public abstract class LevelManager
 {
     private static final String LOGGING_TAG = LevelManager.class.getSimpleName();
+    // TODO: to create/dispose? They haven't failed yet so maybe they don't get removed in android.
     private static ArrayList<SerialisableLevel> levels;
 
     public static GameScreen getLevelGameScreen(SerialisableLevel serialisableLevel)

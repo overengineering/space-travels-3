@@ -4,7 +4,9 @@ import java.util.List;
 
 public class SerialisableLevel
 {
+    // TODO: enforce name being unique?
     public String                   name;
+    // TODO: float?
     public int                      width;
     public int                      height;
     public SerialisableBackground   serialisedBackground;

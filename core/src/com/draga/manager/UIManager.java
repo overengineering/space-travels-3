@@ -58,6 +58,7 @@ public class UIManager
         BitmapFont defaultFont = getBitmapFont();
         skin.add("default", defaultFont);
 
+        // TODO: maybe load only if debugging? Change name to monoSpaceFont or something?
         BitmapFont debugFont = getDebugFont();
         skin.add("debugFont", debugFont);
 

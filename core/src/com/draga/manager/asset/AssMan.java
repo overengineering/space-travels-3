@@ -2,14 +2,12 @@ package com.draga.manager.asset;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Json;
 
 public class AssMan
 {
     private static AssetManager ASSET_MANAGER;
-    private static AssList ASSET_LIST;
+    private static AssList      ASSET_LIST;
 
     public static void create()
     {
@@ -28,6 +26,8 @@ public class AssMan
 
     public static AssList getAssList()
     {
+        // TODO: move to create? maybe a bit overkill but to deserialise these small object is very
+        // fast
         if (ASSET_LIST == null)
         {
             Json json = new Json();
