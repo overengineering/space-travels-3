@@ -31,18 +31,16 @@ import java.util.Stack;
 
 public class Hud implements Screen
 {
-    private final Label scoreLabel;
+    private final Label              scoreLabel;
     private final OrthographicCamera worldCamera;
     private final OrthographicCamera joystickCamera =
         new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-    // TODO: move to visuals?
-    private float FORCE_INDICATOR_SCALE = 0.25f;
-    private Stage stage;
-    private ProgressBar fuelProgressBar;
+    private Stage        stage;
+    private ProgressBar  fuelProgressBar;
     private Stack<Image> grayPickups;
     private Table        pickupTable;
-    private Ship ship;
-    private MiniMap miniMap;
+    private Ship         ship;
+    private MiniMap      miniMap;
     
     public Hud(OrthographicCamera worldCamera, int worldWidth, int worldHeight)
     {
@@ -133,25 +131,27 @@ public class Hud implements Screen
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
-        if (Constants.HUD_DRAW_VELOCITY_INDICATORS
-            && GameEntityManager.getGameEntities().contains(ship))
-        {
-            SpaceTravels3.shapeRenderer.begin();
+        SpaceTravels3.shapeRenderer.begin();
 
+        if (GameEntityManager.getGameEntities().contains(ship))
+        {
             if (SettingsManager.getSettings().inputType == InputType.TOUCH
                 || Gdx.app.getType() == Application.ApplicationType.Desktop)
             {
                 SpaceTravels3.shapeRenderer.setProjectionMatrix(joystickCamera.combined);
                 drawJoystick();
             }
+            if (SettingsManager.getSettings().hudForceIndicators)
+            {
 
-            SpaceTravels3.shapeRenderer.setProjectionMatrix(worldCamera.combined);
-            drawGravityIndicator();
-            drawVelocityIndicator();
-            SpaceTravels3.shapeRenderer.end();
+                SpaceTravels3.shapeRenderer.setProjectionMatrix(worldCamera.combined);
+                drawGravityIndicator();
+                drawVelocityIndicator();
+            }
         }
 
         miniMap.draw();
+        SpaceTravels3.shapeRenderer.end();
         Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
@@ -177,7 +177,6 @@ public class Hud implements Screen
             4,
             30,
             0,
-            12,
             2);
 
         int numArcs = 8;
@@ -190,7 +189,6 @@ public class Hud implements Screen
             numArcs,
             15,
             360 / numArcs / 2,
-            24,
             2);
     }
 
@@ -201,8 +199,10 @@ public class Hud implements Screen
         SpaceTravels3.shapeRenderer.setColor(Color.BLUE);
         SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
         SpaceTravels3.shapeRenderer.circle(
-            ship.physicsComponent.getPosition().x + gravityVector.x * FORCE_INDICATOR_SCALE,
-            ship.physicsComponent.getPosition().y + gravityVector.y * FORCE_INDICATOR_SCALE,
+            ship.physicsComponent.getPosition().x
+                + gravityVector.x * VisualStyle.HUD_FORCE_INDICATOR_SCALE,
+            ship.physicsComponent.getPosition().y
+                + gravityVector.y * VisualStyle.HUD_FORCE_INDICATOR_SCALE,
             0.5f);
 
         SpaceTravels3.shapeRenderer.setColor(new Color(0, 0, 1f, 0.4f));
@@ -210,7 +210,7 @@ public class Hud implements Screen
         SpaceTravels3.shapeRenderer.circle(
             ship.physicsComponent.getPosition().x,
             ship.physicsComponent.getPosition().y,
-            gravityVector.len() * FORCE_INDICATOR_SCALE,
+            gravityVector.len() * VisualStyle.HUD_FORCE_INDICATOR_SCALE,
             24);
     }
 
@@ -220,9 +220,9 @@ public class Hud implements Screen
         SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
         SpaceTravels3.shapeRenderer.circle(
             ship.physicsComponent.getPosition().x
-                + ship.physicsComponent.getVelocity().x * FORCE_INDICATOR_SCALE,
+                + ship.physicsComponent.getVelocity().x * VisualStyle.HUD_FORCE_INDICATOR_SCALE,
             ship.physicsComponent.getPosition().y
-                + ship.physicsComponent.getVelocity().y * FORCE_INDICATOR_SCALE,
+                + ship.physicsComponent.getVelocity().y * VisualStyle.HUD_FORCE_INDICATOR_SCALE,
             0.5f);
 
         SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Line);
@@ -230,7 +230,7 @@ public class Hud implements Screen
         SpaceTravels3.shapeRenderer.circle(
             ship.physicsComponent.getPosition().x,
             ship.physicsComponent.getPosition().y,
-            ship.physicsComponent.getVelocity().len() * FORCE_INDICATOR_SCALE,
+            ship.physicsComponent.getVelocity().len() * VisualStyle.HUD_FORCE_INDICATOR_SCALE,
             24);
     }
 

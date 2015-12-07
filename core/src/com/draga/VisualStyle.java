@@ -19,5 +19,9 @@ public abstract class VisualStyle
     public static final Color PLANET_MINIMAP_COLOUR             = Color.RED;
 
     // Explosion
-    public static float EXPLOSION_LIFETIME = 2f;
+    public static final float EXPLOSION_LIFETIME = 2f;
+
+    // HUD
+    public static final float MINIMAP_SCALE             = 0.25f;
+    public static final float HUD_FORCE_INDICATOR_SCALE = 0.25f;
 }

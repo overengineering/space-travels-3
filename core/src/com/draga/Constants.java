@@ -25,9 +25,6 @@ public abstract class Constants
 
     public static final float MAX_DESTINATION_PLANET_APPROACH_SPEED = 60f;
 
-    // TODO: what is this doing here? Should be a setting maybe?
-    public static final boolean HUD_DRAW_VELOCITY_INDICATORS = true;
-
     public static final String FOLDER                  = SpaceTravels3.class.getSimpleName();
     public static final String SCORES_FILENAME         = "Scores.json";
     public static final String DEBUG_SETTINGS_FILENAME = "DebugSettings.json";

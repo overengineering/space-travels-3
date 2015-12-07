@@ -13,8 +13,6 @@ import com.draga.physic.shape.Circle;
 
 public class MiniMap
 {
-    // TODO: move to visuals?
-    private static final float MINIMAP_SCALE = 0.25f;
     private Ship               ship;
     private OrthographicCamera orthographicCamera;
 
@@ -27,13 +25,10 @@ public class MiniMap
     {
         updateMiniMap();
 
-        SpaceTravels3.shapeRenderer.begin();
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
             gameEntity.miniMapGraphicComponent.draw();
         }
-
-        SpaceTravels3. shapeRenderer.end();
     }
 
     public void updateMiniMap()
@@ -74,7 +69,7 @@ public class MiniMap
             Math.max(
                 newCameraBounds.width / orthographicCamera.viewportWidth,
                 newCameraBounds.height / orthographicCamera.viewportHeight);
-        orthographicCamera.zoom /= MINIMAP_SCALE;
+        orthographicCamera.zoom /= VisualStyle.MINIMAP_SCALE;
 
         // Moves the camera so that the bottom left corner of the screen corresponds to the
         // bottom left corner of the new camera bounds.
@@ -91,7 +86,7 @@ public class MiniMap
 
     private void drawBackground()
     {
-        orthographicCamera.zoom = 1 / MINIMAP_SCALE;
+        orthographicCamera.zoom = 1 / VisualStyle.MINIMAP_SCALE;
         orthographicCamera.position.set(
             (orthographicCamera.viewportWidth / 2f) * orthographicCamera.zoom,
             (orthographicCamera.viewportHeight / 2f) * orthographicCamera.zoom,
@@ -99,7 +94,6 @@ public class MiniMap
         orthographicCamera.update();
         SpaceTravels3.shapeRenderer.setProjectionMatrix(orthographicCamera.combined);
 
-        SpaceTravels3.shapeRenderer.begin();
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
@@ -122,7 +116,6 @@ public class MiniMap
             orthographicCamera.viewportHeight);
 
         Gdx.gl.glDisable(GL20.GL_BLEND);
-        SpaceTravels3.shapeRenderer.end();
     }
 
     public void addShip(Ship ship)
