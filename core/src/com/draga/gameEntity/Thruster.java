@@ -3,6 +3,7 @@ package com.draga.gameEntity;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.math.Vector2;
+import com.draga.Constants;
 import com.draga.component.PhysicsComponent;
 import com.draga.component.graphicComponent.AnimatedGraphicComponent;
 import com.draga.manager.InputManager;
@@ -12,12 +13,7 @@ import com.draga.physic.shape.Circle;
 
 public class Thruster extends GameEntity
 {
-    // Thruster.
-    private static final float MAX_WIDTH      = 5;
-    private static final float MAX_HEIGHT     = 5;
-    private static final float ANIMATION_TIME = 1f;
     private final Ship    ship;
-    private       Vector2 offset;
     private       Circle  shape;
 
     // Sound
@@ -27,19 +23,17 @@ public class Thruster extends GameEntity
     public Thruster(Ship ship)
     {
         this.ship = ship;
-        this.offset =
-            new Vector2(-ship.graphicComponent.getHalfHeight() / 2f, 0);
         shape = new Circle(0);
         this.physicsComponent = new PhysicsComponent(
-            ship.physicsComponent.getPosition().x + this.offset.x,
-            ship.physicsComponent.getPosition().y + this.offset.y,
+            ship.physicsComponent.getPosition().x + Constants.Visual.THRUSTER_OFFSET.x,
+            ship.physicsComponent.getPosition().y + Constants.Visual.THRUSTER_OFFSET.y,
             0,
             shape,
             new GameEntityGroup(GameEntityGroup.GroupOverride.NONE),
             false);
         this.graphicComponent = new AnimatedGraphicComponent(
             AssMan.getAssList().thruster,
-            ANIMATION_TIME,
+            Constants.Visual.THRUSTER_ANIMATION_TIME,
             0,
             0,
             this.physicsComponent,
@@ -60,11 +54,11 @@ public class Thruster extends GameEntity
         }
 
         float thrusterScale = inputForce.len();
-        this.graphicComponent.setWidth(MAX_WIDTH * thrusterScale);
-        this.graphicComponent.setHeight(MAX_HEIGHT * thrusterScale);
-        shape.radius = MAX_WIDTH / 2f * thrusterScale;
+        this.graphicComponent.setWidth(Constants.Visual.THRUSTER_MAX_WIDTH * thrusterScale);
+        this.graphicComponent.setHeight(Constants.Visual.THRUSTER_MAX_HEIGHT * thrusterScale);
+        shape.radius = Constants.Visual.THRUSTER_MAX_WIDTH / 2f * thrusterScale;
 
-        Vector2 thrusterOffsetFromCentre = offset
+        Vector2 thrusterOffsetFromCentre = Constants.Visual.THRUSTER_OFFSET
             .cpy()
             .sub(this.graphicComponent.getHalfWidth(), 0);
         this.physicsComponent.getPosition().set(this.ship.physicsComponent.getPosition().cpy());

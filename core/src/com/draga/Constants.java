@@ -40,6 +40,12 @@ public abstract class Constants
         public static final Vector2 SHIP_MINIMAP_TRIANGLE_VERTEX1 = new Vector2(8, 0);
         public static final Vector2 SHIP_MINIMAP_TRIANGLE_VERTEX2 = new Vector2(-5, -5);
         public static final Vector2 SHIP_MINIMAP_TRIANGLE_VERTEX3 = new Vector2(-5, 5);
+
+        // Thruster.
+        public static final float   THRUSTER_MAX_WIDTH      = 5;
+        public static final float   THRUSTER_MAX_HEIGHT     = 5;
+        public static final float   THRUSTER_ANIMATION_TIME = 1f;
+        public static final Vector2 THRUSTER_OFFSET         = new Vector2(-SHIP_WIDTH / 4f, 0);
     }
 
 
@@ -62,7 +68,7 @@ public abstract class Constants
     }
 
 
-    public static class General extends Constants
+    public static class General
     {
         public static final boolean       IS_DEBUGGING                        = true;
         public static final float         EARTH_GRAVITY                       = 9.80665f;
