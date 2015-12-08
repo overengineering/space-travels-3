@@ -85,7 +85,8 @@ public class Ship extends GameEntity
             ? maxFuel
             : currentFuel - fuelConsumption;
 
-        this.physicsComponent.getVelocity().add(inputForce.cpy().scl(deltaTime * 60f));
+        this.physicsComponent.getVelocity()
+            .add(inputForce.cpy().scl(deltaTime * Constants.Game.SHIP_ACCELERATION_PER_SECOND));
 
         rotateTo(inputForce, deltaTime);
     }
