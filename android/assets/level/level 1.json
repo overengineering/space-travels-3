@@ -3,7 +3,7 @@
   "name": "Level 1",
   "width": 300,
   "height": 150,
-  "fuel": 2.0,
+  "fuel": 6.0,
 
   "serialisedBackground": {
     "texturePath": "background/background1080.jpg"

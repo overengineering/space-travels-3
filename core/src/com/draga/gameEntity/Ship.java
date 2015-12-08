@@ -3,6 +3,7 @@ package com.draga.gameEntity;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
+import com.draga.Constants;
 import com.draga.VisualStyle;
 import com.draga.component.PhysicsComponent;
 import com.draga.component.graphicComponent.StaticGraphicComponent;
@@ -19,9 +20,6 @@ public class Ship extends GameEntity
 {
     public static final String LOGGING_TAG = Ship.class.getSimpleName();
 
-    // Fuel.
-    public static final float FUEL_PER_SECOND = 0.3f;
-
     // Physic.
     private static final float ROTATION_SCALE = 5f;
     private static final float SHIP_MASS      = 1f;
@@ -32,6 +30,7 @@ public class Ship extends GameEntity
     // State.
     private float maxFuel;
     private float currentFuel;
+
     public Ship(
         float x,
         float y,
@@ -162,7 +161,7 @@ public class Ship extends GameEntity
         }
         else
         {
-            currentFuel -= inputForce.len() * FUEL_PER_SECOND * deltaTime;
+            currentFuel -= inputForce.len() * Constants.FUEL_PER_SECOND * deltaTime;
         }
     }
 

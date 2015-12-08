@@ -19,9 +19,11 @@ public abstract class Constants
 
     public static final float COUNTDOWN_SECONDS = 1f;
 
-    public static final float FUEL_POINTS   = 1000f;
-    public static final float TIME_POINTS   = 10f;
-    public static final float PICKUP_POINTS = 1000f;
+    public static final float FUEL_PER_SECOND = 1f;
+
+    public static final float FUEL_POINTS     = 1000f;
+    public static final float TIME_POINTS     = 10f;
+    public static final float PICKUP_POINTS   = 1000f;
 
     public static final float MAX_DESTINATION_PLANET_APPROACH_SPEED = 60f;
 
