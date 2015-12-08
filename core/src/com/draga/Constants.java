@@ -57,7 +57,7 @@ public abstract class Constants
             (Constants.Visual.SHIP_WIDTH + Constants.Visual.SHIP_HEIGHT) / 2f
                 * 0.8f
                 / 2f;
-        
+
         public static float SHIP_ACCELERATION_PER_SECOND = 60f;
     }
 

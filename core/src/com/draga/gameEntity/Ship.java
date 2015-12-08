@@ -96,7 +96,7 @@ public class Ship extends GameEntity
      *
      * @param inputForce The input force, should be long between 0 and 1.
      */
-    private void rotateTo(Vector2 inputForce, float elapsed)
+    private void rotateTo(Vector2 inputForce, float deltaTime)
     {
         if (inputForce.len() == 0)
         {
@@ -115,8 +115,8 @@ public class Ship extends GameEntity
             diffRotation -= 360;
         }
 
-        // Scale the difference of rotation by the elapsed time and input length.
-        diffRotation *= inputForce.len() * elapsed * ROTATION_SCALE;
+        // Scale the difference of rotation by the deltaTime time and input length.
+        diffRotation *= inputForce.len() * deltaTime * ROTATION_SCALE;
 
         // bring the rotation to the max if it's over it
         if (Math.abs(diffRotation) > MAX_ROTATION_DEGREES_PER_SEC)
@@ -137,18 +137,6 @@ public class Ship extends GameEntity
         }
 
         this.physicsComponent.setAngle(finalRotation);
-    }
-
-    private void updateFuel(Vector2 inputForce, float deltaTime)
-    {
-        if (SettingsManager.getDebugSettings().infiniteFuel)
-        {
-            currentFuel = maxFuel;
-        }
-        else
-        {
-            currentFuel -= inputForce.len() * Constants.Game.FUEL_PER_SECOND * deltaTime;
-        }
     }
 
     public float getCurrentFuel()
