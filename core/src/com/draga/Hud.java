@@ -193,8 +193,8 @@ public class Hud implements Screen
 
     private void updateFuelProgressBar()
     {
-        fuelProgressBar.setRange(0, ship.MAX_FUEL);
-        fuelProgressBar.setValue(ship.getFuel());
+        fuelProgressBar.setRange(0, ship.getMaxFuel());
+        fuelProgressBar.setValue(ship.getCurrentFuel());
     }
 
     private void drawGravityIndicator()

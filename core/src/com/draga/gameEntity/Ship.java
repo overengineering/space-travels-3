@@ -3,8 +3,7 @@ package com.draga.gameEntity;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Pools;
-import com.draga.Constants;
+import com.draga.VisualStyle;
 import com.draga.component.PhysicsComponent;
 import com.draga.component.graphicComponent.StaticGraphicComponent;
 import com.draga.component.miniMapGraphicComponent.TriangleMiniMapGraphicComponent;
@@ -21,12 +20,7 @@ public class Ship extends GameEntity
     public static final String LOGGING_TAG = Ship.class.getSimpleName();
 
     // Fuel.
-    public static final float MAX_FUEL        = 1f;
     public static final float FUEL_PER_SECOND = 0.3f;
-
-    // Size.
-    private static final float SHIP_WIDTH  = 10;
-    private static final float SHIP_HEIGHT = 10;
 
     // Physic.
     private static final float ROTATION_SCALE = 5f;
@@ -36,15 +30,21 @@ public class Ship extends GameEntity
     private Sound thrusterSound;
     private long  thrusterSoundInstance;
     // State.
-    private float fuel;
-
-    public Ship(float x, float y, String shipTexturePath, String thrusterTextureAtlasPath)
+    private float maxFuel;
+    private float currentFuel;
+    public Ship(
+        float x,
+        float y,
+        String shipTexturePath,
+        String thrusterTextureAtlasPath,
+        float maxFuel)
     {
         thrusterSound = AssMan.getAssMan().get(AssMan.getAssList().thrusterSound);
         // TODO: check if this sound is loopable.
         thrusterSoundInstance = thrusterSound.loop(0);
 
-        fuel = MAX_FUEL;
+        this.maxFuel = maxFuel;
+        currentFuel = maxFuel;
 
         List<Class<? extends GameEntity>> collidesWith = new ArrayList<>();
         collidesWith.add(Planet.class);
@@ -60,8 +60,8 @@ public class Ship extends GameEntity
 
         this.graphicComponent = new StaticGraphicComponent(
             shipTexturePath,
-            SHIP_WIDTH,
-            SHIP_HEIGHT,
+            VisualStyle.SHIP_WIDTH,
+            VisualStyle.SHIP_HEIGHT,
             this.physicsComponent);
 
         this.miniMapGraphicComponent = new TriangleMiniMapGraphicComponent(
@@ -71,6 +71,11 @@ public class Ship extends GameEntity
             new Vector2(-5, -5),
             new Vector2(-5, 5));
     }
+
+    public float getMaxFuel()
+    {
+        return maxFuel;
+    }
     
     @Override
     public void update(float deltaTime)
@@ -79,7 +84,7 @@ public class Ship extends GameEntity
 
         // TODO: apply the last part of acceleration properly and maybe then elapsed updating the
         // thrusters?
-        if (fuel <= 0)
+        if (currentFuel <= 0)
         {
             inputForce.setZero();
         }
@@ -153,16 +158,16 @@ public class Ship extends GameEntity
     {
         if (SettingsManager.getDebugSettings().infiniteFuel)
         {
-            fuel = MAX_FUEL;
+            currentFuel = maxFuel;
         }
         else
         {
-            fuel -= inputForce.len() * FUEL_PER_SECOND * deltaTime;
+            currentFuel -= inputForce.len() * FUEL_PER_SECOND * deltaTime;
         }
     }
 
-    public float getFuel()
+    public float getCurrentFuel()
     {
-        return fuel;
+        return currentFuel;
     }
 }

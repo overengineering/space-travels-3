@@ -24,6 +24,9 @@ public abstract class VisualStyle
     // HUD
     public static final float MINIMAP_SCALE             = 0.25f;
     public static final float HUD_FORCE_INDICATOR_SCALE = 0.25f;
-
     public static final Color JOYSTICK_OVERLAY_COLOR = new Color(1f, 1f, 1f, 0.3f);
+
+    // Ship
+    public static final float SHIP_WIDTH  = 10;
+    public static final float SHIP_HEIGHT = 10;
 }

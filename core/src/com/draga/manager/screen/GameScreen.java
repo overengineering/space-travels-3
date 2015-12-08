@@ -239,7 +239,7 @@ public class GameScreen implements Screen
     {
         float pickupPoints = pickupCollected * Constants.PICKUP_POINTS;
         float timePoints = elapsedPlayTime * Constants.TIME_POINTS;
-        float fuelPoints = ship.getFuel() * Constants.FUEL_POINTS;
+        float fuelPoints = ship.getCurrentFuel() * Constants.FUEL_POINTS;
 
         float score = pickupPoints;
         score -= timePoints;

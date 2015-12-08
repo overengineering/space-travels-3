@@ -35,7 +35,8 @@ public abstract class LevelManager
             serialisableLevel.serialisedShip.x,
             serialisableLevel.serialisedShip.y,
             AssMan.getAssList().ship,
-            AssMan.getAssList().thruster);
+            AssMan.getAssList().thruster,
+            serialisableLevel.fuel);
         gameScreen.addShip(ship);
 
         for (SerialisablePlanet serialisablePlanet : serialisableLevel.serialisedPlanets)

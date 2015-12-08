@@ -9,6 +9,7 @@ public class SerialisableLevel
     // TODO: float?
     public int                      width;
     public int                      height;
+    public float                    fuel;
     public SerialisableBackground   serialisedBackground;
     public SerialisableShip         serialisedShip;
     public List<SerialisablePlanet> serialisedPlanets;

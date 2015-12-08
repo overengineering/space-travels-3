@@ -22,14 +22,13 @@ public class Planet extends GameEntity
     {
         List<Class<? extends GameEntity>> collidesWith = new ArrayList<>();
         collidesWith.add(Ship.class);
-        this.physicsComponent =
-            new PhysicsComponent(
-                x,
-                y,
-                mass,
-                new Circle(radius),
-                new GameEntityGroup(collidesWith),
-                false);
+        this.physicsComponent = new PhysicsComponent(
+            x,
+            y,
+            mass,
+            new Circle(radius),
+            new GameEntityGroup(collidesWith),
+            false);
 
         this.graphicComponent = new StaticGraphicComponent(
             texturePath,
