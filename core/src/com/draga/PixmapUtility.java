@@ -77,6 +77,8 @@ public abstract class PixmapUtility
             int p3y = Math.round(y2 + ty);
             int p4x = Math.round(x2 - tx);
             int p4y = Math.round(y2 - ty);
+
+            // Two triangles to form a rectangle.
             pixmap.fillTriangle(
                 p1x,
                 p1y,
