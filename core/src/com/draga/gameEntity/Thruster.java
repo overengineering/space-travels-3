@@ -14,7 +14,6 @@ import com.draga.physic.shape.Circle;
 public class Thruster extends GameEntity
 {
     private final Ship    ship;
-    private       Circle  shape;
 
     // Sound
     private Sound sound;
@@ -23,12 +22,11 @@ public class Thruster extends GameEntity
     public Thruster(Ship ship)
     {
         this.ship = ship;
-        shape = new Circle(0);
         this.physicsComponent = new PhysicsComponent(
             ship.physicsComponent.getPosition().x + Constants.Visual.THRUSTER_OFFSET.x,
             ship.physicsComponent.getPosition().y + Constants.Visual.THRUSTER_OFFSET.y,
             0,
-            shape,
+            new Circle(0),
             new GameEntityGroup(GameEntityGroup.GroupOverride.NONE),
             false);
         this.graphicComponent = new AnimatedGraphicComponent(
@@ -56,7 +54,6 @@ public class Thruster extends GameEntity
         float thrusterScale = inputForce.len();
         this.graphicComponent.setWidth(Constants.Visual.THRUSTER_MAX_WIDTH * thrusterScale);
         this.graphicComponent.setHeight(Constants.Visual.THRUSTER_MAX_HEIGHT * thrusterScale);
-        shape.radius = Constants.Visual.THRUSTER_MAX_WIDTH / 2f * thrusterScale;
 
         Vector2 thrusterOffsetFromCentre = Constants.Visual.THRUSTER_OFFSET
             .cpy()
