@@ -1,12 +1,14 @@
 package com.draga.gameEntity;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.math.Vector2;
-import com.draga.physic.shape.Circle;
+import com.draga.component.PhysicsComponent;
 import com.draga.component.graphicComponent.AnimatedGraphicComponent;
 import com.draga.manager.InputManager;
+import com.draga.manager.SettingsManager;
 import com.draga.manager.asset.AssMan;
-import com.draga.component.PhysicsComponent;
+import com.draga.physic.shape.Circle;
 
 public class Thruster extends GameEntity
 {
@@ -17,6 +19,10 @@ public class Thruster extends GameEntity
     private final Ship    ship;
     private       Vector2 offset;
     private       Circle  shape;
+
+    // Sound
+    private Sound sound;
+    private long  soundInstance;
 
     public Thruster(Ship ship)
     {
@@ -38,6 +44,10 @@ public class Thruster extends GameEntity
             0,
             this.physicsComponent,
             Animation.PlayMode.LOOP);
+
+        sound = AssMan.getAssMan().get(AssMan.getAssList().thrusterSound);
+        // TODO: check if this sound is loopable.
+        soundInstance = sound.loop(0);
     }
 
     @Override
@@ -65,5 +75,16 @@ public class Thruster extends GameEntity
         this.physicsComponent.getVelocity().set(this.ship.physicsComponent.getVelocity());
 
         this.physicsComponent.setAngle(this.ship.physicsComponent.getAngle());
+
+        sound.setVolume(
+            soundInstance,
+            inputForce.len() * SettingsManager.getSettings().volume);
+    }
+
+    @Override
+    public void dispose()
+    {
+        sound.stop();
+        sound.dispose();
     }
 }

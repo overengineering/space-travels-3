@@ -1,6 +1,5 @@
 package com.draga.gameEntity;
 
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.draga.Constants;
@@ -10,7 +9,6 @@ import com.draga.component.graphicComponent.StaticGraphicComponent;
 import com.draga.component.miniMapGraphicComponent.TriangleMiniMapGraphicComponent;
 import com.draga.manager.InputManager;
 import com.draga.manager.SettingsManager;
-import com.draga.manager.asset.AssMan;
 import com.draga.physic.shape.Circle;
 
 import java.util.ArrayList;
@@ -21,12 +19,8 @@ public class Ship extends GameEntity
     public static final String LOGGING_TAG = Ship.class.getSimpleName();
 
     // Physic.
-    private static final float ROTATION_SCALE = 5f;
+    private static final float ROTATION_SCALE               = 5f;
     private static final float MAX_ROTATION_DEGREES_PER_SEC = 360f;
-
-    // Sound
-    private Sound thrusterSound;
-    private long  thrusterSoundInstance;
 
     // State.
     private float maxFuel;
@@ -39,10 +33,6 @@ public class Ship extends GameEntity
         String shipTexturePath,
         float maxFuel)
     {
-        thrusterSound = AssMan.getAssMan().get(AssMan.getAssList().thrusterSound);
-        // TODO: check if this sound is loopable.
-        thrusterSoundInstance = thrusterSound.loop(0);
-
         this.maxFuel = maxFuel;
         this.currentFuel = maxFuel;
 
@@ -89,9 +79,6 @@ public class Ship extends GameEntity
             inputForce.setZero();
         }
 
-        thrusterSound.setVolume(
-            thrusterSoundInstance,
-            inputForce.len() * SettingsManager.getSettings().volume);
         rotateTo(inputForce, deltaTime);
         updateFuel(inputForce, deltaTime);
 
@@ -102,8 +89,6 @@ public class Ship extends GameEntity
     public void dispose()
     {
         super.dispose();
-        thrusterSound.stop();
-        thrusterSound.dispose();
     }
 
     /**
