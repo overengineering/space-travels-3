@@ -71,23 +71,23 @@ public class Ship extends GameEntity
     {
         Vector2 inputForce = InputManager.getInputForce();
 
-        // TODO: apply the last part of acceleration properly and maybe then elapsed updating the
-        // thrusters?
-        if (currentFuel <= 0)
+        float fuelConsumption = inputForce.len() * Constants.Game.FUEL_PER_SECOND * deltaTime;
+
+        // If the fuel is or is going to be completely consumed then only apply the input force
+        // that the fuel can afford.
+        if (fuelConsumption > currentFuel)
         {
-            inputForce.setZero();
+            inputForce.scl(currentFuel / fuelConsumption);
+            fuelConsumption = currentFuel;
         }
 
+        currentFuel = SettingsManager.getDebugSettings().infiniteFuel
+            ? maxFuel
+            : currentFuel - fuelConsumption;
+
+        this.physicsComponent.getVelocity().add(inputForce.cpy().scl(deltaTime * 60f));
+
         rotateTo(inputForce, deltaTime);
-        updateFuel(inputForce, deltaTime);
-
-        this.physicsComponent.getVelocity().add(inputForce);
-    }
-
-    @Override
-    public void dispose()
-    {
-        super.dispose();
     }
 
     /**

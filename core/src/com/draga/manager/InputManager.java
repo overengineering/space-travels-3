@@ -23,7 +23,7 @@ public class InputManager
      */
     public static Vector2 getInputForce()
     {
-        return inputForce;
+        return inputForce.cpy();
     }
 
     public static void update()
