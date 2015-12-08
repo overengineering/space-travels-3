@@ -16,7 +16,7 @@ public class MiniMap
     private Ship               ship;
     private OrthographicCamera orthographicCamera;
 
-    public MiniMap(int worldWidth, int worldHeight)
+    public MiniMap(float worldWidth, float worldHeight)
     {
         orthographicCamera = new OrthographicCamera(worldWidth, worldHeight);
     }

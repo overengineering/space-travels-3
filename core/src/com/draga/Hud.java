@@ -37,7 +37,7 @@ public class Hud implements Screen
     private       Ship               ship;
     private       MiniMap            miniMap;
     
-    public Hud(OrthographicCamera worldCamera, int worldWidth, int worldHeight)
+    public Hud(OrthographicCamera worldCamera, float worldWidth, float worldHeight)
     {
         this.worldCamera = worldCamera;
         Constants.General.EVENT_BUS.register(this);

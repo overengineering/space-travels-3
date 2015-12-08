@@ -30,8 +30,8 @@ public class GameScreen implements Screen
 
     private PhysicDebugDrawer physicDebugDrawer;
 
-    private int width;
-    private int height;
+    private float width;
+    private float height;
 
     private String levelPath;
 
@@ -59,8 +59,8 @@ public class GameScreen implements Screen
 
     public GameScreen(
         String backgroundTexturePath,
-        int width,
-        int height,
+        float width,
+        float height,
         String levelPath)
     {
         this.backgroundTexture = AssMan.getAssMan().get(backgroundTexturePath);
