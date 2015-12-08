@@ -12,6 +12,10 @@ public class AssMan
     public static void create()
     {
         ASSET_MANAGER = new AssetManager();
+
+        ASSET_LIST = new Json().fromJson(
+            AssList.class,
+            Gdx.files.internal("assetList.json").readString());
     }
 
     public static void dispose()
@@ -26,16 +30,6 @@ public class AssMan
 
     public static AssList getAssList()
     {
-        // TODO: move to create? maybe a bit overkill but to deserialise these small object is very
-        // fast
-        if (ASSET_LIST == null)
-        {
-            Json json = new Json();
-
-            ASSET_LIST =
-                json.fromJson(AssList.class, Gdx.files.internal("assetList.json").readString());
-        }
-
         return ASSET_LIST;
     }
 }

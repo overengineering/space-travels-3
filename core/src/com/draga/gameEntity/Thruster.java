@@ -13,7 +13,7 @@ import com.draga.physic.shape.Circle;
 
 public class Thruster extends GameEntity
 {
-    private final Ship    ship;
+    private final Ship ship;
 
     // Sound
     private Sound sound;
@@ -58,15 +58,17 @@ public class Thruster extends GameEntity
         this.graphicComponent.setWidth(Constants.Visual.THRUSTER_MAX_WIDTH * thrusterScale);
         this.graphicComponent.setHeight(Constants.Visual.THRUSTER_MAX_HEIGHT * thrusterScale);
 
-        Vector2 thrusterOffsetFromCentre = Constants.Visual.THRUSTER_OFFSET
+        Vector2 thrusterOffsetPosition = Constants.Visual.THRUSTER_OFFSET
             .cpy()
-            .sub(this.graphicComponent.getHalfWidth(), 0);
-        this.physicsComponent.getPosition().set(this.ship.physicsComponent.getPosition().cpy());
-        Vector2 thrusterRotateOffset =
-            new Vector2(thrusterOffsetFromCentre).rotate(this.ship.physicsComponent.getAngle());
-        this.physicsComponent.getPosition().add(thrusterRotateOffset);
+            .sub(this.graphicComponent.getHalfWidth(), 0)
+            .rotate(this.ship.physicsComponent.getAngle());
 
-        this.physicsComponent.getVelocity().set(this.ship.physicsComponent.getVelocity());
+        this.physicsComponent.getPosition()
+            .set(this.ship.physicsComponent.getPosition()
+                .cpy()
+                .add(thrusterOffsetPosition));
+        this.physicsComponent.getVelocity()
+            .set(this.ship.physicsComponent.getVelocity());
 
         this.physicsComponent.setAngle(this.ship.physicsComponent.getAngle());
 
@@ -79,6 +81,5 @@ public class Thruster extends GameEntity
     public void dispose()
     {
         sound.stop();
-        sound.dispose();
     }
 }

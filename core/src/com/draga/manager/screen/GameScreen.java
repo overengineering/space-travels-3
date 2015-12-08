@@ -179,12 +179,13 @@ public class GameScreen implements Screen
 
         InputManager.update();
 
+        PhysicsEngine.update(elapsed);
+
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
             gameEntity.update(elapsed);
         }
 
-        PhysicsEngine.update(elapsed);
         hud.setScore(getScore());
     }
 
