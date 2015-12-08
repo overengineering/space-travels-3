@@ -7,24 +7,25 @@ import com.badlogic.gdx.math.Vector2;
 
 public abstract class ShapeRendererUtility
 {
-    public static void arc(
+    private static final String LOGGING_TAG =
+        ShapeRendererUtility.class.getSimpleName();
+
+    public static void dashedCircle(
         ShapeRenderer shapeRenderer,
         float x,
         float y,
         float radius,
-        float start,
-        float degrees,
-        float width)
+        int numArcs,
+        float arcLengthDegs,
+        float startOffset,
+        int segments,
+        float lineWidth)
     {
-        arc(
-            shapeRenderer,
-            x,
-            y,
-            radius,
-            start,
-            degrees,
-            Math.max(1, (int) (6 * (float) Math.cbrt(radius) * (degrees / 360.0f))),
-            width);
+        for (int i = 0; i < numArcs; i++)
+        {
+            float startDegs = startOffset + (i * (360 / numArcs)) - (arcLengthDegs / 2);
+            arc(shapeRenderer, x, y, radius, startDegs, arcLengthDegs, segments, lineWidth);
+        }
     }
 
     public static void arc(
@@ -98,24 +99,6 @@ public abstract class ShapeRendererUtility
         int numArcs,
         float arcLengthDegs,
         float startOffset,
-        int segments,
-        float lineWidth)
-    {
-        for (int i = 0; i < numArcs; i++)
-        {
-            float startDegs = startOffset + (i * (360 / numArcs)) - (arcLengthDegs / 2);
-            arc(shapeRenderer, x, y, radius, startDegs, arcLengthDegs, segments, lineWidth);
-        }
-    }
-
-    public static void dashedCircle(
-        ShapeRenderer shapeRenderer,
-        float x,
-        float y,
-        float radius,
-        int numArcs,
-        float arcLengthDegs,
-        float startOffset,
         float lineWidth)
     {
         for (int i = 0; i < numArcs; i++)
@@ -123,5 +106,25 @@ public abstract class ShapeRendererUtility
             float startDegs = startOffset + (i * (360 / numArcs)) - (arcLengthDegs / 2);
             arc(shapeRenderer, x, y, radius, startDegs, arcLengthDegs, lineWidth);
         }
+    }
+
+    public static void arc(
+        ShapeRenderer shapeRenderer,
+        float x,
+        float y,
+        float radius,
+        float start,
+        float degrees,
+        float width)
+    {
+        arc(
+            shapeRenderer,
+            x,
+            y,
+            radius,
+            start,
+            degrees,
+            Math.max(1, (int) (6 * (float) Math.cbrt(radius) * (degrees / 360.0f))),
+            width);
     }
 }

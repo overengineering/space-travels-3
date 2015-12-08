@@ -3,10 +3,7 @@ package com.draga;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -33,14 +30,12 @@ public class Hud implements Screen
 {
     private final Label              scoreLabel;
     private final OrthographicCamera worldCamera;
-    private final OrthographicCamera joystickCamera =
-        new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-    private Stage        stage;
-    private ProgressBar  fuelProgressBar;
-    private Stack<Image> grayPickups;
-    private Table        pickupTable;
-    private Ship         ship;
-    private MiniMap      miniMap;
+    private       Stage              stage;
+    private       ProgressBar        fuelProgressBar;
+    private       Stack<Image>       grayPickups;
+    private       Table              pickupTable;
+    private       Ship               ship;
+    private       MiniMap            miniMap;
     
     public Hud(OrthographicCamera worldCamera, int worldWidth, int worldHeight)
     {
@@ -85,6 +80,54 @@ public class Hud implements Screen
             .add(pickupTable)
             .bottom()
             .right();
+
+
+        if (SettingsManager.getSettings().inputType == InputType.TOUCH
+            || Gdx.app.getType() == Application.ApplicationType.Desktop)
+        {
+            float smallestDimension = Math.min(stage.getWidth(), stage.getHeight());
+
+            Pixmap pixmap =
+                new Pixmap(
+                    (int) smallestDimension,
+                    (int) smallestDimension,
+                    Pixmap.Format.RGBA8888);
+            pixmap.setColor(VisualStyle.JOYSTICK_OVERLAY_COLOR);
+
+            int numOuterArcs = 8;
+            float halfSmallestDimension = smallestDimension / 2f;
+
+            PixmapUtility.dashedCircle(
+                pixmap,
+                halfSmallestDimension,
+                halfSmallestDimension,
+                halfSmallestDimension,
+                numOuterArcs,
+                15,
+                360 / numOuterArcs / 2,
+                100,
+                2);
+            PixmapUtility.dashedCircle(
+                pixmap,
+                halfSmallestDimension,
+                halfSmallestDimension,
+                halfSmallestDimension * InputManager.DEAD_ZONE,
+                4,
+                30,
+                0,
+                100,
+                2);
+
+            Image joystickOverlayImage = new Image(new Texture(pixmap));
+            joystickOverlayImage.setScaling(Scaling.fit);
+            Table joystickOverlayTable = new Table();
+            joystickOverlayTable.setFillParent(true);
+            joystickOverlayTable
+                .add(joystickOverlayImage)
+                .center();
+
+            stage.addActor(joystickOverlayTable);
+        }
 
         stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
@@ -133,21 +176,14 @@ public class Hud implements Screen
 
         SpaceTravels3.shapeRenderer.begin();
 
-        if (GameEntityManager.getGameEntities().contains(ship))
+        if (SettingsManager.getSettings().hudForceIndicators
+            && GameEntityManager.getGameEntities().contains(ship))
         {
-            if (SettingsManager.getSettings().inputType == InputType.TOUCH
-                || Gdx.app.getType() == Application.ApplicationType.Desktop)
-            {
-                SpaceTravels3.shapeRenderer.setProjectionMatrix(joystickCamera.combined);
-                drawJoystick();
-            }
-            if (SettingsManager.getSettings().hudForceIndicators)
-            {
 
-                SpaceTravels3.shapeRenderer.setProjectionMatrix(worldCamera.combined);
-                drawGravityIndicator();
-                drawVelocityIndicator();
-            }
+            SpaceTravels3.shapeRenderer.setProjectionMatrix(worldCamera.combined);
+            drawGravityIndicator();
+            drawVelocityIndicator();
+
         }
 
         miniMap.draw();
@@ -159,37 +195,6 @@ public class Hud implements Screen
     {
         fuelProgressBar.setRange(0, ship.MAX_FUEL);
         fuelProgressBar.setValue(ship.getFuel());
-    }
-    
-    private void drawJoystick()
-    {
-        float smallestDimension =
-            Math.min(joystickCamera.viewportWidth, joystickCamera.viewportHeight);
-        float deadZoneHeight = smallestDimension * InputManager.DEAD_ZONE / 2f;
-
-        SpaceTravels3.shapeRenderer.setColor(new Color(1, 1, 1, 0.5f));
-
-        ShapeRendererUtility.dashedCircle(
-            SpaceTravels3.shapeRenderer,
-            0,
-            0,
-            deadZoneHeight,
-            4,
-            30,
-            0,
-            2);
-
-        int numArcs = 8;
-
-        ShapeRendererUtility.dashedCircle(
-            SpaceTravels3.shapeRenderer,
-            0,
-            0,
-            smallestDimension / 2,
-            numArcs,
-            15,
-            360 / numArcs / 2,
-            2);
     }
 
     private void drawGravityIndicator()
