@@ -71,7 +71,7 @@ public class GameScreen implements Screen
         this.gameState = GameState.COUNTDOWN;
         this.overlayScreen = new CountdownScreen();
 
-        Constants.EVENT_BUS.register(this);
+        Constants.General.EVENT_BUS.register(this);
 
         gameScreenInputProcessor = new GameScreenInputProcessor();
         Gdx.input.setInputProcessor(gameScreenInputProcessor);
@@ -80,7 +80,7 @@ public class GameScreen implements Screen
 
         orthographicCamera = new OrthographicCamera();
         extendViewport = new ExtendViewport(
-            VisualStyle.VIEWPORT_WIDTH, VisualStyle.VIEWPORT_HEIGHT, width, height, orthographicCamera);
+            Constants.Visual.VIEWPORT_WIDTH, Constants.Visual.VIEWPORT_HEIGHT, width, height, orthographicCamera);
         extendViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         if (SettingsManager.getDebugSettings().debugDraw)
@@ -172,7 +172,7 @@ public class GameScreen implements Screen
 
     public void update(float elapsed)
     {
-        if (Constants.IS_DEBUGGING)
+        if (Constants.General.IS_DEBUGGING)
         {
             checkDebugKeys();
         }
@@ -237,10 +237,10 @@ public class GameScreen implements Screen
 
     private int getScore()
     {
-        float pickupPoints = pickupCollected * Constants.PICKUP_POINTS;
-        float timePoints = elapsedPlayTime * Constants.TIME_POINTS;
+        float pickupPoints = pickupCollected * Constants.Game.PICKUP_POINTS;
+        float timePoints = elapsedPlayTime * Constants.Game.TIME_POINTS;
         // TODO: Max fuel can be all over the place. Percentage of remaining?
-        float fuelPoints = ship.getCurrentFuel() * Constants.FUEL_POINTS;
+        float fuelPoints = ship.getCurrentFuel() * Constants.Game.FUEL_POINTS;
 
         float score = pickupPoints;
         score -= timePoints;
@@ -283,7 +283,7 @@ public class GameScreen implements Screen
     public void dispose()
     {
         GameEntityManager.dispose();
-        Constants.EVENT_BUS.unregister(this);
+        Constants.General.EVENT_BUS.unregister(this);
         hud.dispose();
         if (this.overlayScreen != null)
         {
@@ -307,7 +307,7 @@ public class GameScreen implements Screen
     @Subscribe
     public void shipPlanetCollision(ShipPlanetCollisionEvent shipPlanetCollisionEvent)
     {
-        if (Constants.IS_DEBUGGING)
+        if (Constants.General.IS_DEBUGGING)
         {
             Gdx.app.debug(
                 LOGGING_TAG,
@@ -320,7 +320,7 @@ public class GameScreen implements Screen
         // If wrong planet or too fast then lose.
         if (!(shipPlanetCollisionEvent.planet.equals(destinationPlanet))
             || ship.physicsComponent.getVelocity().len()
-            > Constants.MAX_DESTINATION_PLANET_APPROACH_SPEED)
+            > Constants.Game.MAX_DESTINATION_PLANET_APPROACH_SPEED)
         {
             gameState = GameState.LOSE;
             GameEntity explosion = new Explosion(

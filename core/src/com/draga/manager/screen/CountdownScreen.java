@@ -19,7 +19,7 @@ public class CountdownScreen implements Screen
 
     public CountdownScreen()
     {
-        this.secondsRemaining = Constants.COUNTDOWN_SECONDS;
+        this.secondsRemaining = Constants.Game.COUNTDOWN_SECONDS;
 
         this.stage = new Stage();
 
@@ -72,7 +72,7 @@ public class CountdownScreen implements Screen
             countdownFinished = true;
             CountdownFinishedEvent countdownFinishedEvent =
                 Pools.obtain(CountdownFinishedEvent.class);
-            Constants.EVENT_BUS.post(countdownFinishedEvent);
+            Constants.General.EVENT_BUS.post(countdownFinishedEvent);
             Pools.free(countdownFinishedEvent);
             return;
         }

@@ -1,9 +1,7 @@
 package com.draga.gameEntity;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.draga.Constants;
-import com.draga.VisualStyle;
 import com.draga.component.PhysicsComponent;
 import com.draga.component.graphicComponent.StaticGraphicComponent;
 import com.draga.component.miniMapGraphicComponent.TriangleMiniMapGraphicComponent;
@@ -30,7 +28,7 @@ public class Ship extends GameEntity
         float x,
         float y,
         float mass,
-        String shipTexturePath,
+        String texturePath,
         float maxFuel)
     {
         this.maxFuel = maxFuel;
@@ -39,27 +37,28 @@ public class Ship extends GameEntity
         List<Class<? extends GameEntity>> collidesWith = new ArrayList<>();
         collidesWith.add(Planet.class);
         collidesWith.add(Pickup.class);
+
         this.physicsComponent =
             new PhysicsComponent(
                 x,
                 y,
                 mass,
-                new Circle(4),
+                new Circle(Constants.Game.SHIP_COLLISION_RADIUS),
                 new GameEntityGroup(collidesWith),
                 true);
 
         this.graphicComponent = new StaticGraphicComponent(
-            shipTexturePath,
-            VisualStyle.SHIP_WIDTH,
-            VisualStyle.SHIP_HEIGHT,
+            texturePath,
+            Constants.Visual.SHIP_WIDTH,
+            Constants.Visual.SHIP_HEIGHT,
             this.physicsComponent);
 
         this.miniMapGraphicComponent = new TriangleMiniMapGraphicComponent(
             this.physicsComponent,
-            Color.WHITE,
-            new Vector2(8, 0),
-            new Vector2(-5, -5),
-            new Vector2(-5, 5));
+            Constants.Visual.SHIP_MINIMAP_COLOUR,
+            Constants.Visual.SHIP_MINIMAP_TRIANGLE_VERTEX1,
+            Constants.Visual.SHIP_MINIMAP_TRIANGLE_VERTEX2,
+            Constants.Visual.SHIP_MINIMAP_TRIANGLE_VERTEX3);
     }
 
     public float getMaxFuel()
@@ -147,7 +146,7 @@ public class Ship extends GameEntity
         }
         else
         {
-            currentFuel -= inputForce.len() * Constants.FUEL_PER_SECOND * deltaTime;
+            currentFuel -= inputForce.len() * Constants.Game.FUEL_PER_SECOND * deltaTime;
         }
     }
 

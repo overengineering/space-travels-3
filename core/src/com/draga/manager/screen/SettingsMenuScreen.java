@@ -66,7 +66,7 @@ public class SettingsMenuScreen implements Screen
         ScrollPane scrollPane = new ScrollPane(table);
 
         //noinspection PointlessBooleanExpression
-        if (Constants.IS_DEBUGGING
+        if (Constants.General.IS_DEBUGGING
             || Gdx.app.getType() == Application.ApplicationType.Android
             || Gdx.app.getType() == Application.ApplicationType.iOS)
         {

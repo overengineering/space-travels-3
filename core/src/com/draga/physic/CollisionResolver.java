@@ -67,7 +67,7 @@ public abstract class CollisionResolver
             shipPlanetCollisionEvent.ship = ship;
             shipPlanetCollisionEvent.planet = planet;
 
-            Constants.EVENT_BUS.post(shipPlanetCollisionEvent);
+            Constants.General.EVENT_BUS.post(shipPlanetCollisionEvent);
             Pools.free(shipPlanetCollisionEvent);
         }
 
@@ -75,7 +75,7 @@ public abstract class CollisionResolver
         {
             PickupCollectedEvent pickupCollectedEvent = Pools.obtain(PickupCollectedEvent.class);
             pickupCollectedEvent.set(pickup);
-            Constants.EVENT_BUS.post(pickupCollectedEvent);
+            Constants.General.EVENT_BUS.post(pickupCollectedEvent);
             Pools.free(pickupCollectedEvent);
         }
     }

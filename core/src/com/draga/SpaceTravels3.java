@@ -36,7 +36,7 @@ public class SpaceTravels3 extends Game
         GameManager.setGame(this);
         PhysicsEngine.create();
 
-        if (Constants.IS_DEBUGGING)
+        if (Constants.General.IS_DEBUGGING)
         {
             Gdx.app.setLogLevel(Application.LOG_DEBUG);
 
@@ -54,7 +54,7 @@ public class SpaceTravels3 extends Game
     public void dispose()
     {
         Gdx.app.debug(LOGGING_TAG, "Dispose");
-        if (Constants.IS_DEBUGGING)
+        if (Constants.General.IS_DEBUGGING)
         {
             this.debugOverlay.dispose();
         }
@@ -90,7 +90,7 @@ public class SpaceTravels3 extends Game
 
         super.render();
 
-        if (Constants.IS_DEBUGGING)
+        if (Constants.General.IS_DEBUGGING)
         {
             this.debugOverlay.render(Gdx.graphics.getDeltaTime());
         }
@@ -104,7 +104,7 @@ public class SpaceTravels3 extends Game
 
         super.resize(width, height);
 
-        if (Constants.IS_DEBUGGING)
+        if (Constants.General.IS_DEBUGGING)
         {
             this.debugOverlay.resize(width, height);
         }

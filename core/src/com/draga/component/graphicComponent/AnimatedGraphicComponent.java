@@ -39,7 +39,7 @@ public class AnimatedGraphicComponent extends GraphicComponent
     public void draw()
     {
         TextureRegion textureRegion =
-            animation.getKeyFrame(animationTime.elapsed(TimeUnit.NANOSECONDS) * Constants.NANO);
+            animation.getKeyFrame(animationTime.elapsed(TimeUnit.NANOSECONDS) * Constants.General.NANO);
 
         SpaceTravels3.spriteBatch.draw(
             textureRegion,
@@ -63,6 +63,6 @@ public class AnimatedGraphicComponent extends GraphicComponent
     public boolean isFinished()
     {
         return animation.isAnimationFinished(animationTime.elapsed(TimeUnit.NANOSECONDS)
-            * Constants.NANO);
+            * Constants.General.NANO);
     }
 }

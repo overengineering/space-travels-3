@@ -11,9 +11,9 @@ public abstract class SettingsManager
     private static final Json JSON = new Json();
 
     private static final FileHandle    debugSettingsFileHandle =
-        FileManager.getFileHandle(Constants.FOLDER, Constants.DEBUG_SETTINGS_FILENAME);
+        FileManager.getFileHandle(Constants.General.FOLDER, Constants.General.DEBUG_SETTINGS_FILENAME);
     private static final FileHandle settingsFileHandle =
-        FileManager.getFileHandle(Constants.FOLDER, Constants.SETTINGS_FILENAME);
+        FileManager.getFileHandle(Constants.General.FOLDER, Constants.General.SETTINGS_FILENAME);
 
     private static       DebugSettings debugSettings           = getOrCreateDebugSettings();
     private static       Settings   settings           = getOrCreateSettings();
@@ -54,13 +54,13 @@ public abstract class SettingsManager
 
     public static void saveSettings()
     {
-        String debugSettingsString = Constants.IS_DEBUGGING
+        String debugSettingsString = Constants.General.IS_DEBUGGING
             ? JSON.prettyPrint(debugSettings)
             : JSON.toJson(debugSettings);
 
         debugSettingsFileHandle.writeString(debugSettingsString, false);
 
-        String settingsString = Constants.IS_DEBUGGING
+        String settingsString = Constants.General.IS_DEBUGGING
             ? JSON.prettyPrint(settings)
             : JSON.toJson(settings);
 

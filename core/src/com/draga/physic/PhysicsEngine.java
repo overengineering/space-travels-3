@@ -61,7 +61,7 @@ public class PhysicsEngine
             step(elapsed / CURRENT_STEPS);
         }
 
-        updateTime = updateTimer.elapsed(TimeUnit.NANOSECONDS) * Constants.NANO;
+        updateTime = updateTimer.elapsed(TimeUnit.NANOSECONDS) * Constants.General.NANO;
         updateTimer.reset();
     }
 

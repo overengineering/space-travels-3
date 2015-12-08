@@ -1,7 +1,7 @@
 package com.draga.gameEntity;
 
 import com.badlogic.gdx.graphics.Color;
-import com.draga.VisualStyle;
+import com.draga.Constants;
 import com.draga.component.PhysicsComponent;
 import com.draga.component.graphicComponent.StaticGraphicComponent;
 import com.draga.component.miniMapGraphicComponent.CircleMiniMapGraphicsComponent;
@@ -37,8 +37,8 @@ public class Planet extends GameEntity
             this.physicsComponent);
 
         Color miniMapColour = isDestination
-            ? VisualStyle.PLANET_MINIMAP_DESTINATION_COLOUR
-            : VisualStyle.PLANET_MINIMAP_COLOUR;
+            ? Constants.Visual.PLANET_MINIMAP_DESTINATION_COLOUR
+            : Constants.Visual.PLANET_MINIMAP_COLOUR;
         this.miniMapGraphicComponent = new CircleMiniMapGraphicsComponent(
             this.physicsComponent,
             miniMapColour,

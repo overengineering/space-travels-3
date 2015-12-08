@@ -69,7 +69,7 @@ public class MiniMap
             Math.max(
                 newCameraBounds.width / orthographicCamera.viewportWidth,
                 newCameraBounds.height / orthographicCamera.viewportHeight);
-        orthographicCamera.zoom /= VisualStyle.MINIMAP_SCALE;
+        orthographicCamera.zoom /= Constants.Visual.MINIMAP_SCALE;
 
         // Moves the camera so that the bottom left corner of the screen corresponds to the
         // bottom left corner of the new camera bounds.
@@ -86,7 +86,7 @@ public class MiniMap
 
     private void drawBackground()
     {
-        orthographicCamera.zoom = 1 / VisualStyle.MINIMAP_SCALE;
+        orthographicCamera.zoom = 1 / Constants.Visual.MINIMAP_SCALE;
         orthographicCamera.position.set(
             (orthographicCamera.viewportWidth / 2f) * orthographicCamera.zoom,
             (orthographicCamera.viewportHeight / 2f) * orthographicCamera.zoom,

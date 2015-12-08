@@ -2,7 +2,7 @@ package com.draga.gameEntity;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.draga.VisualStyle;
+import com.draga.Constants;
 import com.draga.component.PhysicsComponent;
 import com.draga.component.graphicComponent.AnimatedGraphicComponent;
 import com.draga.manager.GameEntityManager;
@@ -26,7 +26,7 @@ public class Explosion extends GameEntity
 
         this.graphicComponent = new AnimatedGraphicComponent(
             AssMan.getAssList().explosion,
-            VisualStyle.EXPLOSION_LIFETIME,
+            Constants.Visual.EXPLOSION_LIFETIME,
             width,
             height,
             this.physicsComponent,

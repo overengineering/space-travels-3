@@ -1,7 +1,7 @@
 package com.draga.gameEntity;
 
 import com.badlogic.gdx.math.MathUtils;
-import com.draga.VisualStyle;
+import com.draga.Constants;
 import com.draga.component.PhysicsComponent;
 import com.draga.component.graphicComponent.StaticGraphicComponent;
 import com.draga.component.miniMapGraphicComponent.StarMiniMapGraphicComponent;
@@ -20,7 +20,7 @@ public class Pickup extends GameEntity
             x,
             y,
             0,
-            new Circle((VisualStyle.PICKUP_WIDTH + VisualStyle.PICKUP_HEIGHT) / 4f),
+            new Circle((Constants.Visual.PICKUP_WIDTH + Constants.Visual.PICKUP_HEIGHT) / 4f),
             new GameEntityGroup(collidesWith),
             false);
         this.physicsComponent.setAngularVelocity(
@@ -29,15 +29,15 @@ public class Pickup extends GameEntity
         this.graphicComponent =
             new StaticGraphicComponent(
                 texturePath,
-                VisualStyle.PICKUP_WIDTH,
-                VisualStyle.PICKUP_HEIGHT,
+                Constants.Visual.PICKUP_WIDTH,
+                Constants.Visual.PICKUP_HEIGHT,
                 this.physicsComponent);
 
         this.miniMapGraphicComponent =
             new StarMiniMapGraphicComponent(
                 physicsComponent,
-                VisualStyle.PICKUP_MINIMAP_COLOR,
-                VisualStyle.PICKUP_MINIMAP_RADIUS);
+                Constants.Visual.PICKUP_MINIMAP_COLOR,
+                Constants.Visual.PICKUP_MINIMAP_RADIUS);
     }
 
     @Override

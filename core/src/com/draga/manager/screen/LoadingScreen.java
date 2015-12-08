@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -116,7 +115,7 @@ public class LoadingScreen implements Screen
     {
         if (AssMan.getAssMan().update())
         {
-            if (Constants.IS_DEBUGGING)
+            if (Constants.General.IS_DEBUGGING)
             {
                 Gdx.app.debug(
                     LOGGING_TAG,
@@ -125,7 +124,7 @@ public class LoadingScreen implements Screen
                     LOGGING_TAG,
                     String.format(
                         "Loading time: %fs",
-                        stopwatch.elapsed(TimeUnit.NANOSECONDS) * Constants.NANO));
+                        stopwatch.elapsed(TimeUnit.NANOSECONDS) * Constants.General.NANO));
             }
             GameScreen gameScreen = LevelManager.getLevelGameScreen(serialisableLevel);
             GameManager.getGame().setScreen(gameScreen);

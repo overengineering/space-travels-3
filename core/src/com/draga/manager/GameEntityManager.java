@@ -23,7 +23,7 @@ public class GameEntityManager
 
     public static void update()
     {
-        if (Constants.IS_DEBUGGING)
+        if (Constants.General.IS_DEBUGGING)
         {
             if (!GAME_ENTITIES_TO_ADD.isEmpty())
             {

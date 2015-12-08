@@ -75,10 +75,10 @@ public class DebugOverlay implements Screen
 
     public void updateGeneralLabel()
     {
-        String formattedJavaHeap = Constants.COMMA_SEPARATED_THOUSANDS_FORMATTER.format(
+        String formattedJavaHeap = Constants.General.COMMA_SEPARATED_THOUSANDS_FORMATTER.format(
             Gdx.app.getJavaHeap());
         String formattedNativeHeap =
-            Constants.COMMA_SEPARATED_THOUSANDS_FORMATTER.format(Gdx.app.getNativeHeap());
+            Constants.General.COMMA_SEPARATED_THOUSANDS_FORMATTER.format(Gdx.app.getNativeHeap());
         String message = String.format(
             "FPS : %3d | Java heap : %12s | Java native heap : %12s",
             Gdx.graphics.getFramesPerSecond(),

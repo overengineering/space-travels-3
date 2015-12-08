@@ -72,10 +72,10 @@ public class InputManager
             .scl(1f / ACCELEROMETER_RANGE);
 
         // Max the gravity by the Earth gravity to avoid excessive force being applied if the device is shaken.
-        input = input.clamp(0, Constants.EARTH_GRAVITY);
+        input = input.clamp(0, Constants.General.EARTH_GRAVITY);
 
         // Scale the input by the Earth's gravity so that I'll be between 1 and 0
-        input = input.scl(1 / Constants.EARTH_GRAVITY);
+        input = input.scl(1 / Constants.General.EARTH_GRAVITY);
 
         input.x = applyDeadZone(input.x);
         input.y = applyDeadZone(input.y);

@@ -53,7 +53,7 @@ public class MenuScreen implements Screen
             .expand();
 
 
-        if (Constants.IS_DEBUGGING)
+        if (Constants.General.IS_DEBUGGING)
         {
             Actor debugButton = getDebugButton();
 

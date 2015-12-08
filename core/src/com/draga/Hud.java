@@ -40,7 +40,7 @@ public class Hud implements Screen
     public Hud(OrthographicCamera worldCamera, int worldWidth, int worldHeight)
     {
         this.worldCamera = worldCamera;
-        Constants.EVENT_BUS.register(this);
+        Constants.General.EVENT_BUS.register(this);
         this.grayPickups = new Stack<>();
         this.miniMap = new MiniMap(worldWidth, worldHeight);
 
@@ -92,7 +92,7 @@ public class Hud implements Screen
                     (int) smallestDimension,
                     (int) smallestDimension,
                     Pixmap.Format.RGBA8888);
-            pixmap.setColor(VisualStyle.JOYSTICK_OVERLAY_COLOR);
+            pixmap.setColor(Constants.Visual.JOYSTICK_OVERLAY_COLOR);
 
             int numOuterArcs = 8;
             float halfSmallestDimension = smallestDimension / 2f;
@@ -205,9 +205,9 @@ public class Hud implements Screen
         SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
         SpaceTravels3.shapeRenderer.circle(
             ship.physicsComponent.getPosition().x
-                + gravityVector.x * VisualStyle.HUD_FORCE_INDICATOR_SCALE,
+                + gravityVector.x * Constants.Visual.HUD_FORCE_INDICATOR_SCALE,
             ship.physicsComponent.getPosition().y
-                + gravityVector.y * VisualStyle.HUD_FORCE_INDICATOR_SCALE,
+                + gravityVector.y * Constants.Visual.HUD_FORCE_INDICATOR_SCALE,
             0.5f);
 
         SpaceTravels3.shapeRenderer.setColor(new Color(0, 0, 1f, 0.4f));
@@ -215,7 +215,7 @@ public class Hud implements Screen
         SpaceTravels3.shapeRenderer.circle(
             ship.physicsComponent.getPosition().x,
             ship.physicsComponent.getPosition().y,
-            gravityVector.len() * VisualStyle.HUD_FORCE_INDICATOR_SCALE,
+            gravityVector.len() * Constants.Visual.HUD_FORCE_INDICATOR_SCALE,
             24);
     }
 
@@ -225,9 +225,9 @@ public class Hud implements Screen
         SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
         SpaceTravels3.shapeRenderer.circle(
             ship.physicsComponent.getPosition().x
-                + ship.physicsComponent.getVelocity().x * VisualStyle.HUD_FORCE_INDICATOR_SCALE,
+                + ship.physicsComponent.getVelocity().x * Constants.Visual.HUD_FORCE_INDICATOR_SCALE,
             ship.physicsComponent.getPosition().y
-                + ship.physicsComponent.getVelocity().y * VisualStyle.HUD_FORCE_INDICATOR_SCALE,
+                + ship.physicsComponent.getVelocity().y * Constants.Visual.HUD_FORCE_INDICATOR_SCALE,
             0.5f);
 
         SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Line);
@@ -235,7 +235,7 @@ public class Hud implements Screen
         SpaceTravels3.shapeRenderer.circle(
             ship.physicsComponent.getPosition().x,
             ship.physicsComponent.getPosition().y,
-            ship.physicsComponent.getVelocity().len() * VisualStyle.HUD_FORCE_INDICATOR_SCALE,
+            ship.physicsComponent.getVelocity().len() * Constants.Visual.HUD_FORCE_INDICATOR_SCALE,
             24);
     }
 
@@ -266,7 +266,7 @@ public class Hud implements Screen
     @Override
     public void dispose()
     {
-        Constants.EVENT_BUS.unregister(this);
+        Constants.General.EVENT_BUS.unregister(this);
         stage.dispose();
     }
 
