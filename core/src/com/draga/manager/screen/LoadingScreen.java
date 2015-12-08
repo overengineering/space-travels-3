@@ -74,19 +74,19 @@ public class LoadingScreen implements Screen
         AssMan.getAssMan().load(AssMan.getAssList().loseSound, Sound.class);
         AssMan.getAssMan().load(AssMan.getAssList().winSound, Sound.class);
 
-        AssMan.getAssMan().load(AssMan.getAssList().pickupGrey, Texture.class);
+        AssMan.getAssMan().load(AssMan.getAssList().pickupGreyTexture, Texture.class);
         AssMan.getAssMan().load(
             this.serialisableLevel.serialisedBackground.texturePath, Texture.class);
         AssMan.getAssMan().load(
-            AssMan.getAssList().ship, Texture.class);
+            AssMan.getAssList().shipTexture, Texture.class);
         AssMan.getAssMan().load(
-            AssMan.getAssList().thruster, TextureAtlas.class);
+            AssMan.getAssList().thrusterTexture, TextureAtlas.class);
         for (SerialisablePlanet serialisablePlanet : this.serialisableLevel.serialisedPlanets)
         {
             AssMan.getAssMan().load(serialisablePlanet.texturePath, Texture.class);
         }
-        AssMan.getAssMan().load(AssMan.getAssList().explosion, TextureAtlas.class);
-        AssMan.getAssMan().load(AssMan.getAssList().pickup, Texture.class);
+        AssMan.getAssMan().load(AssMan.getAssList().explosionTextureAtlas, TextureAtlas.class);
+        AssMan.getAssMan().load(AssMan.getAssList().pickupTexture, Texture.class);
     }
 
     public Label getHeaderLabel()

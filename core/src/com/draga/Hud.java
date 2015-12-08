@@ -272,7 +272,7 @@ public class Hud implements Screen
 
     public void addPickup()
     {
-        Texture pickupTexture = AssMan.getAssMan().get(AssMan.getAssList().pickupGrey);
+        Texture pickupTexture = AssMan.getAssMan().get(AssMan.getAssList().pickupGreyTexture);
         Image pickupImage = new Image(pickupTexture);
 
         pickupImage.setScaling(Scaling.fit);
@@ -287,7 +287,7 @@ public class Hud implements Screen
     {
         Image firstPickup = grayPickups.pop();
 
-        Texture pickupTexture = AssMan.getAssMan().get(AssMan.getAssList().pickup);
+        Texture pickupTexture = AssMan.getAssMan().get(AssMan.getAssList().pickupTexture);
 
         firstPickup.setDrawable(new TextureRegionDrawable(new TextureRegion(pickupTexture)));
     }

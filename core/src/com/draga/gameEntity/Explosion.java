@@ -25,7 +25,7 @@ public class Explosion extends GameEntity
             false);
 
         this.graphicComponent = new AnimatedGraphicComponent(
-            AssMan.getAssList().explosion,
+            AssMan.getAssList().explosionTextureAtlas,
             Constants.Visual.EXPLOSION_LIFETIME,
             width,
             height,

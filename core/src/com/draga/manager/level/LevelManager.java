@@ -34,7 +34,7 @@ public abstract class LevelManager
             serialisableLevel.serialisedShip.x,
             serialisableLevel.serialisedShip.y,
             serialisableLevel.serialisedShip.mass,
-            AssMan.getAssList().ship,
+            AssMan.getAssList().shipTexture,
             serialisableLevel.fuel);
         gameScreen.addShip(ship);
 
@@ -58,7 +58,7 @@ public abstract class LevelManager
         for (SerialisablePickup serialisablePickup : serialisableLevel.serialisedPickups)
         {
             Pickup pickup =
-                new Pickup(serialisablePickup.x, serialisablePickup.y, AssMan.getAssList().pickup);
+                new Pickup(serialisablePickup.x, serialisablePickup.y, AssMan.getAssList().pickupTexture);
             gameScreen.addPickup(pickup);
         }
 

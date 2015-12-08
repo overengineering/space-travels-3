@@ -22,6 +22,7 @@ public class Thruster extends GameEntity
     public Thruster(Ship ship)
     {
         this.ship = ship;
+
         this.physicsComponent = new PhysicsComponent(
             ship.physicsComponent.getPosition().x + Constants.Visual.THRUSTER_OFFSET.x,
             ship.physicsComponent.getPosition().y + Constants.Visual.THRUSTER_OFFSET.y,
@@ -29,8 +30,9 @@ public class Thruster extends GameEntity
             new Circle(0),
             new GameEntityGroup(GameEntityGroup.GroupOverride.NONE),
             false);
+
         this.graphicComponent = new AnimatedGraphicComponent(
-            AssMan.getAssList().thruster,
+            AssMan.getAssList().thrusterTexture,
             Constants.Visual.THRUSTER_ANIMATION_TIME,
             0,
             0,
@@ -38,7 +40,8 @@ public class Thruster extends GameEntity
             Animation.PlayMode.LOOP);
 
         sound = AssMan.getAssMan().get(AssMan.getAssList().thrusterSound);
-        // TODO: check if this sound is loopable.
+
+        // Sound must be loopable.
         soundInstance = sound.loop(0);
     }
 

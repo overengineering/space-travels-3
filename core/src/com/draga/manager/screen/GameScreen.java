@@ -105,7 +105,7 @@ public class GameScreen implements Screen
 
         thruster = new Thruster(ship);
 
-        // Adds the thruster first so that is drawn below the ship.
+        // Adds the thruster first so that is drawn below the shipTexture.
         GameEntityManager.addGameEntity(thruster);
         GameEntityManager.addGameEntity(ship);
     }
@@ -194,7 +194,7 @@ public class GameScreen implements Screen
 
         SpaceTravels3.spriteBatch.begin();
 
-        // Draw background at ship and parallax 30%.
+        // Draw background at shipTexture and parallax 30%.
         SpaceTravels3.spriteBatch.draw(
             backgroundTexture,
             -(width / 2f - orthographicCamera.position.x) / 1.3f,
