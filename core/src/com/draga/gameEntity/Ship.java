@@ -22,10 +22,12 @@ public class Ship extends GameEntity
 
     // Physic.
     private static final float ROTATION_SCALE = 5f;
-
     private static final float MAX_ROTATION_DEGREES_PER_SEC = 360f;
+
+    // Sound
     private Sound thrusterSound;
     private long  thrusterSoundInstance;
+
     // State.
     private float maxFuel;
     private float currentFuel;
@@ -35,7 +37,6 @@ public class Ship extends GameEntity
         float y,
         float mass,
         String shipTexturePath,
-        String thrusterTextureAtlasPath,
         float maxFuel)
     {
         thrusterSound = AssMan.getAssMan().get(AssMan.getAssList().thrusterSound);
@@ -43,7 +44,7 @@ public class Ship extends GameEntity
         thrusterSoundInstance = thrusterSound.loop(0);
 
         this.maxFuel = maxFuel;
-        currentFuel = maxFuel;
+        this.currentFuel = maxFuel;
 
         List<Class<? extends GameEntity>> collidesWith = new ArrayList<>();
         collidesWith.add(Planet.class);

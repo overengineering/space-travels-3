@@ -1,7 +1,6 @@
 package com.draga.manager.level;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Json;
 import com.draga.gameEntity.Planet;
 import com.draga.gameEntity.Ship;
@@ -36,7 +35,6 @@ public abstract class LevelManager
             serialisableLevel.serialisedShip.y,
             serialisableLevel.serialisedShip.mass,
             AssMan.getAssList().ship,
-            AssMan.getAssList().thruster,
             serialisableLevel.fuel);
         gameScreen.addShip(ship);
 
