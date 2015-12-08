@@ -22,7 +22,6 @@ public class Ship extends GameEntity
 
     // Physic.
     private static final float ROTATION_SCALE = 5f;
-    private static final float SHIP_MASS      = 1f;
 
     private static final float MAX_ROTATION_DEGREES_PER_SEC = 360f;
     private Sound thrusterSound;
@@ -34,6 +33,7 @@ public class Ship extends GameEntity
     public Ship(
         float x,
         float y,
+        float mass,
         String shipTexturePath,
         String thrusterTextureAtlasPath,
         float maxFuel)
@@ -52,7 +52,7 @@ public class Ship extends GameEntity
             new PhysicsComponent(
                 x,
                 y,
-                SHIP_MASS,
+                mass,
                 new Circle(4),
                 new GameEntityGroup(collidesWith),
                 true);

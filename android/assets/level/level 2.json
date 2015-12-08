@@ -10,7 +10,8 @@
   },
   "serialisedShip": {
     "x": 150,
-    "y": 75
+    "y": 75,
+    "mass": 1.0
   },
   "serialisedPlanets": [
     {

@@ -239,6 +239,7 @@ public class GameScreen implements Screen
     {
         float pickupPoints = pickupCollected * Constants.PICKUP_POINTS;
         float timePoints = elapsedPlayTime * Constants.TIME_POINTS;
+        // TODO: Max fuel can be all over the place. Percentage of remaining?
         float fuelPoints = ship.getCurrentFuel() * Constants.FUEL_POINTS;
 
         float score = pickupPoints;

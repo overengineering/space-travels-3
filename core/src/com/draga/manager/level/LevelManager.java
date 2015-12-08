@@ -34,6 +34,7 @@ public abstract class LevelManager
         Ship ship = new Ship(
             serialisableLevel.serialisedShip.x,
             serialisableLevel.serialisedShip.y,
+            serialisableLevel.serialisedShip.mass,
             AssMan.getAssList().ship,
             AssMan.getAssList().thruster,
             serialisableLevel.fuel);
