@@ -22,13 +22,11 @@ import com.draga.physic.PhysicDebugDrawer;
 import com.draga.physic.PhysicsEngine;
 import com.google.common.eventbus.Subscribe;
 
-import java.util.ArrayList;
-
 public class GameScreen implements Screen
 {
     private static final String LOGGING_TAG = GameScreen.class.getSimpleName();
 
-    private PhysicDebugDrawer physicDebugDrawer;
+    private final Background background;
 
     private float width;
     private float height;
@@ -45,12 +43,9 @@ public class GameScreen implements Screen
     private OrthographicCamera orthographicCamera;
     private ExtendViewport     extendViewport;
 
-    private Ship              ship;
-    private Thruster          thruster;
-    private ArrayList<Planet> planets;
-    private Planet destinationPlanet;
-
-    private GameScreenInputProcessor gameScreenInputProcessor;
+    private Ship     ship;
+    private Thruster thruster;
+    private Planet   destinationPlanet;
 
     private int   pickupCollected;
     private float elapsedPlayTime;
@@ -63,6 +58,8 @@ public class GameScreen implements Screen
         float height,
         String levelPath)
     {
+        this.background = new Background();
+
         this.backgroundTexture = AssMan.getAssMan().get(backgroundTexturePath);
         this.width = width;
         this.height = height;
@@ -73,20 +70,17 @@ public class GameScreen implements Screen
 
         Constants.General.EVENT_BUS.register(this);
 
-        gameScreenInputProcessor = new GameScreenInputProcessor();
+        GameScreenInputProcessor gameScreenInputProcessor = new GameScreenInputProcessor();
         Gdx.input.setInputProcessor(gameScreenInputProcessor);
-
-        planets = new ArrayList<>();
 
         orthographicCamera = new OrthographicCamera();
         extendViewport = new ExtendViewport(
-            Constants.Visual.VIEWPORT_WIDTH, Constants.Visual.VIEWPORT_HEIGHT, width, height, orthographicCamera);
+            Constants.Visual.VIEWPORT_WIDTH,
+            Constants.Visual.VIEWPORT_HEIGHT,
+            width,
+            height,
+            orthographicCamera);
         extendViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
-        if (SettingsManager.getDebugSettings().debugDraw)
-        {
-            physicDebugDrawer = new PhysicDebugDrawer();
-        }
 
         hud = new Hud(orthographicCamera, width, height);
 
@@ -124,7 +118,6 @@ public class GameScreen implements Screen
 
     public void addPlanet(Planet planet)
     {
-        this.planets.add(planet);
         GameEntityManager.addGameEntity(planet);
     }
 
@@ -195,13 +188,7 @@ public class GameScreen implements Screen
 
         SpaceTravels3.spriteBatch.begin();
 
-        // Draw background at shipTexture and parallax 30%.
-        SpaceTravels3.spriteBatch.draw(
-            backgroundTexture,
-            -(width / 2f - orthographicCamera.position.x) / 1.3f,
-            -(height / 2f - orthographicCamera.position.y) / 1.3f,
-            width,
-            height);
+        background.draw(orthographicCamera);
 
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
@@ -211,7 +198,7 @@ public class GameScreen implements Screen
 
         if (SettingsManager.getDebugSettings().debugDraw)
         {
-            physicDebugDrawer.draw(orthographicCamera);
+            PhysicDebugDrawer.draw(orthographicCamera);
         }
     }
 
