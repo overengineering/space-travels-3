@@ -4,10 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.draga.Constants;
 import com.draga.gameEntity.GameEntity;
-import com.draga.physic.shape.Circle;
 import com.draga.manager.GameEntityManager;
+import com.draga.manager.SettingsManager;
+import com.draga.physic.shape.Circle;
 import com.google.common.base.Stopwatch;
 
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 public class PhysicsEngine
@@ -18,9 +20,10 @@ public class PhysicsEngine
     private static final int       MIN_STEPS     = 1;
     private static final int       MAX_STEPS     = 10;
     private static final int       FPS_GOAL      = 60;
-    private static final Stopwatch UPDATE_TIMER  = Stopwatch.createUnstarted();
+    private static       Stopwatch updateTimer   = Stopwatch.createUnstarted();
     private static       int       CURRENT_STEPS = MAX_STEPS;
-    private static float updateTime;
+    private static float                        updateTime;
+    private static HashMap<GameEntity, Vector2> calculatedGravityForces;
 
     public static float getUpdateTime()
     {
@@ -34,7 +37,7 @@ public class PhysicsEngine
 
     public static void update(float elapsed)
     {
-        UPDATE_TIMER.start();
+        updateTimer.start();
 
 
         if (Gdx.graphics.getFramesPerSecond() >= FPS_GOAL)
@@ -58,24 +61,37 @@ public class PhysicsEngine
             step(elapsed / CURRENT_STEPS);
         }
 
-        updateTime = UPDATE_TIMER.elapsed(TimeUnit.NANOSECONDS) * Constants.NANO;
-        UPDATE_TIMER.reset();
+        updateTime = updateTimer.elapsed(TimeUnit.NANOSECONDS) * Constants.General.NANO;
+        updateTimer.reset();
     }
 
     /**
      * Performs a physic step.
      *
-     * @param elapsed
+     * @param deltaTime
      */
-    private static void step(float elapsed)
+    private static void step(float deltaTime)
     {
+        calculatedGravityForces.clear();
+
+        if (!SettingsManager.getDebugSettings().noGravity)
+        {
+            for (GameEntity gameEntity : GameEntityManager.getGameEntities())
+            {
+                if (gameEntity.physicsComponent.affectedByGravity)
+                {
+                    stepGravity(gameEntity, deltaTime);
+                }
+            }
+        }
+
         // Updates all position according to the game entity velocity.
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
             gameEntity.physicsComponent.getPosition()
-                .add(gameEntity.physicsComponent.getVelocity().cpy().scl(elapsed));
+                .add(gameEntity.physicsComponent.getVelocity().cpy().scl(deltaTime));
             gameEntity.physicsComponent.setAngle(gameEntity.physicsComponent.getAngle()
-                + gameEntity.physicsComponent.getAngularVelocity() * elapsed);
+                + gameEntity.physicsComponent.getAngularVelocity() * deltaTime);
         }
 
         /** Check for collisions following this pattern to avoid duplicates:
@@ -107,6 +123,13 @@ public class PhysicsEngine
         }
     }
 
+    private static void stepGravity(GameEntity gameEntity, float deltaTime)
+    {
+        Vector2 gravityForce = getGravityForceActingOn(gameEntity);
+
+        gameEntity.physicsComponent.getVelocity().add(gravityForce.scl(deltaTime));
+    }
+
     private static boolean areColliding(
         GameEntity gameEntityA,
         GameEntity gameEntityB)
@@ -130,24 +153,24 @@ public class PhysicsEngine
 
         return false;
     }
-    
-    public static Vector2 getForceActingOn(GameEntity gameEntity)
+
+    private static Vector2 calculateGravityForceActingOn(GameEntity gameEntity)
     {
         Vector2 totalForce = new Vector2();
-        
+
         for (GameEntity otherGameEntity : GameEntityManager.getGameEntities())
         {
             if (!gameEntity.equals(otherGameEntity))
             {
-                Vector2 force = getGravityForce(gameEntity, otherGameEntity);
+                Vector2 force = calculateGravityForce(gameEntity, otherGameEntity);
                 totalForce.add(force);
             }
         }
-        
+
         return totalForce;
     }
-    
-    private static Vector2 getGravityForce(
+
+    private static Vector2 calculateGravityForce(
         GameEntity gameEntityA,
         GameEntity gameEntityB)
     {
@@ -162,5 +185,33 @@ public class PhysicsEngine
                 / distanceLen2;
         distance = distance.scl(forceMagnitude);
         return distance;
+    }
+
+    /**
+     * Gets the gravity on a game entity. Calculates it if it has not been already, otherwise returns
+     * the last one.
+     * @param gameEntity
+     * @return
+     */
+    public static Vector2 getGravityForceActingOn(GameEntity gameEntity)
+    {
+        if (!calculatedGravityForces.containsKey(gameEntity))
+        {
+            Vector2 force = calculateGravityForceActingOn(gameEntity);
+            calculatedGravityForces.put(gameEntity, force);
+        }
+
+        return calculatedGravityForces.get(gameEntity).cpy();
+    }
+
+    public static void create()
+    {
+        calculatedGravityForces = new HashMap<>();
+        updateTimer = Stopwatch.createUnstarted();
+    }
+    
+    public static void dispose()
+    {
+
     }
 }

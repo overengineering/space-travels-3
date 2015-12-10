@@ -1,7 +1,6 @@
 package com.draga.manager.level;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Json;
 import com.draga.gameEntity.Planet;
 import com.draga.gameEntity.Ship;
@@ -22,12 +21,10 @@ public abstract class LevelManager
     private static final String LOGGING_TAG = LevelManager.class.getSimpleName();
     private static ArrayList<SerialisableLevel> levels;
 
-    public static GameScreen getLevelGameScreen(
-        SerialisableLevel serialisableLevel, SpriteBatch spriteBatch)
+    public static GameScreen getLevelGameScreen(SerialisableLevel serialisableLevel)
     {
         GameScreen gameScreen = new GameScreen(
             serialisableLevel.serialisedBackground.texturePath,
-            spriteBatch,
             serialisableLevel.width,
             serialisableLevel.height,
             serialisableLevel.name);
@@ -35,8 +32,9 @@ public abstract class LevelManager
         Ship ship = new Ship(
             serialisableLevel.serialisedShip.x,
             serialisableLevel.serialisedShip.y,
-            AssMan.getAssList().ship,
-            AssMan.getAssList().thruster);
+            serialisableLevel.serialisedShip.mass,
+            AssMan.getAssList().shipTexture,
+            serialisableLevel.fuel);
         gameScreen.addShip(ship);
 
         for (SerialisablePlanet serialisablePlanet : serialisableLevel.serialisedPlanets)
@@ -50,12 +48,16 @@ public abstract class LevelManager
                 serialisablePlanet.destination);
 
             gameScreen.addPlanet(planet);
+            if (serialisablePlanet.destination)
+            {
+                gameScreen.setDestinationPlanet(planet);
+            }
         }
 
         for (SerialisablePickup serialisablePickup : serialisableLevel.serialisedPickups)
         {
             Pickup pickup =
-                new Pickup(serialisablePickup.x, serialisablePickup.y, AssMan.getAssList().pickup);
+                new Pickup(serialisablePickup.x, serialisablePickup.y, AssMan.getAssList().pickupTexture);
             gameScreen.addPickup(pickup);
         }
 

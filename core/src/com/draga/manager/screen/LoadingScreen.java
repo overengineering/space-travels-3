@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -75,19 +74,19 @@ public class LoadingScreen implements Screen
         AssMan.getAssMan().load(AssMan.getAssList().loseSound, Sound.class);
         AssMan.getAssMan().load(AssMan.getAssList().winSound, Sound.class);
 
-        AssMan.getAssMan().load(AssMan.getAssList().pickupGrey, Texture.class);
+        AssMan.getAssMan().load(AssMan.getAssList().pickupGreyTexture, Texture.class);
         AssMan.getAssMan().load(
             this.serialisableLevel.serialisedBackground.texturePath, Texture.class);
         AssMan.getAssMan().load(
-            AssMan.getAssList().ship, Texture.class);
+            AssMan.getAssList().shipTexture, Texture.class);
         AssMan.getAssMan().load(
-            AssMan.getAssList().thruster, TextureAtlas.class);
+            AssMan.getAssList().thrusterTexture, TextureAtlas.class);
         for (SerialisablePlanet serialisablePlanet : this.serialisableLevel.serialisedPlanets)
         {
             AssMan.getAssMan().load(serialisablePlanet.texturePath, Texture.class);
         }
-        AssMan.getAssMan().load(AssMan.getAssList().explosion, TextureAtlas.class);
-        AssMan.getAssMan().load(AssMan.getAssList().pickup, Texture.class);
+        AssMan.getAssMan().load(AssMan.getAssList().explosionTextureAtlas, TextureAtlas.class);
+        AssMan.getAssMan().load(AssMan.getAssList().pickupTexture, Texture.class);
     }
 
     public Label getHeaderLabel()
@@ -116,7 +115,7 @@ public class LoadingScreen implements Screen
     {
         if (AssMan.getAssMan().update())
         {
-            if (Constants.IS_DEBUGGING)
+            if (Constants.General.IS_DEBUGGING)
             {
                 Gdx.app.debug(
                     LOGGING_TAG,
@@ -125,10 +124,9 @@ public class LoadingScreen implements Screen
                     LOGGING_TAG,
                     String.format(
                         "Loading time: %fs",
-                        stopwatch.elapsed(TimeUnit.NANOSECONDS) * Constants.NANO));
+                        stopwatch.elapsed(TimeUnit.NANOSECONDS) * Constants.General.NANO));
             }
-            GameScreen gameScreen = LevelManager.getLevelGameScreen(
-                serialisableLevel, new SpriteBatch());
+            GameScreen gameScreen = LevelManager.getLevelGameScreen(serialisableLevel);
             GameManager.getGame().setScreen(gameScreen);
         }
         updateProgressBar();

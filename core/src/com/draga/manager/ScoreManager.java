@@ -10,7 +10,7 @@ public abstract class ScoreManager
 {
     private static final Json                     JSON                  = new Json();
     private static final FileHandle               levelScoresFileHandle =
-        FileManager.getFileHandle(Constants.FOLDER, Constants.SCORES_FILENAME);
+        FileManager.getFileHandle(Constants.General.FOLDER, Constants.General.SCORES_FILENAME);
     private static final HashMap<String, Integer> levelScores           = getLevelScores();
 
     public static void updateScore(String levelName, int score)
@@ -61,7 +61,7 @@ public abstract class ScoreManager
         @Override
         public void run()
         {
-            String levelScoresString = Constants.IS_DEBUGGING
+            String levelScoresString = Constants.General.IS_DEBUGGING
                 ? JSON.prettyPrint(levelScores)
                 : JSON.toJson(levelScores);
 

@@ -3,6 +3,7 @@ package com.draga.component.miniMapGraphicComponent;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.draga.SpaceTravels3;
 import com.draga.component.PhysicsComponent;
 
 public class TriangleMiniMapGraphicComponent extends MiniMapGraphicComponent
@@ -18,29 +19,31 @@ public class TriangleMiniMapGraphicComponent extends MiniMapGraphicComponent
         Vector2 vertex2,
         Vector2 vertex3)
     {
+        super(physicsComponent,color);
+
         this.vertex1 = vertex1;
         this.vertex2 = vertex2;
         this.vertex3 = vertex3;
-        this.physicsComponent = physicsComponent;
-        this.colour = color;
     }
 
     @Override
-    public void draw(ShapeRenderer shapeRenderer)
+    public void draw()
     {
-        shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(colour);
+        SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
+        SpaceTravels3.shapeRenderer.setColor(this.colour);
 
         Vector2 vertex1Rotated = vertex1.cpy().rotate(this.physicsComponent.getAngle());
         Vector2 vertex2Rotated = vertex2.cpy().rotate(this.physicsComponent.getAngle());
         Vector2 vertex3Rotated = vertex3.cpy().rotate(this.physicsComponent.getAngle());
 
-        shapeRenderer.triangle(
-            vertex1Rotated.x + this.physicsComponent.getPosition().x,
-            vertex1Rotated.y + this.physicsComponent.getPosition().y,
-            vertex2Rotated.x + this.physicsComponent.getPosition().x,
-            vertex2Rotated.y + this.physicsComponent.getPosition().y,
-            vertex3Rotated.x + this.physicsComponent.getPosition().x,
-            vertex3Rotated.y + this.physicsComponent.getPosition().y);
+        float x = this.physicsComponent.getPosition().x;
+        float y = this.physicsComponent.getPosition().y;
+        SpaceTravels3.shapeRenderer.triangle(
+            vertex1Rotated.x + x,
+            vertex1Rotated.y + y,
+            vertex2Rotated.x + x,
+            vertex2Rotated.y + y,
+            vertex3Rotated.x + x,
+            vertex3Rotated.y + y);
     }
 }

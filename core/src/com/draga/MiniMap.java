@@ -13,29 +13,22 @@ import com.draga.physic.shape.Circle;
 
 public class MiniMap
 {
-    private static final float MINIMAP_SCALE = 0.25f;
     private Ship               ship;
     private OrthographicCamera orthographicCamera;
-    private ShapeRenderer      shapeRenderer;
 
-    public MiniMap(int worldWidth, int worldHeight)
+    public MiniMap(float worldWidth, float worldHeight)
     {
         orthographicCamera = new OrthographicCamera(worldWidth, worldHeight);
-        shapeRenderer = new ShapeRenderer();
-        shapeRenderer.setAutoShapeType(true);
     }
 
     public void draw()
     {
         updateMiniMap();
 
-        shapeRenderer.begin();
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
-            gameEntity.miniMapGraphicComponent.draw(shapeRenderer);
+            gameEntity.miniMapGraphicComponent.draw();
         }
-
-        shapeRenderer.end();
     }
 
     public void updateMiniMap()
@@ -76,7 +69,7 @@ public class MiniMap
             Math.max(
                 newCameraBounds.width / orthographicCamera.viewportWidth,
                 newCameraBounds.height / orthographicCamera.viewportHeight);
-        orthographicCamera.zoom /= MINIMAP_SCALE;
+        orthographicCamera.zoom /= Constants.Visual.MINIMAP_SCALE;
 
         // Moves the camera so that the bottom left corner of the screen corresponds to the
         // bottom left corner of the new camera bounds.
@@ -88,43 +81,41 @@ public class MiniMap
                 + ((orthographicCamera.viewportHeight / 2f) * orthographicCamera.zoom);
 
         orthographicCamera.update();
-        shapeRenderer.setProjectionMatrix(orthographicCamera.combined);
+        SpaceTravels3.shapeRenderer.setProjectionMatrix(orthographicCamera.combined);
     }
 
     private void drawBackground()
     {
-        orthographicCamera.zoom = 1 / MINIMAP_SCALE;
+        orthographicCamera.zoom = 1 / Constants.Visual.MINIMAP_SCALE;
         orthographicCamera.position.set(
             (orthographicCamera.viewportWidth / 2f) * orthographicCamera.zoom,
             (orthographicCamera.viewportHeight / 2f) * orthographicCamera.zoom,
             0);
         orthographicCamera.update();
-        shapeRenderer.setProjectionMatrix(orthographicCamera.combined);
+        SpaceTravels3.shapeRenderer.setProjectionMatrix(orthographicCamera.combined);
 
-        shapeRenderer.begin();
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
         Color minimapBackgroundColor = new Color(0, 0.17f, 0, 0.5f);
-        shapeRenderer.setColor(minimapBackgroundColor);
-        shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.rect(
+        SpaceTravels3.shapeRenderer.setColor(minimapBackgroundColor);
+        SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
+        SpaceTravels3.shapeRenderer.rect(
             0,
             0,
             orthographicCamera.viewportWidth,
             orthographicCamera.viewportHeight);
 
         Color minimapBorderColor = new Color(0, 0.4f, 0, 1);
-        shapeRenderer.setColor(minimapBorderColor);
-        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.rect(
+        SpaceTravels3.shapeRenderer.setColor(minimapBorderColor);
+        SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Line);
+        SpaceTravels3.shapeRenderer.rect(
             0,
             0,
             orthographicCamera.viewportWidth,
             orthographicCamera.viewportHeight);
 
         Gdx.gl.glDisable(GL20.GL_BLEND);
-        shapeRenderer.end();
     }
 
     public void addShip(Ship ship)

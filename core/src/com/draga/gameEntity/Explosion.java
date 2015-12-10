@@ -2,6 +2,7 @@ package com.draga.gameEntity;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.draga.Constants;
 import com.draga.component.PhysicsComponent;
 import com.draga.component.graphicComponent.AnimatedGraphicComponent;
 import com.draga.manager.GameEntityManager;
@@ -11,26 +12,23 @@ import com.draga.physic.shape.Circle;
 
 public class Explosion extends GameEntity
 {
-
-    private static final int   HEIGHT               = 10;
-    private static final int   WIDTH                = 10;
-    private static final float ANIMATION_TOTAL_TIME = 2f;
     private Sound sound;
 
-    public Explosion(
-        float x, float y)
+    public Explosion(float x, float y, float width, float height)
     {
         this.physicsComponent = new PhysicsComponent(
             x,
             y,
-            0,
-            new Circle((HEIGHT + WIDTH) / 2f),
-            new GameEntityGroup(GameEntityGroup.GroupOverride.NONE));
+            0f,
+            new Circle((height + width) / 4f),
+            new GameEntityGroup(GameEntityGroup.GroupOverride.NONE),
+            false);
 
-        this.graphicComponent = new AnimatedGraphicComponent(AssMan.getAssList().explosion,
-            ANIMATION_TOTAL_TIME,
-            WIDTH,
-            HEIGHT,
+        this.graphicComponent = new AnimatedGraphicComponent(
+            AssMan.getAssList().explosionTextureAtlas,
+            Constants.Visual.EXPLOSION_LIFETIME,
+            width,
+            height,
             this.physicsComponent,
             Animation.PlayMode.NORMAL);
 
@@ -41,8 +39,9 @@ public class Explosion extends GameEntity
     @Override
     public void update(float deltaTime)
     {
-        // Can't get if the sound if still playing, can be done only with music.
-        if (this.graphicComponent.isFinished())
+        // Can't get whether the sound is still playing, can be done only with music.
+        // Sound must be shorter than animation.
+        if (((AnimatedGraphicComponent) this.graphicComponent).isFinished())
         {
             GameEntityManager.removeGameEntity(this);
         }
@@ -51,8 +50,8 @@ public class Explosion extends GameEntity
     @Override
     public void dispose()
     {
-        super.dispose();
         sound.stop();
         sound.dispose();
+        super.dispose();
     }
 }

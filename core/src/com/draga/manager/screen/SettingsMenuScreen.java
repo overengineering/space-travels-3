@@ -63,17 +63,50 @@ public class SettingsMenuScreen implements Screen
     public ScrollPane GetButtonScrollPane()
     {
         Table table = UIManager.getDefaultTable();
+        ScrollPane scrollPane = new ScrollPane(table);
 
         //noinspection PointlessBooleanExpression
-        if (Constants.IS_DEBUGGING
+        if (Constants.General.IS_DEBUGGING
             || Gdx.app.getType() == Application.ApplicationType.Android
             || Gdx.app.getType() == Application.ApplicationType.iOS)
         {
-            Label inputTypeLabel = new Label("Input type", UIManager.skin);
-            table.add(inputTypeLabel);
-            table.add(getInputTypeSelector());
+            addInputType(table);
             table.row();
         }
+
+        addVolume(table);
+
+        table.row();
+
+        addHud(table);
+
+        return scrollPane;
+    }
+
+    private void addHud(Table table)
+    {
+        Label hudLabel =
+            new Label("Hud", UIManager.skin);
+        table.add(hudLabel);
+        TextButton hudForceIndicatorsTextButton =
+            new TextButton("Force indicators", UIManager.skin);
+        hudForceIndicatorsTextButton.setChecked(
+            SettingsManager.getSettings().hudForceIndicators);
+        hudForceIndicatorsTextButton.addListener(new BeepingClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                super.clicked(event, x, y);
+                SettingsManager.getSettings().hudForceIndicators
+                    = !SettingsManager.getSettings().hudForceIndicators;
+            }
+        });
+        table.add(hudForceIndicatorsTextButton);
+    }
+
+    private void addVolume(Table table)
+    {
         table.add(new Label("Volume", UIManager.skin));
         final Slider volumeSlider = new Slider(0f, 1f, 0.01f, false, UIManager.skin);
         volumeSlider.setValue(SettingsManager.getSettings().volume);
@@ -100,10 +133,13 @@ public class SettingsMenuScreen implements Screen
         table
             .add(volumeSlider)
             .width(stage.getWidth() / 2f);
+    }
 
-        ScrollPane scrollPane = new ScrollPane(table);
-
-        return scrollPane;
+    private void addInputType(Table table)
+    {
+        Label inputTypeLabel = new Label("Input type", UIManager.skin);
+        table.add(inputTypeLabel);
+        table.add(getInputTypeSelector());
     }
 
     private TextButton getBackTextButton()

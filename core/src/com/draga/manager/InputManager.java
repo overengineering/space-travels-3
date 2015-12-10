@@ -13,6 +13,7 @@ public class InputManager
      * Change tilt range. E.g. 1.0f = 90 degree max. 0.5f = 45 degrees max.
      */
     private static final float  ACCELEROMETER_RANGE = 0.5f;
+    private static Vector2 inputForce;
 
     /**
      * Returns a vector with length from 0 to 1, representing where the input is pointing to,
@@ -21,6 +22,11 @@ public class InputManager
      * @return A Vector2 of length from 0 to 1 of where the input is pointing
      */
     public static Vector2 getInputForce()
+    {
+        return inputForce.cpy();
+    }
+
+    public static void update()
     {
         Vector2 input;
         switch (Gdx.app.getType())
@@ -57,7 +63,7 @@ public class InputManager
                 input = new Vector2();
                 break;
         }
-        return input;
+        inputForce = input;
     }
 
     private static Vector2 getAccelerometerInput()
@@ -66,10 +72,10 @@ public class InputManager
             .scl(1f / ACCELEROMETER_RANGE);
 
         // Max the gravity by the Earth gravity to avoid excessive force being applied if the device is shaken.
-        input = input.clamp(0, Constants.EARTH_GRAVITY);
+        input = input.clamp(0, Constants.General.EARTH_GRAVITY);
 
         // Scale the input by the Earth's gravity so that I'll be between 1 and 0
-        input = input.scl(1 / Constants.EARTH_GRAVITY);
+        input = input.scl(1 / Constants.General.EARTH_GRAVITY);
 
         input.x = applyDeadZone(input.x);
         input.y = applyDeadZone(input.y);

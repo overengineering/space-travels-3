@@ -4,29 +4,39 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.draga.manager.GameManager;
 import com.draga.manager.SettingsManager;
 import com.draga.manager.SoundManager;
 import com.draga.manager.UIManager;
 import com.draga.manager.asset.AssMan;
 import com.draga.manager.screen.MenuScreen;
+import com.draga.physic.PhysicsEngine;
 
 public class SpaceTravels3 extends Game
 {
     private final static String LOGGING_TAG = SpaceTravels3.class.getSimpleName();
+    public static SpriteBatch   spriteBatch;
+    public static ShapeRenderer shapeRenderer;
     private DebugOverlay debugOverlay;
 
     @Override
     public void create()
     {
+        spriteBatch = new SpriteBatch();
+        shapeRenderer = new ShapeRenderer();
+        shapeRenderer.setAutoShapeType(true);
+
         Gdx.input.setCatchBackKey(true);
         UIManager.create();
         AssMan.create();
         SoundManager.create();
         AssMan.getAssList();
         GameManager.setGame(this);
+        PhysicsEngine.create();
 
-        if (Constants.IS_DEBUGGING)
+        if (Constants.General.IS_DEBUGGING)
         {
             Gdx.app.setLogLevel(Application.LOG_DEBUG);
 
@@ -44,13 +54,16 @@ public class SpaceTravels3 extends Game
     public void dispose()
     {
         Gdx.app.debug(LOGGING_TAG, "Dispose");
-        if (Constants.IS_DEBUGGING)
+        if (Constants.General.IS_DEBUGGING)
         {
             this.debugOverlay.dispose();
         }
         UIManager.dispose();
         AssMan.dispose();
         SoundManager.dispose();
+        PhysicsEngine.dispose();
+        spriteBatch.dispose();
+        shapeRenderer.dispose();
         super.dispose();
     }
 
@@ -77,7 +90,10 @@ public class SpaceTravels3 extends Game
 
         super.render();
 
-        this.debugOverlay.render(Gdx.graphics.getDeltaTime());
+        if (Constants.General.IS_DEBUGGING)
+        {
+            this.debugOverlay.render(Gdx.graphics.getDeltaTime());
+        }
     }
 
     @Override
@@ -88,6 +104,9 @@ public class SpaceTravels3 extends Game
 
         super.resize(width, height);
 
-        this.debugOverlay.resize(width, height);
+        if (Constants.General.IS_DEBUGGING)
+        {
+            this.debugOverlay.resize(width, height);
+        }
     }
 }

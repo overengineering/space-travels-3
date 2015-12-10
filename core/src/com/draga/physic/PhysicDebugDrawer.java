@@ -3,6 +3,7 @@ package com.draga.physic;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.draga.SpaceTravels3;
 import com.draga.gameEntity.GameEntity;
 import com.draga.physic.shape.Circle;
 import com.draga.manager.GameEntityManager;
@@ -12,12 +13,8 @@ import com.draga.manager.GameEntityManager;
  */
 public class PhysicDebugDrawer
 {
-    private static ShapeRenderer shapeRenderer;
-
     public PhysicDebugDrawer()
     {
-        shapeRenderer = new ShapeRenderer();
-        shapeRenderer.setColor(Color.RED);
     }
 
     /**
@@ -26,14 +23,15 @@ public class PhysicDebugDrawer
      */
     public static void draw(Camera camera)
     {
-        shapeRenderer.setProjectionMatrix(camera.combined);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        SpaceTravels3.shapeRenderer.setColor(Color.RED);
+        SpaceTravels3.shapeRenderer.setProjectionMatrix(camera.combined);
+        SpaceTravels3.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
             if (gameEntity.physicsComponent.getShape() instanceof Circle)
             {
-                shapeRenderer.circle(
+                SpaceTravels3.shapeRenderer.circle(
                     gameEntity.physicsComponent.getPosition().x,
                     gameEntity.physicsComponent.getPosition().y,
                     ((Circle) gameEntity.physicsComponent.getShape()).radius);
@@ -45,11 +43,6 @@ public class PhysicDebugDrawer
             }
         }
 
-        shapeRenderer.end();
-    }
-
-    public static void dispose()
-    {
-        shapeRenderer.dispose();
+        SpaceTravels3.shapeRenderer.end();
     }
 }

@@ -6,24 +6,20 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.draga.*;
 import com.draga.event.CountdownFinishedEvent;
 import com.draga.event.PickupCollectedEvent;
-import com.draga.event.ScoreEvent;
 import com.draga.event.ShipPlanetCollisionEvent;
 import com.draga.gameEntity.*;
 import com.draga.manager.GameEntityManager;
 import com.draga.manager.GameManager;
+import com.draga.manager.InputManager;
 import com.draga.manager.SettingsManager;
 import com.draga.manager.asset.AssMan;
 import com.draga.physic.PhysicDebugDrawer;
 import com.draga.physic.PhysicsEngine;
-import com.draga.physic.shape.Circle;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.ArrayList;
@@ -34,8 +30,8 @@ public class GameScreen implements Screen
 
     private PhysicDebugDrawer physicDebugDrawer;
 
-    private int width;
-    private int height;
+    private float width;
+    private float height;
 
     private String levelPath;
 
@@ -44,8 +40,7 @@ public class GameScreen implements Screen
 
     private Hud hud;
 
-    private Texture     backgroundTexture;
-    private SpriteBatch spriteBatch;
+    private Texture backgroundTexture;
 
     private OrthographicCamera orthographicCamera;
     private ExtendViewport     extendViewport;
@@ -53,6 +48,7 @@ public class GameScreen implements Screen
     private Ship              ship;
     private Thruster          thruster;
     private ArrayList<Planet> planets;
+    private Planet destinationPlanet;
 
     private GameScreenInputProcessor gameScreenInputProcessor;
 
@@ -63,21 +59,19 @@ public class GameScreen implements Screen
 
     public GameScreen(
         String backgroundTexturePath,
-        SpriteBatch spriteBatch,
-        int width,
-        int height,
+        float width,
+        float height,
         String levelPath)
     {
         this.backgroundTexture = AssMan.getAssMan().get(backgroundTexturePath);
         this.width = width;
         this.height = height;
-        this.spriteBatch = spriteBatch;
         this.levelPath = levelPath;
 
         this.gameState = GameState.COUNTDOWN;
         this.overlayScreen = new CountdownScreen();
 
-        Constants.EVENT_BUS.register(this);
+        Constants.General.EVENT_BUS.register(this);
 
         gameScreenInputProcessor = new GameScreenInputProcessor();
         Gdx.input.setInputProcessor(gameScreenInputProcessor);
@@ -86,13 +80,9 @@ public class GameScreen implements Screen
 
         orthographicCamera = new OrthographicCamera();
         extendViewport = new ExtendViewport(
-            Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, width, height, orthographicCamera);
+            Constants.Visual.VIEWPORT_WIDTH, Constants.Visual.VIEWPORT_HEIGHT, width, height, orthographicCamera);
         extendViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        //
-        //        if (Constants.IS_DEBUGGING)
-        //        {
-        //            createWalls();
-        //        }
+
         if (SettingsManager.getDebugSettings().debugDraw)
         {
             physicDebugDrawer = new PhysicDebugDrawer();
@@ -115,7 +105,7 @@ public class GameScreen implements Screen
 
         thruster = new Thruster(ship);
 
-        // Adds the thruster first so that is drawn below the ship.
+        // Adds the thruster first so that is drawn below the shipTexture.
         GameEntityManager.addGameEntity(thruster);
         GameEntityManager.addGameEntity(ship);
     }
@@ -129,7 +119,7 @@ public class GameScreen implements Screen
         orthographicCamera.position.y = cameraVec.y;
         orthographicCamera.update();
 
-        spriteBatch.setProjectionMatrix(orthographicCamera.combined);
+        SpaceTravels3.spriteBatch.setProjectionMatrix(orthographicCamera.combined);
     }
 
     public void addPlanet(Planet planet)
@@ -182,43 +172,42 @@ public class GameScreen implements Screen
 
     public void update(float elapsed)
     {
-        if (Constants.IS_DEBUGGING)
+        if (Constants.General.IS_DEBUGGING)
         {
             checkDebugKeys();
         }
 
+        InputManager.update();
+
+        PhysicsEngine.update(elapsed);
 
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
             gameEntity.update(elapsed);
-            gameEntity.graphicComponent.update(elapsed);
         }
 
-        PhysicsEngine.update(elapsed);
-        updateScore();
+        hud.setScore(getScore());
     }
 
     public void draw()
     {
         updateCamera();
 
-        spriteBatch.begin();
+        SpaceTravels3.spriteBatch.begin();
 
-        // Draw background at ship and parallax 30%.
-        spriteBatch.draw(
+        // Draw background at shipTexture and parallax 30%.
+        SpaceTravels3.spriteBatch.draw(
             backgroundTexture,
-            -(width / 2f - orthographicCamera.position.x) / 1.3f ,
+            -(width / 2f - orthographicCamera.position.x) / 1.3f,
             -(height / 2f - orthographicCamera.position.y) / 1.3f,
             width,
             height);
-        spriteBatch.end();
 
-        spriteBatch.begin();
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
-            gameEntity.graphicComponent.draw(spriteBatch);
+            gameEntity.graphicComponent.draw();
         }
-        spriteBatch.end();
+        SpaceTravels3.spriteBatch.end();
 
         if (SettingsManager.getDebugSettings().debugDraw)
         {
@@ -243,23 +232,16 @@ public class GameScreen implements Screen
         if (Gdx.input.isKeyPressed(Input.Keys.F3))
         {
             ship.physicsComponent.getVelocity().set(0, 0);
-            //ship.physicsComponent.setAngularVelocity(0);
+            ship.physicsComponent.setAngularVelocity(0);
         }
-    }
-
-    private void updateScore()
-    {
-        ScoreEvent scoreEvent = Pools.obtain(ScoreEvent.class);
-        scoreEvent.setScore(getScore());
-        Constants.EVENT_BUS.post(scoreEvent);
-        Pools.free(scoreEvent);
     }
 
     private int getScore()
     {
-        float pickupPoints = pickupCollected * Constants.PICKUP_POINTS;
-        float timePoints = elapsedPlayTime * Constants.TIME_POINTS;
-        float fuelPoints = ship.getFuel() * Constants.FUEL_POINTS;
+        float pickupPoints = pickupCollected * Constants.Game.PICKUP_POINTS;
+        float timePoints = elapsedPlayTime * Constants.Game.TIME_POINTS;
+        // TODO: Max fuel can be all over the place. Percentage of remaining?
+        float fuelPoints = ship.getCurrentFuel() * Constants.Game.FUEL_POINTS;
 
         float score = pickupPoints;
         score -= timePoints;
@@ -302,13 +284,7 @@ public class GameScreen implements Screen
     public void dispose()
     {
         GameEntityManager.dispose();
-
-        if (SettingsManager.getDebugSettings().debugDraw)
-        {
-            physicDebugDrawer.dispose();
-        }
-
-        Constants.EVENT_BUS.unregister(this);
+        Constants.General.EVENT_BUS.unregister(this);
         hud.dispose();
         if (this.overlayScreen != null)
         {
@@ -332,7 +308,7 @@ public class GameScreen implements Screen
     @Subscribe
     public void shipPlanetCollision(ShipPlanetCollisionEvent shipPlanetCollisionEvent)
     {
-        if (Constants.IS_DEBUGGING)
+        if (Constants.General.IS_DEBUGGING)
         {
             Gdx.app.debug(
                 LOGGING_TAG,
@@ -343,14 +319,16 @@ public class GameScreen implements Screen
         GameEntityManager.removeGameEntity(thruster);
 
         // If wrong planet or too fast then lose.
-        if (!shipPlanetCollisionEvent.planet.isDestination()
+        if (!(shipPlanetCollisionEvent.planet.equals(destinationPlanet))
             || ship.physicsComponent.getVelocity().len()
-            > Constants.MAX_DESTINATION_PLANET_APPROACH_SPEED)
+            > Constants.Game.MAX_DESTINATION_PLANET_APPROACH_SPEED)
         {
             gameState = GameState.LOSE;
             GameEntity explosion = new Explosion(
                 shipPlanetCollisionEvent.ship.physicsComponent.getPosition().x,
-                shipPlanetCollisionEvent.ship.physicsComponent.getPosition().y
+                shipPlanetCollisionEvent.ship.physicsComponent.getPosition().y,
+                shipPlanetCollisionEvent.ship.graphicComponent.getWidth(),
+                shipPlanetCollisionEvent.ship.graphicComponent.getHeight()
             );
             GameEntityManager.addGameEntity(explosion);
 
@@ -378,5 +356,10 @@ public class GameScreen implements Screen
         }
         this.overlayScreen.dispose();
         this.overlayScreen = null;
+    }
+
+    public void setDestinationPlanet(Planet destinationPlanet)
+    {
+        this.destinationPlanet = destinationPlanet;
     }
 }

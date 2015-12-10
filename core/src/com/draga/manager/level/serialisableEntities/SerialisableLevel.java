@@ -5,8 +5,9 @@ import java.util.List;
 public class SerialisableLevel
 {
     public String                   name;
-    public int                      width;
-    public int                      height;
+    public float                    width;
+    public float                    height;
+    public float                    fuel;
     public SerialisableBackground   serialisedBackground;
     public SerialisableShip         serialisedShip;
     public List<SerialisablePlanet> serialisedPlanets;

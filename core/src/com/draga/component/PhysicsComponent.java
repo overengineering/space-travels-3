@@ -6,27 +6,30 @@ import com.draga.physic.shape.Shape;
 
 public class PhysicsComponent
 {
+    public final boolean affectedByGravity;
+
     private final float           mass;
     private final Vector2         position;
     private final Vector2         velocity;
     private final Shape           shape;
     private final GameEntityGroup collisionGroup;
     private       float           angle;
-
-    private float angularVelocity;
+    private       float           angularVelocity;
 
     public PhysicsComponent(
         float x,
         float y,
         float mass,
         Shape shape,
-        GameEntityGroup collisionGroup)
+        GameEntityGroup collisionGroup,
+        boolean affectedByGravity)
     {
-        this.collisionGroup = collisionGroup;
         this.position = new Vector2(x, y);
-        this.shape = shape;
-        this.mass = mass;
         this.velocity = new Vector2();
+        this.mass = mass;
+        this.shape = shape;
+        this.collisionGroup = collisionGroup;
+        this.affectedByGravity = affectedByGravity;
     }
 
     public float getAngularVelocity()

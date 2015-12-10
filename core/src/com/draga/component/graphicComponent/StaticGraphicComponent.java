@@ -1,7 +1,7 @@
 package com.draga.component.graphicComponent;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.draga.SpaceTravels3;
 import com.draga.manager.asset.AssMan;
 import com.draga.component.PhysicsComponent;
 
@@ -20,22 +20,16 @@ public class StaticGraphicComponent extends GraphicComponent
     }
 
     @Override
-    public void update(float deltaTime)
+    public void draw()
     {
-
-    }
-
-    @Override
-    public void draw(SpriteBatch spriteBatch)
-    {
-        spriteBatch.draw(
+        SpaceTravels3.spriteBatch.draw(
             texture,
-            this.physicsComponent.getPosition().x - (width / 2f),
-            this.physicsComponent.getPosition().y - (height / 2f),
-            width / 2f,
-            height / 2f,
-            width,
-            height,
+            this.physicsComponent.getPosition().x - getHalfWidth(),
+            this.physicsComponent.getPosition().y - getHalfHeight(),
+            getHalfWidth(),
+            getHalfHeight(),
+            getWidth(),
+            getHeight(),
             1,
             1,
             this.physicsComponent.getAngle(),
@@ -45,18 +39,11 @@ public class StaticGraphicComponent extends GraphicComponent
             texture.getHeight(),
             false,
             false);
-
     }
 
     @Override
     public void dispose()
     {
         // Doesn't dispose texture.
-    }
-
-    @Override
-    public boolean isFinished()
-    {
-        return false;
     }
 }

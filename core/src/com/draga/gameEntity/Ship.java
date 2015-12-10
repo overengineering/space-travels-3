@@ -1,18 +1,12 @@
 package com.draga.gameEntity;
 
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Pools;
 import com.draga.Constants;
 import com.draga.component.PhysicsComponent;
 import com.draga.component.graphicComponent.StaticGraphicComponent;
 import com.draga.component.miniMapGraphicComponent.TriangleMiniMapGraphicComponent;
-import com.draga.event.FuelChangeEvent;
 import com.draga.manager.InputManager;
 import com.draga.manager.SettingsManager;
-import com.draga.manager.asset.AssMan;
-import com.draga.physic.PhysicsEngine;
 import com.draga.physic.shape.Circle;
 
 import java.util.ArrayList;
@@ -22,90 +16,79 @@ public class Ship extends GameEntity
 {
     public static final String LOGGING_TAG = Ship.class.getSimpleName();
 
-    // Fuel.
-    public static final float MAX_FUEL        = 1f;
-    public static final float FUEL_PER_SECOND = 0.3f;
-
-    // Size.
-    private static final float SHIP_WIDTH  = 10;
-    private static final float SHIP_HEIGHT = 10;
-
     // Physic.
-    private static final float ROTATION_SCALE = 5f;
-    private static final float SHIP_MASS      = 1f;
-
+    private static final float ROTATION_SCALE               = 5f;
     private static final float MAX_ROTATION_DEGREES_PER_SEC = 360f;
-    private Sound thrusterSound;
-    private long  thrusterSoundInstance;
+
     // State.
-    private float fuel;
+    private float maxFuel;
+    private float currentFuel;
 
-    public Ship(float x, float y, String shipTexturePath, String thrusterTextureAtlasPath)
+    public Ship(
+        float x,
+        float y,
+        float mass,
+        String texturePath,
+        float maxFuel)
     {
-        thrusterSound = AssMan.getAssMan().get(AssMan.getAssList().thrusterSound);
-        // TODO: check if this sound is loopable.
-        thrusterSoundInstance = thrusterSound.loop(0);
-
-        fuel = MAX_FUEL;
+        this.maxFuel = maxFuel;
+        this.currentFuel = maxFuel;
 
         List<Class<? extends GameEntity>> collidesWith = new ArrayList<>();
         collidesWith.add(Planet.class);
         collidesWith.add(Pickup.class);
+
         this.physicsComponent =
-            new PhysicsComponent(x, y, SHIP_MASS, new Circle(4), new GameEntityGroup(collidesWith));
+            new PhysicsComponent(
+                x,
+                y,
+                mass,
+                new Circle(Constants.Game.SHIP_COLLISION_RADIUS),
+                new GameEntityGroup(collidesWith),
+                true);
 
         this.graphicComponent = new StaticGraphicComponent(
-            shipTexturePath,
-            SHIP_WIDTH,
-            SHIP_HEIGHT,
+            texturePath,
+            Constants.Visual.SHIP_WIDTH,
+            Constants.Visual.SHIP_HEIGHT,
             this.physicsComponent);
 
         this.miniMapGraphicComponent = new TriangleMiniMapGraphicComponent(
             this.physicsComponent,
-            Color.WHITE,
-            new Vector2(8, 0),
-            new Vector2(-5, -5),
-            new Vector2(-5, 5));
+            Constants.Visual.SHIP_MINIMAP_COLOUR,
+            Constants.Visual.SHIP_MINIMAP_TRIANGLE_VERTEX1,
+            Constants.Visual.SHIP_MINIMAP_TRIANGLE_VERTEX2,
+            Constants.Visual.SHIP_MINIMAP_TRIANGLE_VERTEX3);
+    }
+
+    public float getMaxFuel()
+    {
+        return maxFuel;
     }
     
     @Override
     public void update(float deltaTime)
     {
-        Vector2 gravityForce;
-        if (SettingsManager.getDebugSettings().noGravity)
-        {
-            gravityForce = new Vector2();
-        }
-        else
-        {
-            gravityForce = PhysicsEngine.getForceActingOn(this);
-        }
-        this.physicsComponent.getVelocity().add(gravityForce.scl(deltaTime));
-
         Vector2 inputForce = InputManager.getInputForce();
 
-        // TODO: apply the last part of acceleration properly and maybe then elapsed updating the
-        // thrusters?
-        if (fuel <= 0)
+        float fuelConsumption = inputForce.len() * Constants.Game.FUEL_PER_SECOND * deltaTime;
+
+        // If the fuel is or is going to be completely consumed then only apply the input force
+        // that the fuel can afford.
+        if (fuelConsumption > currentFuel)
         {
-            inputForce.setZero();
+            inputForce.scl(currentFuel / fuelConsumption);
+            fuelConsumption = currentFuel;
         }
 
-        thrusterSound.setVolume(
-            thrusterSoundInstance,
-            inputForce.len() * SettingsManager.getSettings().volume);
+        currentFuel = SettingsManager.getDebugSettings().infiniteFuel
+            ? maxFuel
+            : currentFuel - fuelConsumption;
+
+        this.physicsComponent.getVelocity()
+            .add(inputForce.cpy().scl(deltaTime * Constants.Game.SHIP_ACCELERATION_PER_SECOND));
+
         rotateTo(inputForce, deltaTime);
-        updateFuel(inputForce, deltaTime);
-
-        this.physicsComponent.getVelocity().add(inputForce);
-    }
-
-    @Override
-    public void dispose()
-    {
-        super.dispose();
-        thrusterSound.stop();
-        thrusterSound.dispose();
     }
 
     /**
@@ -113,7 +96,7 @@ public class Ship extends GameEntity
      *
      * @param inputForce The input force, should be long between 0 and 1.
      */
-    private void rotateTo(Vector2 inputForce, float elapsed)
+    private void rotateTo(Vector2 inputForce, float deltaTime)
     {
         if (inputForce.len() == 0)
         {
@@ -132,8 +115,8 @@ public class Ship extends GameEntity
             diffRotation -= 360;
         }
 
-        // Scale the difference of rotation by the elapsed time and input length.
-        diffRotation *= inputForce.len() * elapsed * ROTATION_SCALE;
+        // Scale the difference of rotation by the deltaTime time and input length.
+        diffRotation *= inputForce.len() * deltaTime * ROTATION_SCALE;
 
         // bring the rotation to the max if it's over it
         if (Math.abs(diffRotation) > MAX_ROTATION_DEGREES_PER_SEC)
@@ -156,27 +139,8 @@ public class Ship extends GameEntity
         this.physicsComponent.setAngle(finalRotation);
     }
 
-    private void updateFuel(Vector2 inputForce, float deltaTime)
+    public float getCurrentFuel()
     {
-        float oldFuel = fuel;
-
-        if (SettingsManager.getDebugSettings().infiniteFuel)
-        {
-            fuel = MAX_FUEL;
-        }
-        else
-        {
-            fuel -= inputForce.len() * FUEL_PER_SECOND * deltaTime;
-        }
-
-        FuelChangeEvent fuelChangeEvent = Pools.obtain(FuelChangeEvent.class);
-        fuelChangeEvent.set(oldFuel, fuel, MAX_FUEL);
-        Constants.EVENT_BUS.post(fuelChangeEvent);
-        Pools.free(fuelChangeEvent);
-    }
-
-    public float getFuel()
-    {
-        return fuel;
+        return currentFuel;
     }
 }
