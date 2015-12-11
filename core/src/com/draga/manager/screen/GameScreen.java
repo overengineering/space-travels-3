@@ -281,6 +281,8 @@ public class GameScreen implements Screen
         pickupCollectedSound.stop();
         pickupCollectedSound.dispose();
 
+        background.dispose();
+
         AssMan.getAssMan().clear();
     }
 

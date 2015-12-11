@@ -6,62 +6,135 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.Disposable;
+import com.google.common.base.Stopwatch;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
-public class Background
+public class Background implements Disposable
 {
-    public static final int LAYER_COUNT = 10;
-    public static final int STAR_COUNT = 300;
-    ArrayList<Sprite> layers;
-    ArrayList<Float>  layerParallaxScale;
+    private static final String LOGGING_TAG         = Background.class.getSimpleName();
+    private static final int    STAR_LAYER_COUNT    = 3;
+    private static final int    STAR_COUNT          = 300;
+    private static final int    NEBULAE_LAYER_COUNT = 3;
+    private ArrayList<Sprite> layers;
+    private ArrayList<Float>  layerParallaxScale;
 
     public Background()
     {
         layers = new ArrayList<>();
         layerParallaxScale = new ArrayList<>();
 
-        for (int i = 0; i < LAYER_COUNT; i++)
+        float r = MathUtils.random(0f, 1f);
+        float g = MathUtils.random(0f, 1f);
+        float b = MathUtils.random(0f, 1f);
+        Stopwatch stopwatch = Stopwatch.createStarted();
+        for (int i = 0; i < NEBULAE_LAYER_COUNT; i++)
         {
-            Texture layer = generateStarLayer(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-            layer.setWrap(Texture.TextureWrap.MirroredRepeat, Texture.TextureWrap.MirroredRepeat);
-            Sprite sprite = new Sprite(layer);
+            Texture texture = getNebulaLayer(r, g, b);
+            Sprite sprite = getRepeatingSprite(texture, Texture.TextureWrap.MirroredRepeat);
             layers.add(sprite);
 
-            float parallaxScale = MathUtils.random(0f, 0.3f);
+            float parallaxScale = MathUtils.random(0.05f, 0.3f);
             layerParallaxScale.add(parallaxScale);
+
+            //            PixmapIO.writePNG(FileManager.getFileHandle(Constants.General.FOLDER, "nebula"+i+".png"), pixmap);
         }
+        Gdx.app.debug(
+            LOGGING_TAG,
+            NEBULAE_LAYER_COUNT + " layers of nebulae took " + stopwatch.elapsed(
+                TimeUnit.NANOSECONDS) * Constants.General.NANO + "s");
+
+        stopwatch = Stopwatch.createStarted();
+        for (int i = 0; i < STAR_LAYER_COUNT; i++)
+        {
+            Texture texture = getStarLayer(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            Sprite sprite = getRepeatingSprite(texture, Texture.TextureWrap.Repeat);
+            layers.add(sprite);
+
+            float parallaxScale = MathUtils.random(0.05f, 0.3f);
+            layerParallaxScale.add(parallaxScale);
+
+            //            PixmapIO.writePNG(FileManager.getFileHandle(Constants.General.FOLDER, "stars"+i+".png"), pixmap);
+        }
+        Gdx.app.debug(LOGGING_TAG, STAR_LAYER_COUNT + " layers of stars took " + stopwatch.elapsed(
+            TimeUnit.NANOSECONDS) * Constants.General.NANO + "s");
     }
 
-    private static Texture generateStarLayer(int width, int height)
+    private Texture getNebulaLayer(float r, float g, float b)
+    {
+        int size = 1024;
+        float [][] pixels = PerlinNoiseGenerator.generatePerlinNoise(
+            size,
+            size,
+            8);
+        Pixmap pixmap = new Pixmap(
+            size,
+            size,
+            Pixmap.Format.RGBA8888);
+
+        for (int x = 0; x < size; x++)
+        {
+            for (int y = 0; y < size; y++)
+            {
+                float a = Math.max(0, (pixels[x][y] - 0.6f) / 0.4f);
+                //float a = pixels[x][y];
+                pixmap.setColor(
+                    r,
+                    g,
+                    b,
+                    a);
+                pixmap.drawPixel(x, y);
+            }
+        }
+
+        Texture texture = new Texture(pixmap);
+        pixmap.dispose();
+        return texture;
+    }
+
+    private Sprite getRepeatingSprite(Texture texture, Texture.TextureWrap textureWrap)
+    {
+        texture.setWrap(textureWrap, textureWrap);
+        Sprite sprite = new Sprite(texture);
+
+        return sprite;
+    }
+
+    private static Texture getStarLayer(int width, int height)
     {
         Pixmap pixmap = new Pixmap(width, height, Pixmap.Format.RGBA8888);
         Pixmap.setBlending(Pixmap.Blending.None);
 
-        for (int i = 0; i < STAR_COUNT / LAYER_COUNT; i++)
+        for (int i = 0; i < STAR_COUNT / STAR_LAYER_COUNT; i++)
         {
-            //            pixmap.setColor(
-            //                MathUtils.random(0.8f, 1f),
-            //                MathUtils.random(0.5f, 0.8f),
-            //                MathUtils.random(0.8f, 1f),
-            //                MathUtils.random(0.5f, 1f)
-            //            );
-            int x = MathUtils.random(1, width - 1);
-            int y = MathUtils.random(1, height - 1);
-            int radius = MathUtils.random(1, 3);
-            float alphaStep = 1f / radius;
+            int radius = Math.round(MathUtils.randomTriangular(0, 1, 0));
+            int x = MathUtils.random(radius, width - 1 - radius);
+            int y = MathUtils.random(radius, height - 1 - radius);
+            float alphaStep = 1f / (radius + 1);
             float alpha = alphaStep;
-            for (int j = radius; j > 0; j--)
+            for (int j = radius; j >= 0; j--)
             {
-                pixmap.setColor(1f, 1f, 1f, alpha);
-                pixmap.fillCircle(x, y, j);
+                float r = MathUtils.random(0.8f, 1f);
+                float g = MathUtils.random(0.8f, 1f);
+                float b = MathUtils.random(0.8f, 1f);
+                pixmap.setColor(r, g, b, alpha);
+                if (j == 0)
+                {
+                    pixmap.drawPixel(x, y);
+                }
+                else
+                {
+                    pixmap.fillCircle(x, y, j);
+                }
 
                 alpha += alphaStep;
             }
         }
 
         Texture texture = new Texture(pixmap);
-
+        pixmap.dispose();
         return texture;
     }
 
@@ -84,6 +157,14 @@ public class Background
                 camera.position.y - camera.viewportHeight / 2f,
                 camera.viewportWidth,
                 camera.viewportHeight);
+        }
+    }
+
+    public void dispose()
+    {
+        for (int i = 0; i < layers.size(); i++)
+        {
+            layers.get(i).getTexture().dispose();
         }
     }
 }
