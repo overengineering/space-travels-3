@@ -19,13 +19,13 @@ import com.draga.manager.asset.AssMan;
 
 public class LoseScreen implements Screen
 {
-    private final Stage stage;
-    private final Sound sound;
-    private       String levelName;
+    private final Stage  stage;
+    private final Sound  sound;
+    private       String levelId;
 
-    public LoseScreen(String levelName)
+    public LoseScreen(String levelId)
     {
-        this.levelName = levelName;
+        this.levelId = levelId;
         this.stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
@@ -88,7 +88,7 @@ public class LoseScreen implements Screen
 
     private void Retry()
     {
-        GameManager.getGame().setScreen(new LoadingScreen(levelName));
+        GameManager.getGame().setScreen(new LoadingScreen(levelId));
     }
 
     @Override

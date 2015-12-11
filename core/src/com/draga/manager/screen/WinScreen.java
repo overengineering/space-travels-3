@@ -23,17 +23,17 @@ import com.draga.manager.level.serialisableEntities.SerialisableLevel;
 
 public class WinScreen implements Screen
 {
-    private final Stage stage;
-    private final Sound sound;
-    private final String levelName;
+    private final Stage  stage;
+    private final Sound  sound;
+    private final String levelId;
 
-    public WinScreen(String levelName, int score)
+    public WinScreen(String levelId, int score)
     {
-        this.levelName = levelName;
+        this.levelId = levelId;
         this.stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-        int previousBestScore = ScoreManager.getScore(levelName);
+        int previousBestScore = ScoreManager.getScore(levelId);
 
         Label headerLabel = getHeaderLabel();
         TextButton retryButton = getRetryButton();
@@ -49,7 +49,7 @@ public class WinScreen implements Screen
 
         table.add(headerLabel);
 
-        ScoreManager.updateScore(levelName, score);
+        ScoreManager.updateScore(levelId, score);
         table.row();
         Label newBestScoreLabel = getBestScoreLabel(score, previousBestScore);
         table.add(newBestScoreLabel);
@@ -60,12 +60,12 @@ public class WinScreen implements Screen
         table.row();
         table.add(retryButton);
 
-        SerialisableLevel nextLevel = LevelManager.getNextLevel(levelName);
+        SerialisableLevel nextLevel = LevelManager.getNextLevel(levelId);
 
         if (nextLevel != null)
         {
-            String nextLevelName = nextLevel.name;
-            TextButton nextTextButton = getNextButton(nextLevelName);
+            String nextLevelId = nextLevel.id;
+            TextButton nextTextButton = getNextButton(nextLevelId);
             table.row();
             table.add(nextTextButton);
         }
@@ -130,7 +130,7 @@ public class WinScreen implements Screen
         return newBestScoreLabel;
     }
 
-    public TextButton getNextButton(final String levelName)
+    public TextButton getNextButton(final String levelId)
     {
         TextButton retryButton = new TextButton("Next level", UIManager.skin);
 
@@ -141,7 +141,7 @@ public class WinScreen implements Screen
                 public void clicked(InputEvent event, float x, float y)
                 {
                     super.clicked(event, x, y);
-                    GameManager.getGame().setScreen(new LoadingScreen(levelName));
+                    GameManager.getGame().setScreen(new LoadingScreen(levelId));
                 }
             });
 
@@ -166,7 +166,7 @@ public class WinScreen implements Screen
 
     private void Retry()
     {
-        GameManager.getGame().setScreen(new LoadingScreen(levelName));
+        GameManager.getGame().setScreen(new LoadingScreen(levelId));
     }
 
     @Override

@@ -27,15 +27,15 @@ import java.util.concurrent.TimeUnit;
 public class LoadingScreen implements Screen
 {
     private static final String LOGGING_TAG = LoadingScreen.class.getSimpleName();
-    private final String            levelName;
+    private final String            levelId;
     private       Stage             stage;
     private       ProgressBar       progressBar;
     private       SerialisableLevel serialisableLevel;
     private       Stopwatch         stopwatch;
     
-    public LoadingScreen(String levelName)
+    public LoadingScreen(String levelId)
     {
-        this.levelName = levelName;
+        this.levelId = levelId;
     }
 
     @Override
@@ -43,7 +43,7 @@ public class LoadingScreen implements Screen
     {
         stopwatch = Stopwatch.createStarted();
 
-        this.serialisableLevel = LevelManager.getLevel(levelName);
+        this.serialisableLevel = LevelManager.getSerialisableLevel(levelId);
 
         loadAssets();
 

@@ -20,23 +20,17 @@ import java.util.List;
 public abstract class LevelManager
 {
     private static final String LOGGING_TAG = LevelManager.class.getSimpleName();
-    private static ArrayList<SerialisableLevel> levels;
+    private static ArrayList<SerialisableLevel> serialisableLevels;
 
     public static Level getLevel(SerialisableLevel serialisableLevel)
-    {/*
-        GameScreen gameScreen = new GameScreen(
-            serialisableLevel.serialisedBackground.texturePath,
-            serialisableLevel.width,
-            serialisableLevel.height,
-            serialisableLevel.name);*/
-
+    {
         Ship ship = new Ship(
             serialisableLevel.serialisedShip.x,
             serialisableLevel.serialisedShip.y,
             serialisableLevel.serialisedShip.mass,
             AssMan.getAssList().shipTexture,
             serialisableLevel.fuel);
-        //        gameScreen.addShip(ship);
+
         ArrayList<Planet> planets = new ArrayList<>(serialisableLevel.serialisedPlanets.size());
         Planet destinationPlanet = null;
 
@@ -51,7 +45,6 @@ public abstract class LevelManager
                 serialisablePlanet.destination);
 
             planets.add(planet);
-            //            gameScreen.addPlanet(planet);
             if (serialisablePlanet.destination)
             {
                 destinationPlanet = planet;
@@ -67,11 +60,12 @@ public abstract class LevelManager
                     serialisablePickup.y,
                     AssMan.getAssList().pickupTexture);
             pickups.add(pickup);
-            //            gameScreen.addPickup(pickup);
         }
 
         Thruster thruster = new Thruster(ship);
+
         Level level = new Level(
+            serialisableLevel.id,
             serialisableLevel.name,
             ship,
             thruster,
@@ -80,56 +74,62 @@ public abstract class LevelManager
             destinationPlanet,
             serialisableLevel.width,
             serialisableLevel.height);
+
         // Run one update so everything is in place for the countdown
         GameEntityManager.update();
+
         return level;
     }
 
-    public static SerialisableLevel getLevel(String levelName)
+    public static SerialisableLevel getSerialisableLevel(String levelId)
     {
-        Iterator<SerialisableLevel> serialisableLevelIterator = LevelManager.getLevels().iterator();
+        Iterator<SerialisableLevel> serialisableLevelIterator =
+            LevelManager.getSerialisableLevels().iterator();
 
         while (serialisableLevelIterator.hasNext())
         {
             SerialisableLevel serialisableLevel = serialisableLevelIterator.next();
-            if (serialisableLevel.name.equals(levelName))
+            if (serialisableLevel.id.equals(levelId))
             {
                 return serialisableLevel;
             }
         }
 
-        Gdx.app.error(LOGGING_TAG, "Could not find a level with name \"" + levelName + "\"");
+        Gdx.app.error(LOGGING_TAG, "Could not find a level with name \"" + levelId + "\"");
         return null;
     }
 
-    public static List<SerialisableLevel> getLevels()
+    public static List<SerialisableLevel> getSerialisableLevels()
     {
-        if (levels == null)
+        if (serialisableLevels == null)
         {
-            loadLevels();
+            loadSerialisableLevels();
         }
 
-        return levels;
+        return serialisableLevels;
     }
 
     /**
-     * Load the levels from the level pack file in order
+     * Load the serialisableLevels from the level pack file in order
      */
-    private static void loadLevels()
+    private static void loadSerialisableLevels()
     {
         Json json = new Json();
         String levelPackString = Gdx.files.internal("level/levelPack.json").readString();
         ArrayList<String> levelFileNameWithExtension = json.fromJson(
             ArrayList.class,
             levelPackString);
-        levels = new ArrayList<>();
+        serialisableLevels = new ArrayList<>();
         json.addClassTag("SerialisableLevel", SerialisableLevel.class);
         for (String levelNameWithExtension : levelFileNameWithExtension)
         {
             String levelString = Gdx.files.internal("level/" + levelNameWithExtension).readString();
             SerialisableLevel serialisableLevel =
                 json.fromJson(SerialisableLevel.class, levelString);
-            levels.add(serialisableLevel);
+
+            serialisableLevel.id = levelNameWithExtension;
+
+            serialisableLevels.add(serialisableLevel);
         }
     }
 
@@ -137,14 +137,15 @@ public abstract class LevelManager
      * Get the serialisable level immediately after the level specified as a parameter.
      * Null if it was the last level.
      */
-    public static SerialisableLevel getNextLevel(String levelName)
+    public static SerialisableLevel getNextLevel(String levelId)
     {
-        Iterator<SerialisableLevel> serialisableLevelIterator = LevelManager.getLevels().iterator();
+        Iterator<SerialisableLevel> serialisableLevelIterator =
+            LevelManager.getSerialisableLevels().iterator();
 
         while (serialisableLevelIterator.hasNext())
         {
             SerialisableLevel serialisableLevel = serialisableLevelIterator.next();
-            if (serialisableLevel.name.equals(levelName))
+            if (serialisableLevel.id.equals(levelId))
             {
                 if (serialisableLevelIterator.hasNext())
                 {
@@ -157,7 +158,7 @@ public abstract class LevelManager
             }
         }
 
-        Gdx.app.error(LOGGING_TAG, "Could not find a level with name \"" + levelName + "\"");
+        Gdx.app.error(LOGGING_TAG, "Could not find a level with name \"" + levelId + "\"");
         return null;
     }
 }

@@ -32,11 +32,12 @@ public class Level
 
     private Sound pickupCollectedSound;
 
-    // TODO: Level json path
     private String id;
+    private String name;
 
     public Level(
         String id,
+        String name,
         Ship ship,
         Thruster thruster,
         ArrayList<Planet> planets,
@@ -52,6 +53,7 @@ public class Level
         this.width = width;
         this.height = height;
         this.id = id;
+        this.name = name;
 
         this.gameState = GameState.COUNTDOWN;
 
