@@ -3,9 +3,11 @@ package com.draga.manager.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.draga.*;
 import com.draga.event.LoseEvent;
 import com.draga.event.WinEvent;
@@ -23,20 +25,15 @@ public class GameScreen implements Screen
 {
     private static final String LOGGING_TAG = GameScreen.class.getSimpleName();
 
-    private PhysicDebugDrawer physicDebugDrawer;
-
     private Screen overlayScreen;
 
     private Hud hud;
 
-    private OrthographicCamera orthographicCamera;
     private ExtendViewport     extendViewport;
 
     private GameScreenInputProcessor gameScreenInputProcessor;
 
     private Level level;
-
-
 
     public GameScreen(Level level)
     {
@@ -50,7 +47,7 @@ public class GameScreen implements Screen
         Gdx.input.setInputProcessor(gameScreenInputProcessor);
 
 
-        orthographicCamera = new OrthographicCamera();
+        OrthographicCamera orthographicCamera = new OrthographicCamera();
         extendViewport = new ExtendViewport(
             Constants.Visual.VIEWPORT_WIDTH,
             Constants.Visual.VIEWPORT_HEIGHT,
@@ -58,11 +55,6 @@ public class GameScreen implements Screen
             level.getHeight(),
             orthographicCamera);
         extendViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
-        if (SettingsManager.getDebugSettings().debugDraw)
-        {
-            physicDebugDrawer = new PhysicDebugDrawer();
-        }
 
         hud = new Hud(orthographicCamera, level);
 
@@ -77,11 +69,12 @@ public class GameScreen implements Screen
         // Soften camera movement.
         Vector2 cameraVec = level.getShip().physicsComponent.getPosition();
 
-        orthographicCamera.position.x = cameraVec.x;
-        orthographicCamera.position.y = cameraVec.y;
-        orthographicCamera.update();
+        Camera camera = extendViewport.getCamera();
+        camera.position.x = cameraVec.x;
+        camera.position.y = cameraVec.y;
+        camera.update();
 
-        SpaceTravels3.spriteBatch.setProjectionMatrix(orthographicCamera.combined);
+        SpaceTravels3.spriteBatch.setProjectionMatrix(camera.combined);
     }
 
     @Override
@@ -153,11 +146,6 @@ public class GameScreen implements Screen
             gameEntity.graphicComponent.draw();
         }
         SpaceTravels3.spriteBatch.end();
-
-        if (SettingsManager.getDebugSettings().debugDraw)
-        {
-            physicDebugDrawer.draw(orthographicCamera);
-        }
     }
 
     private void checkDebugKeys()

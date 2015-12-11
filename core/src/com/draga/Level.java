@@ -196,7 +196,10 @@ public class Level
             || gameState == GameState.COUNTDOWN)
         {
             gameState = GameState.PAUSE;
-            elapsedPlayTime.stop();
+            if (!elapsedPlayTime.isRunning())
+            {
+                elapsedPlayTime.stop();
+            }
         }
     }
 
