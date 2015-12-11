@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -37,7 +36,7 @@ public class WinScreen implements Screen
         this.stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-        float previousBestScore = ScoreManager.getScore(levelName);
+        int previousBestScore = ScoreManager.getScore(levelName);
 
         Label headerLabel = getHeaderLabel();
         TextButton retryButton = getRetryButton();
@@ -124,7 +123,7 @@ public class WinScreen implements Screen
         return retryButton;
     }
 
-    private Label getScoreLabel(float score)
+    private Label getScoreLabel(int score)
     {
         Label.LabelStyle labelStyle = UIManager.skin.get(Label.LabelStyle.class);
 
@@ -133,7 +132,7 @@ public class WinScreen implements Screen
         return scoreLabel;
     }
 
-    private Label getBestScoreLabel(float score, float previousBestScore)
+    private Label getBestScoreLabel(int score, int previousBestScore)
     {
         Label.LabelStyle labelStyle = UIManager.skin.get(Label.LabelStyle.class);
 

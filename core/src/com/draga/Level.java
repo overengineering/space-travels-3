@@ -2,14 +2,12 @@ package com.draga;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
-import com.draga.event.CountdownFinishedEvent;
-import com.draga.event.PickupCollectedEvent;
-import com.draga.event.ShipPlanetCollisionEvent;
+import com.badlogic.gdx.utils.Pools;
+import com.draga.event.*;
 import com.draga.gameEntity.*;
 import com.draga.manager.GameEntityManager;
 import com.draga.manager.SettingsManager;
 import com.draga.manager.asset.AssMan;
-import com.draga.manager.screen.CountdownScreen;
 import com.google.common.base.Stopwatch;
 import com.google.common.eventbus.Subscribe;
 
@@ -19,23 +17,27 @@ import java.util.concurrent.TimeUnit;
 public class Level
 {
     private static final String LOGGING_TAG = Level.class.getSimpleName();
-    private final float             width;
-    private final float             height;
+
+    private final float width;
+    private final float height;
+
     private final ArrayList<Pickup> pickups;
-    private       Ship              ship;
-    private       Thruster          thruster;
-    private       ArrayList<Planet> planets;
-    private       Planet            destinationPlanet;
-    private       GameState         gameState;
-    private       int               pickupCollected;
+    private final Ship              ship;
+    private final Thruster          thruster;
+    private final ArrayList<Planet> planets;
+    private final Planet            destinationPlanet;
+    private       int               pickupsCollected;
+
+    private GameState gameState;
     private Stopwatch elapsedPlayTime = Stopwatch.createUnstarted();
 
     private Sound pickupCollectedSound;
 
     // TODO: Level json path
-    private String levelId;
+    private String id;
 
     public Level(
+        String id,
         Ship ship,
         Thruster thruster,
         ArrayList<Planet> planets,
@@ -51,6 +53,7 @@ public class Level
         this.pickups = pickups;
         this.width = width;
         this.height = height;
+        this.id = id;
 
         this.gameState = GameState.COUNTDOWN;
 
@@ -73,7 +76,7 @@ public class Level
     @Subscribe
     public void pickupCollected(PickupCollectedEvent pickupCollectedEvent)
     {
-        pickupCollected++;
+        pickupsCollected++;
         pickupCollectedSound.play(SettingsManager.getSettings().volume);
         GameEntityManager.removeGameEntity(pickupCollectedEvent.pickup);
     }
@@ -91,6 +94,8 @@ public class Level
         GameEntityManager.removeGameEntity(ship);
         GameEntityManager.removeGameEntity(thruster);
 
+        elapsedPlayTime.stop();
+
         // If wrong planet or too fast then lose.
         if (!(shipPlanetCollisionEvent.planet.equals(destinationPlanet))
             || ship.physicsComponent.getVelocity().len()
@@ -105,24 +110,23 @@ public class Level
             );
             GameEntityManager.addGameEntity(explosion);
 
-            // TODO: Stack of screens
-            // e.g. ScreenManager.add(new LoseScreen(levelPath));
-            //this.overlayScreen = new LoseScreen(levelPath);
+            LoseEvent loseEvent = Pools.obtain(LoseEvent.class);
+            Constants.General.EVENT_BUS.post(loseEvent);
+            Pools.free(loseEvent);
         }
         else
         {
-            int score = getScore();
             gameState = GameState.WIN;
 
-            // TODO: Stack of screens
-            // e.g. ScreenManager.add(new WinScreen(levelPath, score));
-            //this.overlayScreen = new WinScreen(levelPath, score);
+            WinEvent winEvent = Pools.obtain(WinEvent.class);
+            Constants.General.EVENT_BUS.post(winEvent);
+            Pools.free(winEvent);
         }
     }
 
     public int getScore()
     {
-        float pickupPoints = pickupCollected * Constants.Game.PICKUP_POINTS;
+        float pickupPoints = pickupsCollected * Constants.Game.PICKUP_POINTS;
         float timePoints = elapsedPlayTime.elapsed(TimeUnit.NANOSECONDS)
             * Constants.General.NANO
             * Constants.Game.TIME_POINTS;
@@ -135,9 +139,9 @@ public class Level
         return Math.round(score);
     }
 
-    public String getLevelId()
+    public String getId()
     {
-        return levelId;
+        return id;
     }
 
     @Subscribe
@@ -148,6 +152,7 @@ public class Level
             this.gameState = GameState.PLAY;
             elapsedPlayTime.start();
         }
+        // FIXME
         /*this.overlayScreen.dispose();
         this.overlayScreen = null;*/
     }

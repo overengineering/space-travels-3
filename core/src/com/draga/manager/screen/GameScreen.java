@@ -7,8 +7,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.draga.*;
+import com.draga.event.LoseEvent;
+import com.draga.event.WinEvent;
 import com.draga.gameEntity.GameEntity;
-import com.draga.gameEntity.Planet;
 import com.draga.manager.GameEntityManager;
 import com.draga.manager.GameManager;
 import com.draga.manager.InputManager;
@@ -16,6 +17,7 @@ import com.draga.manager.SettingsManager;
 import com.draga.manager.asset.AssMan;
 import com.draga.physic.PhysicDebugDrawer;
 import com.draga.physic.PhysicsEngine;
+import com.google.common.eventbus.Subscribe;
 
 public class GameScreen implements Screen
 {
@@ -23,15 +25,9 @@ public class GameScreen implements Screen
 
     private PhysicDebugDrawer physicDebugDrawer;
 
-    private float width;
-    private float height;
-
-    private String levelPath;
-
     private Screen overlayScreen;
 
     private Hud hud;
-
 
     private OrthographicCamera orthographicCamera;
     private ExtendViewport     extendViewport;
@@ -58,8 +54,8 @@ public class GameScreen implements Screen
         extendViewport = new ExtendViewport(
             Constants.Visual.VIEWPORT_WIDTH,
             Constants.Visual.VIEWPORT_HEIGHT,
-            width,
-            height,
+            level.getWidth(),
+            level.getHeight(),
             orthographicCamera);
         extendViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
@@ -224,8 +220,20 @@ public class GameScreen implements Screen
             this.overlayScreen.dispose();
         }
 
-
+        level.dispose();
 
         AssMan.getAssMan().clear();
+    }
+
+    @Subscribe
+    public void Lose(LoseEvent loseEvent)
+    {
+        this.overlayScreen = new LoseScreen(level.getId());
+    }
+
+    @Subscribe
+    public void Win(WinEvent winEvent)
+    {
+        this.overlayScreen = new WinScreen(level.getId(), level.getScore());
     }
 }

@@ -22,7 +22,7 @@ public abstract class LevelManager
     private static final String LOGGING_TAG = LevelManager.class.getSimpleName();
     private static ArrayList<SerialisableLevel> levels;
 
-    public static Level getLevelGameScreen(SerialisableLevel serialisableLevel)
+    public static Level getLevel(SerialisableLevel serialisableLevel)
     {/*
         GameScreen gameScreen = new GameScreen(
             serialisableLevel.serialisedBackground.texturePath,
@@ -71,7 +71,9 @@ public abstract class LevelManager
         }
 
         Thruster thruster = new Thruster(ship);
-        Level level = new Level(ship,
+        Level level = new Level(
+            serialisableLevel.name,
+            ship,
             thruster,
             planets,
             pickups,
