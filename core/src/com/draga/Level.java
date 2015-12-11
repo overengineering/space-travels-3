@@ -24,7 +24,6 @@ public class Level
     private final ArrayList<Pickup> pickups;
     private final Ship              ship;
     private final Thruster          thruster;
-    private final ArrayList<Planet> planets;
     private final Planet            destinationPlanet;
     private       int               pickupsCollected;
 
@@ -48,7 +47,6 @@ public class Level
     {
         this.ship = ship;
         this.thruster = thruster;
-        this.planets = planets;
         this.destinationPlanet = destinationPlanet;
         this.pickups = pickups;
         this.width = width;
