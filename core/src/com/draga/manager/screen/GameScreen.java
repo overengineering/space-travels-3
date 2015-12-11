@@ -4,11 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.draga.*;
+import com.draga.event.CountdownFinishedEvent;
 import com.draga.event.LoseEvent;
 import com.draga.event.WinEvent;
 import com.draga.gameEntity.GameEntity;
@@ -17,7 +16,6 @@ import com.draga.manager.GameManager;
 import com.draga.manager.InputManager;
 import com.draga.manager.SettingsManager;
 import com.draga.manager.asset.AssMan;
-import com.draga.physic.PhysicDebugDrawer;
 import com.draga.physic.PhysicsEngine;
 import com.google.common.eventbus.Subscribe;
 
@@ -29,7 +27,7 @@ public class GameScreen implements Screen
 
     private Hud hud;
 
-    private ExtendViewport     extendViewport;
+    private ExtendViewport extendViewport;
 
     private GameScreenInputProcessor gameScreenInputProcessor;
 
@@ -46,20 +44,17 @@ public class GameScreen implements Screen
         gameScreenInputProcessor = new GameScreenInputProcessor();
         Gdx.input.setInputProcessor(gameScreenInputProcessor);
 
-
-        OrthographicCamera orthographicCamera = new OrthographicCamera();
         extendViewport = new ExtendViewport(
             Constants.Visual.VIEWPORT_WIDTH,
             Constants.Visual.VIEWPORT_HEIGHT,
             level.getWidth(),
-            level.getHeight(),
-            orthographicCamera);
+            level.getHeight());
         extendViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        hud = new Hud(orthographicCamera, level);
+        hud = new Hud(extendViewport.getCamera(), level);
 
-        orthographicCamera.position.x = level.getShip().physicsComponent.getPosition().x;
-        orthographicCamera.position.y = level.getShip().physicsComponent.getPosition().y;
+        extendViewport.getCamera().position.x = level.getShip().physicsComponent.getPosition().x;
+        extendViewport.getCamera().position.y = level.getShip().physicsComponent.getPosition().y;
         updateCamera();
 
     }
@@ -223,5 +218,12 @@ public class GameScreen implements Screen
     public void Win(WinEvent winEvent)
     {
         this.overlayScreen = new WinScreen(level.getId(), level.getScore());
+    }
+
+    @Subscribe
+    public void countdownFinished(CountdownFinishedEvent countdownFinishedEvent)
+    {
+        this.overlayScreen.dispose();
+        this.overlayScreen = null;
     }
 }

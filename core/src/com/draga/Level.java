@@ -152,9 +152,6 @@ public class Level
             this.gameState = GameState.PLAY;
             elapsedPlayTime.start();
         }
-        // FIXME
-        /*this.overlayScreen.dispose();
-        this.overlayScreen = null;*/
     }
 
     public void dispose()
@@ -196,7 +193,7 @@ public class Level
             || gameState == GameState.COUNTDOWN)
         {
             gameState = GameState.PAUSE;
-            if (!elapsedPlayTime.isRunning())
+            if (elapsedPlayTime.isRunning())
             {
                 elapsedPlayTime.stop();
             }
