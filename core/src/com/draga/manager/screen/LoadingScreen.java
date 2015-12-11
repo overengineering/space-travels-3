@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.draga.Constants;
+import com.draga.Level;
 import com.draga.manager.GameManager;
 import com.draga.manager.SettingsManager;
 import com.draga.manager.UIManager;
@@ -126,7 +127,8 @@ public class LoadingScreen implements Screen
                         "Loading time: %fs",
                         stopwatch.elapsed(TimeUnit.NANOSECONDS) * Constants.General.NANO));
             }
-            GameScreen gameScreen = LevelManager.getLevelGameScreen(serialisableLevel);
+            Level level = LevelManager.getLevelGameScreen(serialisableLevel);
+            GameScreen gameScreen = new GameScreen(level);
             GameManager.getGame().setScreen(gameScreen);
         }
         updateProgressBar();

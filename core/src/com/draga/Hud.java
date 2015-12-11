@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.draga.event.PickupCollectedEvent;
+import com.draga.gameEntity.Pickup;
 import com.draga.gameEntity.Ship;
 import com.draga.manager.GameEntityManager;
 import com.draga.manager.InputManager;
@@ -30,6 +31,7 @@ public class Hud implements Screen
 {
     private final Label              scoreLabel;
     private final OrthographicCamera worldCamera;
+    private final Level level;
     private       Stage              stage;
     private       ProgressBar        fuelProgressBar;
     private       Stack<Image>       grayPickups;
@@ -37,12 +39,14 @@ public class Hud implements Screen
     private       Ship               ship;
     private       MiniMap            miniMap;
     
-    public Hud(OrthographicCamera worldCamera, float worldWidth, float worldHeight)
+    public Hud(OrthographicCamera worldCamera, Level level)
     {
+        this.level = level;
+
         this.worldCamera = worldCamera;
         Constants.General.EVENT_BUS.register(this);
         this.grayPickups = new Stack<>();
-        this.miniMap = new MiniMap(worldWidth, worldHeight);
+        this.miniMap = new MiniMap(level.getWidth(), level.getHeight());
 
         stage = new Stage();
 
@@ -127,6 +131,14 @@ public class Hud implements Screen
                 .center();
 
             stage.addActor(joystickOverlayTable);
+        }
+
+        this.ship = level.getShip();
+        miniMap.addShip(this.ship);
+
+        for (int i = 0; i < level.getPickups().size(); i++)
+        {
+            this.addPickup();
         }
 
         stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
@@ -292,9 +304,8 @@ public class Hud implements Screen
         firstPickup.setDrawable(new TextureRegionDrawable(new TextureRegion(pickupTexture)));
     }
 
-    public void setShip(Ship ship)
+    public void update()
     {
-        this.ship = ship;
-        miniMap.addShip(ship);
+        this.setScore(level.getScore());
     }
 }

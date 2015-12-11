@@ -2,15 +2,16 @@ package com.draga.manager.level;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Json;
+import com.draga.Level;
+import com.draga.gameEntity.Pickup;
 import com.draga.gameEntity.Planet;
 import com.draga.gameEntity.Ship;
-import com.draga.gameEntity.Pickup;
+import com.draga.gameEntity.Thruster;
 import com.draga.manager.GameEntityManager;
 import com.draga.manager.asset.AssMan;
 import com.draga.manager.level.serialisableEntities.SerialisableLevel;
-import com.draga.manager.level.serialisableEntities.SerialisablePlanet;
 import com.draga.manager.level.serialisableEntities.SerialisablePickup;
-import com.draga.manager.screen.GameScreen;
+import com.draga.manager.level.serialisableEntities.SerialisablePlanet;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -21,13 +22,13 @@ public abstract class LevelManager
     private static final String LOGGING_TAG = LevelManager.class.getSimpleName();
     private static ArrayList<SerialisableLevel> levels;
 
-    public static GameScreen getLevelGameScreen(SerialisableLevel serialisableLevel)
-    {
+    public static Level getLevelGameScreen(SerialisableLevel serialisableLevel)
+    {/*
         GameScreen gameScreen = new GameScreen(
             serialisableLevel.serialisedBackground.texturePath,
             serialisableLevel.width,
             serialisableLevel.height,
-            serialisableLevel.name);
+            serialisableLevel.name);*/
 
         Ship ship = new Ship(
             serialisableLevel.serialisedShip.x,
@@ -35,7 +36,9 @@ public abstract class LevelManager
             serialisableLevel.serialisedShip.mass,
             AssMan.getAssList().shipTexture,
             serialisableLevel.fuel);
-        gameScreen.addShip(ship);
+        //        gameScreen.addShip(ship);
+        ArrayList<Planet> planets = new ArrayList<>(serialisableLevel.serialisedPlanets.size());
+        Planet destinationPlanet = null;
 
         for (SerialisablePlanet serialisablePlanet : serialisableLevel.serialisedPlanets)
         {
@@ -47,23 +50,37 @@ public abstract class LevelManager
                 serialisablePlanet.texturePath,
                 serialisablePlanet.destination);
 
-            gameScreen.addPlanet(planet);
+            planets.add(planet);
+            //            gameScreen.addPlanet(planet);
             if (serialisablePlanet.destination)
             {
-                gameScreen.setDestinationPlanet(planet);
+                destinationPlanet = planet;
             }
         }
 
+        ArrayList<Pickup> pickups = new ArrayList<>(serialisableLevel.serialisedPickups.size());
         for (SerialisablePickup serialisablePickup : serialisableLevel.serialisedPickups)
         {
             Pickup pickup =
-                new Pickup(serialisablePickup.x, serialisablePickup.y, AssMan.getAssList().pickupTexture);
-            gameScreen.addPickup(pickup);
+                new Pickup(
+                    serialisablePickup.x,
+                    serialisablePickup.y,
+                    AssMan.getAssList().pickupTexture);
+            pickups.add(pickup);
+            //            gameScreen.addPickup(pickup);
         }
 
+        Thruster thruster = new Thruster(ship);
+        Level level = new Level(ship,
+            thruster,
+            planets,
+            pickups,
+            destinationPlanet,
+            serialisableLevel.width,
+            serialisableLevel.height);
         // Run one update so everything is in place for the countdown
         GameEntityManager.update();
-        return gameScreen;
+        return level;
     }
 
     public static SerialisableLevel getLevel(String levelName)
