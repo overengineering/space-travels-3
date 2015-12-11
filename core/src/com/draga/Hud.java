@@ -28,21 +28,24 @@ import java.util.Stack;
 
 public class Hud implements Screen
 {
-    private final Label              scoreLabel;
-    private final OrthographicCamera worldCamera;
-    private       Stage              stage;
-    private       ProgressBar        fuelProgressBar;
-    private       Stack<Image>       grayPickups;
-    private       Table              pickupTable;
-    private       Ship               ship;
-    private       MiniMap            miniMap;
+    private final Label        scoreLabel;
+    private final Camera       worldCamera;
+    private final Level        level;
+    private       Stage        stage;
+    private       ProgressBar  fuelProgressBar;
+    private       Stack<Image> grayPickups;
+    private       Table        pickupTable;
+    private       Ship         ship;
+    private       MiniMap      miniMap;
     
-    public Hud(OrthographicCamera worldCamera, float worldWidth, float worldHeight)
+    public Hud(Camera worldCamera, Level level)
     {
+        this.level = level;
+
         this.worldCamera = worldCamera;
         Constants.General.EVENT_BUS.register(this);
         this.grayPickups = new Stack<>();
-        this.miniMap = new MiniMap(worldWidth, worldHeight);
+        this.miniMap = new MiniMap(level.getWidth(), level.getHeight());
 
         stage = new Stage();
 
@@ -129,6 +132,14 @@ public class Hud implements Screen
             stage.addActor(joystickOverlayTable);
         }
 
+        this.ship = level.getShip();
+        miniMap.addShip(this.ship);
+
+        for (int i = 0; i < level.getPickups().size(); i++)
+        {
+            this.addPickup();
+        }
+
         stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
@@ -152,9 +163,16 @@ public class Hud implements Screen
         scoreLabel.setText(String.valueOf(score));
     }
 
-    public void setScore(int score)
+    public void addPickup()
     {
-        setScoreLabel(score);
+        Texture pickupTexture = AssMan.getAssMan().get(AssMan.getAssList().pickupGreyTexture);
+        Image pickupImage = new Image(pickupTexture);
+
+        pickupImage.setScaling(Scaling.fit);
+
+        grayPickups.add(pickupImage);
+
+        pickupTable.add(pickupImage);
     }
 
     @Override
@@ -225,9 +243,11 @@ public class Hud implements Screen
         SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
         SpaceTravels3.shapeRenderer.circle(
             ship.physicsComponent.getPosition().x
-                + ship.physicsComponent.getVelocity().x * Constants.Visual.HUD_FORCE_INDICATOR_SCALE,
+                + ship.physicsComponent.getVelocity().x
+                * Constants.Visual.HUD_FORCE_INDICATOR_SCALE,
             ship.physicsComponent.getPosition().y
-                + ship.physicsComponent.getVelocity().y * Constants.Visual.HUD_FORCE_INDICATOR_SCALE,
+                + ship.physicsComponent.getVelocity().y
+                * Constants.Visual.HUD_FORCE_INDICATOR_SCALE,
             0.5f);
 
         SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Line);
@@ -270,18 +290,6 @@ public class Hud implements Screen
         stage.dispose();
     }
 
-    public void addPickup()
-    {
-        Texture pickupTexture = AssMan.getAssMan().get(AssMan.getAssList().pickupGreyTexture);
-        Image pickupImage = new Image(pickupTexture);
-
-        pickupImage.setScaling(Scaling.fit);
-
-        grayPickups.add(pickupImage);
-
-        pickupTable.add(pickupImage);
-    }
-
     @Subscribe
     public void pickupCollected(PickupCollectedEvent pickupCollectedEvent)
     {
@@ -292,9 +300,13 @@ public class Hud implements Screen
         firstPickup.setDrawable(new TextureRegionDrawable(new TextureRegion(pickupTexture)));
     }
 
-    public void setShip(Ship ship)
+    public void update()
     {
-        this.ship = ship;
-        miniMap.addShip(ship);
+        this.setScore(level.getScore());
+    }
+
+    public void setScore(int score)
+    {
+        setScoreLabel(score);
     }
 }

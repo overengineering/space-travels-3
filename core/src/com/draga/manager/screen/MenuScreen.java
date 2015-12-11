@@ -104,7 +104,7 @@ public class MenuScreen implements Screen
 
     private ScrollPane getLevelList()
     {
-        java.util.List<SerialisableLevel> levels = LevelManager.getLevels();
+        java.util.List<SerialisableLevel> levels = LevelManager.getSerialisableLevels();
 
         buttonGroup = new ButtonGroup<>();
 
@@ -119,7 +119,7 @@ public class MenuScreen implements Screen
             String buttonText = level.name + " (" + ScoreManager.getScore(level.name) + ")";
             TextButton textButton =
                 new TextButton(buttonText, UIManager.skin);
-            textButton.setName(level.name);
+            textButton.setName(level.id);
             textButton.addListener(new BeepingClickListener());
             buttonGroup.add(textButton);
             table.add(textButton);
@@ -168,8 +168,8 @@ public class MenuScreen implements Screen
 
     private void StartGameScreen()
     {
-        String levelName = buttonGroup.getChecked().getName();
-        LoadingScreen loadingScreen = new LoadingScreen(levelName);
+        String levelId = buttonGroup.getChecked().getName();
+        LoadingScreen loadingScreen = new LoadingScreen(levelId);
         GameManager.getGame().setScreen(loadingScreen);
     }
 

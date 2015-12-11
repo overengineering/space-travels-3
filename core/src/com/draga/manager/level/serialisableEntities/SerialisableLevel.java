@@ -4,6 +4,8 @@ import java.util.List;
 
 public class SerialisableLevel
 {
+    // TODO: JSON ignore?
+    public String                   id;
     public String                   name;
     public float                    width;
     public float                    height;

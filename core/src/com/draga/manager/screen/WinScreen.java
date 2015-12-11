@@ -4,8 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -14,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.draga.BeepingClickListener;
+import com.draga.Constants;
 import com.draga.manager.GameManager;
 import com.draga.manager.ScoreManager;
 import com.draga.manager.SettingsManager;
@@ -24,34 +23,33 @@ import com.draga.manager.level.serialisableEntities.SerialisableLevel;
 
 public class WinScreen implements Screen
 {
-    private static final float FADE_PER_SECOND = 0.7f;
-    private final Stage stage;
-    private final Color fadeToColour     = new Color(0, 0, 0, 0.7f);
-    private final Color backgroundColour = new Color(0, 0, 0, 0);
-    private final Sound         sound;
-    private       String        levelName;
+    private final Stage  stage;
+    private final Sound  sound;
+    private final String levelId;
 
-    public WinScreen(String levelName, int score)
+    public WinScreen(String levelId, int score)
     {
-        this.levelName = levelName;
+        this.levelId = levelId;
         this.stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-        float previousBestScore = ScoreManager.getScore(levelName);
+        int previousBestScore = ScoreManager.getScore(levelId);
 
         Label headerLabel = getHeaderLabel();
         TextButton retryButton = getRetryButton();
         Label scoreLabel = getScoreLabel(score);
 
         Table table = UIManager.addDefaultTableToStage(stage);
-        table.setBackground(UIManager.skin.newDrawable("background", fadeToColour));
+        table.setBackground(UIManager.skin.newDrawable(
+            "background",
+            Constants.Visual.SCREEN_FADE_COLOUR));
         table.addAction(Actions.sequence(
             Actions.fadeOut(0),
-            Actions.fadeIn(3, Interpolation.pow2In)));
+            Actions.fadeIn(Constants.Visual.SCREEN_FADE_DURATION, Interpolation.pow2In)));
 
         table.add(headerLabel);
 
-        ScoreManager.updateScore(levelName, score);
+        ScoreManager.updateScore(levelId, score);
         table.row();
         Label newBestScoreLabel = getBestScoreLabel(score, previousBestScore);
         table.add(newBestScoreLabel);
@@ -62,12 +60,12 @@ public class WinScreen implements Screen
         table.row();
         table.add(retryButton);
 
-        SerialisableLevel nextLevel = LevelManager.getNextLevel(levelName);
+        SerialisableLevel nextLevel = LevelManager.getNextLevel(levelId);
 
         if (nextLevel != null)
         {
-            String nextLevelName = nextLevel.name;
-            TextButton nextTextButton = getNextButton(nextLevelName);
+            String nextLevelId = nextLevel.id;
+            TextButton nextTextButton = getNextButton(nextLevelId);
             table.row();
             table.add(nextTextButton);
         }
@@ -80,21 +78,6 @@ public class WinScreen implements Screen
 
         sound = AssMan.getAssMan().get(AssMan.getAssList().winSound);
         sound.play(SettingsManager.getSettings().volume);
-    }
-
-    private TextButton getMainMenuTextButton()
-    {
-        TextButton mainMenuTextButton = new TextButton("Main menu", UIManager.skin);
-        mainMenuTextButton.addListener(new BeepingClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y)
-            {
-                super.clicked(event, x, y);
-                GameManager.getGame().setScreen(new MenuScreen());
-            }
-        });
-
-        return mainMenuTextButton;
     }
 
     public Label getHeaderLabel()
@@ -124,7 +107,7 @@ public class WinScreen implements Screen
         return retryButton;
     }
 
-    private Label getScoreLabel(float score)
+    private Label getScoreLabel(int score)
     {
         Label.LabelStyle labelStyle = UIManager.skin.get(Label.LabelStyle.class);
 
@@ -133,7 +116,7 @@ public class WinScreen implements Screen
         return scoreLabel;
     }
 
-    private Label getBestScoreLabel(float score, float previousBestScore)
+    private Label getBestScoreLabel(int score, int previousBestScore)
     {
         Label.LabelStyle labelStyle = UIManager.skin.get(Label.LabelStyle.class);
 
@@ -147,7 +130,7 @@ public class WinScreen implements Screen
         return newBestScoreLabel;
     }
 
-    public TextButton getNextButton(final String levelName)
+    public TextButton getNextButton(final String levelId)
     {
         TextButton retryButton = new TextButton("Next level", UIManager.skin);
 
@@ -158,16 +141,32 @@ public class WinScreen implements Screen
                 public void clicked(InputEvent event, float x, float y)
                 {
                     super.clicked(event, x, y);
-                    GameManager.getGame().setScreen(new LoadingScreen(levelName));
+                    GameManager.getGame().setScreen(new LoadingScreen(levelId));
                 }
             });
 
         return retryButton;
     }
 
+    private TextButton getMainMenuTextButton()
+    {
+        TextButton mainMenuTextButton = new TextButton("Main menu", UIManager.skin);
+        mainMenuTextButton.addListener(new BeepingClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                super.clicked(event, x, y);
+                GameManager.getGame().setScreen(new MenuScreen());
+            }
+        });
+
+        return mainMenuTextButton;
+    }
+
     private void Retry()
     {
-        GameManager.getGame().setScreen(new LoadingScreen(levelName));
+        GameManager.getGame().setScreen(new LoadingScreen(levelId));
     }
 
     @Override

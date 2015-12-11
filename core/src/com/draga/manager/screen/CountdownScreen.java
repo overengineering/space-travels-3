@@ -12,9 +12,9 @@ import com.draga.manager.UIManager;
 
 public class CountdownScreen implements Screen
 {
-    private Stage   stage;
-    private Label   timerLabel;
-    private float   secondsRemaining;
+    private Stage stage;
+    private Label timerLabel;
+    private float secondsRemaining;
     private boolean countdownFinished = false;
 
     public CountdownScreen()
@@ -26,7 +26,7 @@ public class CountdownScreen implements Screen
         Table table = new Table();
         stage.addActor(table);
         table.setFillParent(true);
-        table.pad(((stage.getHeight() + stage.getWidth()) / 2f) / 50f);
+
         timerLabel = getTimerLabel();
         table
             .add(timerLabel)
@@ -47,11 +47,6 @@ public class CountdownScreen implements Screen
         return String.format("%.1f", this.secondsRemaining);
     }
 
-    public float getSecondsRemaining()
-    {
-        return secondsRemaining;
-    }
-
     @Override
     public void show()
     {
@@ -69,6 +64,7 @@ public class CountdownScreen implements Screen
         this.secondsRemaining -= delta;
         if (secondsRemaining <= 0)
         {
+            secondsRemaining = 0;
             countdownFinished = true;
             CountdownFinishedEvent countdownFinishedEvent =
                 Pools.obtain(CountdownFinishedEvent.class);
