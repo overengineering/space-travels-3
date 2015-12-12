@@ -24,6 +24,7 @@ public class DebugMenuScreen implements Screen
 
         Table table = UIManager.addDefaultTableToStage(stage);
 
+        // Empty expanded top cell to keep the menu centered
         table.row();
         table
             .add()
@@ -32,11 +33,13 @@ public class DebugMenuScreen implements Screen
         table.row();
         table.add(GetButtonScrollPane());
 
+        // Empty expanded bottom cell to keep the menu centered
         table.row();
         table
             .add()
             .expand();
 
+        // Back button
         TextButton backTextButton = getBackTextButton();
         table.row();
         table
