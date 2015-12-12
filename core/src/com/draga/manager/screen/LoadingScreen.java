@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.draga.Constants;
+import com.draga.Level;
 import com.draga.manager.GameManager;
 import com.draga.manager.SettingsManager;
 import com.draga.manager.UIManager;
@@ -26,15 +27,15 @@ import java.util.concurrent.TimeUnit;
 public class LoadingScreen implements Screen
 {
     private static final String LOGGING_TAG = LoadingScreen.class.getSimpleName();
-    private final String            levelName;
+    private final String            levelId;
     private       Stage             stage;
     private       ProgressBar       progressBar;
     private       SerialisableLevel serialisableLevel;
     private       Stopwatch         stopwatch;
     
-    public LoadingScreen(String levelName)
+    public LoadingScreen(String levelId)
     {
-        this.levelName = levelName;
+        this.levelId = levelId;
     }
 
     @Override
@@ -42,7 +43,7 @@ public class LoadingScreen implements Screen
     {
         stopwatch = Stopwatch.createStarted();
 
-        this.serialisableLevel = LevelManager.getLevel(levelName);
+        this.serialisableLevel = LevelManager.getSerialisableLevel(levelId);
 
         loadAssets();
 
@@ -126,7 +127,8 @@ public class LoadingScreen implements Screen
                         "Loading time: %fs",
                         stopwatch.elapsed(TimeUnit.NANOSECONDS) * Constants.General.NANO));
             }
-            GameScreen gameScreen = LevelManager.getLevelGameScreen(serialisableLevel);
+            Level level = LevelManager.getLevel(serialisableLevel);
+            GameScreen gameScreen = new GameScreen(level);
             GameManager.getGame().setScreen(gameScreen);
         }
         updateProgressBar();

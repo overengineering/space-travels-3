@@ -4,8 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -13,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.draga.BeepingClickListener;
+import com.draga.Constants;
 import com.draga.manager.GameManager;
 import com.draga.manager.SettingsManager;
 import com.draga.manager.UIManager;
@@ -20,24 +19,25 @@ import com.draga.manager.asset.AssMan;
 
 public class LoseScreen implements Screen
 {
-    private final Stage stage;
-    private final Color fadeToColour = new Color(0, 0, 0, 0.7f);
-    private final Sound         sound;
-    private       String        levelName;
+    private final Stage  stage;
+    private final Sound  sound;
+    private       String levelId;
 
-    public LoseScreen(String levelName)
+    public LoseScreen(String levelId)
     {
-        this.levelName = levelName;
+        this.levelId = levelId;
         this.stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
         TextButton retryButton = getRetryTextButton();
 
         Table table = UIManager.addDefaultTableToStage(stage);
-        table.setBackground(UIManager.skin.newDrawable("background", fadeToColour));
+        table.setBackground(UIManager.skin.newDrawable(
+            "background",
+            Constants.Visual.SCREEN_FADE_COLOUR));
         table.addAction(Actions.sequence(
             Actions.fadeOut(0),
-            Actions.fadeIn(3, Interpolation.pow2In)));
+            Actions.fadeIn(Constants.Visual.SCREEN_FADE_DURATION, Interpolation.pow2In)));
 
         table
             .add(retryButton);
@@ -50,21 +50,6 @@ public class LoseScreen implements Screen
 
         sound = AssMan.getAssMan().get(AssMan.getAssList().loseSound);
         sound.play(SettingsManager.getSettings().volume);
-    }
-
-    private TextButton getMainMenuTextButton()
-    {
-        TextButton mainMenuTextButton = new TextButton("Main menu", UIManager.skin);
-        mainMenuTextButton.addListener(new BeepingClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y)
-            {
-                super.clicked(event, x, y);
-                GameManager.getGame().setScreen(new MenuScreen());
-            }
-        });
-
-        return mainMenuTextButton;
     }
 
     public TextButton getRetryTextButton()
@@ -85,9 +70,25 @@ public class LoseScreen implements Screen
         return retryButton;
     }
 
+    private TextButton getMainMenuTextButton()
+    {
+        TextButton mainMenuTextButton = new TextButton("Main menu", UIManager.skin);
+        mainMenuTextButton.addListener(new BeepingClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                super.clicked(event, x, y);
+                GameManager.getGame().setScreen(new MenuScreen());
+            }
+        });
+
+        return mainMenuTextButton;
+    }
+
     private void Retry()
     {
-        GameManager.getGame().setScreen(new LoadingScreen(levelName));
+        GameManager.getGame().setScreen(new LoadingScreen(levelId));
     }
 
     @Override

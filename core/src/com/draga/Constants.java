@@ -46,6 +46,8 @@ public abstract class Constants
         public static final float   THRUSTER_MAX_HEIGHT     = 5;
         public static final float   THRUSTER_ANIMATION_TIME = 1f;
         public static final Vector2 THRUSTER_OFFSET         = new Vector2(-SHIP_WIDTH / 4f, 0);
+        public static final float   SCREEN_FADE_DURATION    = 3f;
+        public static final Color   SCREEN_FADE_COLOUR      = new Color(0, 0, 0, 0.7f);
     }
 
 
