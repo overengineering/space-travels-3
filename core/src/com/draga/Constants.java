@@ -48,6 +48,11 @@ public abstract class Constants
         public static final Vector2 THRUSTER_OFFSET         = new Vector2(-SHIP_WIDTH / 4f, 0);
         public static final float   SCREEN_FADE_DURATION    = 3f;
         public static final Color   SCREEN_FADE_COLOUR      = new Color(0, 0, 0, 0.7f);
+
+        // Background.
+        public static final int BACKGROUND_STAR_LAYER_COUNT    = 3;
+        public static final int BACKGROUND_STAR_COUNT          = 300;
+        public static final int BACKGROUND_NEBULAE_LAYER_COUNT = 3;
     }
 
 

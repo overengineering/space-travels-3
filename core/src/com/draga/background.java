@@ -14,10 +14,8 @@ import java.util.concurrent.TimeUnit;
 
 public class Background implements Disposable
 {
-    private static final String LOGGING_TAG         = Background.class.getSimpleName();
-    private static final int    STAR_LAYER_COUNT    = 3;
-    private static final int    STAR_COUNT          = 300;
-    private static final int    NEBULAE_LAYER_COUNT = 3;
+    private static final String LOGGING_TAG = Background.class.getSimpleName();
+
     private ArrayList<Sprite> layers;
     private ArrayList<Float>  layerParallaxScale;
 
@@ -26,11 +24,18 @@ public class Background implements Disposable
         layers = new ArrayList<>();
         layerParallaxScale = new ArrayList<>();
 
+        addNebulaeLayers(Constants.Visual.BACKGROUND_NEBULAE_LAYER_COUNT);
+
+        addStarLayers(Constants.Visual.BACKGROUND_STAR_LAYER_COUNT);
+    }
+
+    private void addNebulaeLayers(int count)
+    {
         float r = MathUtils.random(0f, 1f);
         float g = MathUtils.random(0f, 1f);
         float b = MathUtils.random(0f, 1f);
         Stopwatch stopwatch = Stopwatch.createStarted();
-        for (int i = 0; i < NEBULAE_LAYER_COUNT; i++)
+        for (int i = 0; i < count; i++)
         {
             Texture texture = getNebulaLayer(r, g, b);
             Sprite sprite = getRepeatingSprite(texture, Texture.TextureWrap.MirroredRepeat);
@@ -43,11 +48,17 @@ public class Background implements Disposable
         }
         Gdx.app.debug(
             LOGGING_TAG,
-            NEBULAE_LAYER_COUNT + " layers of nebulae took " + stopwatch.elapsed(
-                TimeUnit.NANOSECONDS) * Constants.General.NANO + "s");
+            Constants.Visual.BACKGROUND_NEBULAE_LAYER_COUNT
+                + " layers of nebulae took "
+                + stopwatch.elapsed(
+                TimeUnit.NANOSECONDS) * Constants.General.NANO
+                + "s");
+    }
 
-        stopwatch = Stopwatch.createStarted();
-        for (int i = 0; i < STAR_LAYER_COUNT; i++)
+    private void addStarLayers(int count)
+    {
+        Stopwatch stopwatch = Stopwatch.createStarted();
+        for (int i = 0; i < count; i++)
         {
             Texture texture = getStarLayer(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             Sprite sprite = getRepeatingSprite(texture, Texture.TextureWrap.Repeat);
@@ -58,14 +69,15 @@ public class Background implements Disposable
 
             //            PixmapIO.writePNG(FileManager.getFileHandle(Constants.General.FOLDER, "stars"+i+".png"), pixmap);
         }
-        Gdx.app.debug(LOGGING_TAG, STAR_LAYER_COUNT + " layers of stars took " + stopwatch.elapsed(
+        Gdx.app.debug(LOGGING_TAG, Constants.Visual.BACKGROUND_STAR_LAYER_COUNT
+            + " layers of stars took " + stopwatch.elapsed(
             TimeUnit.NANOSECONDS) * Constants.General.NANO + "s");
     }
 
     private Texture getNebulaLayer(float r, float g, float b)
     {
         int size = 1024;
-        float [][] pixels = PerlinNoiseGenerator.generatePerlinNoise(
+        float[][] pixels = PerlinNoiseGenerator.generatePerlinNoise(
             size,
             size,
             8);
@@ -107,7 +119,8 @@ public class Background implements Disposable
         Pixmap pixmap = new Pixmap(width, height, Pixmap.Format.RGBA8888);
         Pixmap.setBlending(Pixmap.Blending.None);
 
-        for (int i = 0; i < STAR_COUNT / STAR_LAYER_COUNT; i++)
+        for (int i = 0; i < Constants.Visual.BACKGROUND_STAR_COUNT
+            / Constants.Visual.BACKGROUND_STAR_LAYER_COUNT; i++)
         {
             int radius = Math.round(MathUtils.randomTriangular(0, 1, 0));
             int x = MathUtils.random(radius, width - 1 - radius);
