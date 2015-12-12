@@ -119,31 +119,45 @@ public class Background implements Disposable
         Pixmap pixmap = new Pixmap(width, height, Pixmap.Format.RGBA8888);
         Pixmap.setBlending(Pixmap.Blending.None);
 
+        float maxDiameter = width * height * Constants.Visual.BACKGROUND_STAR_MAX_DIAMETER_SCALE;
+
         for (int i = 0; i < Constants.Visual.BACKGROUND_STAR_COUNT
             / Constants.Visual.BACKGROUND_STAR_LAYER_COUNT; i++)
         {
-            int radius = Math.round(MathUtils.randomTriangular(0, 1, 0));
+            float diameter = MathUtils.randomTriangular(0.1f, maxDiameter, 0.1f);
+            int radius = MathUtils.round(diameter / 2f);
             int x = MathUtils.random(radius, width - 1 - radius);
             int y = MathUtils.random(radius, height - 1 - radius);
-            float alphaStep = 1f / (radius + 1);
-            float alpha = alphaStep;
-            for (int j = radius; j >= 0; j--)
-            {
-                float r = MathUtils.random(0.8f, 1f);
-                float g = MathUtils.random(0.8f, 1f);
-                float b = MathUtils.random(0.8f, 1f);
-                pixmap.setColor(r, g, b, alpha);
-                if (j == 0)
-                {
-                    pixmap.drawPixel(x, y);
-                }
-                else
-                {
-                    pixmap.fillCircle(x, y, j);
-                }
 
-                alpha += alphaStep;
+            float r = MathUtils.random(0.8f, 1f);
+            float g = MathUtils.random(0.8f, 1f);
+            float b = MathUtils.random(0.8f, 1f);
+
+            if (diameter <= 1f)
+            {
+                pixmap.setColor(r, g, b, diameter);
+                pixmap.drawPixel(x, y);
             }
+            else
+            {
+                float alphaStep = 1f / (radius + 1);
+                float alpha = alphaStep;
+                for (int j = radius; j >= 0; j--)
+                {
+                    pixmap.setColor(r, g, b, alpha);
+                    if (j == 0)
+                    {
+                        pixmap.drawPixel(x, y);
+                    }
+                    else
+                    {
+                        pixmap.fillCircle(x, y, j);
+                    }
+
+                    alpha += alphaStep;
+                }
+            }
+
         }
 
         Texture texture = new Texture(pixmap);
