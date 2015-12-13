@@ -8,7 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.BeepingClickListener;
+import com.draga.BeepingTextButton;
 import com.draga.manager.GameManager;
 import com.draga.manager.SettingsManager;
 import com.draga.manager.UIManager;
@@ -51,12 +53,11 @@ public class DebugMenuScreen implements Screen
 
     private TextButton getBackTextButton()
     {
-        TextButton backTextButton = new TextButton("Back", UIManager.skin);
-        backTextButton.addListener(new BeepingClickListener(){
+        TextButton backTextButton = new BeepingTextButton("Back", UIManager.skin);
+        backTextButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                super.clicked(event, x, y);
                 GameManager.getGame().setScreen(new MenuScreen());
             }
         });
@@ -81,13 +82,13 @@ public class DebugMenuScreen implements Screen
 
     private TextButton getDebugDrawTextButton()
     {
-        final TextButton debugDrawTextButton = new TextButton(
+        final TextButton debugDrawTextButton = new BeepingTextButton(
             "Debug draw",
             UIManager.skin.get(TextButton.TextButtonStyle.class));
         debugDrawTextButton.setChecked(SettingsManager.getDebugSettings().debugDraw);
 
         debugDrawTextButton.addListener(
-            new BeepingClickListener()
+            new ClickListener()
             {
                 @Override
                 public void clicked(InputEvent event, float x, float y)
@@ -102,13 +103,13 @@ public class DebugMenuScreen implements Screen
 
     private TextButton getInfiniteFuelTextButton()
     {
-        final TextButton infiniteFuelTextButton = new TextButton(
+        final TextButton infiniteFuelTextButton = new BeepingTextButton(
             "Infinite fuel",
             UIManager.skin.get(TextButton.TextButtonStyle.class));
         infiniteFuelTextButton.setChecked(SettingsManager.getDebugSettings().infiniteFuel);
 
         infiniteFuelTextButton.addListener(
-            new BeepingClickListener()
+            new ClickListener()
             {
                 @Override
                 public void clicked(InputEvent event, float x, float y)
@@ -123,13 +124,13 @@ public class DebugMenuScreen implements Screen
 
     private TextButton getNoGravityTextButton()
     {
-        final TextButton infiniteFuelTextButton = new TextButton(
+        final TextButton infiniteFuelTextButton = new BeepingTextButton(
             "No gravity",
             UIManager.skin.get(TextButton.TextButtonStyle.class));
         infiniteFuelTextButton.setChecked(SettingsManager.getDebugSettings().noGravity);
 
         infiniteFuelTextButton.addListener(
-            new BeepingClickListener()
+            new ClickListener()
             {
                 @Override
                 public void clicked(InputEvent event, float x, float y)

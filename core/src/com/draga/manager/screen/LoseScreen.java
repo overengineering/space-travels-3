@@ -10,7 +10,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.BeepingClickListener;
+import com.draga.BeepingTextButton;
 import com.draga.Constants;
 import com.draga.manager.GameManager;
 import com.draga.manager.SettingsManager;
@@ -54,15 +56,14 @@ public class LoseScreen implements Screen
 
     public TextButton getRetryTextButton()
     {
-        TextButton retryButton = new TextButton("Try Again?", UIManager.skin);
+        TextButton retryButton = new BeepingTextButton("Try Again?", UIManager.skin);
 
         retryButton.addListener(
-            new BeepingClickListener()
+            new ClickListener()
             {
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    super.clicked(event, x, y);
                     Retry();
                 }
             });
@@ -72,13 +73,12 @@ public class LoseScreen implements Screen
 
     private TextButton getMainMenuTextButton()
     {
-        TextButton mainMenuTextButton = new TextButton("Main menu", UIManager.skin);
-        mainMenuTextButton.addListener(new BeepingClickListener()
+        TextButton mainMenuTextButton = new BeepingTextButton("Main menu", UIManager.skin);
+        mainMenuTextButton.addListener(new ClickListener()
         {
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                super.clicked(event, x, y);
                 GameManager.getGame().setScreen(new MenuScreen());
             }
         });

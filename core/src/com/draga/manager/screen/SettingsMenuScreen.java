@@ -10,7 +10,9 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.BeepingClickListener;
+import com.draga.BeepingTextButton;
 import com.draga.Constants;
 import com.draga.InputType;
 import com.draga.manager.GameManager;
@@ -89,15 +91,14 @@ public class SettingsMenuScreen implements Screen
             new Label("Hud", UIManager.skin);
         table.add(hudLabel);
         TextButton hudForceIndicatorsTextButton =
-            new TextButton("Force indicators", UIManager.skin);
+            new BeepingTextButton("Force indicators", UIManager.skin);
         hudForceIndicatorsTextButton.setChecked(
             SettingsManager.getSettings().hudForceIndicators);
-        hudForceIndicatorsTextButton.addListener(new BeepingClickListener()
+        hudForceIndicatorsTextButton.addListener(new ClickListener()
         {
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                super.clicked(event, x, y);
                 SettingsManager.getSettings().hudForceIndicators
                     = !SettingsManager.getSettings().hudForceIndicators;
             }
@@ -144,13 +145,12 @@ public class SettingsMenuScreen implements Screen
 
     private TextButton getBackTextButton()
     {
-        TextButton backTextButton = new TextButton("Back", UIManager.skin);
-        backTextButton.addListener(new BeepingClickListener()
+        TextButton backTextButton = new BeepingTextButton("Back", UIManager.skin);
+        backTextButton.addListener(new ClickListener()
         {
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                super.clicked(event, x, y);
                 GameManager.getGame().setScreen(new MenuScreen());
             }
         });
@@ -165,29 +165,27 @@ public class SettingsMenuScreen implements Screen
         ButtonGroup<TextButton> buttonGroup = new ButtonGroup<>();
         buttonGroup.setMaxCheckCount(1);
 
-        TextButton touchButton = new TextButton("Touch", UIManager.skin);
+        TextButton touchButton = new BeepingTextButton("Touch", UIManager.skin);
         touchButton.setChecked(SettingsManager.getSettings().inputType == InputType.TOUCH);
-        touchButton.addListener(new BeepingClickListener()
+        touchButton.addListener(new ClickListener()
         {
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                super.clicked(event, x, y);
                 SettingsManager.getSettings().inputType = InputType.TOUCH;
             }
         });
         buttonGroup.add(touchButton);
         table.add(touchButton);
 
-        TextButton accelerometerButton = new TextButton("Accelerometer", UIManager.skin);
+        TextButton accelerometerButton = new BeepingTextButton("Accelerometer", UIManager.skin);
         accelerometerButton.setChecked(SettingsManager.getSettings().inputType
             == InputType.ACCELEROMETER);
-        accelerometerButton.addListener(new BeepingClickListener()
+        accelerometerButton.addListener(new ClickListener()
         {
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                super.clicked(event, x, y);
                 SettingsManager.getSettings().inputType = InputType.ACCELEROMETER;
             }
         });
@@ -199,18 +197,17 @@ public class SettingsMenuScreen implements Screen
 
     private TextButton getDebugDrawTextButton()
     {
-        final TextButton debugDrawTextButton = new TextButton(
+        final TextButton debugDrawTextButton = new BeepingTextButton(
             "Debug draw",
-            UIManager.skin.get(TextButton.TextButtonStyle.class));
+            UIManager.skin);
         debugDrawTextButton.setChecked(SettingsManager.getDebugSettings().debugDraw);
 
         debugDrawTextButton.addListener(
-            new BeepingClickListener()
+            new ClickListener()
             {
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    super.clicked(event, x, y);
                     SettingsManager.getDebugSettings().debugDraw =
                         !SettingsManager.getDebugSettings().debugDraw;
                     debugDrawTextButton.setChecked(SettingsManager.getDebugSettings().debugDraw);

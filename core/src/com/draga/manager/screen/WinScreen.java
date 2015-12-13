@@ -11,7 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.BeepingClickListener;
+import com.draga.BeepingTextButton;
 import com.draga.Constants;
 import com.draga.manager.GameManager;
 import com.draga.manager.ScoreManager;
@@ -91,15 +93,14 @@ public class WinScreen implements Screen
 
     public TextButton getRetryButton()
     {
-        TextButton retryButton = new TextButton("Try Again?", UIManager.skin);
+        TextButton retryButton = new BeepingTextButton("Try Again?", UIManager.skin);
 
         retryButton.addListener(
-            new BeepingClickListener()
+            new ClickListener()
             {
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    super.clicked(event, x, y);
                     Retry();
                 }
             });
@@ -132,15 +133,14 @@ public class WinScreen implements Screen
 
     public TextButton getNextButton(final String levelId)
     {
-        TextButton retryButton = new TextButton("Next level", UIManager.skin);
+        TextButton retryButton = new BeepingTextButton("Next level", UIManager.skin);
 
         retryButton.addListener(
-            new BeepingClickListener()
+            new ClickListener()
             {
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    super.clicked(event, x, y);
                     GameManager.getGame().setScreen(new LoadingScreen(levelId));
                 }
             });
@@ -150,13 +150,12 @@ public class WinScreen implements Screen
 
     private TextButton getMainMenuTextButton()
     {
-        TextButton mainMenuTextButton = new TextButton("Main menu", UIManager.skin);
-        mainMenuTextButton.addListener(new BeepingClickListener()
+        TextButton mainMenuTextButton = new BeepingTextButton("Main menu", UIManager.skin);
+        mainMenuTextButton.addListener(new ClickListener()
         {
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                super.clicked(event, x, y);
                 GameManager.getGame().setScreen(new MenuScreen());
             }
         });

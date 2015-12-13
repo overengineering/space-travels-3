@@ -7,7 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.draga.BeepingClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.draga.BeepingTextButton;
 import com.draga.Constants;
 import com.draga.manager.GameManager;
 import com.draga.manager.ScoreManager;
@@ -86,15 +87,14 @@ public class MenuScreen implements Screen
     
     public TextButton getPlayButton()
     {
-        TextButton playButton = new TextButton("Play", UIManager.skin);
+        TextButton playButton = new BeepingTextButton("Play", UIManager.skin);
 
         playButton.addListener(
-            new BeepingClickListener()
+            new ClickListener()
             {
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    super.clicked(event, x, y);
                     StartGameScreen();
                 }
             });
@@ -118,9 +118,8 @@ public class MenuScreen implements Screen
         {
             String buttonText = level.name + " (" + ScoreManager.getScore(level.name) + ")";
             TextButton textButton =
-                new TextButton(buttonText, UIManager.skin);
+                new BeepingTextButton(buttonText, UIManager.skin);
             textButton.setName(level.id);
-            textButton.addListener(new BeepingClickListener());
             buttonGroup.add(textButton);
             table.add(textButton);
             table.row();
@@ -133,15 +132,14 @@ public class MenuScreen implements Screen
 
     public Actor getDebugButton()
     {
-        TextButton debugButton = new TextButton("Debug", UIManager.skin);
+        TextButton debugButton = new BeepingTextButton("Debug", UIManager.skin);
 
         debugButton.addListener(
-            new BeepingClickListener()
+            new ClickListener()
             {
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    super.clicked(event, x, y);
                     GameManager.getGame().setScreen(new DebugMenuScreen());
                 }
             });
@@ -150,10 +148,10 @@ public class MenuScreen implements Screen
 
     private TextButton getSettingsTextButton()
     {
-        TextButton settingsTextButton = new TextButton("Settings", UIManager.skin);
+        TextButton settingsTextButton = new BeepingTextButton("Settings", UIManager.skin);
 
         settingsTextButton.addListener(
-            new BeepingClickListener()
+            new ClickListener()
             {
                 @Override
                 public void clicked(InputEvent event, float x, float y)
