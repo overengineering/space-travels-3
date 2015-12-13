@@ -28,7 +28,7 @@ public class Level
     private       int               pickupsCollected;
 
     private GameState gameState;
-    private Stopwatch elapsedPlayTime = Stopwatch.createUnstarted();
+    private Stopwatch elapsedPlayTime;
 
     private Sound pickupCollectedSound;
 
@@ -71,6 +71,8 @@ public class Level
         }
 
         Constants.General.EVENT_BUS.register(this);
+
+        elapsedPlayTime = Stopwatch.createUnstarted();
     }
 
     @Subscribe
@@ -130,8 +132,7 @@ public class Level
         float timePoints = elapsedPlayTime.elapsed(TimeUnit.NANOSECONDS)
             * Constants.General.NANO
             * Constants.Game.TIME_POINTS;
-        // TODO: Max fuel can be all over the place. Percentage of remaining?
-        float fuelPoints = ship.getCurrentFuel() * Constants.Game.FUEL_POINTS;
+        float fuelPoints = ship.getCurrentFuel() / ship.getMaxFuel() * Constants.Game.FUEL_POINTS;
 
         float score = pickupPoints;
         score -= timePoints;
