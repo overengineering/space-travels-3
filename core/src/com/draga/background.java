@@ -154,6 +154,9 @@ public class Background implements Disposable
 
     public void draw(Camera camera)
     {
+        float x = camera.position.x - camera.viewportWidth / 2f;
+        float y = camera.position.y - camera.viewportHeight / 2f;
+
         for (int i = 0; i < layers.size(); i++)
         {
             float offsetX = camera.position.x * layerParallaxScale.get(i);
@@ -165,8 +168,8 @@ public class Background implements Disposable
 
             SpaceTravels3.spriteBatch.draw(
                 texture,
-                camera.position.x - camera.viewportWidth / 2f,
-                camera.position.y - camera.viewportHeight / 2f,
+                x,
+                y,
                 camera.viewportWidth,
                 camera.viewportHeight,
                 u,
