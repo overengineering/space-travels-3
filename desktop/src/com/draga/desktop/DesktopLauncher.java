@@ -2,7 +2,7 @@ package com.draga.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.draga.SpaceTravels3;
+import com.draga.spaceTravels3.SpaceTravels3;
 
 public class DesktopLauncher
 {

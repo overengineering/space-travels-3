@@ -3,7 +3,7 @@ package com.draga.android;
 import android.os.Bundle;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.draga.SpaceTravels3;
+import com.draga.spaceTravels3.SpaceTravels3;
 
 public class AndroidLauncher extends AndroidApplication
 {
