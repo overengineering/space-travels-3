@@ -8,7 +8,7 @@ import com.draga.spaceTravels3.input.inputProvider.TouchInputProvider;
 
 public class InputManager
 {
-    private static final String LOGGING_TAG         = InputManager.class.getSimpleName();
+    private static final String LOGGING_TAG = InputManager.class.getSimpleName();
     private static Vector2 inputForce;
 
     /**
@@ -27,7 +27,6 @@ public class InputManager
         Vector2 input;
         switch (Gdx.app.getType())
         {
-            // TODO: preferences based with adapters?
             case Android:
             case iOS:
                 switch (SettingsManager.getSettings().inputType)
