@@ -1,8 +1,8 @@
 package com.draga.spaceTravels3.component;
 
 import com.badlogic.gdx.math.Vector2;
-import com.draga.spaceTravels3.gameEntity.GameEntityGroup;
 import com.draga.shape.Shape;
+import com.draga.spaceTravels3.gameEntity.GameEntityGroup;
 
 public class PhysicsComponent
 {

@@ -3,12 +3,12 @@ package com.draga.spaceTravels3.physic;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Pools;
 import com.draga.spaceTravels3.Constants;
+import com.draga.spaceTravels3.event.PickupCollectedEvent;
+import com.draga.spaceTravels3.event.ShipPlanetCollisionEvent;
 import com.draga.spaceTravels3.gameEntity.GameEntity;
+import com.draga.spaceTravels3.gameEntity.Pickup;
 import com.draga.spaceTravels3.gameEntity.Planet;
 import com.draga.spaceTravels3.gameEntity.Ship;
-import com.draga.spaceTravels3.gameEntity.Pickup;
-import com.draga.spaceTravels3.event.ShipPlanetCollisionEvent;
-import com.draga.spaceTravels3.event.PickupCollectedEvent;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

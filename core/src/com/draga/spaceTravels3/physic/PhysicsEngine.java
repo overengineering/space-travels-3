@@ -2,11 +2,11 @@ package com.draga.spaceTravels3.physic;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import com.draga.shape.Circle;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.gameEntity.GameEntity;
 import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
-import com.draga.shape.Circle;
 import com.google.common.base.Stopwatch;
 
 import java.util.HashMap;

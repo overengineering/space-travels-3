@@ -8,14 +8,14 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.draga.spaceTravels3.SpaceTravels3;
-import com.draga.spaceTravels3.ui.BeepingTextButton;
 import com.draga.spaceTravels3.Constants;
+import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.manager.ScoreManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.level.LevelManager;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
+import com.draga.spaceTravels3.ui.BeepingTextButton;
 
 public class MenuScreen implements Screen
 {

@@ -11,12 +11,12 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.draga.spaceTravels3.SpaceTravels3;
-import com.draga.spaceTravels3.ui.BeepingTextButton;
 import com.draga.spaceTravels3.Constants;
+import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
+import com.draga.spaceTravels3.ui.BeepingTextButton;
 
 public class LoseScreen implements Screen
 {

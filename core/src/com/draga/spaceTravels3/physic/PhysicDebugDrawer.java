@@ -3,9 +3,9 @@ package com.draga.spaceTravels3.physic;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.draga.shape.Circle;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.gameEntity.GameEntity;
-import com.draga.shape.Circle;
 import com.draga.spaceTravels3.manager.GameEntityManager;
 
 /**

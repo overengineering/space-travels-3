@@ -3,13 +3,13 @@ package com.draga.spaceTravels3.gameEntity;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.math.Vector2;
+import com.draga.shape.Circle;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.component.PhysicsComponent;
 import com.draga.spaceTravels3.component.graphicComponent.AnimatedGraphicComponent;
 import com.draga.spaceTravels3.manager.InputManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
-import com.draga.shape.Circle;
 
 public class Thruster extends GameEntity
 {

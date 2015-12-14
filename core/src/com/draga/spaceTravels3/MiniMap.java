@@ -6,10 +6,10 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.draga.shape.Circle;
 import com.draga.spaceTravels3.gameEntity.GameEntity;
 import com.draga.spaceTravels3.gameEntity.Ship;
 import com.draga.spaceTravels3.manager.GameEntityManager;
-import com.draga.shape.Circle;
 
 public class MiniMap
 {

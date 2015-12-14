@@ -1,13 +1,13 @@
 package com.draga.spaceTravels3.gameEntity;
 
 import com.badlogic.gdx.math.Vector2;
+import com.draga.shape.Circle;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.component.PhysicsComponent;
 import com.draga.spaceTravels3.component.graphicComponent.StaticGraphicComponent;
 import com.draga.spaceTravels3.component.miniMapGraphicComponent.TriangleMiniMapGraphicComponent;
 import com.draga.spaceTravels3.manager.InputManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
-import com.draga.shape.Circle;
 
 import java.util.ArrayList;
 import java.util.List;
