@@ -65,6 +65,11 @@ public abstract class Constants
             (Constants.Visual.SHIP_WIDTH + Constants.Visual.SHIP_HEIGHT) / 2f
                 * 0.8f
                 / 2f;
+        /**
+         * Change tilt range. E.g. 1.0f = 90 degree max. 0.5f = 45 degrees max.
+         */
+        public static final float ACCELEROMETER_RANGE                   = 0.5f;
+        public static final float DEAD_ZONE = 0.15f;
 
         public static float SHIP_ACCELERATION_PER_SECOND = 60f;
     }

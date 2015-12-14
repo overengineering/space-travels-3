@@ -1,18 +1,14 @@
 package com.draga.spaceTravels3.manager;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
-import com.draga.spaceTravels3.Constants;
+import com.draga.spaceTravels3.input.inputProvider.AccelerometerInputProvider;
+import com.draga.spaceTravels3.input.inputProvider.KeyboardInputProvider;
+import com.draga.spaceTravels3.input.inputProvider.TouchInputProvider;
 
 public class InputManager
 {
-    public static final  float  DEAD_ZONE           = 0.15f;
     private static final String LOGGING_TAG         = InputManager.class.getSimpleName();
-    /**
-     * Change tilt range. E.g. 1.0f = 90 degree max. 0.5f = 45 degrees max.
-     */
-    private static final float  ACCELEROMETER_RANGE = 0.5f;
     private static Vector2 inputForce;
 
     /**
@@ -37,10 +33,10 @@ public class InputManager
                 switch (SettingsManager.getSettings().inputType)
                 {
                     case ACCELEROMETER:
-                        input = getAccelerometerInput();
+                        input = AccelerometerInputProvider.PROVIDER.getInput();
                         break;
                     case TOUCH:
-                        input = getTouchInput();
+                        input = TouchInputProvider.PROVIDER.getInput();
                         break;
                     default:
                         Gdx.app.error(
@@ -51,10 +47,10 @@ public class InputManager
                 }
                 break;
             case Desktop:
-                input = getKeyboardInput();
+                input = KeyboardInputProvider.PROVIDER.getInput();
                 if (input.isZero())
                 {
-                    input = getTouchInput();
+                    input = TouchInputProvider.PROVIDER.getInput();
                 }
                 break;
             default:
@@ -64,150 +60,5 @@ public class InputManager
                 break;
         }
         inputForce = input;
-    }
-
-    private static Vector2 getAccelerometerInput()
-    {
-        Vector2 input = getDeviceAccelerationForDeviceOrientation()
-            .scl(1f / ACCELEROMETER_RANGE);
-
-        // Max the gravity by the Earth gravity to avoid excessive force being applied if the device is shaken.
-        input = input.clamp(0, Constants.General.EARTH_GRAVITY);
-
-        // Scale the input by the Earth's gravity so that I'll be between 1 and 0
-        input = input.scl(1 / Constants.General.EARTH_GRAVITY);
-
-        input.x = applyDeadZone(input.x);
-        input.y = applyDeadZone(input.y);
-
-        return input;
-    }
-
-    private static Vector2 getTouchInput()
-    {
-        Vector2 input;
-        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT))
-        {
-            // Height flipped because 0,0 of input is top left, unlike to rest of the API.
-            input = new Vector2(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
-
-            float smallestDimension =
-                Math.min(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
-            Vector2 screenCenter =
-                new Vector2(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f);
-
-            // This was my idea but before I could put it down Lee totally sneakily
-            // solved just a tiny bit of it. (Stefano)
-
-            // Distance between the click and the center of the screen.
-            input.sub(screenCenter);
-            // Brings it to [-1,1]
-            input.scl(1/(smallestDimension / 2f)).clamp(0, 1);
-
-            input.x = applyDeadZone(input.x);
-            input.y = applyDeadZone(input.y);
-        }
-        else
-        {
-            input = Vector2.Zero;
-        }
-
-        return input;
-    }
-
-    /**
-     * Checks arrow, WASD and num pad keys and add 1 for each direction requested, then brings the
-     * vector between 0 and 1.
-     */
-    private static Vector2 getKeyboardInput()
-    {
-        Vector2 input = new Vector2().setZero();
-
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)
-            || Gdx.input.isKeyPressed(Input.Keys.W)
-            || Gdx.input.isKeyPressed(Input.Keys.DPAD_UP))
-        {
-            input.add(0, 1);
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)
-            || Gdx.input.isKeyPressed(Input.Keys.D)
-            || Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT))
-        {
-            input.add(1, 0);
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)
-            || Gdx.input.isKeyPressed(Input.Keys.S)
-            || Gdx.input.isKeyPressed(Input.Keys.DPAD_DOWN))
-        {
-            input.add(0, -1);
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)
-            || Gdx.input.isKeyPressed(Input.Keys.A)
-            || Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT))
-        {
-            input.add(-1, 0);
-        }
-
-        input.clamp(0, 1);
-
-        return input;
-    }
-
-    private static Vector2 getDeviceAccelerationForDeviceOrientation()
-    {
-        Vector2 input = new Vector2(Gdx.input.getAccelerometerX(), Gdx.input.getAccelerometerY());
-
-        adjustAccelerometerForScreenRotation(input);
-
-        return input;
-    }
-
-    private static float applyDeadZone(float value)
-    {
-        float sign = Math.signum(value);
-
-        if (Math.abs(value) > DEAD_ZONE)
-        {
-            // Move range up by dead zone.
-            value -= DEAD_ZONE * sign;
-
-            // Squash to (dead zone to 1). So dead zone is 0, screen max is 1
-            value /= (1 - DEAD_ZONE);
-        }
-        else
-        {
-            value = 0f;
-        }
-
-        return value;
-    }
-
-    private static void adjustAccelerometerForScreenRotation(Vector2 input)
-    {
-        // Rotate the vector "manually" instead of using input.rotate(Gdx.input.getRotation())
-        // because it doesn't need expensive operations.
-        switch (Gdx.input.getRotation())
-        {
-            case 0:
-                break;
-            case 90:
-                //noinspection SuspiciousNameCombination
-                input.set(input.y, -input.x);
-                break;
-            case 180:
-                input.set(-input.x, -input.y);
-                break;
-            case 270:
-                //noinspection SuspiciousNameCombination
-                input.set(-input.y, input.x);
-                break;
-            default:
-                Gdx.app.error(
-                    LOGGING_TAG, "Orientation " + Gdx.input.getRotation() + " not implemented.");
-        }
     }
 }
