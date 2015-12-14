@@ -23,13 +23,8 @@ public class GameScreen implements Screen
     private static final String LOGGING_TAG = GameScreen.class.getSimpleName();
 
     private Screen overlayScreen;
-
     private Hud hud;
-
     private ExtendViewport extendViewport;
-
-    private GameScreenInputProcessor gameScreenInputProcessor;
-
     private Level level;
 
     public GameScreen(Level level)
@@ -40,7 +35,7 @@ public class GameScreen implements Screen
 
         Constants.General.EVENT_BUS.register(this);
 
-        gameScreenInputProcessor = new GameScreenInputProcessor();
+        GameScreenInputProcessor gameScreenInputProcessor = new GameScreenInputProcessor();
         Gdx.input.setInputProcessor(gameScreenInputProcessor);
 
         extendViewport = new ExtendViewport(

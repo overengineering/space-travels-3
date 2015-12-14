@@ -64,6 +64,7 @@ public abstract class ScoreManager
         @Override
         public void run()
         {
+            @SuppressWarnings("ConstantConditions")
             String levelScoresString = Constants.General.IS_DEBUGGING
                 ? JSON.prettyPrint(levelScores)
                 : JSON.toJson(levelScores);

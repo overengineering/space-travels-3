@@ -19,9 +19,8 @@ import com.draga.spaceTravels3.ui.BeepingTextButton;
 
 public class MenuScreen implements Screen
 {
-    private final TextButton              playButton;
-    private       Stage                   stage;
-    private       ButtonGroup<TextButton> buttonGroup;
+    private Stage                   stage;
+    private ButtonGroup<TextButton> buttonGroup;
 
     public MenuScreen()
     {
@@ -31,7 +30,7 @@ public class MenuScreen implements Screen
         Table table = UIManager.addDefaultTableToStage(stage);
 
         Label headerLabel = getHeaderLabel();
-        playButton = getPlayButton();
+        TextButton playButton = getPlayButton();
 
         table
             .add(headerLabel)

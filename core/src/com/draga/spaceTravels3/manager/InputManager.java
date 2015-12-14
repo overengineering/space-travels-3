@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.draga.spaceTravels3.Constants;
+import com.sun.istack.internal.Pool;
 
 public class InputManager
 {
@@ -188,30 +189,26 @@ public class InputManager
 
     private static void adjustAccelerometerForScreenRotation(Vector2 input)
     {
-        Vector2 adjustedInput = new Vector2();
+        // Rotate the vector "manually" instead of using input.rotate(Gdx.input.getRotation())
+        // because it doesn't need expensive operations.
         switch (Gdx.input.getRotation())
         {
             case 0:
-                adjustedInput.x = input.x;
-                adjustedInput.y = input.y;
                 break;
             case 90:
-                adjustedInput.x = input.y;
-                adjustedInput.y = -input.x;
+                //noinspection SuspiciousNameCombination
+                input.set(input.y, -input.x);
                 break;
             case 180:
-                adjustedInput.x = -input.x;
-                adjustedInput.y = -input.y;
+                input.set(-input.x, -input.y);
                 break;
             case 270:
-                adjustedInput.x = -input.y;
-                adjustedInput.y = input.x;
+                //noinspection SuspiciousNameCombination
+                input.set(-input.y, input.x);
                 break;
             default:
                 Gdx.app.error(
                     LOGGING_TAG, "Orientation " + Gdx.input.getRotation() + " not implemented.");
         }
-
-        input.set(adjustedInput);
     }
 }

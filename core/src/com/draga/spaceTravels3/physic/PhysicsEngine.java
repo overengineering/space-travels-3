@@ -67,8 +67,6 @@ public class PhysicsEngine
 
     /**
      * Performs a physic step.
-     *
-     * @param deltaTime
      */
     private static void step(float deltaTime)
     {
@@ -145,13 +143,8 @@ public class PhysicsEngine
 
         double maxDistance = (circleA.radius) + (circleB.radius);
 
-        if (gameEntityA.physicsComponent.getPosition()
-            .dst(gameEntityB.physicsComponent.getPosition()) < maxDistance)
-        {
-            return true;
-        }
-
-        return false;
+        return gameEntityA.physicsComponent.getPosition()
+            .dst(gameEntityB.physicsComponent.getPosition()) < maxDistance;
     }
 
     private static Vector2 calculateGravityForceActingOn(GameEntity gameEntity)
@@ -190,8 +183,6 @@ public class PhysicsEngine
     /**
      * Gets the gravity on a game entity. Calculates it if it has not been already, otherwise returns
      * the last one.
-     * @param gameEntity
-     * @return
      */
     public static Vector2 getGravityForceActingOn(GameEntity gameEntity)
     {

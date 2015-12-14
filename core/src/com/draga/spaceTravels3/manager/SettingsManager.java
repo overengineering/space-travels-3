@@ -59,12 +59,14 @@ public abstract class SettingsManager
 
     public static void saveSettings()
     {
+        @SuppressWarnings("ConstantConditions")
         String debugSettingsString = Constants.General.IS_DEBUGGING
             ? JSON.prettyPrint(debugSettings)
             : JSON.toJson(debugSettings);
 
         debugSettingsFileHandle.writeString(debugSettingsString, false);
 
+        @SuppressWarnings("ConstantConditions")
         String settingsString = Constants.General.IS_DEBUGGING
             ? JSON.prettyPrint(settings)
             : JSON.toJson(settings);

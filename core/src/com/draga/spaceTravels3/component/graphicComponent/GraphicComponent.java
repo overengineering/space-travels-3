@@ -10,7 +10,7 @@ public abstract class GraphicComponent
     private   float            halfWidth;
     private   float            halfHeight;
 
-    public GraphicComponent(PhysicsComponent physicsComponent, float height, float width)
+    public GraphicComponent(PhysicsComponent physicsComponent, float width, float height)
     {
         this.physicsComponent = physicsComponent;
         setHeight(height);
