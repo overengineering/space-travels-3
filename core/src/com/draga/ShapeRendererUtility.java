@@ -16,15 +16,15 @@ public abstract class ShapeRendererUtility
         float y,
         float radius,
         int numArcs,
-        float arcLengthDegs,
+        float arcLengthDegrees,
         float startOffset,
         int segments,
         float lineWidth)
     {
         for (int i = 0; i < numArcs; i++)
         {
-            float startDegs = startOffset + (i * (360 / numArcs)) - (arcLengthDegs / 2);
-            arc(shapeRenderer, x, y, radius, startDegs, arcLengthDegs, segments, lineWidth);
+            float startDegrees = startOffset + (i * (360 / numArcs)) - (arcLengthDegrees / 2);
+            arc(shapeRenderer, x, y, radius, startDegrees, arcLengthDegrees, segments, lineWidth);
         }
     }
 
@@ -97,14 +97,14 @@ public abstract class ShapeRendererUtility
         float y,
         float radius,
         int numArcs,
-        float arcLengthDegs,
+        float arcLengthDegrees,
         float startOffset,
         float lineWidth)
     {
         for (int i = 0; i < numArcs; i++)
         {
-            float startDegs = startOffset + (i * (360 / numArcs)) - (arcLengthDegs / 2);
-            arc(shapeRenderer, x, y, radius, startDegs, arcLengthDegs, lineWidth);
+            float startDegrees = startOffset + (i * (360 / numArcs)) - (arcLengthDegrees / 2);
+            arc(shapeRenderer, x, y, radius, startDegrees, arcLengthDegrees, lineWidth);
         }
     }
 

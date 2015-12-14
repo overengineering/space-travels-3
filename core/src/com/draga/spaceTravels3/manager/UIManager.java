@@ -100,6 +100,7 @@ public class UIManager
 
     private static BitmapFont getBitmapFont()
     {
+        @SuppressWarnings("SpellCheckingInspection")
         FreeTypeFontGenerator generator =
             new FreeTypeFontGenerator(Gdx.files.internal("font/Akashi.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter =
