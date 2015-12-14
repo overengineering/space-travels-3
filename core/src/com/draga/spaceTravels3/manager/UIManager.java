@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.draga.spaceTravels3.Constants;
 
 public class UIManager
 {
@@ -59,8 +60,11 @@ public class UIManager
         skin.add("default", defaultFont);
 
         // TODO: maybe load only if debugging? Change name to monoSpaceFont or something?
-        BitmapFont debugFont = getDebugFont();
-        skin.add("debugFont", debugFont);
+        if (Constants.General.IS_DEBUGGING)
+        {
+            BitmapFont debugFont = getDebugFont();
+            skin.add("debug", debugFont);
+        }
 
         // Create a texture
         Pixmap pixmap = getTexture();

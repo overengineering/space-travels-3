@@ -49,7 +49,7 @@ public class DebugOverlay implements Screen
     private Label getLabel()
     {
         Label.LabelStyle labelStyle = new Label.LabelStyle();
-        labelStyle.font = UIManager.skin.getFont("debugFont");
+        labelStyle.font = UIManager.skin.getFont("debug");
         labelStyle.background =
             UIManager.skin.newDrawable("background", new Color(0, 0, 0, 0.3f));
 
