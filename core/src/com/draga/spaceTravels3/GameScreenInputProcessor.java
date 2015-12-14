@@ -2,7 +2,6 @@ package com.draga.spaceTravels3;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
-import com.draga.spaceTravels3.manager.GameManager;
 import com.draga.spaceTravels3.manager.screen.MenuScreen;
 
 public class GameScreenInputProcessor extends InputAdapter
@@ -12,7 +11,7 @@ public class GameScreenInputProcessor extends InputAdapter
     {
         if (keycode == Input.Keys.BACK)
         {
-            GameManager.getGame().setScreen(new MenuScreen());
+            SpaceTravels3.getGame().setScreen(new MenuScreen());
             return true;
         }
 

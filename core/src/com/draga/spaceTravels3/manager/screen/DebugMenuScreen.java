@@ -9,8 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.ui.BeepingTextButton;
-import com.draga.spaceTravels3.manager.GameManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 
@@ -57,7 +57,7 @@ public class DebugMenuScreen implements Screen
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                GameManager.getGame().setScreen(new MenuScreen());
+                SpaceTravels3.getGame().setScreen(new MenuScreen());
             }
         });
 
@@ -153,7 +153,7 @@ public class DebugMenuScreen implements Screen
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
             || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
         {
-            GameManager.getGame().setScreen(new MenuScreen());
+            SpaceTravels3.getGame().setScreen(new MenuScreen());
         }
 
         stage.act(delta);

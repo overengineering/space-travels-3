@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.Level;
-import com.draga.spaceTravels3.manager.GameManager;
+import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
@@ -129,7 +129,7 @@ public class LoadingScreen implements Screen
             }
             Level level = LevelManager.getLevel(serialisableLevel);
             GameScreen gameScreen = new GameScreen(level);
-            GameManager.getGame().setScreen(gameScreen);
+            SpaceTravels3.getGame().setScreen(gameScreen);
         }
         updateProgressBar();
 

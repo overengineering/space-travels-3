@@ -11,10 +11,10 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.ui.BeepingTextButton;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.InputType;
-import com.draga.spaceTravels3.manager.GameManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 
@@ -150,7 +150,7 @@ public class SettingsMenuScreen implements Screen
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                GameManager.getGame().setScreen(new MenuScreen());
+                SpaceTravels3.getGame().setScreen(new MenuScreen());
             }
         });
 
@@ -226,7 +226,7 @@ public class SettingsMenuScreen implements Screen
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
             || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
         {
-            GameManager.getGame().setScreen(new MenuScreen());
+            SpaceTravels3.getGame().setScreen(new MenuScreen());
         }
 
         stage.act(delta);

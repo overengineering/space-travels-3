@@ -12,7 +12,6 @@ import com.draga.spaceTravels3.event.LoseEvent;
 import com.draga.spaceTravels3.event.WinEvent;
 import com.draga.spaceTravels3.gameEntity.GameEntity;
 import com.draga.spaceTravels3.manager.GameEntityManager;
-import com.draga.spaceTravels3.manager.GameManager;
 import com.draga.spaceTravels3.manager.InputManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
@@ -83,7 +82,7 @@ public class GameScreen implements Screen
     {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
         {
-            GameManager.getGame().setScreen(new MenuScreen());
+            SpaceTravels3.getGame().setScreen(new MenuScreen());
             return;
         }
 

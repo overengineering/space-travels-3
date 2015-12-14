@@ -8,9 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.ui.BeepingTextButton;
 import com.draga.spaceTravels3.Constants;
-import com.draga.spaceTravels3.manager.GameManager;
 import com.draga.spaceTravels3.manager.ScoreManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
@@ -140,7 +140,7 @@ public class MenuScreen implements Screen
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    GameManager.getGame().setScreen(new DebugMenuScreen());
+                    SpaceTravels3.getGame().setScreen(new DebugMenuScreen());
                 }
             });
         return debugButton;
@@ -157,7 +157,7 @@ public class MenuScreen implements Screen
                 public void clicked(InputEvent event, float x, float y)
                 {
                     super.clicked(event, x, y);
-                    GameManager.getGame().setScreen(new SettingsMenuScreen());
+                    SpaceTravels3.getGame().setScreen(new SettingsMenuScreen());
                 }
             });
 
@@ -168,7 +168,7 @@ public class MenuScreen implements Screen
     {
         String levelId = buttonGroup.getChecked().getName();
         LoadingScreen loadingScreen = new LoadingScreen(levelId);
-        GameManager.getGame().setScreen(loadingScreen);
+        SpaceTravels3.getGame().setScreen(loadingScreen);
     }
 
     @Override

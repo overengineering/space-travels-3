@@ -12,15 +12,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.draga.spaceTravels3.ui.BeepingTextButton;
 import com.draga.spaceTravels3.Constants;
-import com.draga.spaceTravels3.manager.GameManager;
+import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.manager.ScoreManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.manager.level.LevelManager;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
+import com.draga.spaceTravels3.ui.BeepingTextButton;
 
 public class WinScreen implements Screen
 {
@@ -140,7 +140,7 @@ public class WinScreen implements Screen
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    GameManager.getGame().setScreen(new LoadingScreen(levelId));
+                    SpaceTravels3.getGame().setScreen(new LoadingScreen(levelId));
                 }
             });
 
@@ -155,7 +155,7 @@ public class WinScreen implements Screen
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                GameManager.getGame().setScreen(new MenuScreen());
+                SpaceTravels3.getGame().setScreen(new MenuScreen());
             }
         });
 
@@ -164,7 +164,7 @@ public class WinScreen implements Screen
 
     private void Retry()
     {
-        GameManager.getGame().setScreen(new LoadingScreen(levelId));
+        SpaceTravels3.getGame().setScreen(new LoadingScreen(levelId));
     }
 
     @Override
@@ -179,7 +179,7 @@ public class WinScreen implements Screen
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
             || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
         {
-            GameManager.getGame().setScreen(new MenuScreen());
+            SpaceTravels3.getGame().setScreen(new MenuScreen());
             return;
         }
 
