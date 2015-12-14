@@ -3,13 +3,25 @@ package com.draga.spaceTravels3.manager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.draga.spaceTravels3.input.inputProvider.AccelerometerInputProvider;
+import com.draga.spaceTravels3.input.inputProvider.InputProvider;
 import com.draga.spaceTravels3.input.inputProvider.KeyboardInputProvider;
 import com.draga.spaceTravels3.input.inputProvider.TouchInputProvider;
 
 public class InputManager
 {
     private static final String LOGGING_TAG = InputManager.class.getSimpleName();
-    private static Vector2 inputForce;
+
+    private static Vector2       inputForce;
+    private static InputProvider touchInputProvider;
+    private static InputProvider accelerometerInputProvider;
+    private static InputProvider keyboardInputProvider;
+
+    public static void create()
+    {
+        touchInputProvider = new TouchInputProvider();
+        accelerometerInputProvider = new AccelerometerInputProvider();
+        keyboardInputProvider = new KeyboardInputProvider();
+    }
 
     /**
      * Returns a vector with length from 0 to 1, representing where the input is pointing to,
@@ -32,10 +44,10 @@ public class InputManager
                 switch (SettingsManager.getSettings().inputType)
                 {
                     case ACCELEROMETER:
-                        input = AccelerometerInputProvider.PROVIDER.getInput();
+                        input = accelerometerInputProvider.getInput();
                         break;
                     case TOUCH:
-                        input = TouchInputProvider.PROVIDER.getInput();
+                        input = touchInputProvider.getInput();
                         break;
                     default:
                         Gdx.app.error(
@@ -46,10 +58,10 @@ public class InputManager
                 }
                 break;
             case Desktop:
-                input = KeyboardInputProvider.PROVIDER.getInput();
+                input = keyboardInputProvider.getInput();
                 if (input.isZero())
                 {
-                    input = TouchInputProvider.PROVIDER.getInput();
+                    input = touchInputProvider.getInput();
                 }
                 break;
             default:

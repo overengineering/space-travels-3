@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.draga.spaceTravels3.manager.InputManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.SoundManager;
 import com.draga.spaceTravels3.manager.UIManager;
@@ -40,6 +41,7 @@ public class SpaceTravels3 extends Game
         SoundManager.create();
         AssMan.getAssList();
         PhysicsEngine.create();
+        InputManager.create();
 
         if (Constants.General.IS_DEBUGGING)
         {

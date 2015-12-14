@@ -12,36 +12,33 @@ import com.draga.spaceTravels3.input.inputModifier.ScaleInputModifier;
  * Zero if the screen is not clicked/touched. The input is then scaled by the half of the smallest
  * dimension of the screen and a dead zone is applied.
  */
-public class TouchInputProvider
+public class TouchInputProvider extends InputProvider
 {
-    public static final InputProvider PROVIDER = new InputProvider()
-    {
-        @Override
-        protected Vector2 getRawInput()
-        {
-            Vector2 input = new Vector2();
-            if (Gdx.input.isButtonPressed(Input.Buttons.LEFT))
-            {
-                // Height flipped because 0,0 of input is top left, unlike to rest of the API.
-                input.set(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
-
-                // This was my idea but before I could put it down Lee totally sneakily
-                // solved just a tiny bit of it. (Stefano)
-
-                // Distance between the click and the center of the screen.
-                input.sub(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f);
-            }
-
-            return input;
-        }
-    };
-
-    static
+    public TouchInputProvider()
     {
         float halfSmallestDimension =
             Math.min(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()) / 2f;
-        PROVIDER.addInputModifier(new ScaleInputModifier(halfSmallestDimension));
+        addInputModifier(new ScaleInputModifier(halfSmallestDimension));
 
-        PROVIDER.addInputModifier(new DeadZoneInputModifier(Constants.Game.DEAD_ZONE));
+        addInputModifier(new DeadZoneInputModifier(Constants.Game.DEAD_ZONE));
+    }
+
+    @Override
+    protected Vector2 getRawInput()
+    {
+        Vector2 input = new Vector2();
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT))
+        {
+            // Height flipped because 0,0 of input is top left, unlike to rest of the API.
+            input.set(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+
+            // This was my idea but before I could put it down Lee totally sneakily
+            // solved just a tiny bit of it. (Stefano)
+
+            // Distance between the click and the center of the screen.
+            input.sub(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f);
+        }
+
+        return input;
     }
 }
