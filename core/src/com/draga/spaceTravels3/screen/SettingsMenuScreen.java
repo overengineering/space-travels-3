@@ -24,27 +24,37 @@ public class SettingsMenuScreen implements Screen
 
     public SettingsMenuScreen()
     {
+    }
+
+    @Override
+    public void show()
+    {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
         Table table = UIManager.addDefaultTableToStage(stage);
 
+        // Header label.
         Label headerLabel = getHeaderLabel();
         table.add(headerLabel);
 
+        // Add a row with an expanded cell to fill the gap.
         table.row();
         table
             .add()
             .expand();
 
+        // Setting buttons
         table.row();
         table.add(GetButtonScrollPane());
 
+        // Add a row with an expanded cell to fill the gap.
         table.row();
         table
             .add()
             .expand();
 
+        // Back button.
         TextButton backTextButton = getBackTextButton();
         table.row();
         table
@@ -79,30 +89,31 @@ public class SettingsMenuScreen implements Screen
 
         table.row();
 
-        addHud(table);
+        addHudSettings(table);
 
         return scrollPane;
     }
 
-    private void addHud(Table table)
+    private TextButton getBackTextButton()
     {
-        Label hudLabel =
-            new Label("Hud", UIManager.skin);
-        table.add(hudLabel);
-        TextButton hudForceIndicatorsTextButton =
-            new BeepingTextButton("Force indicators", UIManager.skin);
-        hudForceIndicatorsTextButton.setChecked(
-            SettingsManager.getSettings().hudForceIndicators);
-        hudForceIndicatorsTextButton.addListener(new ClickListener()
+        TextButton backTextButton = new BeepingTextButton("Back", UIManager.skin);
+        backTextButton.addListener(new ClickListener()
         {
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                SettingsManager.getSettings().hudForceIndicators
-                    = !SettingsManager.getSettings().hudForceIndicators;
+                SpaceTravels3.getGame().setScreen(new MenuScreen());
             }
         });
-        table.add(hudForceIndicatorsTextButton);
+
+        return backTextButton;
+    }
+
+    private void addInputType(Table table)
+    {
+        Label inputTypeLabel = new Label("Input type", UIManager.skin);
+        table.add(inputTypeLabel);
+        table.add(getInputTypeSelector());
     }
 
     private void addVolume(Table table)
@@ -135,26 +146,27 @@ public class SettingsMenuScreen implements Screen
             .width(stage.getWidth() / 2f);
     }
 
-    private void addInputType(Table table)
+    private void addHudSettings(Table table)
     {
-        Label inputTypeLabel = new Label("Input type", UIManager.skin);
-        table.add(inputTypeLabel);
-        table.add(getInputTypeSelector());
-    }
+        Label hudLabel =
+            new Label("Hud", UIManager.skin);
+        table.add(hudLabel);
 
-    private TextButton getBackTextButton()
-    {
-        TextButton backTextButton = new BeepingTextButton("Back", UIManager.skin);
-        backTextButton.addListener(new ClickListener()
+        TextButton hudForceIndicatorsTextButton =
+            new BeepingTextButton("Force indicators", UIManager.skin);
+        hudForceIndicatorsTextButton.setChecked(
+            SettingsManager.getSettings().hudForceIndicators);
+        hudForceIndicatorsTextButton.addListener(new ClickListener()
         {
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                SpaceTravels3.getGame().setScreen(new MenuScreen());
+                SettingsManager.getSettings().hudForceIndicators
+                    = !SettingsManager.getSettings().hudForceIndicators;
             }
         });
 
-        return backTextButton;
+        table.add(hudForceIndicatorsTextButton);
     }
 
     private Table getInputTypeSelector()
@@ -174,12 +186,13 @@ public class SettingsMenuScreen implements Screen
                 SettingsManager.getSettings().inputType = InputType.TOUCH;
             }
         });
+
         buttonGroup.add(touchButton);
         table.add(touchButton);
 
         TextButton accelerometerButton = new BeepingTextButton("Accelerometer", UIManager.skin);
-        accelerometerButton.setChecked(SettingsManager.getSettings().inputType
-            == InputType.ACCELEROMETER);
+        accelerometerButton.setChecked(
+            SettingsManager.getSettings().inputType == InputType.ACCELEROMETER);
         accelerometerButton.addListener(new ClickListener()
         {
             @Override
@@ -188,36 +201,11 @@ public class SettingsMenuScreen implements Screen
                 SettingsManager.getSettings().inputType = InputType.ACCELEROMETER;
             }
         });
+
         buttonGroup.add(accelerometerButton);
         table.add(accelerometerButton);
 
         return table;
-    }
-
-    private TextButton getDebugDrawTextButton()
-    {
-        final TextButton debugDrawTextButton = new BeepingTextButton(
-            "Debug draw",
-            UIManager.skin);
-        debugDrawTextButton.setChecked(SettingsManager.getDebugSettings().debugDraw);
-
-        debugDrawTextButton.addListener(
-            new ClickListener()
-            {
-                @Override
-                public void clicked(InputEvent event, float x, float y)
-                {
-                    SettingsManager.getDebugSettings().debugDraw =
-                        !SettingsManager.getDebugSettings().debugDraw;
-                    debugDrawTextButton.setChecked(SettingsManager.getDebugSettings().debugDraw);
-                }
-            });
-        return debugDrawTextButton;
-    }
-
-    @Override
-    public void show()
-    {
     }
 
     @Override
@@ -252,6 +240,7 @@ public class SettingsMenuScreen implements Screen
     @Override
     public void hide()
     {
+        dispose();
     }
 
     @Override
