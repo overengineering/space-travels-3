@@ -17,9 +17,12 @@ import com.draga.spaceTravels3.physic.PhysicsEngine;
 public class SpaceTravels3 extends Game
 {
     private final static String LOGGING_TAG = SpaceTravels3.class.getSimpleName();
+
     public static SpriteBatch   spriteBatch;
     public static ShapeRenderer shapeRenderer;
+
     private static Game game;
+
     private DebugOverlay debugOverlay;
 
     public static Game getGame()
@@ -36,6 +39,7 @@ public class SpaceTravels3 extends Game
         shapeRenderer.setAutoShapeType(true);
 
         Gdx.input.setCatchBackKey(true);
+
         AssMan.create();
         UIManager.create();
         SoundManager.create();
@@ -64,12 +68,16 @@ public class SpaceTravels3 extends Game
         {
             this.debugOverlay.dispose();
         }
+
         UIManager.dispose();
         AssMan.dispose();
         SoundManager.dispose();
         PhysicsEngine.dispose();
+        InputManager.dispose();
+
         spriteBatch.dispose();
         shapeRenderer.dispose();
+        
         super.dispose();
     }
 

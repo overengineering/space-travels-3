@@ -73,4 +73,9 @@ public class InputManager
         }
         inputForce = input;
     }
+
+    public static void dispose()
+    {
+
+    }
 }
