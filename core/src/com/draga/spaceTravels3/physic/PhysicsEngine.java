@@ -17,7 +17,7 @@ public class PhysicsEngine
     private static final String LOGGING_TAG =
         PhysicsEngine.class.getSimpleName();
 
-    private static       Stopwatch updateTimer = Stopwatch.createUnstarted();
+    private static Stopwatch updateTimer = Stopwatch.createUnstarted();
     private static float                        updateTime;
     private static HashMap<GameEntity, Vector2> calculatedGravityForces;
 
@@ -58,7 +58,8 @@ public class PhysicsEngine
             }
         }
 
-        // Updates all position according to the game entity velocity.
+        // Updates all position and rotation according to the game entity velocity and
+        // angular velocity.
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
             gameEntity.physicsComponent.getPosition()
@@ -103,10 +104,16 @@ public class PhysicsEngine
         gameEntity.physicsComponent.getVelocity().add(gravityForce.scl(deltaTime));
     }
 
+    /**
+     * @throws UnsupportedOperationException If physics component's Shape is not a Circle.
+     */
     private static boolean areColliding(
         GameEntity gameEntityA,
         GameEntity gameEntityB)
     {
+        // Rewrite the whole shebang when other Shapes are needed. Maybe in a way similar to
+        // the collisionResolver.
+
         if (!(gameEntityA.physicsComponent.getShape() instanceof Circle)
             || !(gameEntityB.physicsComponent.getShape() instanceof Circle))
         {
@@ -116,10 +123,27 @@ public class PhysicsEngine
         Circle circleA = (Circle) gameEntityA.physicsComponent.getShape();
         Circle circleB = (Circle) gameEntityB.physicsComponent.getShape();
 
-        double maxDistance = (circleA.radius) + (circleB.radius);
+        float collisionDistance = circleA.radius + circleB.radius;
 
-        return gameEntityA.physicsComponent.getPosition()
-            .dst(gameEntityB.physicsComponent.getPosition()) < maxDistance;
+        boolean isColliding = gameEntityA.physicsComponent.getPosition()
+            .dst(gameEntityB.physicsComponent.getPosition()) < collisionDistance;
+
+        return isColliding;
+    }
+
+    /**
+     * Gets the gravity on a game entity. Calculates it if it has not been already, otherwise returns
+     * the last one.
+     */
+    public static Vector2 getGravityForceActingOn(GameEntity gameEntity)
+    {
+        if (!calculatedGravityForces.containsKey(gameEntity))
+        {
+            Vector2 force = calculateGravityForceActingOn(gameEntity);
+            calculatedGravityForces.put(gameEntity, force);
+        }
+
+        return calculatedGravityForces.get(gameEntity).cpy();
     }
 
     private static Vector2 calculateGravityForceActingOn(GameEntity gameEntity)
@@ -142,32 +166,20 @@ public class PhysicsEngine
         GameEntity gameEntityA,
         GameEntity gameEntityB)
     {
-        Vector2 distance =
-            gameEntityB.physicsComponent.getPosition()
-                .cpy()
-                .sub(gameEntityA.physicsComponent.getPosition());
+        Vector2 distance = gameEntityB.physicsComponent.getPosition()
+            .cpy()
+            .sub(gameEntityA.physicsComponent.getPosition());
         float distanceLen2 = distance.len2();
-        distance = distance.nor();
-        float forceMagnitude =
-            gameEntityA.physicsComponent.getMass() * gameEntityB.physicsComponent.getMass()
-                / distanceLen2;
-        distance = distance.scl(forceMagnitude);
-        return distance;
-    }
 
-    /**
-     * Gets the gravity on a game entity. Calculates it if it has not been already, otherwise returns
-     * the last one.
-     */
-    public static Vector2 getGravityForceActingOn(GameEntity gameEntity)
-    {
-        if (!calculatedGravityForces.containsKey(gameEntity))
-        {
-            Vector2 force = calculateGravityForceActingOn(gameEntity);
-            calculatedGravityForces.put(gameEntity, force);
-        }
+        Vector2 direction = distance.nor();
 
-        return calculatedGravityForces.get(gameEntity).cpy();
+        float force = gameEntityA.physicsComponent.getMass()
+            * gameEntityB.physicsComponent.getMass()
+            / distanceLen2;
+
+        Vector2 gravityForce = direction.scl(force);
+
+        return gravityForce;
     }
 
     public static void create()
