@@ -4,6 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 
+/**
+ * App sounds that can stay in memory.
+ */
 public abstract class SoundManager
 {
     public static Sound buttonSound;

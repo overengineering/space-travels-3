@@ -14,14 +14,6 @@ import com.draga.spaceTravels3.Constants;
 
 public class UIManager
 {
-    private static final float sqrtPixels =
-        (float) Math.sqrt(Gdx.graphics.getWidth() * Gdx.graphics.getHeight());
-
-    private static final float BUTTON_PADDING = sqrtPixels * 0.01f;
-
-    private static final float FONT_SCALE       = 0.05f;
-    private static final float DEBUG_FONT_SCALE = 0.02f;
-
     public static Skin skin;
 
     public static Table addDefaultTableToStage(Stage stage)
@@ -36,8 +28,8 @@ public class UIManager
     public static Table getDefaultTable()
     {
         Table table = new Table();
-        table.defaults().pad(UIManager.BUTTON_PADDING);
-        table.pad(sqrtPixels / 50f);
+        table.defaults().pad(Constants.Visual.UI.BUTTON_PADDING);
+        table.pad(Constants.Visual.UI.SQRT_PIXELS / 50f);
 
         return table;
     }
@@ -106,7 +98,7 @@ public class UIManager
         FreeTypeFontGenerator.FreeTypeFontParameter parameter =
             new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size =
-            (int) (sqrtPixels * FONT_SCALE);
+            (int) (Constants.Visual.UI.SQRT_PIXELS * Constants.Visual.UI.FONT_SCALE);
         BitmapFont bitmapFont = generator.generateFont(parameter);
 
         return bitmapFont;
@@ -119,7 +111,7 @@ public class UIManager
         FreeTypeFontGenerator.FreeTypeFontParameter parameter =
             new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size =
-            (int) (sqrtPixels * DEBUG_FONT_SCALE);
+            (int) (Constants.Visual.UI.SQRT_PIXELS * Constants.Visual.UI.DEBUG_FONT_SCALE);
         BitmapFont bitmapFont = generator.generateFont(parameter);
 
         return bitmapFont;

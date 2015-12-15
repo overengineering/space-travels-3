@@ -1,5 +1,6 @@
 package com.draga.spaceTravels3;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.google.common.eventbus.EventBus;
@@ -48,6 +49,16 @@ public abstract class Constants
         public static final Vector2 THRUSTER_OFFSET         = new Vector2(-SHIP_WIDTH / 4f, 0);
         public static final float   SCREEN_FADE_DURATION    = 3f;
         public static final Color   SCREEN_FADE_COLOUR      = new Color(0, 0, 0, 0.7f);
+
+
+        public abstract static class UI
+        {
+            public static final float SQRT_PIXELS      =
+                (float) Math.sqrt(Gdx.graphics.getWidth() * Gdx.graphics.getHeight());
+            public static final float FONT_SCALE       = 0.05f;
+            public static final float DEBUG_FONT_SCALE = 0.02f;
+            public static final float BUTTON_PADDING   = SQRT_PIXELS * 0.01f;
+        }
     }
 
 
@@ -69,7 +80,7 @@ public abstract class Constants
          * Change tilt range. E.g. 1.0f = 90 degree max. 0.5f = 45 degrees max.
          */
         public static final float ACCELEROMETER_RANGE                   = 0.5f;
-        public static final float DEAD_ZONE = 0.15f;
+        public static final float DEAD_ZONE                             = 0.15f;
 
         public static float SHIP_ACCELERATION_PER_SECOND = 60f;
     }
