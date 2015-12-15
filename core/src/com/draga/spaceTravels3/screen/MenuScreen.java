@@ -24,14 +24,18 @@ public class MenuScreen implements Screen
 
     public MenuScreen()
     {
+    }
+    
+    @Override
+    public void show()
+    {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
         Table table = UIManager.addDefaultTableToStage(stage);
 
+        // Header label.
         Label headerLabel = getHeaderLabel();
-        TextButton playButton = getPlayButton();
-
         table
             .add(headerLabel)
             .top();
@@ -42,6 +46,7 @@ public class MenuScreen implements Screen
             .add()
             .expand();
 
+        // Level list.
         table.row();
         ScrollPane levelsScrollPane = getLevelList();
         table.add(levelsScrollPane);
@@ -52,7 +57,7 @@ public class MenuScreen implements Screen
             .add()
             .expand();
 
-
+        // Debug button.
         if (Constants.General.IS_DEBUGGING)
         {
             Actor debugButton = getDebugButton();
@@ -63,12 +68,15 @@ public class MenuScreen implements Screen
                 .bottom();
         }
 
+        // Setting button.
         table.row();
         TextButton settingsTextButton = getSettingsTextButton();
         table
             .add(settingsTextButton)
             .bottom();
 
+        // Play button.
+        TextButton playButton = getPlayButton();
         table.row();
         table
             .add(playButton)
@@ -83,7 +91,7 @@ public class MenuScreen implements Screen
 
         return headerLabel;
     }
-    
+
     public TextButton getPlayButton()
     {
         TextButton playButton = new BeepingTextButton("Play", UIManager.skin);
@@ -168,12 +176,6 @@ public class MenuScreen implements Screen
         String levelId = buttonGroup.getChecked().getName();
         LoadingScreen loadingScreen = new LoadingScreen(levelId);
         SpaceTravels3.getGame().setScreen(loadingScreen);
-    }
-
-    @Override
-    public void show()
-    {
-
     }
 
     @Override
