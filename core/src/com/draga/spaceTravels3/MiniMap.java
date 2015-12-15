@@ -33,19 +33,22 @@ public class MiniMap
 
     public void updateMiniMap()
     {
+        Circle shipCircle = (Circle) ship.physicsComponent.getShape();
+
         Rectangle shipRect = new Rectangle(
             ship.physicsComponent.getPosition().x
-                - ((Circle) ship.physicsComponent.getShape()).radius,
+                - shipCircle.radius,
             ship.physicsComponent.getPosition().y
-                - ((Circle) ship.physicsComponent.getShape()).radius,
-            ((Circle) ship.physicsComponent.getShape()).radius * 2,
-            ((Circle) ship.physicsComponent.getShape()).radius * 2);
+                - shipCircle.radius,
+            shipCircle.radius * 2,
+            shipCircle.radius * 2);
 
         Rectangle worldRect = new Rectangle(
             0,
             0,
             orthographicCamera.viewportWidth,
             orthographicCamera.viewportHeight);
+
         update(shipRect, worldRect);
     }
 
@@ -58,6 +61,25 @@ public class MiniMap
         for (Rectangle mergeRectangle : keepInView)
         {
             newCameraBounds.merge(mergeRectangle);
+        }
+
+        float miniMapAspectRatio =
+            orthographicCamera.viewportWidth / orthographicCamera.viewportHeight;
+        float newCameraBoundsAspectRatio = newCameraBounds.width / newCameraBounds.height;
+
+        if (newCameraBoundsAspectRatio < miniMapAspectRatio)
+        {
+            float newWidth = newCameraBounds.height * miniMapAspectRatio;
+            float widthDifference = newWidth - newCameraBounds.width;
+            newCameraBounds.x -= widthDifference / 2f;
+            newCameraBounds.width += widthDifference / 2f;
+        }
+        else
+        {
+            float newHeight = newCameraBounds.width / miniMapAspectRatio;
+            float heightDifference = newHeight - newCameraBounds.height;
+            newCameraBounds.y -= heightDifference / 2f;
+            newCameraBounds.height += heightDifference / 2f;
         }
 
         // Draw a background and border.
@@ -86,7 +108,7 @@ public class MiniMap
 
     private void drawBackground()
     {
-        orthographicCamera.zoom = 1 / Constants.Visual.MINIMAP_SCALE;
+        orthographicCamera.zoom = 1f / Constants.Visual.MINIMAP_SCALE;
         orthographicCamera.position.set(
             (orthographicCamera.viewportWidth / 2f) * orthographicCamera.zoom,
             (orthographicCamera.viewportHeight / 2f) * orthographicCamera.zoom,

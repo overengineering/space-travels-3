@@ -111,7 +111,7 @@ public class MenuScreen implements Screen
 
     private ScrollPane getLevelList()
     {
-        java.util.List<SerialisableLevel> levels = LevelManager.getSerialisableLevels();
+        java.util.List<SerialisableLevel> serialisableLevels = LevelManager.getSerialisableLevels();
 
         buttonGroup = new ButtonGroup<>();
 
@@ -121,12 +121,12 @@ public class MenuScreen implements Screen
 
         Table table = UIManager.getDefaultTable();
 
-        for (SerialisableLevel level : levels)
+        for (SerialisableLevel serialisableLevel : serialisableLevels)
         {
-            String buttonText = level.name + " (" + ScoreManager.getScore(level.id) + ")";
+            String buttonText = serialisableLevel.name + " (" + ScoreManager.getScore(serialisableLevel.id) + ")";
             TextButton textButton =
                 new BeepingTextButton(buttonText, UIManager.skin);
-            textButton.setName(level.id);
+            textButton.setName(serialisableLevel.id);
             buttonGroup.add(textButton);
             table.add(textButton);
             table.row();
