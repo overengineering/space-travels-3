@@ -8,10 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.draga.PixmapUtility;
@@ -37,13 +34,15 @@ public class Hud implements Screen
     private       Table        pickupTable;
     private       Ship         ship;
     private       MiniMap      miniMap;
-    
+
     public Hud(Camera worldCamera, Level level)
     {
         this.level = level;
-
+        this.ship = level.getShip();
         this.worldCamera = worldCamera;
+
         Constants.General.EVENT_BUS.register(this);
+
         this.grayPickups = new Stack<>();
         this.miniMap = new MiniMap(level.getWidth(), level.getHeight());
 
@@ -70,75 +69,31 @@ public class Hud implements Screen
         table.row();
         table.add().expand();
 
-        table.row();
         // Bottom row left column
+        table.row();
         table.add();
 
         // Bottom row right column;
-        pickupTable = new Table();
-        pickupTable
-            .defaults()
-            .height(stage.getViewport().getScreenWidth() / 30f);
+        pickupTable = createPickupTable();
         table
             .add(pickupTable)
             .bottom()
             .right();
 
-
         if (SettingsManager.getSettings().inputType == InputType.TOUCH
             || Gdx.app.getType() == Application.ApplicationType.Desktop)
         {
-            float smallestDimension = Math.min(stage.getWidth(), stage.getHeight());
-
-            Pixmap pixmap =
-                new Pixmap(
-                    (int) smallestDimension,
-                    (int) smallestDimension,
-                    Pixmap.Format.RGBA8888);
-            pixmap.setColor(Constants.Visual.JOYSTICK_OVERLAY_COLOR);
-
-            int numOuterArcs = 8;
-            float halfSmallestDimension = smallestDimension / 2f;
-
-            PixmapUtility.dashedCircle(
-                pixmap,
-                halfSmallestDimension,
-                halfSmallestDimension,
-                halfSmallestDimension,
-                numOuterArcs,
-                15,
-                360 / numOuterArcs / 2,
-                100,
-                2);
-            PixmapUtility.dashedCircle(
-                pixmap,
-                halfSmallestDimension,
-                halfSmallestDimension,
-                halfSmallestDimension * Constants.Game.DEAD_ZONE,
-                4,
-                30,
-                0,
-                100,
-                2);
-
-            Image joystickOverlayImage = new Image(new Texture(pixmap));
+            Image joystickOverlayImage = createJoystickOverlay();
             joystickOverlayImage.setScaling(Scaling.fit);
-            Table joystickOverlayTable = new Table();
-            joystickOverlayTable.setFillParent(true);
-            joystickOverlayTable
-                .add(joystickOverlayImage)
-                .center();
 
-            stage.addActor(joystickOverlayTable);
+            Container<Image> joystickOverlayContainer = new Container<>(joystickOverlayImage);
+            joystickOverlayContainer.setFillParent(true);
+            joystickOverlayContainer.center();
+
+            stage.addActor(joystickOverlayContainer);
         }
 
-        this.ship = level.getShip();
         miniMap.addShip(this.ship);
-
-        for (int i = 0; i < level.getPickups().size(); i++)
-        {
-            this.addPickup();
-        }
 
         stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
@@ -158,21 +113,70 @@ public class Hud implements Screen
         return scoreLabel;
     }
 
+    private Table createPickupTable()
+    {
+        pickupTable = new Table();
+        pickupTable
+            .defaults()
+            .height(stage.getViewport().getScreenWidth() / 30f);
+
+        Texture pickupTexture = AssMan.getAssMan().get(AssMan.getAssList().pickupGreyTexture);
+
+        for (int i = 0; i < level.getPickups().size(); i++)
+        {
+            Image pickupImage = new Image(pickupTexture);
+
+            pickupImage.setScaling(Scaling.fit);
+
+            grayPickups.add(pickupImage);
+
+            pickupTable.add(pickupImage);
+        }
+
+        return pickupTable;
+    }
+
+    private Image createJoystickOverlay()
+    {
+        float smallestDimension = Math.min(stage.getWidth(), stage.getHeight());
+
+        Pixmap pixmap =
+            new Pixmap(
+                (int) smallestDimension,
+                (int) smallestDimension,
+                Pixmap.Format.RGBA8888);
+        pixmap.setColor(Constants.Visual.JOYSTICK_OVERLAY_COLOR);
+
+        int numOuterArcs = 8;
+        float halfSmallestDimension = smallestDimension / 2f;
+
+        PixmapUtility.dashedCircle(
+            pixmap,
+            halfSmallestDimension,
+            halfSmallestDimension,
+            halfSmallestDimension,
+            numOuterArcs,
+            15,
+            360 / numOuterArcs / 2,
+            100,
+            2);
+        PixmapUtility.dashedCircle(
+            pixmap,
+            halfSmallestDimension,
+            halfSmallestDimension,
+            halfSmallestDimension * Constants.Game.DEAD_ZONE,
+            4,
+            30,
+            0,
+            100,
+            2);
+
+        return new Image(new Texture(pixmap));
+    }
+
     private void setScoreLabel(int score)
     {
         scoreLabel.setText(String.valueOf(score));
-    }
-
-    public void addPickup()
-    {
-        Texture pickupTexture = AssMan.getAssMan().get(AssMan.getAssList().pickupGreyTexture);
-        Image pickupImage = new Image(pickupTexture);
-
-        pickupImage.setScaling(Scaling.fit);
-
-        grayPickups.add(pickupImage);
-
-        pickupTable.add(pickupImage);
     }
 
     @Override
@@ -185,6 +189,8 @@ public class Hud implements Screen
     public void render(float delta)
     {
         updateFuelProgressBar();
+
+        setScoreLabel(level.getScore());
 
         stage.act(delta);
         stage.draw();
@@ -298,15 +304,5 @@ public class Hud implements Screen
         Texture pickupTexture = AssMan.getAssMan().get(AssMan.getAssList().pickupTexture);
 
         firstPickup.setDrawable(new TextureRegionDrawable(new TextureRegion(pickupTexture)));
-    }
-
-    public void update()
-    {
-        this.setScore(level.getScore());
-    }
-
-    public void setScore(int score)
-    {
-        setScoreLabel(score);
     }
 }

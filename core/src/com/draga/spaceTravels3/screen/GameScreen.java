@@ -105,8 +105,6 @@ public class GameScreen implements Screen
         {
             gameEntity.update(deltaTime);
         }
-
-        hud.update();
     }
 
     public void draw()
