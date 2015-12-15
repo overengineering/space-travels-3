@@ -30,8 +30,6 @@ public class LoseScreen implements Screen
         this.stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-        TextButton retryButton = getRetryTextButton();
-
         Table table = UIManager.addDefaultTableToStage(stage);
         table.setBackground(UIManager.skin.newDrawable(
             "background",
@@ -40,9 +38,12 @@ public class LoseScreen implements Screen
             Actions.fadeOut(0),
             Actions.fadeIn(Constants.Visual.SCREEN_FADE_DURATION, Interpolation.pow2In)));
 
+        // Retry button.
+        TextButton retryButton = getRetryTextButton();
         table
             .add(retryButton);
 
+        // Main menu button.
         TextButton mainMenuTextButton = getMainMenuTextButton();
         table.row();
         table.add(mainMenuTextButton);
@@ -135,7 +136,6 @@ public class LoseScreen implements Screen
     @Override
     public void pause()
     {
-
 
     }
 
