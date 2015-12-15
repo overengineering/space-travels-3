@@ -42,7 +42,7 @@ public abstract class ScoreManager
             // Check the type of the first value if any is present because they used to be saved in
             // float and for some reason they successfully make it into the HashMap but then
             // failing to retrieve it.
-            if (!levelScores.isEmpty() && (levelScores.values().toArray()[0] instanceof Integer))
+            if (!levelScores.isEmpty())
             {
                 return levelScores;
             }
@@ -51,12 +51,12 @@ public abstract class ScoreManager
         return new HashMap<>();
     }
 
-    public static int getScore(String levelName)
+    public static int getScore(String levelId)
     {
         int score = 0;
-        if (levelScores.containsKey(levelName))
+        if (levelScores.containsKey(levelId))
         {
-            score = Math.round(levelScores.get(levelName));
+            score = levelScores.get(levelId);
         }
 
         return score;
