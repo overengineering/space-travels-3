@@ -27,11 +27,13 @@ import java.util.concurrent.TimeUnit;
 public class LoadingScreen implements Screen
 {
     private static final String LOGGING_TAG = LoadingScreen.class.getSimpleName();
+
     private final String            levelId;
     private       Stage             stage;
     private       ProgressBar       progressBar;
     private       SerialisableLevel serialisableLevel;
     private       Stopwatch         stopwatch;
+    private Level level;
     
     public LoadingScreen(String levelId)
     {
@@ -45,7 +47,7 @@ public class LoadingScreen implements Screen
 
         this.serialisableLevel = LevelManager.getSerialisableLevel(levelId);
 
-        loadAssets();
+        loadAssets(this.serialisableLevel);
 
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
@@ -53,7 +55,6 @@ public class LoadingScreen implements Screen
         Actor headerLabel = getHeaderLabel();
 
         progressBar = getProgressBar();
-
 
         Table table = UIManager.addDefaultTableToStage(stage);
 
@@ -66,7 +67,7 @@ public class LoadingScreen implements Screen
         stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
-    private void loadAssets()
+    private void loadAssets(SerialisableLevel serialisableLevel)
     {
         // Loads sounds first 'cause of weird quirk of Android not loading them in time.
         AssMan.getAssMan().load(AssMan.getAssList().thrusterSound, Sound.class);
@@ -76,13 +77,12 @@ public class LoadingScreen implements Screen
         AssMan.getAssMan().load(AssMan.getAssList().winSound, Sound.class);
 
         AssMan.getAssMan().load(AssMan.getAssList().pickupGreyTexture, Texture.class);
-        AssMan.getAssMan().load(
-            this.serialisableLevel.serialisedBackground.texturePath, Texture.class);
+        AssMan.getAssMan().load(serialisableLevel.serialisedBackground.texturePath, Texture.class);
         AssMan.getAssMan().load(
             AssMan.getAssList().shipTexture, Texture.class);
         AssMan.getAssMan().load(
             AssMan.getAssList().thrusterTexture, TextureAtlas.class);
-        for (SerialisablePlanet serialisablePlanet : this.serialisableLevel.serialisedPlanets)
+        for (SerialisablePlanet serialisablePlanet : serialisableLevel.serialisedPlanets)
         {
             AssMan.getAssMan().load(serialisablePlanet.texturePath, Texture.class);
         }
@@ -127,7 +127,7 @@ public class LoadingScreen implements Screen
                         "Loading time: %fs",
                         stopwatch.elapsed(TimeUnit.NANOSECONDS) * Constants.General.NANO));
             }
-            Level level = LevelManager.getLevel(serialisableLevel);
+            level = LevelManager.getLevel(serialisableLevel);
             GameScreen gameScreen = new GameScreen(level);
             SpaceTravels3.getGame().setScreen(gameScreen);
         }

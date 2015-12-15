@@ -68,6 +68,11 @@ public class GameScreen implements Screen
     @Override
     public void render(float deltaTime)
     {
+        if (Constants.General.IS_DEBUGGING)
+        {
+            checkDebugKeys();
+        }
+
         if (level.getGameState() != GameState.PAUSE
             && level.getGameState() != GameState.COUNTDOWN)
         {
@@ -84,20 +89,15 @@ public class GameScreen implements Screen
         }
     }
 
-    public void update(float elapsed)
+    public void update(float deltaTime)
     {
-        if (Constants.General.IS_DEBUGGING)
-        {
-            checkDebugKeys();
-        }
-
         InputManager.update();
 
-        PhysicsEngine.update(elapsed);
+        PhysicsEngine.update(deltaTime);
 
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
-            gameEntity.update(elapsed);
+            gameEntity.update(deltaTime);
         }
 
         hud.update();
@@ -109,18 +109,11 @@ public class GameScreen implements Screen
 
         SpaceTravels3.spriteBatch.begin();
 
-        // Draw background at shipTexture and parallax 30%.
-        /*SpaceTravels3.spriteBatch.draw(
-            backgroundTexture,
-            -(width / 2f - orthographicCamera.position.x) / 1.3f,
-            -(height / 2f - orthographicCamera.position.y) / 1.3f,
-            width,
-            height);*/
-
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
             gameEntity.graphicComponent.draw();
         }
+
         SpaceTravels3.spriteBatch.end();
     }
 

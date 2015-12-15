@@ -61,6 +61,7 @@ public class GameEntityManager
         {
             gameEntity.dispose();
         }
+
         reset();
     }
 
