@@ -2,7 +2,7 @@ package com.draga.spaceTravels3.manager;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
-import com.draga.GdxUtils;
+import com.draga.FileUtils;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.DebugSettings;
 import com.draga.spaceTravels3.Settings;
@@ -12,13 +12,9 @@ public abstract class SettingsManager
     private static final Json JSON = new Json();
 
     private static final FileHandle debugSettingsFileHandle =
-        GdxUtils.getExternalOrLocalStorageFileHandle(
-            Constants.General.FOLDER,
-            Constants.General.DEBUG_SETTINGS_FILENAME);
+        FileUtils.getDebugSettingsFileHandle();
     private static final FileHandle settingsFileHandle      =
-        GdxUtils.getExternalOrLocalStorageFileHandle(
-            Constants.General.FOLDER,
-            Constants.General.SETTINGS_FILENAME);
+        FileUtils.getSettingsFileHandle();
 
     private static DebugSettings debugSettings = getOrCreateDebugSettings();
     private static Settings      settings      = getOrCreateSettings();

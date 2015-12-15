@@ -2,18 +2,17 @@ package com.draga.spaceTravels3.manager;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
-import com.draga.GdxUtils;
+import com.draga.FileUtils;
 import com.draga.spaceTravels3.Constants;
 
 import java.util.HashMap;
 
 public abstract class ScoreManager
 {
-    private static final Json                     JSON                  = new Json();
+    private static final Json JSON = new Json();
+
     private static final FileHandle               levelScoresFileHandle =
-        GdxUtils.getExternalOrLocalStorageFileHandle(
-            Constants.General.FOLDER,
-            Constants.General.SCORES_FILENAME);
+        FileUtils.getScoreFileHandle();
     private static final HashMap<String, Integer> levelScores           = getLevelScores();
 
     public static void updateScore(String levelName, int score)
