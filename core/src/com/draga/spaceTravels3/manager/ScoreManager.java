@@ -15,17 +15,21 @@ public abstract class ScoreManager
         FileUtils.getScoreFileHandle();
     private static final HashMap<String, Integer> levelScores           = getLevelScores();
 
-    public static void updateScore(String levelName, int score)
+    public static void setScore(String levelId, int score)
     {
-        levelScores.put(levelName, score);
+        levelScores.put(levelId, score);
 
         saveLevelScores();
     }
 
     private static void saveLevelScores()
     {
-        Runnable saveLevelScoreRunnable = new SaveLevelScoreRunnable();
-        saveLevelScoreRunnable.run();
+        @SuppressWarnings("ConstantConditions")
+        String levelScoresString = Constants.General.IS_DEBUGGING
+            ? JSON.prettyPrint(levelScores)
+            : JSON.toJson(levelScores);
+
+        levelScoresFileHandle.writeString(levelScoresString, false);
     }
 
     private static HashMap<String, Integer> getLevelScores()
@@ -56,19 +60,5 @@ public abstract class ScoreManager
         }
 
         return score;
-    }
-
-    private static class SaveLevelScoreRunnable implements Runnable
-    {
-        @Override
-        public void run()
-        {
-            @SuppressWarnings("ConstantConditions")
-            String levelScoresString = Constants.General.IS_DEBUGGING
-                ? JSON.prettyPrint(levelScores)
-                : JSON.toJson(levelScores);
-
-            levelScoresFileHandle.writeString(levelScoresString, false);
-        }
     }
 }

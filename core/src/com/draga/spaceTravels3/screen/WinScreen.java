@@ -52,7 +52,7 @@ public class WinScreen implements Screen
         table.add(headerLabel);
 
         // Best score.
-        ScoreManager.updateScore(levelId, score);
+        ScoreManager.setScore(levelId, score);
         table.row();
         Label newBestScoreLabel = getBestScoreLabel(score, previousBestScore);
         table.add(newBestScoreLabel);

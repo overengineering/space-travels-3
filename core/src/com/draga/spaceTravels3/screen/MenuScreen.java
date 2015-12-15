@@ -123,7 +123,7 @@ public class MenuScreen implements Screen
 
         for (SerialisableLevel level : levels)
         {
-            String buttonText = level.name + " (" + ScoreManager.getScore(level.name) + ")";
+            String buttonText = level.name + " (" + ScoreManager.getScore(level.id) + ")";
             TextButton textButton =
                 new BeepingTextButton(buttonText, UIManager.skin);
             textButton.setName(level.id);
