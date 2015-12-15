@@ -15,6 +15,7 @@ import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.spaceTravels3.manager.InputManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
+import com.draga.spaceTravels3.physic.PhysicDebugDrawer;
 import com.draga.spaceTravels3.physic.PhysicsEngine;
 import com.google.common.eventbus.Subscribe;
 
@@ -86,6 +87,11 @@ public class GameScreen implements Screen
         if (overlayScreen != null)
         {
             overlayScreen.render(deltaTime);
+        }
+
+        if (SettingsManager.getDebugSettings().debugDraw)
+        {
+            PhysicDebugDrawer.draw(extendViewport.getCamera());
         }
     }
 

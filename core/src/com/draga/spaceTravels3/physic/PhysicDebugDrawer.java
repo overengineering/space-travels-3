@@ -13,10 +13,6 @@ import com.draga.spaceTravels3.manager.GameEntityManager;
  */
 public class PhysicDebugDrawer
 {
-    public PhysicDebugDrawer()
-    {
-    }
-
     /**
      * Draw all the game entities bounds. Uses ShapeRenderer.
      * @param camera The camera to use the projection from
