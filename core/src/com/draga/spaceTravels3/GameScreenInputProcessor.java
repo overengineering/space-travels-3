@@ -9,7 +9,8 @@ public class GameScreenInputProcessor extends InputAdapter
     @Override
     public boolean keyUp(int keycode)
     {
-        if (keycode == Input.Keys.BACK)
+        if (keycode == Input.Keys.BACK
+            || keycode == Input.Keys.ESCAPE)
         {
             SpaceTravels3.getGame().setScreen(new MenuScreen());
             return true;

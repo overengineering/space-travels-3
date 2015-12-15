@@ -72,6 +72,7 @@ public class CountdownScreen implements Screen
             Pools.free(countdownFinishedEvent);
             return;
         }
+
         this.timerLabel.setText(getLabelText());
         stage.act(delta);
         stage.draw();
@@ -98,7 +99,7 @@ public class CountdownScreen implements Screen
     @Override
     public void hide()
     {
-
+        dispose();
     }
 
     @Override

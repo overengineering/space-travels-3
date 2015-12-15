@@ -20,6 +20,11 @@ public class DebugMenuScreen implements Screen
 
     public DebugMenuScreen()
     {
+    }
+
+    @Override
+    public void show()
+    {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
@@ -50,20 +55,6 @@ public class DebugMenuScreen implements Screen
         stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
-    private TextButton getBackTextButton()
-    {
-        TextButton backTextButton = new BeepingTextButton("Back", UIManager.skin);
-        backTextButton.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y)
-            {
-                SpaceTravels3.getGame().setScreen(new MenuScreen());
-            }
-        });
-
-        return backTextButton;
-    }
-
     public ScrollPane GetButtonScrollPane()
     {
         Table table = UIManager.getDefaultTable();
@@ -77,6 +68,21 @@ public class DebugMenuScreen implements Screen
         ScrollPane scrollPane = new ScrollPane(table);
 
         return scrollPane;
+    }
+
+    private TextButton getBackTextButton()
+    {
+        TextButton backTextButton = new BeepingTextButton("Back", UIManager.skin);
+        backTextButton.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                SpaceTravels3.getGame().setScreen(new MenuScreen());
+            }
+        });
+
+        return backTextButton;
     }
 
     private TextButton getDebugDrawTextButton()
@@ -93,32 +99,13 @@ public class DebugMenuScreen implements Screen
                 public void clicked(InputEvent event, float x, float y)
                 {
                     super.clicked(event, x, y);
-                    SettingsManager.getDebugSettings().debugDraw = !SettingsManager.getDebugSettings().debugDraw;
+                    SettingsManager.getDebugSettings().debugDraw =
+                        !SettingsManager.getDebugSettings().debugDraw;
                     debugDrawTextButton.setChecked(SettingsManager.getDebugSettings().debugDraw);
                 }
             });
+
         return debugDrawTextButton;
-    }
-
-    private TextButton getInfiniteFuelTextButton()
-    {
-        final TextButton infiniteFuelTextButton = new BeepingTextButton(
-            "Infinite fuel",
-            UIManager.skin.get(TextButton.TextButtonStyle.class));
-        infiniteFuelTextButton.setChecked(SettingsManager.getDebugSettings().infiniteFuel);
-
-        infiniteFuelTextButton.addListener(
-            new ClickListener()
-            {
-                @Override
-                public void clicked(InputEvent event, float x, float y)
-                {
-                    super.clicked(event, x, y);
-                    SettingsManager.getDebugSettings().infiniteFuel = !SettingsManager.getDebugSettings().infiniteFuel;
-                    infiniteFuelTextButton.setChecked(SettingsManager.getDebugSettings().infiniteFuel);
-                }
-            });
-        return infiniteFuelTextButton;
     }
 
     private TextButton getNoGravityTextButton()
@@ -135,16 +122,36 @@ public class DebugMenuScreen implements Screen
                 public void clicked(InputEvent event, float x, float y)
                 {
                     super.clicked(event, x, y);
-                    SettingsManager.getDebugSettings().noGravity = !SettingsManager.getDebugSettings().noGravity;
+                    SettingsManager.getDebugSettings().noGravity =
+                        !SettingsManager.getDebugSettings().noGravity;
                     infiniteFuelTextButton.setChecked(SettingsManager.getDebugSettings().noGravity);
                 }
             });
+
         return infiniteFuelTextButton;
     }
 
-    @Override
-    public void show()
+    private TextButton getInfiniteFuelTextButton()
     {
+        final TextButton infiniteFuelTextButton = new BeepingTextButton(
+            "Infinite fuel",
+            UIManager.skin.get(TextButton.TextButtonStyle.class));
+        infiniteFuelTextButton.setChecked(SettingsManager.getDebugSettings().infiniteFuel);
+
+        infiniteFuelTextButton.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    super.clicked(event, x, y);
+                    SettingsManager.getDebugSettings().infiniteFuel =
+                        !SettingsManager.getDebugSettings().infiniteFuel;
+                    infiniteFuelTextButton.setChecked(SettingsManager.getDebugSettings().infiniteFuel);
+                }
+            });
+
+        return infiniteFuelTextButton;
     }
 
     @Override

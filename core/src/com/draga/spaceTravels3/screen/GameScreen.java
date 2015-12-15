@@ -30,7 +30,24 @@ public class GameScreen implements Screen
     public GameScreen(Level level)
     {
         this.level = level;
+    }
 
+    private void updateCamera()
+    {
+        Camera camera = extendViewport.getCamera();
+
+        camera.position.set(
+            level.getShip().physicsComponent.getPosition().x,
+            level.getShip().physicsComponent.getPosition().y,
+            0f);
+        camera.update();
+
+        SpaceTravels3.spriteBatch.setProjectionMatrix(camera.combined);
+    }
+
+    @Override
+    public void show()
+    {
         this.overlayScreen = new CountdownScreen();
 
         Constants.General.EVENT_BUS.register(this);
@@ -40,47 +57,17 @@ public class GameScreen implements Screen
 
         extendViewport = new ExtendViewport(
             Constants.Visual.VIEWPORT_WIDTH,
-            Constants.Visual.VIEWPORT_HEIGHT,
-            level.getWidth(),
-            level.getHeight());
+            Constants.Visual.VIEWPORT_HEIGHT);
         extendViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        hud = new Hud(extendViewport.getCamera(), level);
-
-        extendViewport.getCamera().position.x = level.getShip().physicsComponent.getPosition().x;
-        extendViewport.getCamera().position.y = level.getShip().physicsComponent.getPosition().y;
         updateCamera();
 
-    }
-
-    private void updateCamera()
-    {
-        // Soften camera movement.
-        Vector2 cameraVec = level.getShip().physicsComponent.getPosition();
-
-        Camera camera = extendViewport.getCamera();
-        camera.position.x = cameraVec.x;
-        camera.position.y = cameraVec.y;
-        camera.update();
-
-        SpaceTravels3.spriteBatch.setProjectionMatrix(camera.combined);
-    }
-
-    @Override
-    public void show()
-    {
-
+        hud = new Hud(extendViewport.getCamera(), level);
     }
 
     @Override
     public void render(float deltaTime)
     {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
-        {
-            SpaceTravels3.getGame().setScreen(new MenuScreen());
-            return;
-        }
-
         if (level.getGameState() != GameState.PAUSE
             && level.getGameState() != GameState.COUNTDOWN)
         {
