@@ -25,15 +25,16 @@ import java.util.Stack;
 
 public class Hud implements Screen
 {
-    private final Label        scoreLabel;
-    private final Camera       worldCamera;
-    private final Level        level;
-    private       Stage        stage;
-    private       ProgressBar  fuelProgressBar;
-    private       Stack<Image> grayPickups;
-    private       Table        pickupTable;
-    private       Ship         ship;
-    private       MiniMap      miniMap;
+    private final Label                 scoreLabel;
+    private final Camera                worldCamera;
+    private final Level                 level;
+    private       Stage                 stage;
+    private       ProgressBar           fuelProgressBar;
+    private       Stack<Image>          grayPickups;
+    private       Table                 pickupTable;
+    private       Ship                  ship;
+    private       MiniMap               miniMap;
+    private       TextureRegionDrawable collectedPickupDrawable;
 
     public Hud(Camera worldCamera, Level level)
     {
@@ -44,6 +45,9 @@ public class Hud implements Screen
         Constants.General.EVENT_BUS.register(this);
 
         this.grayPickups = new Stack<>();
+        Texture pickupTexture = AssMan.getAssMan().get(AssMan.getAssList().pickupTexture);
+        collectedPickupDrawable = new TextureRegionDrawable(new TextureRegion(pickupTexture));
+
         this.miniMap = new MiniMap(level.getWidth(), level.getHeight());
 
         stage = new Stage();
@@ -101,7 +105,7 @@ public class Hud implements Screen
     private ProgressBar getFuelProgressBar()
     {
         ProgressBar fuelProgressBar = new ProgressBar(
-            0, 1, 0.0001f, false, UIManager.skin);
+            0, ship.getMaxFuel(), 0.0001f, false, UIManager.skin);
 
         return fuelProgressBar;
     }
@@ -203,11 +207,9 @@ public class Hud implements Screen
         if (SettingsManager.getSettings().hudForceIndicators
             && GameEntityManager.getGameEntities().contains(ship))
         {
-
             SpaceTravels3.shapeRenderer.setProjectionMatrix(worldCamera.combined);
             drawGravityIndicator();
             drawVelocityIndicator();
-
         }
 
         miniMap.draw();
@@ -217,7 +219,6 @@ public class Hud implements Screen
 
     private void updateFuelProgressBar()
     {
-        fuelProgressBar.setRange(0, ship.getMaxFuel());
         fuelProgressBar.setValue(ship.getCurrentFuel());
     }
 
@@ -301,8 +302,6 @@ public class Hud implements Screen
     {
         Image firstPickup = grayPickups.pop();
 
-        Texture pickupTexture = AssMan.getAssMan().get(AssMan.getAssList().pickupTexture);
-
-        firstPickup.setDrawable(new TextureRegionDrawable(new TextureRegion(pickupTexture)));
+        firstPickup.setDrawable(collectedPickupDrawable);
     }
 }
