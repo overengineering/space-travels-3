@@ -81,7 +81,7 @@ public class LoadingScreen implements Screen
         AssMan.getAssMan().load(
             AssMan.getAssList().shipTexture, Texture.class);
         AssMan.getAssMan().load(
-            AssMan.getAssList().thrusterTexture, TextureAtlas.class);
+            AssMan.getAssList().thrusterTextureAtlas, TextureAtlas.class);
         for (SerialisablePlanet serialisablePlanet : serialisableLevel.serialisedPlanets)
         {
             AssMan.getAssMan().load(serialisablePlanet.texturePath, Texture.class);

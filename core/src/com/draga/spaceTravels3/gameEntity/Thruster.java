@@ -32,7 +32,7 @@ public class Thruster extends GameEntity
             false);
 
         this.graphicComponent = new AnimatedGraphicComponent(
-            AssMan.getAssList().thrusterTexture,
+            AssMan.getAssList().thrusterTextureAtlas,
             Constants.Visual.THRUSTER_ANIMATION_TIME,
             0,
             0,

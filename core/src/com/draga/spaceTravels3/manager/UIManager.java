@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.draga.spaceTravels3.Constants;
+import com.draga.spaceTravels3.manager.asset.AssMan;
 
 public class UIManager
 {
@@ -48,12 +49,16 @@ public class UIManager
     {
         Skin skin = new Skin();
 
-        BitmapFont defaultFont = getBitmapFont();
+        BitmapFont defaultFont = getBitmapFont(
+            AssMan.getAssList().font,
+            (int) (Constants.Visual.UI.SQRT_PIXELS * Constants.Visual.UI.FONT_SCALE));
         skin.add("default", defaultFont);
 
         if (Constants.General.IS_DEBUGGING)
         {
-            BitmapFont debugFont = getDebugFont();
+            BitmapFont debugFont = getBitmapFont(
+                AssMan.getAssList().debugFont,
+                (int) (Constants.Visual.UI.SQRT_PIXELS * Constants.Visual.UI.DEBUG_FONT_SCALE));
             skin.add("debug", debugFont);
         }
 
@@ -90,28 +95,14 @@ public class UIManager
         return skin;
     }
 
-    private static BitmapFont getBitmapFont()
+    private static BitmapFont getBitmapFont(String path, int size)
     {
-        @SuppressWarnings("SpellCheckingInspection")
         FreeTypeFontGenerator generator =
-            new FreeTypeFontGenerator(Gdx.files.internal("font/Akashi.ttf"));
+            new FreeTypeFontGenerator(Gdx.files.internal(path));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter =
             new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size =
-            (int) (Constants.Visual.UI.SQRT_PIXELS * Constants.Visual.UI.FONT_SCALE);
-        BitmapFont bitmapFont = generator.generateFont(parameter);
-
-        return bitmapFont;
-    }
-
-    private static BitmapFont getDebugFont()
-    {
-        FreeTypeFontGenerator generator =
-            new FreeTypeFontGenerator(Gdx.files.internal("font/DroidSansMono.ttf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter =
-            new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size =
-            (int) (Constants.Visual.UI.SQRT_PIXELS * Constants.Visual.UI.DEBUG_FONT_SCALE);
+            size;
         BitmapFont bitmapFont = generator.generateFont(parameter);
 
         return bitmapFont;

@@ -36,10 +36,9 @@ public class SpaceTravels3 extends Game
         shapeRenderer.setAutoShapeType(true);
 
         Gdx.input.setCatchBackKey(true);
-        UIManager.create();
         AssMan.create();
+        UIManager.create();
         SoundManager.create();
-        AssMan.getAssList();
         PhysicsEngine.create();
         InputManager.create();
 
