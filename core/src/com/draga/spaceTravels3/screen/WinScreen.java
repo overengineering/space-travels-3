@@ -30,15 +30,14 @@ public class WinScreen implements Screen
 
     public WinScreen(String levelId, int score)
     {
+        sound = AssMan.getAssMan().get(AssMan.getAssList().winSound);
+        sound.play(SettingsManager.getSettings().volume);
+
         this.levelId = levelId;
         this.stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
         int previousBestScore = ScoreManager.getScore(levelId);
-
-        Label headerLabel = getHeaderLabel();
-        TextButton retryButton = getRetryButton();
-        Label scoreLabel = getScoreLabel(score);
 
         Table table = UIManager.addDefaultTableToStage(stage);
         table.setBackground(UIManager.skin.newDrawable(
@@ -48,21 +47,28 @@ public class WinScreen implements Screen
             Actions.fadeOut(0),
             Actions.fadeIn(Constants.Visual.SCREEN_FADE_DURATION, Interpolation.pow2In)));
 
+        // Header label.
+        Label headerLabel = getHeaderLabel();
         table.add(headerLabel);
 
+        // Best score.
         ScoreManager.updateScore(levelId, score);
         table.row();
         Label newBestScoreLabel = getBestScoreLabel(score, previousBestScore);
         table.add(newBestScoreLabel);
 
+        // Current score.
+        Label scoreLabel = getScoreLabel(score);
         table.row();
         table.add(scoreLabel);
 
+        // Retry button.
         table.row();
+        TextButton retryButton = getRetryButton();
         table.add(retryButton);
 
+        // Next level button.
         SerialisableLevel nextLevel = LevelManager.getNextLevel(levelId);
-
         if (nextLevel != null)
         {
             String nextLevelId = nextLevel.id;
@@ -71,14 +77,12 @@ public class WinScreen implements Screen
             table.add(nextTextButton);
         }
 
+        // Main menu button.
         TextButton mainMenuTextButton = getMainMenuTextButton();
         table.row();
         table.add(mainMenuTextButton);
 
         stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
-
-        sound = AssMan.getAssMan().get(AssMan.getAssList().winSound);
-        sound.play(SettingsManager.getSettings().volume);
     }
 
     public Label getHeaderLabel()
@@ -88,6 +92,29 @@ public class WinScreen implements Screen
         Label headerLabel = new Label("You won!", labelStyle);
 
         return headerLabel;
+    }
+
+    private Label getBestScoreLabel(int score, int previousBestScore)
+    {
+        Label.LabelStyle labelStyle = UIManager.skin.get(Label.LabelStyle.class);
+
+        String text = score > previousBestScore
+            ? "New best score! It was: " + previousBestScore
+            : "Best score: " + previousBestScore;
+
+        Label newBestScoreLabel =
+            new Label(text, labelStyle);
+
+        return newBestScoreLabel;
+    }
+
+    private Label getScoreLabel(int score)
+    {
+        Label.LabelStyle labelStyle = UIManager.skin.get(Label.LabelStyle.class);
+
+        Label scoreLabel = new Label("Score: " + score, labelStyle);
+
+        return scoreLabel;
     }
 
     public TextButton getRetryButton()
@@ -105,29 +132,6 @@ public class WinScreen implements Screen
             });
 
         return retryButton;
-    }
-
-    private Label getScoreLabel(int score)
-    {
-        Label.LabelStyle labelStyle = UIManager.skin.get(Label.LabelStyle.class);
-
-        Label scoreLabel = new Label("Score: " + score, labelStyle);
-
-        return scoreLabel;
-    }
-
-    private Label getBestScoreLabel(int score, int previousBestScore)
-    {
-        Label.LabelStyle labelStyle = UIManager.skin.get(Label.LabelStyle.class);
-
-        String text = score > previousBestScore
-            ? "New best score! It was: " + previousBestScore
-            : "Best score: " + previousBestScore;
-
-        Label newBestScoreLabel =
-            new Label(text, labelStyle);
-
-        return newBestScoreLabel;
     }
 
     public TextButton getNextButton(final String levelId)
@@ -189,17 +193,7 @@ public class WinScreen implements Screen
             return;
         }
 
-        update(delta);
-        draw(delta);
-    }
-
-    private void update(float delta)
-    {
         stage.act(delta);
-    }
-
-    private void draw(float delta)
-    {
         stage.draw();
     }
 

@@ -26,6 +26,9 @@ public class LoseScreen implements Screen
 
     public LoseScreen(String levelId)
     {
+        sound = AssMan.getAssMan().get(AssMan.getAssList().loseSound);
+        sound.play(SettingsManager.getSettings().volume);
+
         this.levelId = levelId;
         this.stage = new Stage();
         Gdx.input.setInputProcessor(stage);
@@ -49,9 +52,6 @@ public class LoseScreen implements Screen
         table.add(mainMenuTextButton);
 
         stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
-
-        sound = AssMan.getAssMan().get(AssMan.getAssList().loseSound);
-        sound.play(SettingsManager.getSettings().volume);
     }
 
     public TextButton getRetryTextButton()
