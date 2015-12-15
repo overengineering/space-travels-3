@@ -5,7 +5,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.draga.spaceTravels3.manager.level.LevelManager;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
-import com.draga.spaceTravels3.manager.screen.GameScreen;
+import com.draga.spaceTravels3.screen.GameScreen;
 import com.draga.test.gdxTestRunner.GdxTestRunner;
 import org.junit.Assert;
 import org.junit.Test;

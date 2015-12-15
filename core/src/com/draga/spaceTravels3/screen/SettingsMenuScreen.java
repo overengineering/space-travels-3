@@ -1,4 +1,4 @@
-package com.draga.spaceTravels3.manager.screen;
+package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
