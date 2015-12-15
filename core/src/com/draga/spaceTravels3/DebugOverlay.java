@@ -90,9 +90,8 @@ public class DebugOverlay implements Screen
     public void updatePhysicEngineLabel()
     {
         String message = String.format(
-            "Engine update time: %9f | Steps: %d\r\n",
-            PhysicsEngine.getUpdateTime(),
-            PhysicsEngine.getCurrentSteps());
+            "Engine update time: %9f",
+            PhysicsEngine.getUpdateTime());
         physicEngineLabel.setText(message);
     }
 

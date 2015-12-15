@@ -17,11 +17,7 @@ public class PhysicsEngine
     private static final String LOGGING_TAG =
         PhysicsEngine.class.getSimpleName();
 
-    private static final int       MIN_STEPS     = 1;
-    private static final int       MAX_STEPS     = 10;
-    private static final int       FPS_GOAL      = 60;
-    private static       Stopwatch updateTimer   = Stopwatch.createUnstarted();
-    private static       int       CURRENT_STEPS = MAX_STEPS;
+    private static       Stopwatch updateTimer = Stopwatch.createUnstarted();
     private static float                        updateTime;
     private static HashMap<GameEntity, Vector2> calculatedGravityForces;
 
@@ -30,35 +26,14 @@ public class PhysicsEngine
         return updateTime;
     }
 
-    public static int getCurrentSteps()
-    {
-        return CURRENT_STEPS;
-    }
-
     public static void update(float elapsed)
     {
         updateTimer.start();
 
-
-        if (Gdx.graphics.getFramesPerSecond() >= FPS_GOAL)
-        {
-            if (CURRENT_STEPS < MAX_STEPS)
-            {
-                CURRENT_STEPS++;
-            }
-        }
-        else
-        {
-            if (CURRENT_STEPS > MIN_STEPS)
-            {
-                CURRENT_STEPS--;
-            }
-        }
-
-        for (float step = 0; step < CURRENT_STEPS; step++)
+        for (int step = 0; step < Constants.Game.PHYSICS_STEPS; step++)
         {
             GameEntityManager.update();
-            step(elapsed / CURRENT_STEPS);
+            step(elapsed / Constants.Game.PHYSICS_STEPS);
         }
 
         updateTime = updateTimer.elapsed(TimeUnit.NANOSECONDS) * Constants.General.NANO;

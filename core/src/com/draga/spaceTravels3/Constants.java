@@ -83,6 +83,8 @@ public abstract class Constants
         public static final float DEAD_ZONE                             = 0.15f;
 
         public static float SHIP_ACCELERATION_PER_SECOND = 60f;
+
+        public static int PHYSICS_STEPS = 10;
     }
 
 
