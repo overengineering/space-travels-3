@@ -48,7 +48,7 @@ public class Hud implements Screen
         Texture pickupTexture = AssMan.getAssMan().get(AssMan.getAssList().pickupTexture);
         collectedPickupDrawable = new TextureRegionDrawable(new TextureRegion(pickupTexture));
 
-        this.miniMap = new MiniMap(level.getWidth(), level.getHeight());
+        this.miniMap = new MiniMap(ship, level.getWidth(), level.getHeight());
 
         stage = new Stage();
 
@@ -96,8 +96,6 @@ public class Hud implements Screen
 
             stage.addActor(joystickOverlayContainer);
         }
-
-        miniMap.addShip(this.ship);
 
         stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
@@ -212,6 +210,7 @@ public class Hud implements Screen
             drawVelocityIndicator();
         }
 
+        miniMap.update();
         miniMap.draw();
         SpaceTravels3.shapeRenderer.end();
         Gdx.gl.glDisable(GL20.GL_BLEND);

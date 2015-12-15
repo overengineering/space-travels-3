@@ -50,6 +50,10 @@ public abstract class Constants
         public static final float   SCREEN_FADE_DURATION    = 3f;
         public static final Color   SCREEN_FADE_COLOUR      = new Color(0, 0, 0, 0.7f);
 
+        // Minimap.
+        public static final Color MINIMAP_BACKGROUND_COLOR = new Color(0, 0.17f, 0, 0.5f);
+        public static final Color MINIMAP_BORDER_COLOR     = new Color(0, 0.4f, 0, 1);
+
 
         public abstract static class UI
         {
