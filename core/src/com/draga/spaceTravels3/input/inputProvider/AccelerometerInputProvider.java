@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.input.inputModifier.DeadZoneInputModifier;
-import com.draga.spaceTravels3.input.inputModifier.ScaleInputModifier;
+import com.draga.spaceTravels3.input.inputModifier.RangeInputModifier;
 
 /**
  * The raw input are the accelerometer X and Y axis, appropriately rotated according to the screen
@@ -16,7 +16,7 @@ public class AccelerometerInputProvider extends InputProvider
 
     public AccelerometerInputProvider()
     {
-        addInputModifier(new ScaleInputModifier(Constants.General.EARTH_GRAVITY));
+        addInputModifier(new RangeInputModifier(Constants.General.EARTH_GRAVITY));
         addInputModifier(new DeadZoneInputModifier(Constants.Game.DEAD_ZONE));
     }
 

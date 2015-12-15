@@ -25,7 +25,7 @@ public abstract class InputProvider
             inputModifier.modify(rawInput);
         }
 
-        rawInput.limit2(1f);
+        rawInput.limit(1f);
 
         return rawInput;
     }

@@ -5,7 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.input.inputModifier.DeadZoneInputModifier;
-import com.draga.spaceTravels3.input.inputModifier.ScaleInputModifier;
+import com.draga.spaceTravels3.input.inputModifier.RangeInputModifier;
 
 /**
  * The raw input is the distance in pixels between the center of the screen and the touch or click.
@@ -18,7 +18,7 @@ public class TouchInputProvider extends InputProvider
     {
         float halfSmallestDimension =
             Math.min(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()) / 2f;
-        addInputModifier(new ScaleInputModifier(halfSmallestDimension));
+        addInputModifier(new RangeInputModifier(halfSmallestDimension));
 
         addInputModifier(new DeadZoneInputModifier(Constants.Game.DEAD_ZONE));
     }

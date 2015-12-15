@@ -12,6 +12,7 @@ public class InputManager
     private static final String LOGGING_TAG = InputManager.class.getSimpleName();
 
     private static Vector2       inputForce;
+
     private static InputProvider touchInputProvider;
     private static InputProvider accelerometerInputProvider;
     private static InputProvider keyboardInputProvider;

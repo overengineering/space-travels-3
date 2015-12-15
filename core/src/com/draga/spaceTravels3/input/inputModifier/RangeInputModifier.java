@@ -2,11 +2,11 @@ package com.draga.spaceTravels3.input.inputModifier;
 
 import com.badlogic.gdx.math.Vector2;
 
-public class ScaleInputModifier implements InputModifier
+public class RangeInputModifier implements InputModifier
 {
     private final float maxRawInput;
 
-    public ScaleInputModifier(float maxRawInput)
+    public RangeInputModifier(float maxRawInput)
     {
         this.maxRawInput = maxRawInput;
     }
