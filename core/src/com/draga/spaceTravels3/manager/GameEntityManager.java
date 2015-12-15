@@ -10,11 +10,11 @@ import java.util.Queue;
 
 public class GameEntityManager
 {
+    private static final String LOGGING_TAG = GameEntityManager.class.getSimpleName();
+
     private static final LinkedList<GameEntity> GAME_ENTITIES           = new LinkedList<>();
     private static final Queue<GameEntity>      GAME_ENTITIES_TO_ADD    = new LinkedList<>();
     private static final Queue<GameEntity>      GAME_ENTITIES_TO_REMOVE = new LinkedList<>();
-    private static final String                 LOGGING_TAG             =
-        GameEntityManager.class.getSimpleName();
 
     public static LinkedList<GameEntity> getGameEntities()
     {
@@ -72,11 +72,17 @@ public class GameEntityManager
         GAME_ENTITIES_TO_REMOVE.clear();
     }
 
+    /**
+     * Add a game entity to a list to be removed during the next update.
+     */
     public static void removeGameEntity(GameEntity gameEntity)
     {
         GAME_ENTITIES_TO_REMOVE.add(gameEntity);
     }
 
+    /**
+     * Add a game entity to a list to be added during the next update.
+     */
     public static void addGameEntity(GameEntity gameEntity)
     {
         GAME_ENTITIES_TO_ADD.add(gameEntity);
