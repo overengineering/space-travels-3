@@ -46,7 +46,7 @@ public class AccelerometerInputProvider extends InputProvider
                     "Orientation " + Gdx.input.getRotation() + " not implemented.");
         }
 
-        input.scl(Constants.Game.ACCELEROMETER_RANGE);
+        input.scl(1f / Constants.Game.ACCELEROMETER_RANGE);
 
         return input;
     }
