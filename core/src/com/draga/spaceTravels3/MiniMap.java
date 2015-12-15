@@ -19,6 +19,7 @@ public class MiniMap
     private       Ship               ship;
     private       float              worldWidth;
     private       float              worldHeight;
+    private       float              miniMapAspectRatio;
 
     public MiniMap(Ship ship, float worldWidth, float worldHeight)
     {
@@ -30,6 +31,8 @@ public class MiniMap
                 Gdx.graphics.getWidth(),
                 Gdx.graphics.getHeight());
         this.backgroundProjectionMatrix = getBackgroundProjectionMatrix();
+        this.miniMapAspectRatio =
+            orthographicCamera.viewportWidth / orthographicCamera.viewportHeight;
     }
 
     private Matrix4 getBackgroundProjectionMatrix()
@@ -116,28 +119,29 @@ public class MiniMap
         }
 
         // Keep the minimap aspect ratio so that the rectangle will be centered in the minimap.
-        float miniMapAspectRatio =
-            orthographicCamera.viewportWidth / orthographicCamera.viewportHeight;
-        float newCameraBoundsAspectRatio = newCameraBounds.width / newCameraBounds.height;
+        float newCameraBoundsAspectRatio = newCameraBounds.getAspectRatio();
         if (newCameraBoundsAspectRatio < miniMapAspectRatio)
         {
             float newWidth = newCameraBounds.height * miniMapAspectRatio;
             float widthDifference = newWidth - newCameraBounds.width;
             newCameraBounds.x -= widthDifference / 2f;
-            newCameraBounds.width += widthDifference / 2f;
+            newCameraBounds.width = newWidth;
         }
         else
         {
             float newHeight = newCameraBounds.width / miniMapAspectRatio;
             float heightDifference = newHeight - newCameraBounds.height;
             newCameraBounds.y -= heightDifference / 2f;
-            newCameraBounds.height += heightDifference / 2f;
+            newCameraBounds.height = newHeight;
         }
 
+        // Zoom out to see the new camera bounds.
         orthographicCamera.zoom = Math.max(
             newCameraBounds.width / orthographicCamera.viewportWidth,
             newCameraBounds.height / orthographicCamera.viewportHeight);
+        // Zoom out to make this world as big as the minimap.
         orthographicCamera.zoom /= Constants.Visual.MINIMAP_SCALE;
+
         // Moves the camera so that the bottom left corner of the screen corresponds to the
         // bottom left corner of the new camera bounds.
         orthographicCamera.position.x =
