@@ -7,7 +7,6 @@ import com.draga.spaceTravels3.component.PhysicsComponent;
 import com.draga.spaceTravels3.gameEntity.GameEntity;
 import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
-import com.draga.utils.JavaUtils;
 import com.google.common.base.Stopwatch;
 
 import java.util.ArrayList;
@@ -188,24 +187,6 @@ public class PhysicsEngine
         Vector2 gravityForce = direction.scl(force);
 
         return gravityForce;
-    }
-
-    private static Vector2 calculateGravityForceActingOn(PhysicsComponent physicsComponent)
-    {
-        Vector2 totalForce = new Vector2();
-
-        for (GameEntity otherGameEntity : GameEntityManager.getGameEntities())
-        {
-            PhysicsComponent otherPhysicsComponent = otherGameEntity.physicsComponent;
-
-            if (!physicsComponent.equals(otherPhysicsComponent))
-            {
-                Vector2 force = calculateGravityForce(physicsComponent, otherPhysicsComponent);
-                totalForce.add(force);
-            }
-        }
-
-        return totalForce;
     }
 
     public static void create()
