@@ -63,8 +63,7 @@ public class MiniMap
 
     private void drawBackground()
     {
-        Gdx.gl.glEnable(GL20.GL_BLEND);
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        GraphicsUtils.SetBlending(true);
 
         Color minimapBackgroundColor = Constants.Visual.MINIMAP_BACKGROUND_COLOR;
         SpaceTravels3.shapeRenderer.setColor(minimapBackgroundColor);
@@ -84,7 +83,7 @@ public class MiniMap
             worldWidth,
             worldHeight);
 
-        Gdx.gl.glDisable(GL20.GL_BLEND);
+        GraphicsUtils.SetBlending(false);
     }
 
     public void update()

@@ -160,8 +160,7 @@ public class GameScreen implements Screen
                 Constants.Visual.HUD_TRAJECTORY_LINE_STEPS,
                 Constants.Visual.HUD_TRAJECTORY_LINE_STEP_TIME);
 
-        Gdx.gl.glEnable(GL20.GL_BLEND);
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        GraphicsUtils.SetBlending(true);
 
         SpaceTravels3.shapeRenderer.setProjectionMatrix(this.extendViewport.getCamera().combined);
         SpaceTravels3.shapeRenderer.begin(ShapeRenderer.ShapeType.Point);
@@ -183,7 +182,7 @@ public class GameScreen implements Screen
         }
         SpaceTravels3.shapeRenderer.end();
 
-        Gdx.gl.glDisable(GL20.GL_BLEND);
+        GraphicsUtils.SetBlending(false);
     }
 
     public void resize(int width, int height)

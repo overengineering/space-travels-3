@@ -197,8 +197,7 @@ public class Hud implements Screen
         stage.act(delta);
         stage.draw();
 
-        Gdx.gl.glEnable(GL20.GL_BLEND);
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        GraphicsUtils.SetBlending(true);
 
         SpaceTravels3.shapeRenderer.begin();
 
@@ -213,7 +212,7 @@ public class Hud implements Screen
         miniMap.update();
         miniMap.draw();
         SpaceTravels3.shapeRenderer.end();
-        Gdx.gl.glDisable(GL20.GL_BLEND);
+        GraphicsUtils.SetBlending(false);
     }
 
     private void updateFuelProgressBar()

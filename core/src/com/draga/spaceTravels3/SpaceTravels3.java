@@ -11,8 +11,8 @@ import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.SoundManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
-import com.draga.spaceTravels3.screen.MenuScreen;
 import com.draga.spaceTravels3.physic.PhysicsEngine;
+import com.draga.spaceTravels3.screen.MenuScreen;
 
 public class SpaceTravels3 extends Game
 {
