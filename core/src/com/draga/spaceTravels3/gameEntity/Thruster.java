@@ -29,6 +29,7 @@ public class Thruster extends GameEntity
             0,
             new Circle(0),
             new GameEntityGroup(GameEntityGroup.GroupOverride.NONE),
+            this.getClass(),
             false);
 
         this.graphicComponent = new AnimatedGraphicComponent(

@@ -2,6 +2,7 @@ package com.draga.spaceTravels3.component;
 
 import com.badlogic.gdx.math.Vector2;
 import com.draga.shape.Shape;
+import com.draga.spaceTravels3.gameEntity.GameEntity;
 import com.draga.spaceTravels3.gameEntity.GameEntityGroup;
 
 import java.io.Serializable;
@@ -10,28 +11,45 @@ public class PhysicsComponent implements Serializable
 {
     public final boolean affectedByGravity;
 
-    private final float           mass;
-    private final Vector2         position;
-    private final Vector2         velocity;
-    private final Shape           shape;
-    private final GameEntityGroup collisionGroup;
-    private       float           angle;
-    private       float           angularVelocity;
+    private final Vector2 position;
+    private final Vector2 velocity;
+
+    private final Shape shape;
+
+    private final float mass;
+
+    private final GameEntityGroup             collideWith;
+    private final Class<? extends GameEntity> is;
+
+    private float angle;
+    private float angularVelocity;
 
     public PhysicsComponent(
         float x,
         float y,
         float mass,
         Shape shape,
-        GameEntityGroup collisionGroup,
+        GameEntityGroup collideWith,
+        Class<? extends GameEntity> is,
         boolean affectedByGravity)
     {
+        this.is = is;
         this.position = new Vector2(x, y);
         this.velocity = new Vector2();
         this.mass = mass;
         this.shape = shape;
-        this.collisionGroup = collisionGroup;
+        this.collideWith = collideWith;
         this.affectedByGravity = affectedByGravity;
+    }
+
+    public Class<? extends GameEntity> getIs()
+    {
+        return is;
+    }
+
+    public boolean isAffectedByGravity()
+    {
+        return affectedByGravity;
     }
 
     public float getAngularVelocity()
@@ -78,8 +96,8 @@ public class PhysicsComponent implements Serializable
         return mass;
     }
 
-    public GameEntityGroup getCollisionGroup()
+    public GameEntityGroup getCollideWith()
     {
-        return collisionGroup;
+        return collideWith;
     }
 }

@@ -22,6 +22,7 @@ public class Explosion extends GameEntity
             0f,
             new Circle((height + width) / 4f),
             new GameEntityGroup(GameEntityGroup.GroupOverride.NONE),
+            this.getClass(),
             false);
 
         this.graphicComponent = new AnimatedGraphicComponent(

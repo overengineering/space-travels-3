@@ -22,6 +22,7 @@ public class Pickup extends GameEntity
             0,
             new Circle((Constants.Visual.PICKUP_WIDTH + Constants.Visual.PICKUP_HEIGHT) / 4f),
             new GameEntityGroup(collidesWith),
+            this.getClass(),
             false);
         this.physicsComponent.setAngularVelocity(
             MathUtils.random(100, 300) * MathUtils.randomSign());

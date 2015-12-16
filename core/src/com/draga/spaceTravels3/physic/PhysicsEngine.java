@@ -127,8 +127,8 @@ public class PhysicsEngine
 
     private static boolean areColliding(GameEntity gameEntityA, GameEntity gameEntityB)
     {
-        return gameEntityA.physicsComponent.getCollisionGroup().contains(gameEntityB)
-            && gameEntityB.physicsComponent.getCollisionGroup().contains(gameEntityA)
+        return gameEntityA.physicsComponent.getCollideWith().contains(gameEntityB)
+            && gameEntityB.physicsComponent.getCollideWith().contains(gameEntityA)
             && areOverlapping(gameEntityA.physicsComponent, gameEntityB.physicsComponent);
     }
 

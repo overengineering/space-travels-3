@@ -28,6 +28,7 @@ public class Planet extends GameEntity
             mass,
             new Circle(radius),
             new GameEntityGroup(collidesWith),
+            this.getClass(),
             false);
 
         this.graphicComponent = new StaticGraphicComponent(

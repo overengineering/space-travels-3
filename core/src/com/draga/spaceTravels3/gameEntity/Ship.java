@@ -45,6 +45,7 @@ public class Ship extends GameEntity
                 mass,
                 new Circle(Constants.Game.SHIP_COLLISION_RADIUS),
                 new GameEntityGroup(collidesWith),
+                this.getClass(),
                 true);
 
         this.graphicComponent = new StaticGraphicComponent(
