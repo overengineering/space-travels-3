@@ -1,9 +1,10 @@
 package com.draga.spaceTravels3.gameEntity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameEntityGroup
+public class GameEntityGroup implements Serializable
 {
     public  GroupOverride                     groupOverride;
     private List<Class<? extends GameEntity>> gameEntities  = new ArrayList<>();

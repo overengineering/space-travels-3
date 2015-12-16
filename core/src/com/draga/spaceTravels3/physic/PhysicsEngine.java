@@ -2,11 +2,11 @@ package com.draga.spaceTravels3.physic;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import com.draga.JavaUtils;
 import com.draga.shape.Circle;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.component.PhysicsComponent;
 import com.draga.spaceTravels3.gameEntity.GameEntity;
-import com.draga.spaceTravels3.gameEntity.GameEntityGroup;
 import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.google.common.base.Stopwatch;
@@ -206,14 +206,7 @@ public class PhysicsEngine
         float stepTime = projectionTime / iterations;
 
         PhysicsComponent originalComponent = gameEntity.physicsComponent;
-        gameEntity.physicsComponent = new PhysicsComponent(
-            originalComponent.getPosition().x,
-            originalComponent.getPosition().y,
-            originalComponent.getMass(),
-            new Circle(1),
-            new GameEntityGroup(GameEntityGroup.GroupOverride.ALL),
-            true);
-        gameEntity.physicsComponent.getVelocity().set(originalComponent.getVelocity());
+        gameEntity.physicsComponent = (PhysicsComponent) JavaUtils.deepClone(originalComponent);
 
         ArrayList<Vector2> projections = new ArrayList<>();
 

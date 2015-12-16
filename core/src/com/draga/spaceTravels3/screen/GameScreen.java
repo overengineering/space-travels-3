@@ -150,7 +150,7 @@ public class GameScreen implements Screen
 
     private void drawTrajectoryLine()
     {
-        ArrayList<Vector2> projectionPoints = PhysicsEngine.projectGravity(level.getShip(), 100, 3);
+        ArrayList<Vector2> projectionPoints = PhysicsEngine.projectGravity(level.getShip(), 1000, 10);
         SpaceTravels3.shapeRenderer.setProjectionMatrix(this.extendViewport.getCamera().combined);
         SpaceTravels3.shapeRenderer.begin(ShapeRenderer.ShapeType.Point);
         SpaceTravels3.shapeRenderer.setColor(Color.CYAN);

@@ -4,7 +4,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.draga.shape.Shape;
 import com.draga.spaceTravels3.gameEntity.GameEntityGroup;
 
-public class PhysicsComponent
+import java.io.Serializable;
+
+public class PhysicsComponent implements Serializable
 {
     public final boolean affectedByGravity;
 

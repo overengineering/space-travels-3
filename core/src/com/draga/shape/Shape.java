@@ -1,6 +1,8 @@
 package com.draga.shape;
 
-public interface Shape
+import java.io.Serializable;
+
+public abstract class Shape implements Serializable
 {
 
 }

@@ -1,6 +1,6 @@
 package com.draga.shape;
 
-public class Circle implements Shape
+public class Circle extends Shape
 {
     public float radius;
 
