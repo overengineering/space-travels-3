@@ -20,6 +20,12 @@ public class GameEntityGroup implements Serializable
         this.groupOverride = groupOverride;
     }
 
+    public GameEntityGroup(GameEntityGroup originalGameEntityGroup)
+    {
+        this.groupOverride = originalGameEntityGroup.groupOverride;
+        this.gameEntities = new ArrayList<>(originalGameEntityGroup.gameEntities);
+    }
+
     public boolean contains(GameEntity gameEntity)
     {
         return contains(gameEntity.getClass());

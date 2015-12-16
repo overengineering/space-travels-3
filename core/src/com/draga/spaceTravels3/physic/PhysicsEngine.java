@@ -224,8 +224,7 @@ public class PhysicsEngine
         float stepTime)
     {
         // Swap out physics component so to revert after projection.
-        PhysicsComponent physicsComponent =
-            (PhysicsComponent) JavaUtils.deepClone(originalPhysicsComponent);
+        PhysicsComponent physicsComponent = new PhysicsComponent(originalPhysicsComponent);
 
         ArrayList<Vector2> projections = new ArrayList<>();
 

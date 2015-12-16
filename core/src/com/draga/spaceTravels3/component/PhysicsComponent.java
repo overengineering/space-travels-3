@@ -42,6 +42,17 @@ public class PhysicsComponent implements Serializable
         this.affectedByGravity = affectedByGravity;
     }
 
+    public PhysicsComponent(PhysicsComponent originalPhysicsComponent)
+    {
+        this.is = originalPhysicsComponent.is;
+        this.position = new Vector2(originalPhysicsComponent.position);
+        this.velocity = new Vector2(originalPhysicsComponent.velocity);
+        this.mass = originalPhysicsComponent.mass;
+        this.shape = new Circle(originalPhysicsComponent.getShape().radius);
+        this.collideWith = new GameEntityGroup(originalPhysicsComponent.collideWith);
+        this.affectedByGravity = originalPhysicsComponent.affectedByGravity;
+    }
+
     public Class<? extends GameEntity> getIs()
     {
         return is;
