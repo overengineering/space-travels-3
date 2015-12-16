@@ -62,7 +62,16 @@ public class PhysicsEngine
         if (!SettingsManager.getDebugSettings().noGravity
             && physicsComponent.isAffectedByGravity())
         {
-            stepGravity(physicsComponent, deltaTime);
+            ArrayList<PhysicsComponent> otherPhysicsComponents = new ArrayList<>();
+            for (GameEntity gameEntity : GameEntityManager.getGameEntities())
+            {
+                if (!physicsComponent.equals(gameEntity.physicsComponent))
+                {
+                    otherPhysicsComponents.add(gameEntity.physicsComponent);
+                }
+            }
+
+            stepGravity(physicsComponent, otherPhysicsComponents, deltaTime);
         }
 
         stepVelocity(physicsComponent, deltaTime);
@@ -102,9 +111,11 @@ public class PhysicsEngine
     /**
      * Accelerate the {@link PhysicsComponent} according to the gravity acting on it.
      */
-    private static void stepGravity(PhysicsComponent physicsComponent, float deltaTime)
+    private static void stepGravity(
+        PhysicsComponent physicsComponent,
+        ArrayList<PhysicsComponent> otherPhysicsComponents, float deltaTime)
     {
-        Vector2 gravityForce = calculateGravityForce(physicsComponent);
+        Vector2 gravityForce = calculateGravityForce(physicsComponent, otherPhysicsComponents);
 
         physicsComponent.getVelocity().add(gravityForce.scl(deltaTime));
     }
@@ -140,17 +151,16 @@ public class PhysicsEngine
             && areOverlapping(physicsComponentA, physicsComponentB);
     }
 
-    public static Vector2 calculateGravityForce(PhysicsComponent physicsComponent)
+    public static Vector2 calculateGravityForce(
+        PhysicsComponent physicsComponent,
+        ArrayList<PhysicsComponent> otherPhysicComponents)
     {
         Vector2 totalForce = new Vector2();
-        for (GameEntity gameEntity : GameEntityManager.getGameEntities())
+        for (PhysicsComponent otherPhysicsComponent : otherPhysicComponents)
         {
-            if (!physicsComponent.equals(gameEntity.physicsComponent))
-            {
-                Vector2 force =
-                    calculateGravityForce(physicsComponent, gameEntity.physicsComponent);
-                totalForce.add(force);
-            }
+            Vector2 force =
+                calculateGravityForce(physicsComponent, otherPhysicsComponent);
+            totalForce.add(force);
         }
 
         return totalForce;
@@ -204,39 +214,25 @@ public class PhysicsEngine
         int steps,
         float stepTime)
     {
-        // Swap out physics component so to revert after projection.
+        // Create a copy of the PhysicsComponent so that it won't be changed.
         PhysicsComponent physicsComponent = new PhysicsComponent(originalPhysicsComponent);
+        ArrayList<PhysicsComponent> otherPhysicsComponents =
+            getPhysicsComponents(originalPhysicsComponent);
 
         ArrayList<Vector2> projections = new ArrayList<>();
 
         buildProjections:
         for (int i = 0; i < steps; i++)
         {
-            // This cannot use calculateGravityForce() because it wouldn't consider the original
-            // physic component as the same and would calculate the force between the two.
-            Vector2 gravity = new Vector2();
-            for (GameEntity gameEntity : GameEntityManager.getGameEntities())
-            {
-                if (!originalPhysicsComponent.equals(gameEntity.physicsComponent))
-                {
-                    Vector2 force =
-                        calculateGravityForce(physicsComponent, gameEntity.physicsComponent);
-                    gravity.add(force);
-                }
-            }
-            physicsComponent.getVelocity().add(gravity.scl(stepTime));
-
-            // Move.
+            stepGravity(physicsComponent, otherPhysicsComponents, stepTime);
             stepVelocity(physicsComponent, stepTime);
 
             projections.add(physicsComponent.getPosition().cpy());
 
             // Stop on collision.
-            for (GameEntity otherGameEntity : GameEntityManager.getGameEntities())
+            for (PhysicsComponent otherPhysicsComponent : otherPhysicsComponents)
             {
-                PhysicsComponent otherPhysicsComponent = otherGameEntity.physicsComponent;
-                if (!originalPhysicsComponent.equals(otherPhysicsComponent)
-                    && areColliding(physicsComponent, otherPhysicsComponent))
+                if (areColliding(physicsComponent, otherPhysicsComponent))
                 {
                     break buildProjections;
                 }
@@ -244,5 +240,32 @@ public class PhysicsEngine
         }
 
         return projections;
+    }
+
+    private static ArrayList<PhysicsComponent> getPhysicsComponents(PhysicsComponent excludePhysicsComponent)
+    {
+        ArrayList<PhysicsComponent> physicsComponents = getPhysicsComponents();
+        physicsComponents.remove(excludePhysicsComponent);
+
+        return physicsComponents;
+    }
+
+    private static ArrayList<PhysicsComponent> getPhysicsComponents()
+    {
+        ArrayList<PhysicsComponent> physicsComponents = new ArrayList<>();
+        for (GameEntity gameEntity : GameEntityManager.getGameEntities())
+        {
+            physicsComponents.add(gameEntity.physicsComponent);
+        }
+
+        return physicsComponents;
+    }
+
+    public static Vector2 calculateGravityForce(PhysicsComponent physicsComponent)
+    {
+        ArrayList<PhysicsComponent> otherPhysicsComponents = getPhysicsComponents(physicsComponent);
+        Vector2 gravityForce = calculateGravityForce(physicsComponent, otherPhysicsComponents);
+
+        return gravityForce;
     }
 }
