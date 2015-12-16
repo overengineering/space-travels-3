@@ -30,9 +30,15 @@ public abstract class Constants
         public static final float EXPLOSION_LIFETIME = 2f;
 
         // HUD
-        public static final float MINIMAP_SCALE             = 0.25f;
-        public static final float HUD_FORCE_INDICATOR_SCALE = 0.25f;
-        public static final Color JOYSTICK_OVERLAY_COLOR    = new Color(1f, 1f, 1f, 0.3f);
+        public static final float MINIMAP_SCALE                     = 0.25f;
+        public static final float HUD_FORCE_INDICATOR_SCALE         = 0.25f;
+        public static final Color JOYSTICK_OVERLAY_COLOR            = new Color(1f, 1f, 1f, 0.3f);
+        public static final Color HUD_TRAJECTORY_LINE_COLOR_NEUTRAL =
+            new Color(0.5f, 0.5f, 0.5f, 1);
+        public static final Color HUD_TRAJECTORY_LINE_COLOR_PLANET  =
+            new Color(0.8f, 0.2f, 0.2f, 1);
+        public static final int   HUD_TRAJECTORY_LINE_STEPS         = 100;
+        public static final int   HUD_TRAJECTORY_LINE_SECONDS       = 5;
 
         // Ship
         public static final float   SHIP_WIDTH                    = 10f;
@@ -51,10 +57,9 @@ public abstract class Constants
         public static final Color   SCREEN_FADE_COLOUR      = new Color(0, 0, 0, 0.7f);
 
         // Minimap.
-        public static final Color MINIMAP_BACKGROUND_COLOR          = new Color(0, 0.17f, 0, 0.5f);
-        public static final Color MINIMAP_BORDER_COLOR              = new Color(0, 0.4f, 0, 1);
-        public static final Color HUD_TRAJECTORY_LINE_COLOR_NEUTRAL = new Color(0.5f, 0.5f, 0.5f, 1);
-        public static final Color HUD_TRAJECTORY_LINE_COLOR_PLANET  = new Color(0.8f, 0.2f, 0.2f, 1);
+        public static final Color MINIMAP_BACKGROUND_COLOR      = new Color(0, 0.17f, 0, 0.5f);
+        public static final Color MINIMAP_BORDER_COLOR          = new Color(0, 0.4f, 0, 1);
+        public static final float HUD_TRAJECTORY_LINE_STEP_TIME = 0.05f;
 
 
         public abstract static class UI
@@ -103,11 +108,11 @@ public abstract class Constants
         public static final float         NANO                                = 0.000000001f;
         public static final EventBus      EVENT_BUS                           = new EventBus();
 
-        public static final String        FOLDER                              =
+        public static final String FOLDER                  =
             SpaceTravels3.class.getSimpleName();
-        public static final String        SCORES_FILENAME                     = "Scores.json";
-        public static final String        DEBUG_SETTINGS_FILENAME             =
+        public static final String SCORES_FILENAME         = "Scores.json";
+        public static final String DEBUG_SETTINGS_FILENAME =
             "DebugSettings.json";
-        public static final String        SETTINGS_FILENAME                   = "Settings.json";
+        public static final String SETTINGS_FILENAME       = "Settings.json";
     }
 }

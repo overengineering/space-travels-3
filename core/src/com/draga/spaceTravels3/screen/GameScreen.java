@@ -151,10 +151,14 @@ public class GameScreen implements Screen
 
     private void drawTrajectoryLine()
     {
-        int steps = 100;
+        // TODO: Refactor out when projection points are a class.
+        int steps = Constants.Visual.HUD_TRAJECTORY_LINE_STEPS;
 
         ArrayList<Vector2> projectionPoints =
-            PhysicsEngine.projectGravity(level.getShip(), steps, 5);
+            PhysicsEngine.projectGravity(
+                level.getShip(),
+                Constants.Visual.HUD_TRAJECTORY_LINE_STEPS,
+                Constants.Visual.HUD_TRAJECTORY_LINE_STEP_TIME);
 
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -162,12 +166,12 @@ public class GameScreen implements Screen
         SpaceTravels3.shapeRenderer.setProjectionMatrix(this.extendViewport.getCamera().combined);
         SpaceTravels3.shapeRenderer.begin(ShapeRenderer.ShapeType.Point);
         Color color = projectionPoints.size() == steps
-            ?   Constants.Visual.HUD_TRAJECTORY_LINE_COLOR_NEUTRAL
-            :   Constants.Visual.HUD_TRAJECTORY_LINE_COLOR_PLANET;
+            ? Constants.Visual.HUD_TRAJECTORY_LINE_COLOR_NEUTRAL
+            : Constants.Visual.HUD_TRAJECTORY_LINE_COLOR_PLANET;
 
         for (int i = 1; i < projectionPoints.size(); i += 2)
         {
-            float alpha = 1 - ((float)i / steps);
+            float alpha = 1 - ((float) i / steps);
             SpaceTravels3.shapeRenderer.setColor(color.r, color.g, color.b, alpha);
 
             Vector2 projectionPointA = projectionPoints.get(i);

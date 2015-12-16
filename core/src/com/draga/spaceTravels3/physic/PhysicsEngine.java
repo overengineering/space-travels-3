@@ -214,10 +214,8 @@ public class PhysicsEngine
     public static ArrayList<Vector2> projectGravity(
         GameEntity gameEntity,
         int steps,
-        float projectionTime)
+        float stepTime)
     {
-        float stepTime = projectionTime / steps;
-
         // Swap out physics component so to revert after projection.
         PhysicsComponent originalComponent = gameEntity.physicsComponent;
         gameEntity.physicsComponent = (PhysicsComponent) JavaUtils.deepClone(originalComponent);
