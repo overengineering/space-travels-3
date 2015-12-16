@@ -22,6 +22,11 @@ public class GameEntityGroup implements Serializable
 
     public boolean contains(GameEntity gameEntity)
     {
+        return contains(gameEntity.getClass());
+    }
+
+    public boolean contains(Class<? extends GameEntity> klass)
+    {
         switch (groupOverride)
         {
             case ALL:
@@ -29,7 +34,7 @@ public class GameEntityGroup implements Serializable
             case NONE:
                 return false;
             case SELECTION:
-                return this.gameEntities.contains(gameEntity.getClass());
+                return this.gameEntities.contains(klass);
             default:
                 throw new UnsupportedOperationException();
         }

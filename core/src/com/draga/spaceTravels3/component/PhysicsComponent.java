@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 public class PhysicsComponent implements Serializable
 {
-    public final boolean affectedByGravity;
+    private final boolean affectedByGravity;
 
     private final Vector2 position;
     private final Vector2 velocity;

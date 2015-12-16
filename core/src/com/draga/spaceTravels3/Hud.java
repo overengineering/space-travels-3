@@ -223,7 +223,7 @@ public class Hud implements Screen
 
     private void drawGravityIndicator()
     {
-        Vector2 gravityVector = PhysicsEngine.getGravityForceActingOn(ship);
+        Vector2 gravityVector = PhysicsEngine.calculateGravityForce(ship.physicsComponent);
 
         SpaceTravels3.shapeRenderer.setColor(Color.BLUE);
         SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Filled);

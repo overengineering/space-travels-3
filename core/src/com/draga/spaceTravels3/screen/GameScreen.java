@@ -156,7 +156,7 @@ public class GameScreen implements Screen
 
         ArrayList<Vector2> projectionPoints =
             PhysicsEngine.projectGravity(
-                level.getShip(),
+                level.getShip().physicsComponent,
                 Constants.Visual.HUD_TRAJECTORY_LINE_STEPS,
                 Constants.Visual.HUD_TRAJECTORY_LINE_STEP_TIME);
 
