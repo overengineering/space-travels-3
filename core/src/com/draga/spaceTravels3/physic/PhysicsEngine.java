@@ -4,11 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.draga.shape.Circle;
 import com.draga.spaceTravels3.Constants;
+import com.draga.spaceTravels3.component.PhysicsComponent;
 import com.draga.spaceTravels3.gameEntity.GameEntity;
+import com.draga.spaceTravels3.gameEntity.GameEntityGroup;
 import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.google.common.base.Stopwatch;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -139,22 +142,24 @@ public class PhysicsEngine
     {
         if (!calculatedGravityForces.containsKey(gameEntity))
         {
-            Vector2 force = calculateGravityForceActingOn(gameEntity);
+            Vector2 force = calculateGravityForceActingOn(gameEntity.physicsComponent);
             calculatedGravityForces.put(gameEntity, force);
         }
 
         return calculatedGravityForces.get(gameEntity).cpy();
     }
 
-    private static Vector2 calculateGravityForceActingOn(GameEntity gameEntity)
+    private static Vector2 calculateGravityForceActingOn(PhysicsComponent physicsComponent)
     {
         Vector2 totalForce = new Vector2();
 
         for (GameEntity otherGameEntity : GameEntityManager.getGameEntities())
         {
-            if (!gameEntity.equals(otherGameEntity))
+            PhysicsComponent otherPhysicsComponent = otherGameEntity.physicsComponent;
+
+            if (!physicsComponent.equals(otherPhysicsComponent))
             {
-                Vector2 force = calculateGravityForce(gameEntity, otherGameEntity);
+                Vector2 force = calculateGravityForce(physicsComponent, otherPhysicsComponent);
                 totalForce.add(force);
             }
         }
@@ -163,18 +168,18 @@ public class PhysicsEngine
     }
 
     private static Vector2 calculateGravityForce(
-        GameEntity gameEntityA,
-        GameEntity gameEntityB)
+        PhysicsComponent physicsComponentA,
+        PhysicsComponent physicsComponentB)
     {
-        Vector2 distance = gameEntityB.physicsComponent.getPosition()
+        Vector2 distance = physicsComponentB.getPosition()
             .cpy()
-            .sub(gameEntityA.physicsComponent.getPosition());
+            .sub(physicsComponentA.getPosition());
         float distanceLen2 = distance.len2();
 
         Vector2 direction = distance.nor();
 
-        float force = gameEntityA.physicsComponent.getMass()
-            * gameEntityB.physicsComponent.getMass()
+        float force = physicsComponentA.getMass()
+            * physicsComponentB.getMass()
             / distanceLen2;
 
         Vector2 gravityForce = direction.scl(force);
@@ -191,5 +196,42 @@ public class PhysicsEngine
     public static void dispose()
     {
 
+    }
+
+    public static ArrayList<Vector2> projectGravity(
+        GameEntity gameEntity,
+        int iterations,
+        float projectionTime)
+    {
+        float stepTime = projectionTime / iterations;
+
+        PhysicsComponent originalComponent = gameEntity.physicsComponent;
+        gameEntity.physicsComponent = new PhysicsComponent(
+            originalComponent.getPosition().x,
+            originalComponent.getPosition().y,
+            originalComponent.getMass(),
+            new Circle(1),
+            new GameEntityGroup(GameEntityGroup.GroupOverride.ALL),
+            true);
+        gameEntity.physicsComponent.getVelocity().set(originalComponent.getVelocity());
+
+        ArrayList<Vector2> projections = new ArrayList<>();
+
+        for (int i = 0; i < iterations; i++)
+        {
+            Vector2 force = calculateGravityForceActingOn(gameEntity.physicsComponent);
+
+            // Accelerate by gravity.
+            gameEntity.physicsComponent.getVelocity().add(force.scl(stepTime));
+            // Move.
+            gameEntity.physicsComponent.getPosition()
+                .add(gameEntity.physicsComponent.getVelocity().cpy().scl(stepTime));
+
+            projections.add(gameEntity.physicsComponent.getPosition().cpy());
+        }
+
+        gameEntity.physicsComponent = originalComponent;
+
+        return projections;
     }
 }

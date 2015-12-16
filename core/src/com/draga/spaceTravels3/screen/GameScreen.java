@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.draga.spaceTravels3.*;
@@ -19,31 +21,20 @@ import com.draga.spaceTravels3.physic.PhysicDebugDrawer;
 import com.draga.spaceTravels3.physic.PhysicsEngine;
 import com.google.common.eventbus.Subscribe;
 
+import java.util.ArrayList;
+
 public class GameScreen implements Screen
 {
     private static final String LOGGING_TAG = GameScreen.class.getSimpleName();
 
-    private Screen overlayScreen;
-    private Hud hud;
+    private Screen         overlayScreen;
+    private Hud            hud;
     private ExtendViewport extendViewport;
-    private Level level;
+    private Level          level;
 
     public GameScreen(Level level)
     {
         this.level = level;
-    }
-
-    private void updateCamera()
-    {
-        Camera camera = extendViewport.getCamera();
-
-        camera.position.set(
-            level.getShip().physicsComponent.getPosition().x,
-            level.getShip().physicsComponent.getPosition().y,
-            0f);
-        camera.update();
-
-        SpaceTravels3.spriteBatch.setProjectionMatrix(camera.combined);
     }
 
     @Override
@@ -64,6 +55,19 @@ public class GameScreen implements Screen
         updateCamera();
 
         hud = new Hud(extendViewport.getCamera(), level);
+    }
+
+    private void updateCamera()
+    {
+        Camera camera = extendViewport.getCamera();
+
+        camera.position.set(
+            level.getShip().physicsComponent.getPosition().x,
+            level.getShip().physicsComponent.getPosition().y,
+            0f);
+        camera.update();
+
+        SpaceTravels3.spriteBatch.setProjectionMatrix(camera.combined);
     }
 
     @Override
@@ -95,6 +99,27 @@ public class GameScreen implements Screen
         }
     }
 
+    private void checkDebugKeys()
+    {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F1))
+        {
+            SettingsManager.getDebugSettings().infiniteFuel =
+                !SettingsManager.getDebugSettings().infiniteFuel;
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F2))
+        {
+            SettingsManager.getDebugSettings().noGravity =
+                !SettingsManager.getDebugSettings().noGravity;
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.F3))
+        {
+            level.getShip().physicsComponent.getVelocity().set(0, 0);
+            level.getShip().physicsComponent.setAngularVelocity(0);
+        }
+    }
+
     public void update(float deltaTime)
     {
         InputManager.update();
@@ -119,27 +144,21 @@ public class GameScreen implements Screen
         }
 
         SpaceTravels3.spriteBatch.end();
+
+        drawTrajectoryLine();
     }
 
-    private void checkDebugKeys()
+    private void drawTrajectoryLine()
     {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F1))
+        ArrayList<Vector2> projectionPoints = PhysicsEngine.projectGravity(level.getShip(), 100, 3);
+        SpaceTravels3.shapeRenderer.setProjectionMatrix(this.extendViewport.getCamera().combined);
+        SpaceTravels3.shapeRenderer.begin(ShapeRenderer.ShapeType.Point);
+        SpaceTravels3.shapeRenderer.setColor(Color.CYAN);
+        for (Vector2 projectionPoint : projectionPoints)
         {
-            SettingsManager.getDebugSettings().infiniteFuel =
-                !SettingsManager.getDebugSettings().infiniteFuel;
+            SpaceTravels3.shapeRenderer.point(projectionPoint.x, projectionPoint.y, 0);
         }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F2))
-        {
-            SettingsManager.getDebugSettings().noGravity =
-                !SettingsManager.getDebugSettings().noGravity;
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.F3))
-        {
-            level.getShip().physicsComponent.getVelocity().set(0, 0);
-            level.getShip().physicsComponent.setAngularVelocity(0);
-        }
+        SpaceTravels3.shapeRenderer.end();
     }
 
     public void resize(int width, int height)
