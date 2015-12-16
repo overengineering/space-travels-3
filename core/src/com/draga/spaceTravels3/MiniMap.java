@@ -2,7 +2,6 @@ package com.draga.spaceTravels3;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Matrix4;
@@ -63,7 +62,7 @@ public class MiniMap
 
     private void drawBackground()
     {
-        GraphicsUtils.SetBlending(true);
+        GraphicsUtils.enableBlending();
 
         Color minimapBackgroundColor = Constants.Visual.MINIMAP_BACKGROUND_COLOR;
         SpaceTravels3.shapeRenderer.setColor(minimapBackgroundColor);
@@ -83,7 +82,7 @@ public class MiniMap
             worldWidth,
             worldHeight);
 
-        GraphicsUtils.SetBlending(false);
+        GraphicsUtils.disableBlending();
     }
 
     public void update()

@@ -5,16 +5,14 @@ import com.badlogic.gdx.graphics.GL20;
 
 public class GraphicsUtils
 {
-    public static void SetBlending(boolean doIt)
+    public static void enableBlending()
     {
-        if (doIt)
-        {
-            Gdx.gl.glEnable(GL20.GL_BLEND);
-            Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-        }
-        else
-        {
-            Gdx.gl.glDisable(GL20.GL_BLEND);
-        }
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+    }
+
+    public static void disableBlending()
+    {
+        Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 }

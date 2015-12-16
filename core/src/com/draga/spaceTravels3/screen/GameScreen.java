@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -160,7 +159,7 @@ public class GameScreen implements Screen
                 Constants.Visual.HUD_TRAJECTORY_LINE_STEPS,
                 Constants.Visual.HUD_TRAJECTORY_LINE_STEP_TIME);
 
-        GraphicsUtils.SetBlending(true);
+        GraphicsUtils.enableBlending();
 
         SpaceTravels3.shapeRenderer.setProjectionMatrix(this.extendViewport.getCamera().combined);
         SpaceTravels3.shapeRenderer.begin(ShapeRenderer.ShapeType.Point);
@@ -182,7 +181,7 @@ public class GameScreen implements Screen
         }
         SpaceTravels3.shapeRenderer.end();
 
-        GraphicsUtils.SetBlending(false);
+        GraphicsUtils.disableBlending();
     }
 
     public void resize(int width, int height)

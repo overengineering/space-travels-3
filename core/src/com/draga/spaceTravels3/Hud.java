@@ -197,7 +197,7 @@ public class Hud implements Screen
         stage.act(delta);
         stage.draw();
 
-        GraphicsUtils.SetBlending(true);
+        GraphicsUtils.enableBlending();
 
         SpaceTravels3.shapeRenderer.begin();
 
@@ -212,7 +212,7 @@ public class Hud implements Screen
         miniMap.update();
         miniMap.draw();
         SpaceTravels3.shapeRenderer.end();
-        GraphicsUtils.SetBlending(false);
+        GraphicsUtils.disableBlending();
     }
 
     private void updateFuelProgressBar()
