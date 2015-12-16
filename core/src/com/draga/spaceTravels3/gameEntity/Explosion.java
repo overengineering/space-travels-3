@@ -20,7 +20,7 @@ public class Explosion extends GameEntity
             x,
             y,
             0f,
-            new Circle((height + width) / 4f),
+            (height + width) / 4f,
             new GameEntityGroup(GameEntityGroup.GroupOverride.NONE),
             this.getClass(),
             false);

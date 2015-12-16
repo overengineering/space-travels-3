@@ -26,7 +26,7 @@ public class Planet extends GameEntity
             x,
             y,
             mass,
-            new Circle(radius),
+            radius,
             new GameEntityGroup(collidesWith),
             this.getClass(),
             false);

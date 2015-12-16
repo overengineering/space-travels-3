@@ -1,7 +1,7 @@
 package com.draga.spaceTravels3.component;
 
 import com.badlogic.gdx.math.Vector2;
-import com.draga.shape.Shape;
+import com.draga.shape.Circle;
 import com.draga.spaceTravels3.gameEntity.GameEntity;
 import com.draga.spaceTravels3.gameEntity.GameEntityGroup;
 
@@ -14,7 +14,7 @@ public class PhysicsComponent implements Serializable
     private final Vector2 position;
     private final Vector2 velocity;
 
-    private final Shape shape;
+    private final Circle shape;
 
     private final float mass;
 
@@ -28,7 +28,7 @@ public class PhysicsComponent implements Serializable
         float x,
         float y,
         float mass,
-        Shape shape,
+        float radius,
         GameEntityGroup collideWith,
         Class<? extends GameEntity> is,
         boolean affectedByGravity)
@@ -37,7 +37,7 @@ public class PhysicsComponent implements Serializable
         this.position = new Vector2(x, y);
         this.velocity = new Vector2();
         this.mass = mass;
-        this.shape = shape;
+        this.shape = new Circle(radius);
         this.collideWith = collideWith;
         this.affectedByGravity = affectedByGravity;
     }
@@ -82,7 +82,7 @@ public class PhysicsComponent implements Serializable
         this.angle = angle;
     }
 
-    public Shape getShape()
+    public Circle getShape()
     {
         return shape;
     }

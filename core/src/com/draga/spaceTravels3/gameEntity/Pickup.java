@@ -20,7 +20,7 @@ public class Pickup extends GameEntity
             x,
             y,
             0,
-            new Circle((Constants.Visual.PICKUP_WIDTH + Constants.Visual.PICKUP_HEIGHT) / 4f),
+            (Constants.Visual.PICKUP_WIDTH + Constants.Visual.PICKUP_HEIGHT) / 4f,
             new GameEntityGroup(collidesWith),
             this.getClass(),
             false);

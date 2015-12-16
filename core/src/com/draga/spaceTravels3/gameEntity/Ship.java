@@ -43,7 +43,7 @@ public class Ship extends GameEntity
                 x,
                 y,
                 mass,
-                new Circle(Constants.Game.SHIP_COLLISION_RADIUS),
+                Constants.Game.SHIP_COLLISION_RADIUS,
                 new GameEntityGroup(collidesWith),
                 this.getClass(),
                 true);

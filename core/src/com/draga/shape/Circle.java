@@ -1,6 +1,8 @@
 package com.draga.shape;
 
-public class Circle extends Shape
+import java.io.Serializable;
+
+public class Circle implements Serializable
 {
     public float radius;
 

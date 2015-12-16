@@ -2,13 +2,12 @@ package com.draga.spaceTravels3.physic;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
-import com.draga.utils.JavaUtils;
-import com.draga.shape.Circle;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.component.PhysicsComponent;
 import com.draga.spaceTravels3.gameEntity.GameEntity;
 import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
+import com.draga.utils.JavaUtils;
 import com.google.common.base.Stopwatch;
 
 import java.util.ArrayList;
@@ -150,28 +149,12 @@ public class PhysicsEngine
         return totalForce;
     }
 
-    /**
-     * @param physicsComponentA
-     * @param physicsComponentB
-     * @throws UnsupportedOperationException If physics component's Shape is not a Circle.
-     */
     private static boolean areOverlapping(
         PhysicsComponent physicsComponentA,
         PhysicsComponent physicsComponentB)
     {
-        // Rewrite the whole shebang when other Shapes are needed. Maybe in a way similar to
-        // the collisionResolver.
-
-        if (!(physicsComponentA.getShape() instanceof Circle)
-            || !(physicsComponentB.getShape() instanceof Circle))
-        {
-            throw new UnsupportedOperationException();
-        }
-
-        Circle circleA = (Circle) physicsComponentA.getShape();
-        Circle circleB = (Circle) physicsComponentB.getShape();
-
-        float collisionDistance = circleA.radius + circleB.radius;
+        float collisionDistance =
+            physicsComponentA.getShape().radius + physicsComponentB.getShape().radius;
 
         boolean isColliding = physicsComponentA.getPosition()
             .dst(physicsComponentB.getPosition()) < collisionDistance;

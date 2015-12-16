@@ -26,8 +26,8 @@ public class Thruster extends GameEntity
         this.physicsComponent = new PhysicsComponent(
             ship.physicsComponent.getPosition().x + Constants.Visual.THRUSTER_OFFSET.x,
             ship.physicsComponent.getPosition().y + Constants.Visual.THRUSTER_OFFSET.y,
-            0,
-            new Circle(0),
+            0f,
+            0f,
             new GameEntityGroup(GameEntityGroup.GroupOverride.NONE),
             this.getClass(),
             false);
