@@ -1,11 +1,15 @@
-package com.draga;
+package com.draga.utils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.draga.spaceTravels3.Constants;
 
-public abstract class FileUtils
+public final class FileUtils
 {
+    private FileUtils()
+    {
+    }
+
     public static FileHandle getScoreFileHandle()
     {
         FileHandle fileHandle = getExternalStorageFileHandle(Constants.General.SCORES_FILENAME);

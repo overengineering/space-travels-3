@@ -1,12 +1,16 @@
-package com.draga;
+package com.draga.utils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-public class JavaUtils
+public final class JavaUtils
 {
+    private JavaUtils()
+    {
+    }
+
     public static Object deepClone(Object object)
     {
         try

@@ -19,6 +19,7 @@ import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.physic.PhysicsEngine;
+import com.draga.utils.GraphicsUtils;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.Stack;

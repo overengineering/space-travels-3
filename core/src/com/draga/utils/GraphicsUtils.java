@@ -1,10 +1,14 @@
-package com.draga.spaceTravels3;
+package com.draga.utils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 
-public class GraphicsUtils
+public final class GraphicsUtils
 {
+    private GraphicsUtils()
+    {
+    }
+
     public static void enableBlending()
     {
         Gdx.gl.glEnable(GL20.GL_BLEND);
