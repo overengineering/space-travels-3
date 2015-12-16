@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
-import com.draga.PixmapUtility;
+import com.draga.utils.PixmapUtils;
 import com.draga.spaceTravels3.event.PickupCollectedEvent;
 import com.draga.spaceTravels3.gameEntity.Ship;
 import com.draga.spaceTravels3.manager.GameEntityManager;
@@ -153,7 +153,7 @@ public class Hud implements Screen
         int numOuterArcs = 8;
         float halfSmallestDimension = smallestDimension / 2f;
 
-        PixmapUtility.dashedCircle(
+        PixmapUtils.dashedCircle(
             pixmap,
             halfSmallestDimension,
             halfSmallestDimension,
@@ -163,7 +163,7 @@ public class Hud implements Screen
             360 / numOuterArcs / 2,
             100,
             2);
-        PixmapUtility.dashedCircle(
+        PixmapUtils.dashedCircle(
             pixmap,
             halfSmallestDimension,
             halfSmallestDimension,

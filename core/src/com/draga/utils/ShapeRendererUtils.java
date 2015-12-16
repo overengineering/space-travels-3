@@ -1,14 +1,18 @@
-package com.draga;
+package com.draga.utils;
 
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
-public abstract class ShapeRendererUtility
+public final class ShapeRendererUtils
 {
     private static final String LOGGING_TAG =
-        ShapeRendererUtility.class.getSimpleName();
+        ShapeRendererUtils.class.getSimpleName();
+
+    private ShapeRendererUtils()
+    {
+    }
 
     public static void dashedCircle(
         ShapeRenderer shapeRenderer,

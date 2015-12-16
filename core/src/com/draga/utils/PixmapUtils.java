@@ -1,13 +1,17 @@
-package com.draga;
+package com.draga.utils;
 
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
-public abstract class PixmapUtility
+public final class PixmapUtils
 {
     private static final String LOGGING_TAG =
-        PixmapUtility.class.getSimpleName();
+        PixmapUtils.class.getSimpleName();
+
+    private PixmapUtils()
+    {
+    }
 
     public static void dashedCircle(
         Pixmap pixmap,
