@@ -10,6 +10,7 @@ import com.draga.spaceTravels3.gameEntity.GameEntity;
 import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.google.common.base.Stopwatch;
+import com.sun.org.apache.bcel.internal.generic.GOTO;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,22 +72,32 @@ public class PhysicsEngine
                 + gameEntity.physicsComponent.getAngularVelocity() * deltaTime);
         }
 
-        /** Check for collisions following this pattern to avoid duplicates:
-         *
-         *    \ X0 \ X1 \ X2
-         * Y0 \    \    \
-         * Y1 \ X  \    \
-         * Y2 \ X  \ X  \
-         */
+        checkCollisions();
+    }
+
+    private static void stepGravity(GameEntity gameEntity, float deltaTime)
+    {
+        Vector2 gravityForce = getGravityForceActingOn(gameEntity);
+
+        gameEntity.physicsComponent.getVelocity().add(gravityForce.scl(deltaTime));
+    }
+
+    /**
+     * Check for collisions following this pattern to avoid duplicates:
+     * \ X0 \ X1 \ X2
+     * Y0 \    \    \
+     * Y1 \ X  \    \
+     * Y2 \ X  \ X  \
+     */
+    private static void checkCollisions()
+    {
         for (int x = 1; x < GameEntityManager.getGameEntities().size(); x++)
         {
             GameEntity gameEntityA = GameEntityManager.getGameEntities().get(x);
             for (int y = 0; y < x; y++)
             {
                 GameEntity gameEntityB = GameEntityManager.getGameEntities().get(y);
-                if (gameEntityA.physicsComponent.getCollisionGroup().contains(gameEntityB)
-                    && gameEntityB.physicsComponent.getCollisionGroup().contains(gameEntityA)
-                    && areColliding(gameEntityA, gameEntityB))
+                if (areColliding(gameEntityA, gameEntityB))
                 {
                     Gdx.app.debug(
                         LOGGING_TAG,
@@ -98,40 +109,6 @@ public class PhysicsEngine
                 }
             }
         }
-    }
-
-    private static void stepGravity(GameEntity gameEntity, float deltaTime)
-    {
-        Vector2 gravityForce = getGravityForceActingOn(gameEntity);
-
-        gameEntity.physicsComponent.getVelocity().add(gravityForce.scl(deltaTime));
-    }
-
-    /**
-     * @throws UnsupportedOperationException If physics component's Shape is not a Circle.
-     */
-    private static boolean areColliding(
-        GameEntity gameEntityA,
-        GameEntity gameEntityB)
-    {
-        // Rewrite the whole shebang when other Shapes are needed. Maybe in a way similar to
-        // the collisionResolver.
-
-        if (!(gameEntityA.physicsComponent.getShape() instanceof Circle)
-            || !(gameEntityB.physicsComponent.getShape() instanceof Circle))
-        {
-            throw new UnsupportedOperationException();
-        }
-
-        Circle circleA = (Circle) gameEntityA.physicsComponent.getShape();
-        Circle circleB = (Circle) gameEntityB.physicsComponent.getShape();
-
-        float collisionDistance = circleA.radius + circleB.radius;
-
-        boolean isColliding = gameEntityA.physicsComponent.getPosition()
-            .dst(gameEntityB.physicsComponent.getPosition()) < collisionDistance;
-
-        return isColliding;
     }
 
     /**
@@ -147,6 +124,13 @@ public class PhysicsEngine
         }
 
         return calculatedGravityForces.get(gameEntity).cpy();
+    }
+
+    private static boolean areColliding(GameEntity gameEntityA, GameEntity gameEntityB)
+    {
+        return gameEntityA.physicsComponent.getCollisionGroup().contains(gameEntityB)
+            && gameEntityB.physicsComponent.getCollisionGroup().contains(gameEntityA)
+            && areOverlapping(gameEntityA.physicsComponent, gameEntityB.physicsComponent);
     }
 
     private static Vector2 calculateGravityForceActingOn(PhysicsComponent physicsComponent)
@@ -165,6 +149,35 @@ public class PhysicsEngine
         }
 
         return totalForce;
+    }
+
+    /**
+     * @param physicsComponentA
+     * @param physicsComponentB
+     * @throws UnsupportedOperationException If physics component's Shape is not a Circle.
+     */
+    private static boolean areOverlapping(
+        PhysicsComponent physicsComponentA,
+        PhysicsComponent physicsComponentB)
+    {
+        // Rewrite the whole shebang when other Shapes are needed. Maybe in a way similar to
+        // the collisionResolver.
+
+        if (!(physicsComponentA.getShape() instanceof Circle)
+            || !(physicsComponentB.getShape() instanceof Circle))
+        {
+            throw new UnsupportedOperationException();
+        }
+
+        Circle circleA = (Circle) physicsComponentA.getShape();
+        Circle circleB = (Circle) physicsComponentB.getShape();
+
+        float collisionDistance = circleA.radius + circleB.radius;
+
+        boolean isColliding = physicsComponentA.getPosition()
+            .dst(physicsComponentB.getPosition()) < collisionDistance;
+
+        return isColliding;
     }
 
     private static Vector2 calculateGravityForce(
@@ -200,27 +213,41 @@ public class PhysicsEngine
 
     public static ArrayList<Vector2> projectGravity(
         GameEntity gameEntity,
-        int iterations,
+        int steps,
         float projectionTime)
     {
-        float stepTime = projectionTime / iterations;
+        float stepTime = projectionTime / steps;
 
+        // Swap out physics component so to revert after projection.
         PhysicsComponent originalComponent = gameEntity.physicsComponent;
         gameEntity.physicsComponent = (PhysicsComponent) JavaUtils.deepClone(originalComponent);
 
         ArrayList<Vector2> projections = new ArrayList<>();
 
-        for (int i = 0; i < iterations; i++)
+        buildProjections:
+        for (int i = 0; i < steps; i++)
         {
             Vector2 force = calculateGravityForceActingOn(gameEntity.physicsComponent);
 
             // Accelerate by gravity.
             gameEntity.physicsComponent.getVelocity().add(force.scl(stepTime));
+
             // Move.
             gameEntity.physicsComponent.getPosition()
                 .add(gameEntity.physicsComponent.getVelocity().cpy().scl(stepTime));
 
             projections.add(gameEntity.physicsComponent.getPosition().cpy());
+
+            // Stop on collision.
+            for (GameEntity otherGameEntity : GameEntityManager.getGameEntities())
+            {
+                if (!gameEntity.equals(otherGameEntity)
+                    && areColliding(gameEntity, otherGameEntity))
+                {
+                    break buildProjections;
+                }
+            }
+
         }
 
         gameEntity.physicsComponent = originalComponent;

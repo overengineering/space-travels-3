@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -27,10 +28,10 @@ public class GameScreen implements Screen
 {
     private static final String LOGGING_TAG = GameScreen.class.getSimpleName();
 
-    private Screen         overlayScreen;
-    private Hud            hud;
+    private Screen overlayScreen;
+    private Hud hud;
     private ExtendViewport extendViewport;
-    private Level          level;
+    private Level level;
 
     public GameScreen(Level level)
     {
@@ -135,6 +136,7 @@ public class GameScreen implements Screen
     public void draw()
     {
         updateCamera();
+        drawTrajectoryLine();
 
         SpaceTravels3.spriteBatch.begin();
 
@@ -145,20 +147,39 @@ public class GameScreen implements Screen
 
         SpaceTravels3.spriteBatch.end();
 
-        drawTrajectoryLine();
     }
 
     private void drawTrajectoryLine()
     {
-        ArrayList<Vector2> projectionPoints = PhysicsEngine.projectGravity(level.getShip(), 1000, 10);
+        int steps = 100;
+
+        ArrayList<Vector2> projectionPoints =
+            PhysicsEngine.projectGravity(level.getShip(), steps, 5);
+
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
         SpaceTravels3.shapeRenderer.setProjectionMatrix(this.extendViewport.getCamera().combined);
         SpaceTravels3.shapeRenderer.begin(ShapeRenderer.ShapeType.Point);
-        SpaceTravels3.shapeRenderer.setColor(Color.CYAN);
-        for (Vector2 projectionPoint : projectionPoints)
+        Color color = projectionPoints.size() == steps
+            ?   Constants.Visual.HUD_TRAJECTORY_LINE_COLOR_NEUTRAL
+            :   Constants.Visual.HUD_TRAJECTORY_LINE_COLOR_PLANET;
+
+        for (int i = 1; i < projectionPoints.size(); i += 2)
         {
-            SpaceTravels3.shapeRenderer.point(projectionPoint.x, projectionPoint.y, 0);
+            float alpha = 1 - ((float)i / steps);
+            SpaceTravels3.shapeRenderer.setColor(color.r, color.g, color.b, alpha);
+
+            Vector2 projectionPointA = projectionPoints.get(i);
+            Vector2 projectionPointB = projectionPoints.get(i - 1);
+
+            SpaceTravels3.shapeRenderer.line(
+                projectionPointA.x, projectionPointA.y,
+                projectionPointB.x, projectionPointB.y);
         }
         SpaceTravels3.shapeRenderer.end();
+
+        Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
     public void resize(int width, int height)
