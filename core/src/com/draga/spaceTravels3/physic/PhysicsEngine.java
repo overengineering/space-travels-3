@@ -2,6 +2,8 @@ package com.draga.spaceTravels3.physic;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.utils.Pools;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.component.PhysicsComponent;
 import com.draga.spaceTravels3.gameEntity.GameEntity;
@@ -222,35 +224,42 @@ public class PhysicsEngine
         
     }
     
-    public static Projection gravityProjection(
+    public static ArrayList<ProjectionPoint> gravityProjection(
         PhysicsComponent originalPhysicsComponent,
         int steps,
         float stepTime)
     {
         // Create a copy of the PhysicsComponent so that it won't be changed.
         PhysicsComponent physicsComponent = new PhysicsComponent(originalPhysicsComponent);
+
         ArrayList<PhysicsComponent> otherPhysicsComponents =
             getAllPhysicsComponentsExcept(originalPhysicsComponent);
-        
-        Projection projection = new Projection(steps, stepTime);
-        
+
+        ArrayList<ProjectionPoint> projectionPoints = new ArrayList<>(steps);
+
         for (int i = 0; i < steps; i++)
         {
             stepGravity(physicsComponent, otherPhysicsComponents, stepTime);
             applyVelocity(physicsComponent, stepTime);
-            
-            projection.addPosition(physicsComponent.getPosition().cpy());
-            
+
+            ArrayList<PhysicsComponent> collidingPhysicsComponents = new ArrayList<>();
+
             for (PhysicsComponent otherPhysicsComponent : otherPhysicsComponents)
             {
                 if (areColliding(physicsComponent, otherPhysicsComponent))
                 {
-                    projection.addCollision(otherPhysicsComponent, i);
+                    collidingPhysicsComponents.add(otherPhysicsComponent);
                 }
             }
+
+            ProjectionPoint projectionPoint = new ProjectionPoint(
+                    physicsComponent.getPosition().cpy(),
+                    physicsComponent.getVelocity().cpy(),
+                    collidingPhysicsComponents);
+            projectionPoints.add(projectionPoint);
         }
-        
-        return projection;
+
+        return projectionPoints;
     }
     
     public static Vector2 calculateGravityForce(PhysicsComponent physicsComponent)

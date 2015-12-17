@@ -8,6 +8,7 @@ import com.draga.spaceTravels3.gameEntity.*;
 import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
+import com.draga.spaceTravels3.physic.ProjectionPoint;
 import com.google.common.base.Stopwatch;
 import com.google.common.eventbus.Subscribe;
 
@@ -207,5 +208,10 @@ public class Level
         {
             gameState = GameState.COUNTDOWN;
         }
+    }
+
+    public ArrayList<Vertex> processProjection(ArrayList<ProjectionPoint> projectionPoints)
+    {
+        return null;
     }
 }

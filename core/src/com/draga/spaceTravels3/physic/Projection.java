@@ -2,6 +2,7 @@ package com.draga.spaceTravels3.physic;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.SpaceTravels3;
@@ -20,7 +21,7 @@ public class Projection
     private final float                                    stepTime;
     private final ArrayList<Vector2>                       positions;
     private       LinkedHashMap<PhysicsComponent, Integer> collisions;
-    private ArrayList<ProjectionPoint>
+//    private ArrayList<ProjectionPoint>
 
     public Projection(int steps, float stepTime)
     {

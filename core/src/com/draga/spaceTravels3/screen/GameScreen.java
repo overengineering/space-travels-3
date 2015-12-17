@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.draga.spaceTravels3.*;
 import com.draga.spaceTravels3.event.CountdownFinishedEvent;
@@ -20,8 +21,11 @@ import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.physic.PhysicDebugDrawer;
 import com.draga.spaceTravels3.physic.PhysicsEngine;
 import com.draga.spaceTravels3.physic.Projection;
+import com.draga.spaceTravels3.physic.ProjectionPoint;
 import com.draga.utils.GraphicsUtils;
 import com.google.common.eventbus.Subscribe;
+
+import java.util.ArrayList;
 
 public class GameScreen implements Screen
 {
@@ -150,20 +154,21 @@ public class GameScreen implements Screen
 
     private void drawTrajectoryLine()
     {
-        // TODO: Refactor out when projection points are a class.
+        // TODO: Refactor out when projectionPoints points are a class.
         int steps = Constants.Visual.HUD_TRAJECTORY_LINE_STEPS;
 
-        Projection projection =
+        ArrayList<ProjectionPoint> projectionPoints =
             PhysicsEngine.gravityProjection(
                 level.getShip().physicsComponent,
                 Constants.Visual.HUD_TRAJECTORY_LINE_STEPS,
                 Constants.Visual.HUD_TRAJECTORY_LINE_STEP_TIME);
 
-        projection.draw();
+
+        ArrayList<Vertex> vertices = level.processProjection(projectionPoints);
 
         SpaceTravels3.shapeRenderer.setProjectionMatrix(this.extendViewport.getCamera().combined);
 
-        projection.draw();
+        projectionPoints.draw();
     }
 
     public void resize(int width, int height)
