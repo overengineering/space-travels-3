@@ -269,7 +269,7 @@ public class Level
             if (nextCollidingPhysicsComponent.getOwnerClass().equals(Planet.class))
             {
                 if (destinationPlanet.physicsComponent.equals(nextCollidingPhysicsComponent)
-                    && ship.physicsComponent.getVelocity().len()
+                    && projectionPoint.getVelocity().len()
                     < Constants.Game.MAX_DESTINATION_PLANET_APPROACH_SPEED)
                 {
                     return Constants.Visual.HUD_TRAJECTORY_LINE_COLOR_PLANET_WIN;
