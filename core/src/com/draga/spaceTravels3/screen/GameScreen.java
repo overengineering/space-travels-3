@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -21,6 +22,7 @@ import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.physic.PhysicDebugDrawer;
 import com.draga.spaceTravels3.physic.PhysicsEngine;
 import com.draga.spaceTravels3.physic.ProjectionPoint;
+import com.draga.utils.GraphicsUtils;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.ArrayList;
@@ -172,15 +174,17 @@ public class GameScreen implements Screen
 
         ArrayList<Vertex> vertices = level.processProjection(projectionPoints);
 
+        GraphicsUtils.enableBlending();
         SpaceTravels3.shapeRenderer.setProjectionMatrix(this.extendViewport.getCamera().combined);
-        SpaceTravels3.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        SpaceTravels3.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
         for (int i = 1; i < vertices.size(); i += 2)
         {
-//            float alpha = fromAlpha - ((fromAlpha - toAlpha) / positions.size() * i);
+            float alpha = 1f - ((float)i / vertices.size());
             Vertex vertexA = vertices.get(i);
             Vertex vertexB = vertices.get(i-1);
-            SpaceTravels3.shapeRenderer.setColor(vertexA.getColor());
+            Color color = vertexA.getColor().cpy().lerp(vertexB.getColor(), 0.5f);
+            SpaceTravels3.shapeRenderer.setColor(color.r, color.g, color.b, alpha);
 
             Vector2 projectionPointA = vertexA.getPosition();
             Vector2 projectionPointB = vertexB.getPosition();
@@ -189,7 +193,9 @@ public class GameScreen implements Screen
                 projectionPointA.x, projectionPointA.y,
                 projectionPointB.x, projectionPointB.y);
         }
+
         SpaceTravels3.shapeRenderer.end();
+        GraphicsUtils.disableBlending();
     }
 
     public void resize(int width, int height)

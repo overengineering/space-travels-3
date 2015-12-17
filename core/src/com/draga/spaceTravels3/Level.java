@@ -216,62 +216,40 @@ public class Level
     {
         ArrayList<Vertex> vertices = new ArrayList<>(projectionPoints.size());
 
-        int currentIndex = 0;
-        int nextCollisionIndex = 0;
+        int lastCollisionIndex = 0;
         ArrayList<PhysicsComponent> alreadyCollidedPhysicsComponents = new ArrayList<>();
-
-        while (currentIndex < projectionPoints.size())
+        for (int i = 0, projectionPointsSize = projectionPoints.size(); i
+            < projectionPointsSize; i++)
         {
-            nextCollisionIndex = getNextCollisionIndex(projectionPoints, currentIndex);
-
-            if (nextCollisionIndex == -1)
-            {
-                nextCollisionIndex = projectionPoints.size() - 1;
-            }
-
-            ProjectionPoint nextCollisionProjectionPoint = projectionPoints.get(nextCollisionIndex);
+            ProjectionPoint projectionPoint = projectionPoints.get(i);
 
             ArrayList<PhysicsComponent> physicsComponentsToCheck =
-                new ArrayList<>(nextCollisionProjectionPoint.getCollidingPhysicsComponents());
+                new ArrayList<>(projectionPoint.getCollidingPhysicsComponents());
             physicsComponentsToCheck.removeAll(alreadyCollidedPhysicsComponents);
-
-            Color currentColor = getColor(physicsComponentsToCheck);
-
-            while (currentIndex <= nextCollisionIndex)
+            if (!physicsComponentsToCheck.isEmpty()
+                || i == projectionPointsSize - 1)
             {
-                vertices.add(new Vertex(
-                    currentColor,
-                    projectionPoints.get(currentIndex).getPosition()));
-                currentIndex++;
-            }
-
-            alreadyCollidedPhysicsComponents.addAll(nextCollisionProjectionPoint.getCollidingPhysicsComponents());
-
-            for (PhysicsComponent physicsComponent : nextCollisionProjectionPoint.getCollidingPhysicsComponents())
-            {
-                if (physicsComponent.getOwnerClass().equals(Planet.class))
+                Color currentColor = getColor(physicsComponentsToCheck);
+                alreadyCollidedPhysicsComponents.addAll(physicsComponentsToCheck);
+                for (int j = lastCollisionIndex; j < i; j++)
                 {
-                    return vertices;
+                    vertices.add(
+                        j,
+                        new Vertex(currentColor, projectionPoints.get(j).getPosition()));
+                }
+                lastCollisionIndex = i;
+
+                for (PhysicsComponent physicsComponent : physicsComponentsToCheck)
+                {
+                    if (physicsComponent.getOwnerClass().equals(Planet.class))
+                    {
+                        return vertices;
+                    }
                 }
             }
-
         }
 
         return vertices;
-    }
-
-    private int getNextCollisionIndex(ArrayList<ProjectionPoint> projectionPoints, int startIndex)
-    {
-        for (int i = startIndex, projectionPointsSize = projectionPoints.size(); i
-            < projectionPointsSize; i++)
-        {
-            if (!projectionPoints.get(i).getCollidingPhysicsComponents().isEmpty())
-            {
-                return i;
-            }
-        }
-
-        return -1;
     }
 
     private Color getColor(ArrayList<PhysicsComponent> nextCollidingPhysicsComponents)
@@ -293,5 +271,19 @@ public class Level
         }
 
         return Constants.Visual.HUD_TRAJECTORY_LINE_COLOR_NEUTRAL;
+    }
+
+    private int getNextCollisionIndex(ArrayList<ProjectionPoint> projectionPoints, int startIndex)
+    {
+        for (int i = startIndex, projectionPointsSize = projectionPoints.size(); i
+            < projectionPointsSize; i++)
+        {
+            if (!projectionPoints.get(i).getCollidingPhysicsComponents().isEmpty())
+            {
+                return i;
+            }
+        }
+
+        return -1;
     }
 }
