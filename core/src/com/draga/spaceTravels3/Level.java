@@ -218,7 +218,7 @@ public class Level
 
         int currentIndex = 0;
         int nextCollisionIndex = 0;
-        ArrayList<PhysicsComponent> 
+        ArrayList<PhysicsComponent> alreadyCollidedPhysicsComponents = new ArrayList<>();
 
         while (currentIndex < projectionPoints.size())
         {
@@ -231,7 +231,11 @@ public class Level
 
             ProjectionPoint nextCollisionProjectionPoint = projectionPoints.get(nextCollisionIndex);
 
-            Color currentColor = getColor(nextCollisionProjectionPoint.getCollidingPhysicsComponents());
+            ArrayList<PhysicsComponent> physicsComponentsToCheck =
+                new ArrayList<>(nextCollisionProjectionPoint.getCollidingPhysicsComponents());
+            physicsComponentsToCheck.removeAll(alreadyCollidedPhysicsComponents);
+
+            Color currentColor = getColor(physicsComponentsToCheck);
 
             while (currentIndex <= nextCollisionIndex)
             {
@@ -240,6 +244,8 @@ public class Level
                     projectionPoints.get(currentIndex).getPosition()));
                 currentIndex++;
             }
+
+            alreadyCollidedPhysicsComponents.addAll(nextCollisionProjectionPoint.getCollidingPhysicsComponents());
 
             for (PhysicsComponent physicsComponent : nextCollisionProjectionPoint.getCollidingPhysicsComponents())
             {
