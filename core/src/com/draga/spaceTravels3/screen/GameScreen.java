@@ -4,11 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.draga.Background;
 import com.draga.spaceTravels3.*;
 import com.draga.spaceTravels3.event.CountdownFinishedEvent;
 import com.draga.spaceTravels3.event.LoseEvent;
@@ -20,9 +17,7 @@ import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.physic.PhysicDebugDrawer;
 import com.draga.spaceTravels3.physic.PhysicsEngine;
-import com.draga.spaceTravels3.physic.Projection;
 import com.draga.spaceTravels3.physic.ProjectionPoint;
-import com.draga.utils.GraphicsUtils;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.ArrayList;
@@ -31,21 +26,24 @@ public class GameScreen implements Screen
 {
     private static final String LOGGING_TAG = GameScreen.class.getSimpleName();
 
-    private Screen overlayScreen;
+    private final Background background;
+    private       Screen     overlayScreen;
+
     private Hud hud;
+
     private ExtendViewport extendViewport;
+
     private Level level;
 
     public GameScreen(Level level)
     {
+        this.background = new Background();
         this.level = level;
     }
 
     @Override
     public void show()
     {
-        this.overlayScreen = new CountdownScreen();
-
         Constants.General.EVENT_BUS.register(this);
 
         GameScreenInputProcessor gameScreenInputProcessor = new GameScreenInputProcessor();
@@ -59,6 +57,8 @@ public class GameScreen implements Screen
         updateCamera();
 
         hud = new Hud(extendViewport.getCamera(), level);
+
+        this.overlayScreen = new CountdownScreen();
     }
 
     private void updateCamera()
@@ -71,7 +71,7 @@ public class GameScreen implements Screen
             0f);
         camera.update();
 
-        SpaceTravels3.spriteBatch.setProjectionMatrix(camera.combined);
+        SpaceTravels3.spriteBatch.setProjectionMatrix(extendViewport.getCamera().combined);
     }
 
     @Override
@@ -143,6 +143,7 @@ public class GameScreen implements Screen
 
         SpaceTravels3.spriteBatch.begin();
 
+        background.draw(extendViewport.getCamera());
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
             gameEntity.graphicComponent.draw();
@@ -150,13 +151,15 @@ public class GameScreen implements Screen
 
         SpaceTravels3.spriteBatch.end();
 
+        if (SettingsManager.getDebugSettings().debugDraw)
+        {
+            PhysicDebugDrawer.draw(extendViewport.getCamera());
+        }
+
     }
 
     private void drawTrajectoryLine()
     {
-        // TODO: Refactor out when projectionPoints points are a class.
-        int steps = Constants.Visual.HUD_TRAJECTORY_LINE_STEPS;
-
         ArrayList<ProjectionPoint> projectionPoints =
             PhysicsEngine.gravityProjection(
                 level.getShip().physicsComponent,
@@ -168,7 +171,7 @@ public class GameScreen implements Screen
 
         SpaceTravels3.shapeRenderer.setProjectionMatrix(this.extendViewport.getCamera().combined);
 
-        projectionPoints.draw();
+        //projectionPoints.draw();
     }
 
     public void resize(int width, int height)
@@ -211,6 +214,8 @@ public class GameScreen implements Screen
         }
 
         level.dispose();
+
+        background.dispose();
 
         AssMan.getAssMan().clear();
     }

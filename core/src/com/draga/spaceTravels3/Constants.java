@@ -53,8 +53,10 @@ public abstract class Constants
         public static final float   THRUSTER_MAX_HEIGHT     = 5;
         public static final float   THRUSTER_ANIMATION_TIME = 1f;
         public static final Vector2 THRUSTER_OFFSET         = new Vector2(-SHIP_WIDTH / 4f, 0);
-        public static final float   SCREEN_FADE_DURATION    = 3f;
-        public static final Color   SCREEN_FADE_COLOUR      = new Color(0, 0, 0, 0.7f);
+
+        // Screen.
+        public static final float SCREEN_FADE_DURATION = 3f;
+        public static final Color SCREEN_FADE_COLOUR   = new Color(0, 0, 0, 0.7f);
 
         // Minimap.
         public static final Color MINIMAP_BACKGROUND_COLOR      = new Color(0, 0.17f, 0, 0.5f);
@@ -62,6 +64,11 @@ public abstract class Constants
         public static final float HUD_TRAJECTORY_LINE_STEP_TIME = 0.05f;
 
 
+        // Background.
+        public static final int   BACKGROUND_STAR_LAYER_COUNT        = 10;
+        public static final int   BACKGROUND_STAR_COUNT              = 3000;
+        public static final int   BACKGROUND_NEBULAE_LAYER_COUNT     = 0;
+        public static final float BACKGROUND_STAR_MAX_DIAMETER_SCALE = 0.000005f;
         public abstract static class UI
         {
             public static final float SQRT_PIXELS      =
@@ -76,7 +83,8 @@ public abstract class Constants
     public abstract static class Game
     {
         public static final float COUNTDOWN_SECONDS = 1f;
-        public static final float FUEL_PER_SECOND   = 1f;
+
+        public static final float FUEL_PER_SECOND = 1f;
 
         public static final float FUEL_POINTS   = 1000f;
         public static final float TIME_POINTS   = 10f;
