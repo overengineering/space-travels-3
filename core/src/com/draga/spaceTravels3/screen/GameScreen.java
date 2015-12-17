@@ -19,10 +19,9 @@ import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.physic.PhysicDebugDrawer;
 import com.draga.spaceTravels3.physic.PhysicsEngine;
+import com.draga.spaceTravels3.physic.Projection;
 import com.draga.utils.GraphicsUtils;
 import com.google.common.eventbus.Subscribe;
-
-import java.util.ArrayList;
 
 public class GameScreen implements Screen
 {
@@ -154,35 +153,17 @@ public class GameScreen implements Screen
         // TODO: Refactor out when projection points are a class.
         int steps = Constants.Visual.HUD_TRAJECTORY_LINE_STEPS;
 
-        ArrayList<Vector2> projectionPoints =
-            PhysicsEngine.projectGravity(
+        Projection projection =
+            PhysicsEngine.gravityProjection(
                 level.getShip().physicsComponent,
                 Constants.Visual.HUD_TRAJECTORY_LINE_STEPS,
                 Constants.Visual.HUD_TRAJECTORY_LINE_STEP_TIME);
 
-        GraphicsUtils.enableBlending();
+        projection.draw();
 
         SpaceTravels3.shapeRenderer.setProjectionMatrix(this.extendViewport.getCamera().combined);
-        SpaceTravels3.shapeRenderer.begin(ShapeRenderer.ShapeType.Point);
-        Color color = projectionPoints.size() == steps
-            ? Constants.Visual.HUD_TRAJECTORY_LINE_COLOR_NEUTRAL
-            : Constants.Visual.HUD_TRAJECTORY_LINE_COLOR_PLANET;
 
-        for (int i = 1; i < projectionPoints.size(); i += 2)
-        {
-            float alpha = 1 - ((float) i / steps);
-            SpaceTravels3.shapeRenderer.setColor(color.r, color.g, color.b, alpha);
-
-            Vector2 projectionPointA = projectionPoints.get(i);
-            Vector2 projectionPointB = projectionPoints.get(i - 1);
-
-            SpaceTravels3.shapeRenderer.line(
-                projectionPointA.x, projectionPointA.y,
-                projectionPointB.x, projectionPointB.y);
-        }
-        SpaceTravels3.shapeRenderer.end();
-
-        GraphicsUtils.disableBlending();
+        projection.draw();
     }
 
     public void resize(int width, int height)

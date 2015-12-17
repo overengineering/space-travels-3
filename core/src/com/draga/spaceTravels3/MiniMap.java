@@ -88,7 +88,7 @@ public class MiniMap
 
     public void update()
     {
-        Circle shipCircle = (Circle) ship.physicsComponent.getShape();
+        Circle shipCircle = (Circle) ship.physicsComponent.getBoundsCircle();
 
         Rectangle shipRect = new Rectangle(
             ship.physicsComponent.getPosition().x

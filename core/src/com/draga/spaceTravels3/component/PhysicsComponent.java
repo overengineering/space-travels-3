@@ -14,12 +14,12 @@ public class PhysicsComponent implements Serializable
     private final Vector2 position;
     private final Vector2 velocity;
 
-    private final Circle shape;
+    private final Circle boundsCircle;
 
     private final float mass;
 
-    private final GameEntityGroup             collideWith;
-    private final Class<? extends GameEntity> is;
+    private final GameEntityGroup             collidesWith;
+    private final Class<? extends GameEntity> ownerClass;
 
     private float angle;
     private float angularVelocity;
@@ -28,34 +28,34 @@ public class PhysicsComponent implements Serializable
         float x,
         float y,
         float mass,
-        float radius,
-        GameEntityGroup collideWith,
-        Class<? extends GameEntity> is,
+        float boundsRadius,
+        GameEntityGroup collidesWith,
+        Class<? extends GameEntity> ownerClass,
         boolean affectedByGravity)
     {
-        this.is = is;
+        this.ownerClass = ownerClass;
         this.position = new Vector2(x, y);
         this.velocity = new Vector2();
         this.mass = mass;
-        this.shape = new Circle(radius);
-        this.collideWith = collideWith;
+        this.boundsCircle = new Circle(boundsRadius);
+        this.collidesWith = collidesWith;
         this.affectedByGravity = affectedByGravity;
     }
 
     public PhysicsComponent(PhysicsComponent originalPhysicsComponent)
     {
-        this.is = originalPhysicsComponent.is;
+        this.ownerClass = originalPhysicsComponent.ownerClass;
         this.position = new Vector2(originalPhysicsComponent.position);
         this.velocity = new Vector2(originalPhysicsComponent.velocity);
         this.mass = originalPhysicsComponent.mass;
-        this.shape = new Circle(originalPhysicsComponent.getShape().radius);
-        this.collideWith = new GameEntityGroup(originalPhysicsComponent.collideWith);
+        this.boundsCircle = new Circle(originalPhysicsComponent.getBoundsCircle().radius);
+        this.collidesWith = new GameEntityGroup(originalPhysicsComponent.collidesWith);
         this.affectedByGravity = originalPhysicsComponent.affectedByGravity;
     }
 
-    public Class<? extends GameEntity> getIs()
+    public Class<? extends GameEntity> getOwnerClass()
     {
-        return is;
+        return ownerClass;
     }
 
     public boolean isAffectedByGravity()
@@ -93,9 +93,9 @@ public class PhysicsComponent implements Serializable
         this.angle = angle;
     }
 
-    public Circle getShape()
+    public Circle getBoundsCircle()
     {
-        return shape;
+        return boundsCircle;
     }
 
     public void dispose()
@@ -107,8 +107,8 @@ public class PhysicsComponent implements Serializable
         return mass;
     }
 
-    public GameEntityGroup getCollideWith()
+    public GameEntityGroup getCollidesWith()
     {
-        return collideWith;
+        return collidesWith;
     }
 }
