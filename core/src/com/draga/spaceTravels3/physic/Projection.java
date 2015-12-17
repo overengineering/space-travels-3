@@ -2,7 +2,6 @@ package com.draga.spaceTravels3.physic;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.SpaceTravels3;
@@ -98,7 +97,7 @@ public class Projection
         }
         if (physicsComponent.getOwnerClass().equals(Planet.class))
         {
-            return Constants.Visual.HUD_TRAJECTORY_LINE_COLOR_PLANET;
+            return Constants.Visual.HUD_TRAJECTORY_LINE_COLOR_PLANET_LOSE;
         }
         if (physicsComponent.getOwnerClass().equals(Pickup.class))
         {

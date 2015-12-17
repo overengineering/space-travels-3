@@ -217,20 +217,27 @@ public class Level
         ArrayList<Vertex> vertices = new ArrayList<>(projectionPoints.size());
 
         int lastCollisionIndex = 0;
+        // Keep a list of PhysicsComponent that we already collided with to exclude them later on.
         ArrayList<PhysicsComponent> alreadyCollidedPhysicsComponents = new ArrayList<>();
         for (int i = 0, projectionPointsSize = projectionPoints.size(); i
             < projectionPointsSize; i++)
         {
             ProjectionPoint projectionPoint = projectionPoints.get(i);
 
+            // Get the PhysicsComponent we are colliding with at this point excluding the one
+            // already checked for.
             ArrayList<PhysicsComponent> physicsComponentsToCheck =
                 new ArrayList<>(projectionPoint.getCollidingPhysicsComponents());
             physicsComponentsToCheck.removeAll(alreadyCollidedPhysicsComponents);
+
+            // If it collides with something or this is the last iteration.
             if (!physicsComponentsToCheck.isEmpty()
                 || i == projectionPointsSize - 1)
             {
-                Color currentColor = getColor(physicsComponentsToCheck);
+                Color currentColor = getColor(projectionPoint, physicsComponentsToCheck);
                 alreadyCollidedPhysicsComponents.addAll(physicsComponentsToCheck);
+
+                // Add all the vertices up to this collision with the correct color.
                 for (int j = lastCollisionIndex; j < i; j++)
                 {
                     vertices.add(
@@ -239,6 +246,7 @@ public class Level
                 }
                 lastCollisionIndex = i;
 
+                // If collided with a planet truncate here.
                 for (PhysicsComponent physicsComponent : physicsComponentsToCheck)
                 {
                     if (physicsComponent.getOwnerClass().equals(Planet.class))
@@ -252,13 +260,24 @@ public class Level
         return vertices;
     }
 
-    private Color getColor(ArrayList<PhysicsComponent> nextCollidingPhysicsComponents)
+    private Color getColor(
+        ProjectionPoint projectionPoint,
+        ArrayList<PhysicsComponent> nextCollidingPhysicsComponents)
     {
         for (PhysicsComponent nextCollidingPhysicsComponent : nextCollidingPhysicsComponents)
         {
             if (nextCollidingPhysicsComponent.getOwnerClass().equals(Planet.class))
             {
-                return Constants.Visual.HUD_TRAJECTORY_LINE_COLOR_PLANET;
+                if (destinationPlanet.physicsComponent.equals(nextCollidingPhysicsComponent)
+                    && ship.physicsComponent.getVelocity().len()
+                    < Constants.Game.MAX_DESTINATION_PLANET_APPROACH_SPEED)
+                {
+                    return Constants.Visual.HUD_TRAJECTORY_LINE_COLOR_PLANET_WIN;
+                }
+                else
+                {
+                    return Constants.Visual.HUD_TRAJECTORY_LINE_COLOR_PLANET_LOSE;
+                }
             }
         }
 

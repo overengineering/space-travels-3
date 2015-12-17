@@ -35,37 +35,38 @@ public abstract class Constants
         public static final Color JOYSTICK_OVERLAY_COLOR    = new Color(1f, 1f, 1f, 0.3f);
 
         // Trajectory line.
-        public static final Color HUD_TRAJECTORY_LINE_COLOR_NEUTRAL =
+        public static final int   HUD_TRAJECTORY_LINE_STEPS             = 100;
+        public static final float HUD_TRAJECTORY_LINE_STEP_TIME         = 0.05f;
+        public static final Color HUD_TRAJECTORY_LINE_COLOR_NEUTRAL     =
             new Color(0.5f, 0.5f, 0.5f, 1);
-        public static final Color HUD_TRAJECTORY_LINE_COLOR_PLANET  =
+        public static final Color HUD_TRAJECTORY_LINE_COLOR_PLANET_LOSE =
             new Color(0.8f, 0.2f, 0.2f, 1);
-        public static final int   HUD_TRAJECTORY_LINE_STEPS         = 100;
-        public static final float HUD_TRAJECTORY_LINE_STEP_TIME     = 0.05f;
-        public static final Color HUD_TRAJECTORY_LINE_COLOR_PICKUP  = Color.GREEN;
-        public static final int   HUD_TRAJECTORY_LINE_SECONDS       = 5;
+        public static final Color HUD_TRAJECTORY_LINE_COLOR_PICKUP      = Color.GREEN;
+        public static final Color HUD_TRAJECTORY_LINE_COLOR_PLANET_WIN  = Color.BLUE;
 
+        public static final int   HUD_TRAJECTORY_LINE_SECONDS = 5;
         // Ship
-        public static final float   SHIP_WIDTH                    = 10f;
-        public static final float   SHIP_HEIGHT                   = 10f;
-        public static final Color   SHIP_MINIMAP_COLOUR           = Color.WHITE;
-        public static final Vector2 SHIP_MINIMAP_TRIANGLE_VERTEX1 = new Vector2(8, 0);
+        public static final float SHIP_WIDTH                  = 10f;
+        public static final float SHIP_HEIGHT                 = 10f;
+        public static final Color SHIP_MINIMAP_COLOUR         = Color.WHITE;
 
+        public static final Vector2 SHIP_MINIMAP_TRIANGLE_VERTEX1 = new Vector2(8, 0);
         public static final Vector2 SHIP_MINIMAP_TRIANGLE_VERTEX2 = new Vector2(-5, -5);
         public static final Vector2 SHIP_MINIMAP_TRIANGLE_VERTEX3 = new Vector2(-5, 5);
         // Thruster.
         public static final float   THRUSTER_MAX_WIDTH            = 5;
-        public static final float   THRUSTER_MAX_HEIGHT           = 5;
 
-        public static final float   THRUSTER_ANIMATION_TIME = 1f;
-        public static final Vector2 THRUSTER_OFFSET         = new Vector2(-SHIP_WIDTH / 4f, 0);
+        public static final float THRUSTER_MAX_HEIGHT     = 5;
+        public static final float THRUSTER_ANIMATION_TIME = 1f;
 
+        public static final Vector2 THRUSTER_OFFSET      = new Vector2(-SHIP_WIDTH / 4f, 0);
         // Screen.
-        public static final float SCREEN_FADE_DURATION     = 3f;
-        public static final Color SCREEN_FADE_COLOUR       = new Color(0, 0, 0, 0.7f);
+        public static final float   SCREEN_FADE_DURATION = 3f;
+        public static final Color   SCREEN_FADE_COLOUR   = new Color(0, 0, 0, 0.7f);
+
+
         // Minimap.
-        public static final Color MINIMAP_BACKGROUND_COLOR = new Color(0, 0.17f, 0, 0.5f);
-
-
+        public static final Color MINIMAP_BACKGROUND_COLOR           = new Color(0, 0.17f, 0, 0.5f);
         public static final Color MINIMAP_BORDER_COLOR               = new Color(0, 0.4f, 0, 1);
         // Background.
         public static final int   BACKGROUND_STAR_LAYER_COUNT        = 10;

@@ -180,11 +180,10 @@ public class GameScreen implements Screen
 
         for (int i = 1; i < vertices.size(); i += 2)
         {
-            float alpha = 1f - ((float)i / vertices.size());
             Vertex vertexA = vertices.get(i);
             Vertex vertexB = vertices.get(i-1);
             Color color = vertexA.getColor().cpy().lerp(vertexB.getColor(), 0.5f);
-            SpaceTravels3.shapeRenderer.setColor(color.r, color.g, color.b, alpha);
+            SpaceTravels3.shapeRenderer.setColor(color);
 
             Vector2 projectionPointA = vertexA.getPosition();
             Vector2 projectionPointB = vertexB.getPosition();
