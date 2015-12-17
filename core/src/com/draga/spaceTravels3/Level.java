@@ -2,7 +2,9 @@ package com.draga.spaceTravels3;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Pools;
+import com.draga.spaceTravels3.component.PhysicsComponent;
 import com.draga.spaceTravels3.event.*;
 import com.draga.spaceTravels3.gameEntity.*;
 import com.draga.spaceTravels3.manager.GameEntityManager;
@@ -212,6 +214,78 @@ public class Level
 
     public ArrayList<Vertex> processProjection(ArrayList<ProjectionPoint> projectionPoints)
     {
-        return null;
+        ArrayList<Vertex> vertices = new ArrayList<>(projectionPoints.size());
+
+        int currentIndex = 0;
+        int nextCollisionIndex = 0;
+        ArrayList<PhysicsComponent> 
+
+        while (currentIndex < projectionPoints.size())
+        {
+            nextCollisionIndex = getNextCollisionIndex(projectionPoints, currentIndex);
+
+            if (nextCollisionIndex == -1)
+            {
+                nextCollisionIndex = projectionPoints.size() - 1;
+            }
+
+            ProjectionPoint nextCollisionProjectionPoint = projectionPoints.get(nextCollisionIndex);
+
+            Color currentColor = getColor(nextCollisionProjectionPoint.getCollidingPhysicsComponents());
+
+            while (currentIndex <= nextCollisionIndex)
+            {
+                vertices.add(new Vertex(
+                    currentColor,
+                    projectionPoints.get(currentIndex).getPosition()));
+                currentIndex++;
+            }
+
+            for (PhysicsComponent physicsComponent : nextCollisionProjectionPoint.getCollidingPhysicsComponents())
+            {
+                if (physicsComponent.getOwnerClass().equals(Planet.class))
+                {
+                    return vertices;
+                }
+            }
+
+        }
+
+        return vertices;
+    }
+
+    private int getNextCollisionIndex(ArrayList<ProjectionPoint> projectionPoints, int startIndex)
+    {
+        for (int i = startIndex, projectionPointsSize = projectionPoints.size(); i
+            < projectionPointsSize; i++)
+        {
+            if (!projectionPoints.get(i).getCollidingPhysicsComponents().isEmpty())
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    private Color getColor(ArrayList<PhysicsComponent> nextCollidingPhysicsComponents)
+    {
+        for (PhysicsComponent nextCollidingPhysicsComponent : nextCollidingPhysicsComponents)
+        {
+            if (nextCollidingPhysicsComponent.getOwnerClass().equals(Planet.class))
+            {
+                return Constants.Visual.HUD_TRAJECTORY_LINE_COLOR_PLANET;
+            }
+        }
+
+        for (PhysicsComponent nextCollidingPhysicsComponent : nextCollidingPhysicsComponents)
+        {
+            if (nextCollidingPhysicsComponent.getOwnerClass().equals(Pickup.class))
+            {
+                return Constants.Visual.HUD_TRAJECTORY_LINE_COLOR_PICKUP;
+            }
+        }
+
+        return Constants.Visual.HUD_TRAJECTORY_LINE_COLOR_NEUTRAL;
     }
 }

@@ -12,9 +12,9 @@ public class ProjectionPoint
     private ArrayList<PhysicsComponent> collidingPhysicsComponents;
 
     public ProjectionPoint(
-        Vector2 position,
-        Vector2 velocity,
-        ArrayList<PhysicsComponent> collidingPhysicsComponents)
+                Vector2 position,
+         Vector2 velocity,
+         ArrayList<PhysicsComponent> collidingPhysicsComponents)
     {
         this.position = position;
         this.velocity = velocity;

@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.draga.Background;
 import com.draga.spaceTravels3.*;
@@ -11,6 +13,7 @@ import com.draga.spaceTravels3.event.CountdownFinishedEvent;
 import com.draga.spaceTravels3.event.LoseEvent;
 import com.draga.spaceTravels3.event.WinEvent;
 import com.draga.spaceTravels3.gameEntity.GameEntity;
+import com.draga.spaceTravels3.gameEntity.Planet;
 import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.spaceTravels3.manager.InputManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
@@ -170,8 +173,23 @@ public class GameScreen implements Screen
         ArrayList<Vertex> vertices = level.processProjection(projectionPoints);
 
         SpaceTravels3.shapeRenderer.setProjectionMatrix(this.extendViewport.getCamera().combined);
+        SpaceTravels3.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
-        //projectionPoints.draw();
+        for (int i = 1; i < vertices.size(); i += 2)
+        {
+//            float alpha = fromAlpha - ((fromAlpha - toAlpha) / positions.size() * i);
+            Vertex vertexA = vertices.get(i);
+            Vertex vertexB = vertices.get(i-1);
+            SpaceTravels3.shapeRenderer.setColor(vertexA.getColor());
+
+            Vector2 projectionPointA = vertexA.getPosition();
+            Vector2 projectionPointB = vertexB.getPosition();
+
+            SpaceTravels3.shapeRenderer.line(
+                projectionPointA.x, projectionPointA.y,
+                projectionPointB.x, projectionPointB.y);
+        }
+        SpaceTravels3.shapeRenderer.end();
     }
 
     public void resize(int width, int height)
