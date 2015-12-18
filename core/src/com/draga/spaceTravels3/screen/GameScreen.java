@@ -144,6 +144,7 @@ public class GameScreen implements Screen
     public void draw()
     {
         updateCamera();
+
         drawTrajectoryLine();
 
         SpaceTravels3.spriteBatch.begin();
@@ -160,7 +161,6 @@ public class GameScreen implements Screen
         {
             PhysicDebugDrawer.draw(extendViewport.getCamera());
         }
-
     }
 
     private void drawTrajectoryLine()
@@ -170,7 +170,6 @@ public class GameScreen implements Screen
                 level.getShip().physicsComponent,
                 Constants.Visual.HUD_TRAJECTORY_LINE_STEPS,
                 Constants.Visual.HUD_TRAJECTORY_LINE_STEP_TIME);
-
 
         ArrayList<Vertex> vertices = level.processProjection(projectionPoints);
 

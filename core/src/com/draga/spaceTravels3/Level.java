@@ -268,11 +268,31 @@ public class Level
         {
             if (nextCollidingPhysicsComponent.getOwnerClass().equals(Planet.class))
             {
-                if (destinationPlanet.physicsComponent.equals(nextCollidingPhysicsComponent)
-                    && projectionPoint.getVelocity().len()
-                    < Constants.Game.MAX_DESTINATION_PLANET_APPROACH_SPEED)
+                // If colliding with destination planet lerps from
+                // the color for winning (zero velocity),
+                // to white (max approach speed)
+                // to the color for losing (twice the maximum approach velocity)
+                if (destinationPlanet.physicsComponent.equals(nextCollidingPhysicsComponent))
                 {
-                    return Constants.Visual.HUD_TRAJECTORY_LINE_COLOR_PLANET_WIN;
+
+                    if (projectionPoint.getVelocity().len()
+                        < Constants.Game.MAX_DESTINATION_PLANET_APPROACH_SPEED)
+                    {
+                        Color color = Constants.Visual.HUD_TRAJECTORY_LINE_COLOR_PLANET_WIN
+                            .cpy()
+                            .lerp(
+                                Color.WHITE,
+                                projectionPoint.getVelocity().len()
+                                    / Constants.Game.MAX_DESTINATION_PLANET_APPROACH_SPEED);
+                        return color;
+                    }
+                    Color color = Color.WHITE
+                        .cpy()
+                        .lerp(
+                            Constants.Visual.HUD_TRAJECTORY_LINE_COLOR_PLANET_LOSE,
+                            projectionPoint.getVelocity().len()
+                                / Constants.Game.MAX_DESTINATION_PLANET_APPROACH_SPEED / 2f);
+                    return color;
                 }
                 else
                 {
@@ -290,19 +310,5 @@ public class Level
         }
 
         return Constants.Visual.HUD_TRAJECTORY_LINE_COLOR_NEUTRAL;
-    }
-
-    private int getNextCollisionIndex(ArrayList<ProjectionPoint> projectionPoints, int startIndex)
-    {
-        for (int i = startIndex, projectionPointsSize = projectionPoints.size(); i
-            < projectionPointsSize; i++)
-        {
-            if (!projectionPoints.get(i).getCollidingPhysicsComponents().isEmpty())
-            {
-                return i;
-            }
-        }
-
-        return -1;
     }
 }
