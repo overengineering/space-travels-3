@@ -23,8 +23,8 @@ public class MiniMap
     private       float              worldWidth;
     private       float              worldHeight;
     private       float              miniMapAspectRatio;
-    private       OrthographicCamera tmpCamera;
-    private       Frustum            realFrustum;
+
+    private Projection shipProjection;
 
     public MiniMap(Ship ship, float worldWidth, float worldHeight)
     {
@@ -35,7 +35,7 @@ public class MiniMap
             new OrthographicCamera(
                 Gdx.graphics.getWidth(),
                 Gdx.graphics.getHeight());
-        this.tmpCamera = new OrthographicCamera();
+
         this.backgroundProjectionMatrix = getBackgroundProjectionMatrix();
         this.miniMapAspectRatio =
             orthographicCamera.viewportWidth / orthographicCamera.viewportHeight;
@@ -56,7 +56,7 @@ public class MiniMap
         return backgroundCamera.combined;
     }
 
-    public void draw(Projection shipProjection)
+    public void draw()
     {
         // Draw a background and border.
         SpaceTravels3.shapeRenderer.setProjectionMatrix(backgroundProjectionMatrix);
@@ -70,7 +70,7 @@ public class MiniMap
             0,
             MathUtils.round(Gdx.graphics.getWidth() * MINIMAP_SCALE) + 1,
             MathUtils.round(Gdx.graphics.getHeight() * MINIMAP_SCALE) + 1);
-        shipProjection.draw();
+        this.shipProjection.draw();
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
             gameEntity.miniMapGraphicComponent.draw();
@@ -151,18 +151,6 @@ public class MiniMap
             newCameraBounds.height = newHeight;
         }
 
-        Vector2 newCameraBoundsCenter = newCameraBounds.getCenter(new Vector2());
-
-        this.tmpCamera.viewportWidth = newCameraBounds.width;
-        this.tmpCamera.viewportHeight = newCameraBounds.height;
-        this.tmpCamera.position.x = newCameraBoundsCenter.x;
-        this.tmpCamera.position.y = newCameraBoundsCenter.y;
-        this.tmpCamera.update();
-        this.realFrustum = this.tmpCamera.frustum;
-
-        this.orthographicCamera.viewportWidth = Gdx.graphics.getWidth();
-        this.orthographicCamera.viewportHeight = Gdx.graphics.getHeight();
-
         // Zoom out to see the new camera bounds.
         orthographicCamera.zoom = Math.max(
             newCameraBounds.width / orthographicCamera.viewportWidth,
@@ -179,5 +167,10 @@ public class MiniMap
             newCameraBounds.y
                 + ((orthographicCamera.viewportHeight / 2f) * orthographicCamera.zoom);
         orthographicCamera.update();
+    }
+
+    public void setShipProjection(Projection shipProjection)
+    {
+        this.shipProjection = shipProjection;
     }
 }

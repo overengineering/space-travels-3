@@ -18,7 +18,10 @@ import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.physic.PhysicDebugDrawer;
 import com.draga.spaceTravels3.physic.PhysicsEngine;
 import com.draga.spaceTravels3.physic.Projection;
+import com.draga.spaceTravels3.physic.ProjectionPoint;
 import com.google.common.eventbus.Subscribe;
+
+import java.util.ArrayList;
 
 public class GameScreen implements Screen
 {
@@ -54,12 +57,10 @@ public class GameScreen implements Screen
             Constants.Visual.VIEWPORT_HEIGHT);
         extendViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        updateCamera();
-
-        this.shipProjection = new Projection(this.level.getShip().physicsComponent, this.level);
-
         hud = new Hud(extendViewport.getCamera(), level);
-        hud.setShipProjection(this.shipProjection);
+
+        // Run a frame to do things like generate a Projection.
+        update(0);
 
         this.overlayScreen = new CountdownScreen();
     }
@@ -138,8 +139,18 @@ public class GameScreen implements Screen
             gameEntity.update(deltaTime);
         }
 
-        this.shipProjection = new Projection(this.level.getShip().physicsComponent, this.level);
-        this.hud.setShipProjection(this.shipProjection);
+        updateShipProjection();
+        this.hud.getMiniMap().setShipProjection(this.shipProjection);
+    }
+
+    private void updateShipProjection()
+    {
+        ArrayList<ProjectionPoint> projectionPoints = PhysicsEngine.gravityProjection(
+            this.level.getShip().physicsComponent,
+            Constants.Visual.HUD_TRAJECTORY_LINE_STEPS,
+            Constants.Visual.HUD_TRAJECTORY_LINE_STEP_TIME);
+
+        this.shipProjection = this.level.processProjection(projectionPoints);
     }
 
     public void draw()

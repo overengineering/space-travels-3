@@ -17,15 +17,9 @@ public class Projection
 {
     private final ArrayList<Vertex> vertices;
 
-    public Projection(PhysicsComponent physicsComponent, Level level)
+    public Projection(ArrayList<Vertex> vertices)
     {
-        ArrayList<ProjectionPoint> projectionPoints =
-            PhysicsEngine.gravityProjection(
-                physicsComponent,
-                Constants.Visual.HUD_TRAJECTORY_LINE_STEPS,
-                Constants.Visual.HUD_TRAJECTORY_LINE_STEP_TIME);
-
-        this.vertices = level.processProjection(projectionPoints);
+        this.vertices = vertices;
     }
 
     public void draw()

@@ -27,17 +27,23 @@ import java.util.Stack;
 
 public class Hud implements Screen
 {
-    private final Label                 scoreLabel;
-    private final Camera                worldCamera;
-    private final Level                 level;
-    private       Stage                 stage;
-    private       ProgressBar           fuelProgressBar;
-    private       Stack<Image>          grayPickups;
-    private       Table                 pickupTable;
-    private       Ship                  ship;
-    private       MiniMap               miniMap;
-    private       TextureRegionDrawable collectedPickupDrawable;
-    private Projection shipProjection;
+    private final Label        scoreLabel;
+    private final Camera       worldCamera;
+    private final Level        level;
+    private       Stage        stage;
+    private       ProgressBar  fuelProgressBar;
+    private       Stack<Image> grayPickups;
+    private       Table        pickupTable;
+    private       Ship         ship;
+
+    public MiniMap getMiniMap()
+    {
+        return miniMap;
+    }
+
+    private MiniMap               miniMap;
+    private TextureRegionDrawable collectedPickupDrawable;
+
 
     public Hud(Camera worldCamera, Level level)
     {
@@ -213,7 +219,7 @@ public class Hud implements Screen
         }
 
         miniMap.update();
-        miniMap.draw(this.shipProjection);
+        miniMap.draw();
         SpaceTravels3.shapeRenderer.end();
         GraphicsUtils.disableBlending();
     }
@@ -304,10 +310,5 @@ public class Hud implements Screen
         Image firstPickup = grayPickups.pop();
 
         firstPickup.setDrawable(collectedPickupDrawable);
-    }
-
-    public void setShipProjection(Projection shipProjection)
-    {
-        this.shipProjection = shipProjection;
     }
 }
