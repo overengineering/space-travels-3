@@ -71,21 +71,21 @@ public abstract class Constants
                 new Color(1f, 1f, 1f, 0.3f);
             // Trajectory line.
             public static final int     TRAJECTORY_LINE_POINTS                 = 100;
-            public static final float   TRAJECTORY_LINE_POINTS_TIME            = 0.05f;
-            public static final float   TRAJECTORY_LINE_STEP_TIME              = 1f / 600f;
-            public static final Color   TRAJECTORY_LINE_COLOR_NEUTRAL          =
+            public static final float   TRAJECTORY_LINE_POINTS_TIME              = 0.05f;
+            public static final float   TRAJECTORY_LINE_STEP_TIME                = 1f / 600f;
+            public static final Color   TRAJECTORY_LINE_COLOR_NEUTRAL            =
                 new Color(0.5f, 0.5f, 0.5f, 1);
-            public static final Color   TRAJECTORY_LINE_COLOR_PLANET_LOSE      =
+            public static final Color   TRAJECTORY_LINE_COLOR_PLANET_LOSE        =
                 new Color(0.8f, 0.2f, 0.2f, 1);
-            public static final Color   TRAJECTORY_LINE_COLOR_PICKUP           = Color.GREEN;
-            public static final Color   TRAJECTORY_LINE_COLOR_PLANET_WIN       = Color.BLUE;
-            public static final int     TRAJECTORY_LINE_SECONDS                = 5;
-            public static final Color   SHIP_MINIMAP_COLOUR                    = Color.WHITE;
-            public static final Vector2 SHIP_MINIMAP_TRIANGLE_VERTEX1          =
+            public static final Color   TRAJECTORY_LINE_COLOR_PICKUP             = Color.GREEN;
+            public static final Color   TRAJECTORY_LINE_COLOR_PLANET_DESTINATION = new Color(0, 0.7f, 1, 1);
+            public static final int     TRAJECTORY_LINE_SECONDS                  = 5;
+            public static final Color   SHIP_MINIMAP_COLOUR                      = Color.WHITE;
+            public static final Vector2 SHIP_MINIMAP_TRIANGLE_VERTEX1            =
                 new Vector2(8, 0);
-            public static final Vector2 SHIP_MINIMAP_TRIANGLE_VERTEX2          =
+            public static final Vector2 SHIP_MINIMAP_TRIANGLE_VERTEX2            =
                 new Vector2(-5, -5);
-            public static final Vector2 SHIP_MINIMAP_TRIANGLE_VERTEX3          =
+            public static final Vector2 SHIP_MINIMAP_TRIANGLE_VERTEX3            =
                 new Vector2(-5, 5);
             // Minimap.
             public static final Color   MINIMAP_BACKGROUND_COLOR               =

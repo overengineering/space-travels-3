@@ -275,25 +275,7 @@ public class Level
                 // to the color for losing (twice the maximum approach velocity)
                 if (destinationPlanet.physicsComponent.equals(nextCollidingPhysicsComponent))
                 {
-
-                    if (projectionPoint.getVelocity().len()
-                        < Constants.Game.MAX_DESTINATION_PLANET_APPROACH_SPEED)
-                    {
-                        Color color = Constants.Visual.HUD.TRAJECTORY_LINE_COLOR_PLANET_WIN
-                            .cpy()
-                            .lerp(
-                                Color.WHITE,
-                                projectionPoint.getVelocity().len()
-                                    / Constants.Game.MAX_DESTINATION_PLANET_APPROACH_SPEED);
-                        return color;
-                    }
-                    Color color = Color.WHITE
-                        .cpy()
-                        .lerp(
-                            Constants.Visual.HUD.TRAJECTORY_LINE_COLOR_PLANET_LOSE,
-                            projectionPoint.getVelocity().len()
-                                / Constants.Game.MAX_DESTINATION_PLANET_APPROACH_SPEED / 2f);
-                    return color;
+                    return Constants.Visual.HUD.TRAJECTORY_LINE_COLOR_PLANET_DESTINATION;
                 }
                 else
                 {
