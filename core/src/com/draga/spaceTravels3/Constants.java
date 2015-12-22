@@ -76,7 +76,7 @@ public abstract class Constants
                 public static final float PICKUP_RADIUS =
                     (PICKUP_WIDTH + PICKUP_HEIGHT) / 2f * 1.3f;
                 public static final Color PICKUP_COLOR  = Color.GOLDENROD;
-                
+
                 public static final Color   BACKGROUND_COLOR      = new Color(0, 0.17f, 0, 0.5f);
                 public static final Color   BORDER_COLOR          = new Color(0, 0.4f, 0, 1);
                 public static final Color   SHIP_COLOUR           = Color.WHITE;
@@ -86,7 +86,7 @@ public abstract class Constants
                 public static final float   SCALE                 = 0.25f;
 
                 // Planet
-                public static final Color PLANET_DESTINATION_COLOUR = Color.BLUE;
+                public static final Color PLANET_DESTINATION_COLOUR = new Color(0, 0.7f, 1, 1);
                 public static final Color PLANET_COLOUR             = Color.RED;
             }
 
@@ -95,14 +95,14 @@ public abstract class Constants
             {
                 public static final int   LINE_POINTS                   = 100;
                 public static final float LINE_POINTS_TIME              = 0.05f;
-                public static final float LINE_STEP_TIME                = 1f / 600f;
+                public static final float LINE_STEP_TIME                = 1f / 100f;
                 public static final Color LINE_COLOR_NEUTRAL            =
                     new Color(0.5f, 0.5f, 0.5f, 1);
                 public static final Color LINE_COLOR_PLANET_LOSE        =
                     new Color(0.8f, 0.2f, 0.2f, 1);
                 public static final Color LINE_COLOR_PICKUP             = Color.GREEN;
                 public static final Color LINE_COLOR_PLANET_DESTINATION =
-                    new Color(0, 0.7f, 1, 1);
+                    Minimap.PLANET_DESTINATION_COLOUR;
                 public static final int   LINE_SECONDS                  = 5;
             }
 
@@ -131,7 +131,7 @@ public abstract class Constants
         public static final float ACCELEROMETER_RANGE                   = 0.5f;
         public static final float DEAD_ZONE                             = 0.15f;
 
-        public static float SHIP_ACCELERATION_PER_SECOND = 60f;
+        public static float SHIP_ACCELERATION_PER_SECOND = 100f;
 
         public static int PHYSICS_STEPS = 10;
     }
