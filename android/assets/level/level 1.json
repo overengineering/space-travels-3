@@ -19,7 +19,7 @@
       "x": 280,
       "y": 75,
       "radius": 6.378,
-      "mass": 30000,
+      "mass": 10000,
       "destination": true
     },
     {

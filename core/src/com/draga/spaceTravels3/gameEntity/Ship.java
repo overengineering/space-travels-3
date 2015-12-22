@@ -1,7 +1,6 @@
 package com.draga.spaceTravels3.gameEntity;
 
 import com.badlogic.gdx.math.Vector2;
-import com.draga.shape.Circle;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.component.PhysicsComponent;
 import com.draga.spaceTravels3.component.graphicComponent.StaticGraphicComponent;
@@ -56,10 +55,10 @@ public class Ship extends GameEntity
 
         this.miniMapGraphicComponent = new TriangleMiniMapGraphicComponent(
             this.physicsComponent,
-            Constants.Visual.SHIP_MINIMAP_COLOUR,
-            Constants.Visual.SHIP_MINIMAP_TRIANGLE_VERTEX1,
-            Constants.Visual.SHIP_MINIMAP_TRIANGLE_VERTEX2,
-            Constants.Visual.SHIP_MINIMAP_TRIANGLE_VERTEX3);
+            Constants.Visual.HUD.SHIP_MINIMAP_COLOUR,
+            Constants.Visual.HUD.SHIP_MINIMAP_TRIANGLE_VERTEX1,
+            Constants.Visual.HUD.SHIP_MINIMAP_TRIANGLE_VERTEX2,
+            Constants.Visual.HUD.SHIP_MINIMAP_TRIANGLE_VERTEX3);
     }
 
     public float getMaxFuel()

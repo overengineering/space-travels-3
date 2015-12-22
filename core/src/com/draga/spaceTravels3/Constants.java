@@ -16,46 +16,18 @@ public abstract class Constants
         public static final float VIEWPORT_HEIGHT = 100f;
 
         // Pickup
-        public static final float PICKUP_WIDTH          = 5f;
-        public static final float PICKUP_HEIGHT         = 5f * 0.75f;
-        public static final float PICKUP_MINIMAP_RADIUS =
-            (PICKUP_WIDTH + PICKUP_HEIGHT) / 2f * 1.3f;
-        public static final Color PICKUP_MINIMAP_COLOR  = Color.GOLDENROD;
-
-        // Planet
-        public static final Color PLANET_MINIMAP_DESTINATION_COLOUR = Color.BLUE;
-        public static final Color PLANET_MINIMAP_COLOUR             = Color.RED;
+        public static final float PICKUP_WIDTH  = 5f;
+        public static final float PICKUP_HEIGHT = 5f * 0.75f;
 
         // Explosion
         public static final float EXPLOSION_LIFETIME = 2f;
 
-        // HUD
-        public static final float MINIMAP_SCALE             = 0.25f;
-        public static final float HUD_FORCE_INDICATOR_SCALE = 0.25f;
-        public static final Color JOYSTICK_OVERLAY_COLOR    = new Color(1f, 1f, 1f, 0.3f);
-
-        // Trajectory line.
-        public static final int   HUD_TRAJECTORY_LINE_POINTS            = 100;
-        public static final float HUD_TRAJECTORY_LINE_POINTS_TIME       = 0.05f;
-        public static final float HUD_TRAJECTORY_LINE_STEP_TIME         = 1f / 600f;
-        public static final Color HUD_TRAJECTORY_LINE_COLOR_NEUTRAL     =
-            new Color(0.5f, 0.5f, 0.5f, 1);
-        public static final Color HUD_TRAJECTORY_LINE_COLOR_PLANET_LOSE =
-            new Color(0.8f, 0.2f, 0.2f, 1);
-        public static final Color HUD_TRAJECTORY_LINE_COLOR_PICKUP      = Color.GREEN;
-        public static final Color HUD_TRAJECTORY_LINE_COLOR_PLANET_WIN  = Color.BLUE;
-
-        public static final int   HUD_TRAJECTORY_LINE_SECONDS = 5;
         // Ship
-        public static final float SHIP_WIDTH                  = 10f;
-        public static final float SHIP_HEIGHT                 = 10f;
-        public static final Color SHIP_MINIMAP_COLOUR         = Color.WHITE;
+        public static final float SHIP_WIDTH  = 10f;
+        public static final float SHIP_HEIGHT = 10f;
 
-        public static final Vector2 SHIP_MINIMAP_TRIANGLE_VERTEX1 = new Vector2(8, 0);
-        public static final Vector2 SHIP_MINIMAP_TRIANGLE_VERTEX2 = new Vector2(-5, -5);
-        public static final Vector2 SHIP_MINIMAP_TRIANGLE_VERTEX3 = new Vector2(-5, 5);
         // Thruster.
-        public static final float   THRUSTER_MAX_WIDTH            = 5;
+        public static final float THRUSTER_MAX_WIDTH = 5;
 
         public static final float THRUSTER_MAX_HEIGHT     = 5;
         public static final float THRUSTER_ANIMATION_TIME = 1f;
@@ -66,9 +38,6 @@ public abstract class Constants
         public static final Color   SCREEN_FADE_COLOUR   = new Color(0, 0, 0, 0.7f);
 
 
-        // Minimap.
-        public static final Color MINIMAP_BACKGROUND_COLOR           = new Color(0, 0.17f, 0, 0.5f);
-        public static final Color MINIMAP_BORDER_COLOR               = new Color(0, 0.4f, 0, 1);
         // Background.
         public static final int   BACKGROUND_STAR_LAYER_COUNT        = 10;
         public static final int   BACKGROUND_STAR_COUNT              = 3000;
@@ -84,6 +53,52 @@ public abstract class Constants
             public static final float DEBUG_FONT_SCALE = 0.02f;
             public static final float BUTTON_PADDING   = SQRT_PIXELS * 0.01f;
         }
+
+
+        public static class HUD
+        {
+            public static final float   PICKUP_MINIMAP_RADIUS                  =
+                (PICKUP_WIDTH + PICKUP_HEIGHT) / 2f * 1.3f;
+            public static final Color   PICKUP_MINIMAP_COLOR                   =
+                Color.GOLDENROD;
+            // Planet
+            public static final Color   PLANET_MINIMAP_DESTINATION_COLOUR      = Color.BLUE;
+            public static final Color   PLANET_MINIMAP_COLOUR                  = Color.RED;
+            // HUD
+            public static final float   MINIMAP_SCALE                          = 0.25f;
+            public static final float   FORCE_INDICATOR_SCALE                  = 0.25f;
+            public static final Color   JOYSTICK_OVERLAY_COLOR                 =
+                new Color(1f, 1f, 1f, 0.3f);
+            // Trajectory line.
+            public static final int     TRAJECTORY_LINE_POINTS                 = 100;
+            public static final float   TRAJECTORY_LINE_POINTS_TIME            = 0.05f;
+            public static final float   TRAJECTORY_LINE_STEP_TIME              = 1f / 600f;
+            public static final Color   TRAJECTORY_LINE_COLOR_NEUTRAL          =
+                new Color(0.5f, 0.5f, 0.5f, 1);
+            public static final Color   TRAJECTORY_LINE_COLOR_PLANET_LOSE      =
+                new Color(0.8f, 0.2f, 0.2f, 1);
+            public static final Color   TRAJECTORY_LINE_COLOR_PICKUP           = Color.GREEN;
+            public static final Color   TRAJECTORY_LINE_COLOR_PLANET_WIN       = Color.BLUE;
+            public static final int     TRAJECTORY_LINE_SECONDS                = 5;
+            public static final Color   SHIP_MINIMAP_COLOUR                    = Color.WHITE;
+            public static final Vector2 SHIP_MINIMAP_TRIANGLE_VERTEX1          =
+                new Vector2(8, 0);
+            public static final Vector2 SHIP_MINIMAP_TRIANGLE_VERTEX2          =
+                new Vector2(-5, -5);
+            public static final Vector2 SHIP_MINIMAP_TRIANGLE_VERTEX3          =
+                new Vector2(-5, 5);
+            // Minimap.
+            public static final Color   MINIMAP_BACKGROUND_COLOR               =
+                new Color(0, 0.17f, 0, 0.5f);
+            public static final Color   MINIMAP_BORDER_COLOR                   =
+                new Color(0, 0.4f, 0, 1);
+            public static final Color   DESTINATION_PLANET_OVERLAY_LOSE_BORDER = Color.RED;
+            public static final Color   DESTINATION_PLANET_OVERLAY_LOSE_FILL   =
+                new Color(1f, 0f, 0f, 0.2f);
+            public static final Color   DESTINATION_PLANET_OVERLAY_WIN_BORDER  = Color.GREEN;
+            public static final Color   DESTINATION_PLANET_OVERLAY_WIN_FILL    =
+                new Color(0f, 1f, 0f, 0.2f);
+        }
     }
 
 
@@ -97,7 +112,7 @@ public abstract class Constants
         public static final float TIME_POINTS   = 10f;
         public static final float PICKUP_POINTS = 1000f;
 
-        public static final float MAX_DESTINATION_PLANET_APPROACH_SPEED = 70f;
+        public static final float MAX_DESTINATION_PLANET_APPROACH_SPEED = 30f;
         public static final float SHIP_COLLISION_RADIUS                 =
             (Constants.Visual.SHIP_WIDTH + Constants.Visual.SHIP_HEIGHT) / 2f
                 * 0.8f

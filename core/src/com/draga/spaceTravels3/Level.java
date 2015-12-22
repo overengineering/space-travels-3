@@ -279,7 +279,7 @@ public class Level
                     if (projectionPoint.getVelocity().len()
                         < Constants.Game.MAX_DESTINATION_PLANET_APPROACH_SPEED)
                     {
-                        Color color = Constants.Visual.HUD_TRAJECTORY_LINE_COLOR_PLANET_WIN
+                        Color color = Constants.Visual.HUD.TRAJECTORY_LINE_COLOR_PLANET_WIN
                             .cpy()
                             .lerp(
                                 Color.WHITE,
@@ -290,14 +290,14 @@ public class Level
                     Color color = Color.WHITE
                         .cpy()
                         .lerp(
-                            Constants.Visual.HUD_TRAJECTORY_LINE_COLOR_PLANET_LOSE,
+                            Constants.Visual.HUD.TRAJECTORY_LINE_COLOR_PLANET_LOSE,
                             projectionPoint.getVelocity().len()
                                 / Constants.Game.MAX_DESTINATION_PLANET_APPROACH_SPEED / 2f);
                     return color;
                 }
                 else
                 {
-                    return Constants.Visual.HUD_TRAJECTORY_LINE_COLOR_PLANET_LOSE;
+                    return Constants.Visual.HUD.TRAJECTORY_LINE_COLOR_PLANET_LOSE;
                 }
             }
         }
@@ -306,10 +306,15 @@ public class Level
         {
             if (nextCollidingPhysicsComponent.getOwnerClass().equals(Pickup.class))
             {
-                return Constants.Visual.HUD_TRAJECTORY_LINE_COLOR_PICKUP;
+                return Constants.Visual.HUD.TRAJECTORY_LINE_COLOR_PICKUP;
             }
         }
 
-        return Constants.Visual.HUD_TRAJECTORY_LINE_COLOR_NEUTRAL;
+        return Constants.Visual.HUD.TRAJECTORY_LINE_COLOR_NEUTRAL;
+    }
+
+    public Planet getDestinationPlanet()
+    {
+        return destinationPlanet;
     }
 }

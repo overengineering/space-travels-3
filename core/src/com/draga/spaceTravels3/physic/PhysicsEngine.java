@@ -2,8 +2,6 @@ package com.draga.spaceTravels3.physic;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Pool;
-import com.badlogic.gdx.utils.Pools;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.component.PhysicsComponent;
 import com.draga.spaceTravels3.gameEntity.GameEntity;
@@ -237,11 +235,10 @@ public class PhysicsEngine
 
         ArrayList<ProjectionPoint> projectionPoints = new ArrayList<>(points);
 
-        // TODO: increase collision points
         for (int i = 0; i < points; i++)
         {
             // Sub points to make the physics calculations more accurate without adding visual points.
-            float stepTime = Constants.Visual.HUD_TRAJECTORY_LINE_STEP_TIME;
+            float stepTime = Constants.Visual.HUD.TRAJECTORY_LINE_STEP_TIME;
 
             ArrayList<PhysicsComponent> collidingPhysicsComponents = new ArrayList<>();
             for (float remainingStepTime = pointTime; remainingStepTime > 0;

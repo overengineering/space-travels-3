@@ -1,7 +1,6 @@
 package com.draga.spaceTravels3.gameEntity;
 
 import com.badlogic.gdx.math.MathUtils;
-import com.draga.shape.Circle;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.component.PhysicsComponent;
 import com.draga.spaceTravels3.component.graphicComponent.StaticGraphicComponent;
@@ -37,8 +36,8 @@ public class Pickup extends GameEntity
         this.miniMapGraphicComponent =
             new StarMiniMapGraphicComponent(
                 physicsComponent,
-                Constants.Visual.PICKUP_MINIMAP_COLOR,
-                Constants.Visual.PICKUP_MINIMAP_RADIUS);
+                Constants.Visual.HUD.PICKUP_MINIMAP_COLOR,
+                Constants.Visual.HUD.PICKUP_MINIMAP_RADIUS);
     }
 
     @Override
