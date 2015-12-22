@@ -226,8 +226,8 @@ public class PhysicsEngine
     
     public static ArrayList<ProjectionPoint> gravityProjection(
         PhysicsComponent originalPhysicsComponent,
-        int steps,
-        float stepTime)
+        int points,
+        float pointTime)
     {
         // Create a copy of the PhysicsComponent so that it won't be changed.
         PhysicsComponent physicsComponent = new PhysicsComponent(originalPhysicsComponent);
@@ -235,28 +235,40 @@ public class PhysicsEngine
         ArrayList<PhysicsComponent> otherPhysicsComponents =
             getAllPhysicsComponentsExcept(originalPhysicsComponent);
 
-        ArrayList<ProjectionPoint> projectionPoints = new ArrayList<>(steps);
+        ArrayList<ProjectionPoint> projectionPoints = new ArrayList<>(points);
 
-        // TODO: increase collision steps
-        for (int i = 0; i < steps; i++)
+        // TODO: increase collision points
+        for (int i = 0; i < points; i++)
         {
-            stepGravity(physicsComponent, otherPhysicsComponents, stepTime);
-            applyVelocity(physicsComponent, stepTime);
+            // Sub points to make the physics calculations more accurate without adding visual points.
+            float stepTime = Constants.Visual.HUD_TRAJECTORY_LINE_STEP_TIME;
 
             ArrayList<PhysicsComponent> collidingPhysicsComponents = new ArrayList<>();
-
-            for (PhysicsComponent otherPhysicsComponent : otherPhysicsComponents)
+            for (float remainingStepTime = pointTime; remainingStepTime > 0;
+                 remainingStepTime -= stepTime)
             {
-                if (areColliding(physicsComponent, otherPhysicsComponent))
+                if (remainingStepTime < stepTime)
                 {
-                    collidingPhysicsComponents.add(otherPhysicsComponent);
+                    stepTime = remainingStepTime;
+                }
+
+                stepGravity(physicsComponent, otherPhysicsComponents, stepTime);
+                applyVelocity(physicsComponent, stepTime);
+
+                for (PhysicsComponent otherPhysicsComponent : otherPhysicsComponents)
+                {
+                    if (!collidingPhysicsComponents.contains(otherPhysicsComponent)
+                        && areColliding(physicsComponent, otherPhysicsComponent))
+                    {
+                        collidingPhysicsComponents.add(otherPhysicsComponent);
+                    }
                 }
             }
 
             ProjectionPoint projectionPoint = new ProjectionPoint(
-                    physicsComponent.getPosition().cpy(),
-                    physicsComponent.getVelocity().cpy(),
-                    collidingPhysicsComponents);
+                physicsComponent.getPosition().cpy(),
+                physicsComponent.getVelocity().cpy(),
+                collidingPhysicsComponents);
             projectionPoints.add(projectionPoint);
         }
 

@@ -35,8 +35,9 @@ public abstract class Constants
         public static final Color JOYSTICK_OVERLAY_COLOR    = new Color(1f, 1f, 1f, 0.3f);
 
         // Trajectory line.
-        public static final int   HUD_TRAJECTORY_LINE_STEPS             = 100;
-        public static final float HUD_TRAJECTORY_LINE_STEP_TIME         = 0.05f;
+        public static final int   HUD_TRAJECTORY_LINE_POINTS            = 100;
+        public static final float HUD_TRAJECTORY_LINE_POINTS_TIME       = 0.05f;
+        public static final float HUD_TRAJECTORY_LINE_STEP_TIME         = 1f / 600f;
         public static final Color HUD_TRAJECTORY_LINE_COLOR_NEUTRAL     =
             new Color(0.5f, 0.5f, 0.5f, 1);
         public static final Color HUD_TRAJECTORY_LINE_COLOR_PLANET_LOSE =
