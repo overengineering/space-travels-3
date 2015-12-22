@@ -238,7 +238,7 @@ public class PhysicsEngine
         for (int i = 0; i < points; i++)
         {
             // Sub points to make the physics calculations more accurate without adding visual points.
-            float stepTime = Constants.Visual.HUD.TRAJECTORY_LINE_STEP_TIME;
+            float stepTime = Constants.Visual.HUD.TrajectoryLine.LINE_STEP_TIME;
 
             ArrayList<PhysicsComponent> collidingPhysicsComponents = new ArrayList<>();
             for (float remainingStepTime = pointTime; remainingStepTime > 0;

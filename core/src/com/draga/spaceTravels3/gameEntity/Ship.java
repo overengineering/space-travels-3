@@ -55,10 +55,10 @@ public class Ship extends GameEntity
 
         this.miniMapGraphicComponent = new TriangleMiniMapGraphicComponent(
             this.physicsComponent,
-            Constants.Visual.HUD.SHIP_MINIMAP_COLOUR,
-            Constants.Visual.HUD.SHIP_MINIMAP_TRIANGLE_VERTEX1,
-            Constants.Visual.HUD.SHIP_MINIMAP_TRIANGLE_VERTEX2,
-            Constants.Visual.HUD.SHIP_MINIMAP_TRIANGLE_VERTEX3);
+            Constants.Visual.HUD.Minimap.SHIP_COLOUR,
+            Constants.Visual.HUD.Minimap.SHIP_TRIANGLE_VERTEX1,
+            Constants.Visual.HUD.Minimap.SHIP_TRIANGLE_VERTEX2,
+            Constants.Visual.HUD.Minimap.SHIP_TRIANGLE_VERTEX3);
     }
 
     public float getMaxFuel()

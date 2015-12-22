@@ -37,8 +37,8 @@ public class Planet extends GameEntity
             this.physicsComponent);
 
         Color miniMapColour = isDestination
-            ? Constants.Visual.HUD.PLANET_MINIMAP_DESTINATION_COLOUR
-            : Constants.Visual.HUD.PLANET_MINIMAP_COLOUR;
+            ? Constants.Visual.HUD.Minimap.PLANET_DESTINATION_COLOUR
+            : Constants.Visual.HUD.Minimap.PLANET_COLOUR;
         this.miniMapGraphicComponent = new CircleMiniMapGraphicsComponent(
             this.physicsComponent,
             miniMapColour,

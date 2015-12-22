@@ -27,22 +27,23 @@ public abstract class Constants
         public static final float SHIP_HEIGHT = 10f;
 
         // Thruster.
-        public static final float THRUSTER_MAX_WIDTH = 5;
+        public static final float   THRUSTER_MAX_WIDTH      = 5;
+        public static final float   THRUSTER_MAX_HEIGHT     = 5;
+        public static final float   THRUSTER_ANIMATION_TIME = 1f;
+        public static final Vector2 THRUSTER_OFFSET         = new Vector2(-SHIP_WIDTH / 4f, 0);
 
-        public static final float THRUSTER_MAX_HEIGHT     = 5;
-        public static final float THRUSTER_ANIMATION_TIME = 1f;
-
-        public static final Vector2 THRUSTER_OFFSET      = new Vector2(-SHIP_WIDTH / 4f, 0);
         // Screen.
-        public static final float   SCREEN_FADE_DURATION = 3f;
-        public static final Color   SCREEN_FADE_COLOUR   = new Color(0, 0, 0, 0.7f);
+        public static final float SCREEN_FADE_DURATION = 3f;
+        public static final Color SCREEN_FADE_COLOUR   = new Color(0, 0, 0, 0.7f);
 
 
-        // Background.
-        public static final int   BACKGROUND_STAR_LAYER_COUNT        = 10;
-        public static final int   BACKGROUND_STAR_COUNT              = 3000;
-        public static final int   BACKGROUND_NEBULAE_LAYER_COUNT     = 0;
-        public static final float BACKGROUND_STAR_MAX_DIAMETER_SCALE = 0.000005f;
+        public static abstract class Background
+        {
+            public static final int   STAR_LAYER_COUNT        = 10;
+            public static final int   STAR_COUNT              = 3000;
+            public static final int   NEBULAE_LAYER_COUNT     = 0;
+            public static final float STAR_MAX_DIAMETER_SCALE = 0.000005f;
+        }
 
 
         public abstract static class UI
@@ -57,47 +58,54 @@ public abstract class Constants
 
         public static class HUD
         {
-            public static final float   PICKUP_MINIMAP_RADIUS                  =
-                (PICKUP_WIDTH + PICKUP_HEIGHT) / 2f * 1.3f;
-            public static final Color   PICKUP_MINIMAP_COLOR                   =
-                Color.GOLDENROD;
-            // Planet
-            public static final Color   PLANET_MINIMAP_DESTINATION_COLOUR      = Color.BLUE;
-            public static final Color   PLANET_MINIMAP_COLOUR                  = Color.RED;
+
             // HUD
-            public static final float   MINIMAP_SCALE                          = 0.25f;
-            public static final float   FORCE_INDICATOR_SCALE                  = 0.25f;
-            public static final Color   JOYSTICK_OVERLAY_COLOR                 =
+            public static final float FORCE_INDICATOR_SCALE                  = 0.25f;
+            public static final Color JOYSTICK_OVERLAY_COLOR                 =
                 new Color(1f, 1f, 1f, 0.3f);
-            // Trajectory line.
-            public static final int     TRAJECTORY_LINE_POINTS                 = 100;
-            public static final float   TRAJECTORY_LINE_POINTS_TIME              = 0.05f;
-            public static final float   TRAJECTORY_LINE_STEP_TIME                = 1f / 600f;
-            public static final Color   TRAJECTORY_LINE_COLOR_NEUTRAL            =
-                new Color(0.5f, 0.5f, 0.5f, 1);
-            public static final Color   TRAJECTORY_LINE_COLOR_PLANET_LOSE        =
-                new Color(0.8f, 0.2f, 0.2f, 1);
-            public static final Color   TRAJECTORY_LINE_COLOR_PICKUP             = Color.GREEN;
-            public static final Color   TRAJECTORY_LINE_COLOR_PLANET_DESTINATION = new Color(0, 0.7f, 1, 1);
-            public static final int     TRAJECTORY_LINE_SECONDS                  = 5;
-            public static final Color   SHIP_MINIMAP_COLOUR                      = Color.WHITE;
-            public static final Vector2 SHIP_MINIMAP_TRIANGLE_VERTEX1            =
-                new Vector2(8, 0);
-            public static final Vector2 SHIP_MINIMAP_TRIANGLE_VERTEX2            =
-                new Vector2(-5, -5);
-            public static final Vector2 SHIP_MINIMAP_TRIANGLE_VERTEX3            =
-                new Vector2(-5, 5);
-            // Minimap.
-            public static final Color   MINIMAP_BACKGROUND_COLOR               =
-                new Color(0, 0.17f, 0, 0.5f);
-            public static final Color   MINIMAP_BORDER_COLOR                   =
-                new Color(0, 0.4f, 0, 1);
-            public static final Color   DESTINATION_PLANET_OVERLAY_LOSE_BORDER = Color.RED;
-            public static final Color   DESTINATION_PLANET_OVERLAY_LOSE_FILL   =
+            public static final Color DESTINATION_PLANET_OVERLAY_LOSE_BORDER = Color.RED;
+            public static final Color DESTINATION_PLANET_OVERLAY_LOSE_FILL   =
                 new Color(1f, 0f, 0f, 0.2f);
-            public static final Color   DESTINATION_PLANET_OVERLAY_WIN_BORDER  = Color.GREEN;
-            public static final Color   DESTINATION_PLANET_OVERLAY_WIN_FILL    =
+            public static final Color DESTINATION_PLANET_OVERLAY_WIN_BORDER  = Color.GREEN;
+            public static final Color DESTINATION_PLANET_OVERLAY_WIN_FILL    =
                 new Color(0f, 1f, 0f, 0.2f);
+
+
+            public abstract static class Minimap
+            {
+                public static final float PICKUP_RADIUS =
+                    (PICKUP_WIDTH + PICKUP_HEIGHT) / 2f * 1.3f;
+                public static final Color PICKUP_COLOR  = Color.GOLDENROD;
+                
+                public static final Color   BACKGROUND_COLOR      = new Color(0, 0.17f, 0, 0.5f);
+                public static final Color   BORDER_COLOR          = new Color(0, 0.4f, 0, 1);
+                public static final Color   SHIP_COLOUR           = Color.WHITE;
+                public static final Vector2 SHIP_TRIANGLE_VERTEX1 = new Vector2(8, 0);
+                public static final Vector2 SHIP_TRIANGLE_VERTEX2 = new Vector2(-5, -5);
+                public static final Vector2 SHIP_TRIANGLE_VERTEX3 = new Vector2(-5, 5);
+                public static final float   SCALE                 = 0.25f;
+
+                // Planet
+                public static final Color PLANET_DESTINATION_COLOUR = Color.BLUE;
+                public static final Color PLANET_COLOUR             = Color.RED;
+            }
+
+
+            public abstract static class TrajectoryLine
+            {
+                public static final int   LINE_POINTS                   = 100;
+                public static final float LINE_POINTS_TIME              = 0.05f;
+                public static final float LINE_STEP_TIME                = 1f / 600f;
+                public static final Color LINE_COLOR_NEUTRAL            =
+                    new Color(0.5f, 0.5f, 0.5f, 1);
+                public static final Color LINE_COLOR_PLANET_LOSE        =
+                    new Color(0.8f, 0.2f, 0.2f, 1);
+                public static final Color LINE_COLOR_PICKUP             = Color.GREEN;
+                public static final Color LINE_COLOR_PLANET_DESTINATION =
+                    new Color(0, 0.7f, 1, 1);
+                public static final int   LINE_SECONDS                  = 5;
+            }
+
         }
     }
 

@@ -13,7 +13,7 @@ import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.spaceTravels3.physic.Projection;
 import com.draga.utils.GraphicsUtils;
 
-import static com.draga.spaceTravels3.Constants.Visual.HUD.MINIMAP_SCALE;
+import static com.draga.spaceTravels3.Constants.Visual.HUD.Minimap.SCALE;
 
 public class MiniMap
 {
@@ -46,7 +46,7 @@ public class MiniMap
     private Matrix4 getBackgroundProjectionMatrix()
     {
         OrthographicCamera backgroundCamera = new OrthographicCamera(worldWidth, worldHeight);
-        backgroundCamera.zoom = 1f / MINIMAP_SCALE;
+        backgroundCamera.zoom = 1f / SCALE;
         backgroundCamera.position.set(
             (backgroundCamera.viewportWidth / 2f) * backgroundCamera.zoom,
             (backgroundCamera.viewportHeight / 2f) * backgroundCamera.zoom,
@@ -68,8 +68,8 @@ public class MiniMap
         Gdx.gl20.glScissor(
             0,
             0,
-            MathUtils.round(Gdx.graphics.getWidth() * MINIMAP_SCALE) + 1,
-            MathUtils.round(Gdx.graphics.getHeight() * MINIMAP_SCALE) + 1);
+            MathUtils.round(Gdx.graphics.getWidth() * SCALE) + 1,
+            MathUtils.round(Gdx.graphics.getHeight() * SCALE) + 1);
         this.shipProjection.draw();
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
@@ -82,7 +82,7 @@ public class MiniMap
     {
         GraphicsUtils.enableBlending();
 
-        Color minimapBackgroundColor = Constants.Visual.HUD.MINIMAP_BACKGROUND_COLOR;
+        Color minimapBackgroundColor = Constants.Visual.HUD.Minimap.BACKGROUND_COLOR;
         SpaceTravels3.shapeRenderer.setColor(minimapBackgroundColor);
         SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
         SpaceTravels3.shapeRenderer.rect(
@@ -91,7 +91,7 @@ public class MiniMap
             worldWidth,
             worldHeight);
 
-        Color minimapBorderColor = Constants.Visual.HUD.MINIMAP_BORDER_COLOR;
+        Color minimapBorderColor = Constants.Visual.HUD.Minimap.BORDER_COLOR;
         SpaceTravels3.shapeRenderer.setColor(minimapBorderColor);
         SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Line);
         SpaceTravels3.shapeRenderer.rect(
@@ -156,7 +156,7 @@ public class MiniMap
             newCameraBounds.width / orthographicCamera.viewportWidth,
             newCameraBounds.height / orthographicCamera.viewportHeight);
         // Zoom out to make this world as big as the minimap.
-        orthographicCamera.zoom /= MINIMAP_SCALE;
+        orthographicCamera.zoom /= SCALE;
 
         // Moves the camera so that the bottom left corner of the screen corresponds to the
         // bottom left corner of the new camera bounds.
