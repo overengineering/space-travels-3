@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
+import com.draga.spaceTravels3.physic.Projection;
 import com.draga.utils.PixmapUtils;
 import com.draga.spaceTravels3.event.PickupCollectedEvent;
 import com.draga.spaceTravels3.gameEntity.Ship;
@@ -36,6 +37,7 @@ public class Hud implements Screen
     private       Ship                  ship;
     private       MiniMap               miniMap;
     private       TextureRegionDrawable collectedPickupDrawable;
+    private Projection shipProjection;
 
     public Hud(Camera worldCamera, Level level)
     {
@@ -211,7 +213,7 @@ public class Hud implements Screen
         }
 
         miniMap.update();
-        miniMap.draw();
+        miniMap.draw(this.shipProjection);
         SpaceTravels3.shapeRenderer.end();
         GraphicsUtils.disableBlending();
     }
@@ -302,5 +304,10 @@ public class Hud implements Screen
         Image firstPickup = grayPickups.pop();
 
         firstPickup.setDrawable(collectedPickupDrawable);
+    }
+
+    public void setShipProjection(Projection shipProjection)
+    {
+        this.shipProjection = shipProjection;
     }
 }

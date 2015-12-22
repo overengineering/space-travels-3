@@ -237,6 +237,7 @@ public class PhysicsEngine
 
         ArrayList<ProjectionPoint> projectionPoints = new ArrayList<>(steps);
 
+        // TODO: increase collision steps
         for (int i = 0; i < steps; i++)
         {
             stepGravity(physicsComponent, otherPhysicsComponents, stepTime);
