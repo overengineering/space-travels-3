@@ -3,6 +3,8 @@ package com.draga.spaceTravels3;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pools;
 import com.draga.spaceTravels3.component.PhysicsComponent;
 import com.draga.spaceTravels3.event.*;
@@ -97,16 +99,12 @@ public class Level
                 "Linear velocity on collision: " + ship.physicsComponent.getVelocity().len());
         }
 
-        GameEntityManager.removeGameEntity(ship);
-        GameEntityManager.removeGameEntity(thruster);
 
-        elapsedPlayTime.stop();
-
-        // If wrong planet or too fast then lose.
-        if (!(shipPlanetCollisionEvent.planet.equals(destinationPlanet))
-            || ship.physicsComponent.getVelocity().len()
+        if (ship.physicsComponent.getVelocity().len()
             > Constants.Game.MAX_DESTINATION_PLANET_APPROACH_SPEED)
         {
+            GameEntityManager.removeGameEntity(ship);
+            GameEntityManager.removeGameEntity(thruster);
             gameState = GameState.LOSE;
             GameEntity explosion = new Explosion(
                 shipPlanetCollisionEvent.ship.physicsComponent.getPosition().x,
@@ -122,11 +120,27 @@ public class Level
         }
         else
         {
-            gameState = GameState.WIN;
+            if (shipPlanetCollisionEvent.planet.equals(destinationPlanet))
+            {
+                GameEntityManager.removeGameEntity(ship);
+                GameEntityManager.removeGameEntity(thruster);
 
-            WinEvent winEvent = Pools.obtain(WinEvent.class);
-            Constants.General.EVENT_BUS.post(winEvent);
-            Pools.free(winEvent);
+                gameState = GameState.WIN;
+
+                WinEvent winEvent = Pools.obtain(WinEvent.class);
+                Constants.General.EVENT_BUS.post(winEvent);
+                Pools.free(winEvent);
+            }
+            else
+            {
+                Vector2 distance = shipPlanetCollisionEvent.ship.physicsComponent.getPosition()
+                    .cpy()
+                    .sub(shipPlanetCollisionEvent.planet.physicsComponent.getPosition());
+
+                // TODO: Scale by distance from planet
+                shipPlanetCollisionEvent.ship.physicsComponent.getVelocity()
+                    .add(distance.nor().scl(0.4f));
+            }
         }
     }
 

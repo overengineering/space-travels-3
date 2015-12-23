@@ -1,0 +1,65 @@
+{
+  "class": "SerialisableLevel",
+  "name": "Level 3",
+  "width": 300,
+  "height": 150,
+  "fuel": 6.0,
+
+  "serialisedBackground": {
+    "texturePath": "background/background1080.jpg"
+  },
+  "serialisedShip": {
+    "x": 10,
+    "y": 75,
+    "mass": 1
+  },
+  "serialisedPlanets": [
+    {
+      "texturePath": "planet/earth256.png",
+      "x": 280,
+      "y": 75,
+      "radius": 6.378,
+      "mass": 20000,
+      "destination": true
+    },
+    {
+      "texturePath": "planet/mars256.png",
+      "x": 150,
+      "y": 75,
+      "radius": 8,
+      "mass": 20000
+    },
+    {
+      "texturePath": "planet/jupiter256.png",
+      "x": 100,
+      "y": 90,
+      "radius": 7,
+      "mass": 20000
+    },
+    {
+      "texturePath": "planet/mars256.png",
+      "x": 200,
+      "y": 110,
+      "radius": 6,
+      "mass": 20000
+    }
+  ],
+  "serialisedPickups": [
+    {
+      "x": 140,
+      "y": 60
+    },
+    {
+      "x": 160,
+      "y": 60
+    },
+    {
+      "x": 150,
+      "y": 90
+    },
+    {
+      "x": 200,
+      "y": 100
+    }
+  ]
+}
