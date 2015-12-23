@@ -275,11 +275,11 @@ public class Level
                 // to the color for losing (twice the maximum approach velocity)
                 if (destinationPlanet.physicsComponent.equals(nextCollidingPhysicsComponent))
                 {
-                    return Constants.Visual.HUD.TrajectoryLine.LINE_COLOR_PLANET_DESTINATION;
+                    return Constants.Visual.HUD.TrajectoryLine.COLOR_PLANET_DESTINATION;
                 }
                 else
                 {
-                    return Constants.Visual.HUD.TrajectoryLine.LINE_COLOR_PLANET_LOSE;
+                    return Constants.Visual.HUD.TrajectoryLine.COLOR_PLANET_LOSE;
                 }
             }
         }
@@ -288,11 +288,11 @@ public class Level
         {
             if (nextCollidingPhysicsComponent.getOwnerClass().equals(Pickup.class))
             {
-                return Constants.Visual.HUD.TrajectoryLine.LINE_COLOR_PICKUP;
+                return Constants.Visual.HUD.TrajectoryLine.COLOR_PICKUP;
             }
         }
 
-        return Constants.Visual.HUD.TrajectoryLine.LINE_COLOR_NEUTRAL;
+        return Constants.Visual.HUD.TrajectoryLine.COLOR_NEUTRAL;
     }
 
     public Planet getDestinationPlanet()

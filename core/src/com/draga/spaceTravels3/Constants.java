@@ -37,7 +37,7 @@ public abstract class Constants
         public static final Color SCREEN_FADE_COLOUR   = new Color(0, 0, 0, 0.7f);
 
 
-        public static abstract class Background
+        public abstract static class Background
         {
             public static final int   STAR_LAYER_COUNT        = 10;
             public static final int   STAR_COUNT              = 3000;
@@ -56,7 +56,7 @@ public abstract class Constants
         }
 
 
-        public static class HUD
+        public abstract static class HUD
         {
 
             // HUD
@@ -73,8 +73,6 @@ public abstract class Constants
 
             public abstract static class Minimap
             {
-                public static final float PICKUP_RADIUS =
-                    (PICKUP_WIDTH + PICKUP_HEIGHT) / 2f * 1.3f;
                 public static final Color PICKUP_COLOR  = Color.GOLDENROD;
 
                 public static final Color   BACKGROUND_COLOR      = new Color(0, 0.17f, 0, 0.5f);
@@ -93,17 +91,15 @@ public abstract class Constants
 
             public abstract static class TrajectoryLine
             {
-                public static final int   LINE_POINTS                   = 100;
-                public static final float LINE_POINTS_TIME              = 0.05f;
-                public static final float LINE_STEP_TIME                = 1f / 100f;
-                public static final Color LINE_COLOR_NEUTRAL            =
-                    new Color(0.5f, 0.5f, 0.5f, 1);
-                public static final Color LINE_COLOR_PLANET_LOSE        =
-                    new Color(0.8f, 0.2f, 0.2f, 1);
-                public static final Color LINE_COLOR_PICKUP             = Color.GREEN;
-                public static final Color LINE_COLOR_PLANET_DESTINATION =
+                public static final int   POINTS                   = 100;
+                public static final float POINTS_TIME              = 0.05f;
+                public static final float STEP_TIME                = 1f / 100f;
+                public static final Color COLOR_NEUTRAL            = new Color(0.5f, 0.5f, 0.5f, 1);
+                public static final Color COLOR_PLANET_LOSE        = new Color(0.8f, 0.2f, 0.2f, 1);
+                public static final Color COLOR_PICKUP             = Color.GREEN;
+                public static final Color COLOR_PLANET_DESTINATION =
                     Minimap.PLANET_DESTINATION_COLOUR;
-                public static final int   LINE_SECONDS                  = 5;
+                public static final int   SECONDS                  = 5;
             }
 
         }
@@ -130,6 +126,9 @@ public abstract class Constants
          */
         public static final float ACCELEROMETER_RANGE                   = 0.5f;
         public static final float DEAD_ZONE                             = 0.15f;
+
+        public static final float PICKUP_RADIUS =
+            (Visual.PICKUP_WIDTH + Visual.PICKUP_HEIGHT) / 2f * 1.3f;
 
         public static float SHIP_ACCELERATION_PER_SECOND = 100f;
 
