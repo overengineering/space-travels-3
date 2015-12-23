@@ -116,7 +116,7 @@ public abstract class Constants
         public static final float TIME_POINTS   = 10f;
         public static final float PICKUP_POINTS = 1000f;
 
-        public static final float MAX_DESTINATION_PLANET_APPROACH_SPEED = 30f;
+        public static final float MAX_DESTINATION_PLANET_APPROACH_SPEED = 60f;
         public static final float SHIP_COLLISION_RADIUS                 =
             (Constants.Visual.SHIP_WIDTH + Constants.Visual.SHIP_HEIGHT) / 2f
                 * 0.8f
@@ -130,7 +130,7 @@ public abstract class Constants
         public static final float PICKUP_RADIUS =
             (Visual.PICKUP_WIDTH + Visual.PICKUP_HEIGHT) / 2f * 1.3f;
 
-        public static float SHIP_ACCELERATION_PER_SECOND = 100f;
+        public static float SHIP_ACCELERATION_PER_SECOND = 70f;
 
         public static int PHYSICS_STEPS = 10;
     }

@@ -15,9 +15,16 @@ public abstract class ScoreManager
         FileUtils.getScoreFileHandle();
     private static final HashMap<String, Integer> levelScores           = getLevelScores();
 
-    public static void setScore(String levelId, int score)
+    /**
+     * Saves the score if highest for this level.
+     */
+    public static void saveHighScore(String levelId, int score)
     {
-        levelScores.put(levelId, score);
+        if (!levelScores.containsKey(levelId)
+            || levelScores.get(levelId) < score)
+        {
+            levelScores.put(levelId, score);
+        }
 
         saveLevelScores();
     }
