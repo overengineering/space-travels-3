@@ -1,5 +1,6 @@
 package com.draga.spaceTravels3.gameEntity;
 
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.component.PhysicsComponent;
@@ -85,8 +86,12 @@ public class Ship extends GameEntity
             ? maxFuel
             : currentFuel - fuelConsumption;
 
+        Vector2 scaled = inputForce.cpy()
+            .scl(Constants.Game.SHIP_ACCELERATION_PER_SECOND);
+        Vector2 scaled2 = scaled.cpy()
+            .scl(Interpolation.linear.apply(scaled.len() / Constants.Game.SHIP_ACCELERATION_PER_SECOND));
         this.physicsComponent.getVelocity()
-            .add(inputForce.cpy().scl(deltaTime * Constants.Game.SHIP_ACCELERATION_PER_SECOND));
+            .add(scaled2.scl(deltaTime));
 
         rotateTo(inputForce, deltaTime);
     }

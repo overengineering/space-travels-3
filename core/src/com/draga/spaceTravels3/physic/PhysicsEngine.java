@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.component.PhysicsComponent;
 import com.draga.spaceTravels3.gameEntity.GameEntity;
+import com.draga.spaceTravels3.gameEntity.Thruster;
 import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.google.common.base.Stopwatch;
@@ -201,14 +202,22 @@ public class PhysicsEngine
             .sub(physicsComponentA.getPosition());
         float distanceLen2 = distance.len2();
         
-        Vector2 direction = distance.nor();
+        Vector2 direction = distance.cpy().nor();
         
         float force = physicsComponentA.getMass()
             * physicsComponentB.getMass()
             / distanceLen2;
         
         Vector2 gravityForce = direction.scl(force);
-        
+
+        if (distance.len()
+            < (
+            physicsComponentA.getBoundsCircle().radius
+                + physicsComponentB.getBoundsCircle().radius))
+        {
+            gravityForce.scl(-0.4f);
+        }
+
         return gravityForce;
     }
     

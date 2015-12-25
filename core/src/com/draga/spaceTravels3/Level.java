@@ -3,7 +3,6 @@ package com.draga.spaceTravels3;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pools;
 import com.draga.spaceTravels3.component.PhysicsComponent;
@@ -103,20 +102,31 @@ public class Level
         if (ship.physicsComponent.getVelocity().len()
             > Constants.Game.MAX_DESTINATION_PLANET_APPROACH_SPEED)
         {
-            GameEntityManager.removeGameEntity(ship);
-            GameEntityManager.removeGameEntity(thruster);
-            gameState = GameState.LOSE;
-            GameEntity explosion = new Explosion(
-                shipPlanetCollisionEvent.ship.physicsComponent.getPosition().x,
-                shipPlanetCollisionEvent.ship.physicsComponent.getPosition().y,
-                shipPlanetCollisionEvent.ship.graphicComponent.getWidth(),
-                shipPlanetCollisionEvent.ship.graphicComponent.getHeight()
-            );
-            GameEntityManager.addGameEntity(explosion);
+            Vector2 distance = shipPlanetCollisionEvent.ship.physicsComponent.getPosition()
+                .cpy()
+                .sub(shipPlanetCollisionEvent.planet.physicsComponent.getPosition());
+            if (distance.len()
+                < (
+                (
+                    shipPlanetCollisionEvent.ship.physicsComponent.getBoundsCircle().radius
+                        + shipPlanetCollisionEvent.planet.physicsComponent.getBoundsCircle().radius)
+                    * 0.75f))
+            {
+                GameEntityManager.removeGameEntity(ship);
+                GameEntityManager.removeGameEntity(thruster);
+                gameState = GameState.LOSE;
+                GameEntity explosion = new Explosion(
+                    shipPlanetCollisionEvent.ship.physicsComponent.getPosition().x,
+                    shipPlanetCollisionEvent.ship.physicsComponent.getPosition().y,
+                    shipPlanetCollisionEvent.ship.graphicComponent.getWidth(),
+                    shipPlanetCollisionEvent.ship.graphicComponent.getHeight()
+                );
+                GameEntityManager.addGameEntity(explosion);
 
-            LoseEvent loseEvent = Pools.obtain(LoseEvent.class);
-            Constants.General.EVENT_BUS.post(loseEvent);
-            Pools.free(loseEvent);
+                LoseEvent loseEvent = Pools.obtain(LoseEvent.class);
+                Constants.General.EVENT_BUS.post(loseEvent);
+                Pools.free(loseEvent);
+            }
         }
         else
         {
@@ -133,13 +143,17 @@ public class Level
             }
             else
             {
-                Vector2 distance = shipPlanetCollisionEvent.ship.physicsComponent.getPosition()
+                /*Vector2 distance = shipPlanetCollisionEvent.ship.physicsComponent.getPosition()
                     .cpy()
                     .sub(shipPlanetCollisionEvent.planet.physicsComponent.getPosition());
+                float distanceLen2 = distance.len2();
+                float force = shipPlanetCollisionEvent.ship.physicsComponent.getMass()
+                    * shipPlanetCollisionEvent.planet.physicsComponent.getMass()
+                    / distanceLen2;
 
                 // TODO: Scale by distance from planet
                 shipPlanetCollisionEvent.ship.physicsComponent.getVelocity()
-                    .add(distance.nor().scl(0.4f));
+                    .add(distance.nor().scl(force * 0.4f));*/
             }
         }
     }
@@ -260,7 +274,7 @@ public class Level
                         new Vertex(currentColor, projectionPoints.get(j).getPosition()));
                 }
                 lastCollisionIndex = i;
-
+/*
                 // If collided with a planet truncate here.
                 for (PhysicsComponent physicsComponent : physicsComponentsToCheck)
                 {
@@ -268,7 +282,7 @@ public class Level
                     {
                         return new Projection(vertices);
                     }
-                }
+                }*/
             }
         }
 

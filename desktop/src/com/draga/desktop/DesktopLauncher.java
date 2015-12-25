@@ -13,8 +13,8 @@ public class DesktopLauncher
 //        config.height = 720;
         config.width = 1920;
         config.height = 1080;
-        config.fullscreen = true;
-//        config.fullscreen = false;
+//        config.fullscreen = true;
+        config.fullscreen = false;
         config.resizable = false;
 
         new LwjglApplication(new SpaceTravels3(), config);

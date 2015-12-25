@@ -3,7 +3,10 @@ package com.draga.spaceTravels3;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -11,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
-import com.draga.utils.PixmapUtils;
 import com.draga.spaceTravels3.event.PickupCollectedEvent;
 import com.draga.spaceTravels3.gameEntity.Ship;
 import com.draga.spaceTravels3.manager.GameEntityManager;
@@ -20,6 +22,7 @@ import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.physic.PhysicsEngine;
 import com.draga.utils.GraphicsUtils;
+import com.draga.utils.PixmapUtils;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.Stack;
@@ -236,14 +239,14 @@ public class Hud implements Screen
         {
             borderCollie = Constants.Visual.HUD.DESTINATION_PLANET_OVERLAY_LOSE_BORDER;
             fillCollins = Constants.Visual.HUD.DESTINATION_PLANET_OVERLAY_LOSE_FILL;
-            radius *= Constants.Game.MAX_DESTINATION_PLANET_APPROACH_SPEED / shipSpeed;
         }
         else
         {
             borderCollie = Constants.Visual.HUD.DESTINATION_PLANET_OVERLAY_WIN_BORDER;
             fillCollins = Constants.Visual.HUD.DESTINATION_PLANET_OVERLAY_WIN_FILL;
-            radius *= shipSpeed / Constants.Game.MAX_DESTINATION_PLANET_APPROACH_SPEED;
         }
+
+        radius *= shipSpeed / Constants.Game.MAX_DESTINATION_PLANET_APPROACH_SPEED;
 
         SpaceTravels3.shapeRenderer.setColor(fillCollins);
         SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Filled);

@@ -39,8 +39,8 @@ public abstract class Constants
 
         public abstract static class Background
         {
-            public static final int   STAR_LAYER_COUNT        = 10;
-            public static final int   STAR_COUNT              = 3000;
+            public static final int   STAR_LAYER_COUNT        = 3;
+            public static final int   STAR_COUNT              = 1000;
             public static final int   NEBULAE_LAYER_COUNT     = 0;
             public static final float STAR_MAX_DIAMETER_SCALE = 0.000005f;
         }
@@ -130,7 +130,7 @@ public abstract class Constants
         public static final float PICKUP_RADIUS =
             (Visual.PICKUP_WIDTH + Visual.PICKUP_HEIGHT) / 2f * 1.3f;
 
-        public static float SHIP_ACCELERATION_PER_SECOND = 70f;
+        public static float SHIP_ACCELERATION_PER_SECOND = 40f;
 
         public static int PHYSICS_STEPS = 10;
     }
