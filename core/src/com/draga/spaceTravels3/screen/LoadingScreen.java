@@ -130,6 +130,7 @@ public class LoadingScreen implements Screen
             level = LevelManager.getLevel(serialisableLevel);
             GameScreen gameScreen = new GameScreen(level);
             SpaceTravels3.getGame().setScreen(gameScreen);
+            return;
         }
         updateProgressBar();
 
