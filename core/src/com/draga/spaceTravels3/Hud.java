@@ -28,7 +28,7 @@ import java.util.Stack;
 
 public class Hud implements Screen
 {
-    private final Label        scoreLabel;
+    private final Label scoreLabel;
     private final Camera       worldCamera;
     private final Level        level;
     private       Stage        stage;
@@ -187,7 +187,7 @@ public class Hud implements Screen
             15,
             360 / numOuterArcs / 2,
             100,
-            2);
+            Constants.Visual.HUD.JOYSTICK_OVERLAY_WIDTH);
         PixmapUtils.dashedCircle(
             pixmap,
             halfSmallestDimension,
@@ -197,7 +197,7 @@ public class Hud implements Screen
             30,
             0,
             100,
-            2);
+            Constants.Visual.HUD.JOYSTICK_OVERLAY_WIDTH);
 
         return new Image(new Texture(pixmap));
     }
