@@ -27,13 +27,16 @@ public class Level
     private final float width;
     private final float height;
 
+    private final float trajectorySeconds;
+
     private final ArrayList<Pickup> pickups;
     private final Ship              ship;
     private final Thruster          thruster;
     private final Planet            destinationPlanet;
-    private       int               pickupsCollected;
 
+    private       int               pickupsCollected;
     private GameState gameState;
+
     private Stopwatch elapsedPlayTime;
 
     private Sound pickupCollectedSound;
@@ -50,7 +53,8 @@ public class Level
         ArrayList<Pickup> pickups,
         Planet destinationPlanet,
         float width,
-        float height)
+        float height,
+        float trajectorySeconds)
     {
         this.ship = ship;
         this.thruster = thruster;
@@ -60,6 +64,7 @@ public class Level
         this.height = height;
         this.id = id;
         this.name = name;
+        this.trajectorySeconds = trajectorySeconds;
 
         this.gameState = GameState.COUNTDOWN;
 
@@ -312,5 +317,10 @@ public class Level
     public Planet getDestinationPlanet()
     {
         return destinationPlanet;
+    }
+
+    public float getTrajectorySeconds()
+    {
+        return trajectorySeconds;
     }
 }

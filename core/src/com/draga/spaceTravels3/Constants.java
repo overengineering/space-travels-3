@@ -91,7 +91,6 @@ public abstract class Constants
 
             public abstract static class TrajectoryLine
             {
-                public static final int   POINTS                   = 100;
                 public static final float POINTS_TIME              = 0.05f;
                 public static final float STEP_TIME                = 1f / 100f;
                 public static final Color COLOR_NEUTRAL            = new Color(0.5f, 0.5f, 0.5f, 1);
@@ -99,7 +98,6 @@ public abstract class Constants
                 public static final Color COLOR_PICKUP             = Color.GREEN;
                 public static final Color COLOR_PLANET_DESTINATION =
                     Minimap.PLANET_DESTINATION_COLOUR;
-                public static final int   SECONDS                  = 5;
             }
 
         }

@@ -224,9 +224,11 @@ public class PhysicsEngine
     
     public static ArrayList<ProjectionPoint> gravityProjection(
         PhysicsComponent originalPhysicsComponent,
-        int points,
+        float projectionSeconds,
         float pointTime)
     {
+        int points = Math.round(projectionSeconds / pointTime);
+
         // Create a copy of the PhysicsComponent so that it won't be changed.
         PhysicsComponent physicsComponent = new PhysicsComponent(originalPhysicsComponent);
 

@@ -4,6 +4,7 @@
   "width": 300,
   "height": 150,
   "fuel": 6.0,
+  "trajectorySeconds": 5.0,
 
   "serialisedBackground": {
     "texturePath": "background/background1080.jpg"

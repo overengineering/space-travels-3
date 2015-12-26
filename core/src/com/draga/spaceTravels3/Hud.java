@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -30,7 +32,7 @@ public class Hud implements Screen
     private final Camera       worldCamera;
     private final Level        level;
     private       Stage        stage;
-    private       ProgressBar  fuelProgressBar;
+    private       Actor  fuelIndicator;
     private       Stack<Image> grayPickups;
     private       Table        pickupTable;
     private       Ship         ship;
@@ -63,9 +65,9 @@ public class Hud implements Screen
         Table table = UIManager.addDefaultTableToStage(stage);
 
         // Top row left column
-        fuelProgressBar = getFuelProgressBar();
+        fuelIndicator = getFuelIndicator();
         table
-            .add(fuelProgressBar)
+            .add(fuelIndicator)
             .width(stage.getWidth() / 3f)
             .top()
             .left();
@@ -108,12 +110,28 @@ public class Hud implements Screen
         stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
-    private ProgressBar getFuelProgressBar()
+    private Actor getFuelIndicator()
     {
-        ProgressBar fuelProgressBar = new ProgressBar(
-            0, ship.getMaxFuel(), 0.0001f, false, UIManager.skin);
-
-        return fuelProgressBar;
+        if (ship.getMaxFuel() != -1)
+        {
+            final ProgressBar fuelProgressBar = new ProgressBar(
+                0, ship.getMaxFuel(), 0.001f, false, UIManager.skin);
+            fuelProgressBar.addAction(new Action()
+            {
+                @Override
+                public boolean act(float delta)
+                {
+                    fuelProgressBar.setValue(ship.getCurrentFuel());
+                    return false;
+                }
+            });
+            return fuelProgressBar;
+        }
+        else
+        {
+            Label infiniteFuelLabel = new Label("inf", UIManager.skin);
+            return infiniteFuelLabel;
+        }
     }
 
     private Label getScoreLabel()
@@ -198,8 +216,6 @@ public class Hud implements Screen
     @Override
     public void render(float delta)
     {
-        updateFuelProgressBar();
-
         setScoreLabel(level.getScore());
 
         stage.act(delta);
@@ -261,11 +277,6 @@ public class Hud implements Screen
             level.getDestinationPlanet().physicsComponent.getPosition().y,
             radius,
             segments);
-    }
-
-    private void updateFuelProgressBar()
-    {
-        fuelProgressBar.setValue(ship.getCurrentFuel());
     }
 
     private void drawGravityIndicator()

@@ -71,19 +71,22 @@ public class Ship extends GameEntity
     {
         Vector2 inputForce = InputManager.getInputForce();
 
-        float fuelConsumption = inputForce.len() * Constants.Game.FUEL_PER_SECOND * deltaTime;
-
-        // If the fuel is or is going to be completely consumed then only apply the input force
-        // that the fuel can afford.
-        if (fuelConsumption > currentFuel)
+        if (this.maxFuel != -1)
         {
-            inputForce.scl(currentFuel / fuelConsumption);
-            fuelConsumption = currentFuel;
-        }
+            float fuelConsumption = inputForce.len() * Constants.Game.FUEL_PER_SECOND * deltaTime;
 
-        currentFuel = SettingsManager.getDebugSettings().infiniteFuel
-            ? maxFuel
-            : currentFuel - fuelConsumption;
+            // If the fuel is or is going to be completely consumed then only apply the input force
+            // that the fuel can afford.
+            if (fuelConsumption > currentFuel)
+            {
+                inputForce.scl(currentFuel / fuelConsumption);
+                fuelConsumption = currentFuel;
+            }
+
+            currentFuel = SettingsManager.getDebugSettings().infiniteFuel
+                ? maxFuel
+                : currentFuel - fuelConsumption;
+        }
 
         this.physicsComponent.getVelocity()
             .add(inputForce.cpy().scl(deltaTime * Constants.Game.SHIP_ACCELERATION_PER_SECOND));

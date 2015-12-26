@@ -147,7 +147,7 @@ public class GameScreen implements Screen
     {
         ArrayList<ProjectionPoint> projectionPoints = PhysicsEngine.gravityProjection(
             this.level.getShip().physicsComponent,
-            Constants.Visual.HUD.TrajectoryLine.POINTS,
+            this.level.getTrajectorySeconds(),
             Constants.Visual.HUD.TrajectoryLine.POINTS_TIME);
 
         this.shipProjection = this.level.processProjection(projectionPoints);
