@@ -4,12 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 
@@ -175,5 +175,33 @@ public class UIManager
         sliderStyle.knob = skin.newDrawable("slider", Color.WHITE);
 
         return sliderStyle;
+    }
+
+    public static ProgressBar getDelimitedProgressBar(float max, float width)
+    {
+        Pixmap pixmap = new Pixmap(
+            Math.round(width / max),
+            Math.round((Gdx.graphics.getHeight() / 30f)),
+            Pixmap.Format.RGBA8888);
+
+        pixmap.setColor(Color.WHITE);
+        pixmap.fillRectangle(0, 0, pixmap.getWidth() - 1, pixmap.getHeight());
+
+        pixmap.setColor(Color.BLUE);
+        pixmap.fillRectangle(pixmap.getWidth() - 1, 0, 1, pixmap.getHeight());
+
+        Texture texture = new Texture(pixmap);
+        texture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+        TextureRegion textureRegion = new TextureRegion(texture, (int) width, pixmap.getHeight());
+        textureRegion.setRegion(0, 0, width, pixmap.getHeight());
+
+        ProgressBar.ProgressBarStyle progressBarStyle = new ProgressBar.ProgressBarStyle();
+        progressBarStyle.background = new TextureRegionDrawable(textureRegion);
+
+        progressBarStyle.knob = skin.newDrawable("progressbar", Color.RED);
+
+        ProgressBar progressBar = new ProgressBar(0, max, 0.01f, false, progressBarStyle);
+
+        return progressBar;
     }
 }

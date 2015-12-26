@@ -4,6 +4,7 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -11,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.*;
 import com.badlogic.gdx.utils.Scaling;
 import com.draga.utils.PixmapUtils;
 import com.draga.spaceTravels3.event.PickupCollectedEvent;
@@ -32,7 +33,7 @@ public class Hud implements Screen
     private final Camera       worldCamera;
     private final Level        level;
     private       Stage        stage;
-    private       Actor  fuelIndicator;
+    private       Actor        fuelIndicator;
     private       Stack<Image> grayPickups;
     private       Table        pickupTable;
     private       Ship         ship;
@@ -65,10 +66,11 @@ public class Hud implements Screen
         Table table = UIManager.addDefaultTableToStage(stage);
 
         // Top row left column
-        fuelIndicator = getFuelIndicator();
+        float width = stage.getWidth() / 3f;
+        fuelIndicator = getFuelIndicator(width);
         table
             .add(fuelIndicator)
-            .width(stage.getWidth() / 3f)
+            .width(width)
             .top()
             .left();
 
@@ -110,12 +112,54 @@ public class Hud implements Screen
         stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
-    private Actor getFuelIndicator()
+    private Actor getFuelIndicator(float width)
     {
         if (!ship.isInfiniteFuel())
         {
+            /*Pixmap pixmap = new Pixmap(
+                Math.round(width),
+                Math.round((Gdx.graphics.getHeight() / 30f)),
+                Pixmap.Format.RGBA8888);
+
+            pixmap.setColor(Color.RED);
+            pixmap.fillRectangle(0, 0, pixmap.getWidth(), pixmap.getHeight());
+
+            float chunkSize = width / ship.getMaxFuel();
+            for (int i = 0; i < ship.getMaxFuel(); i++)
+            {
+                pixmap.setColor(Color.BLUE);
+                pixmap.fillRectangle(Math.round(chunkSize * i) - 1, 0, 1, pixmap.getHeight());
+            }
+            Texture texture = new Texture(pixmap);
+            texture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+
             final ProgressBar fuelProgressBar = new ProgressBar(
                 0, ship.getMaxFuel(), 0.001f, false, UIManager.skin);
+
+
+            Pixmap pixmap2 = new Pixmap(
+                Math.round(width),
+                Math.round((Gdx.graphics.getHeight() / 30f)),
+                Pixmap.Format.RGBA8888);
+
+            pixmap2.setColor(Color.GREEN);
+            pixmap2.fillRectangle(0, 0, pixmap2.getWidth(), pixmap2.getHeight());
+
+            for (int i = 0; i < ship.getMaxFuel(); i++)
+            {
+                pixmap2.setColor(Color.BLUE);
+                pixmap2.fillRectangle(Math.round(chunkSize * i) - 1, 0, 1, pixmap2.getHeight());
+            }
+            Texture texture2 = new Texture(pixmap2);
+            texture2.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+
+            Drawable backgroundDrawable = new TextureRegionDrawable(new TextureRegion(texture));
+            fuelProgressBar.getStyle().background = backgroundDrawable;
+            fuelProgressBar.getStyle().knobBefore = null;
+            fuelProgressBar.getStyle().knobAfter =
+                new SpriteDrawable(new Sprite(new Texture(pixmap2)));*/
+
+            final ProgressBar fuelProgressBar = UIManager.getDelimitedProgressBar(ship.getMaxFuel(), width);
             fuelProgressBar.addAction(new Action()
             {
                 @Override
