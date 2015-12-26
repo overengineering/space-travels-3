@@ -112,7 +112,7 @@ public class Hud implements Screen
 
     private Actor getFuelIndicator()
     {
-        if (ship.getMaxFuel() != -1)
+        if (!ship.isInfiniteFuel())
         {
             final ProgressBar fuelProgressBar = new ProgressBar(
                 0, ship.getMaxFuel(), 0.001f, false, UIManager.skin);

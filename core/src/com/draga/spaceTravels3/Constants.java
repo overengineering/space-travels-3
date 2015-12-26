@@ -124,8 +124,9 @@ public abstract class Constants
         public static final float ACCELEROMETER_RANGE                   = 0.5f;
         public static final float DEAD_ZONE                             = 0.15f;
 
-        public static final float PICKUP_RADIUS =
+        public static final float PICKUP_RADIUS       =
             (Visual.PICKUP_WIDTH + Visual.PICKUP_HEIGHT) / 2f * 1.3f;
+        public static final float LEVEL_BOUNDS_BUFFER = 10;
 
         public static float SHIP_ACCELERATION_PER_SECOND = 70f;
 

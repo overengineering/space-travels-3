@@ -1,9 +1,6 @@
 {
   "class": "SerialisableLevel",
   "name": "Level 2 easy",
-  "width": 300,
-  "height": 150,
-  "fuel": -1,
   "trajectorySeconds": 5.0,
   "maxLandingSpeed": 70,
 
@@ -13,7 +10,9 @@
   "serialisedShip": {
     "x": 10,
     "y": 75,
-    "mass": 1
+    "mass": 1,
+    "fuel": 0,
+    "infiniteFuel": true
   },
   "serialisedPlanets": [
     {
