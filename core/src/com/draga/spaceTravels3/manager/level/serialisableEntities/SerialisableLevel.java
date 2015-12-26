@@ -11,6 +11,7 @@ public class SerialisableLevel
     public float                    height;
     public float                    fuel;
     public float                    trajectorySeconds;
+    public float                    maxLandingSpeed;
     public SerialisableBackground   serialisedBackground;
     public SerialisableShip         serialisedShip;
     public List<SerialisablePlanet> serialisedPlanets;

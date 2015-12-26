@@ -248,17 +248,17 @@ public class Hud implements Screen
         // "That is not going to be confusing at all" (cit. Lee)
         Color borderCollie;
         Color fillCollins;
-        if (shipSpeed > Constants.Game.MAX_DESTINATION_PLANET_APPROACH_SPEED)
+        if (shipSpeed > this.level.getMaxLandingSpeed())
         {
             borderCollie = Constants.Visual.HUD.DESTINATION_PLANET_OVERLAY_LOSE_BORDER;
             fillCollins = Constants.Visual.HUD.DESTINATION_PLANET_OVERLAY_LOSE_FILL;
-            radius *= Constants.Game.MAX_DESTINATION_PLANET_APPROACH_SPEED / shipSpeed;
+            radius *= this.level.getMaxLandingSpeed() / shipSpeed;
         }
         else
         {
             borderCollie = Constants.Visual.HUD.DESTINATION_PLANET_OVERLAY_WIN_BORDER;
             fillCollins = Constants.Visual.HUD.DESTINATION_PLANET_OVERLAY_WIN_FILL;
-            radius *= shipSpeed / Constants.Game.MAX_DESTINATION_PLANET_APPROACH_SPEED;
+            radius *= shipSpeed / this.level.getMaxLandingSpeed();
         }
 
         SpaceTravels3.shapeRenderer.setColor(fillCollins);

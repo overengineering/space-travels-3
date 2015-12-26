@@ -5,6 +5,7 @@
   "height": 150,
   "fuel": 2,
   "trajectorySeconds": 0,
+  "maxLandingSpeed": 70,
 
   "serialisedBackground": {
     "texturePath": "background/background1080.jpg"

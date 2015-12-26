@@ -28,6 +28,7 @@ public class Level
     private final float height;
 
     private final float trajectorySeconds;
+    private final float maxLandingSpeed;
 
     private final ArrayList<Pickup> pickups;
     private final Ship              ship;
@@ -54,7 +55,8 @@ public class Level
         Planet destinationPlanet,
         float width,
         float height,
-        float trajectorySeconds)
+        float trajectorySeconds,
+        float maxLandingSpeed)
     {
         this.ship = ship;
         this.thruster = thruster;
@@ -65,6 +67,7 @@ public class Level
         this.id = id;
         this.name = name;
         this.trajectorySeconds = trajectorySeconds;
+        this.maxLandingSpeed = maxLandingSpeed;
 
         this.gameState = GameState.COUNTDOWN;
 
@@ -108,7 +111,7 @@ public class Level
         GameEntityManager.removeGameEntity(thruster);
 
         if (ship.physicsComponent.getVelocity().len()
-            > Constants.Game.MAX_DESTINATION_PLANET_APPROACH_SPEED
+            > this.getMaxLandingSpeed()
             || !shipPlanetCollisionEvent.planet.equals(destinationPlanet))
         {
             gameState = GameState.LOSE;
@@ -310,5 +313,10 @@ public class Level
     public float getTrajectorySeconds()
     {
         return trajectorySeconds;
+    }
+
+    public float getMaxLandingSpeed()
+    {
+        return maxLandingSpeed;
     }
 }

@@ -74,7 +74,8 @@ public abstract class LevelManager
             destinationPlanet,
             serialisableLevel.width,
             serialisableLevel.height,
-            serialisableLevel.trajectorySeconds);
+            serialisableLevel.trajectorySeconds,
+            serialisableLevel.maxLandingSpeed);
 
         // Run one update so everything is in place for the countdown
         GameEntityManager.update();
