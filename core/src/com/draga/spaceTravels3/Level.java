@@ -33,7 +33,7 @@ public class Level
 
     private final Rectangle bounds;
 
-    private int       pickupsCollected;
+    private int pickupsCollected;
     private GameState gameState;
 
     private Stopwatch elapsedPlayTime;
@@ -79,7 +79,9 @@ public class Level
         }
         GameEntityManager.update();
 
-        this.bounds = getBounds();
+        this.bounds = getBounds(
+            this.ship.physicsComponent.getPosition().x,
+            this.ship.physicsComponent.getPosition().y);
 
         Constants.General.EVENT_BUS.register(this);
 
@@ -88,10 +90,16 @@ public class Level
 
     /**
      * Return a rectangle that includes all the physic components and a little buffer.
+     * @param x
+     * @param y
      */
-    private Rectangle getBounds()
+    private Rectangle getBounds(float x, float y)
     {
-        Rectangle bounds = new Rectangle();
+        Rectangle bounds = new Rectangle(
+            x,
+            y,
+            0,
+            0);
 
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
