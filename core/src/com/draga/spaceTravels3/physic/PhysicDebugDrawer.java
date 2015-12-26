@@ -25,17 +25,17 @@ public class PhysicDebugDrawer
 
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
-            if (gameEntity.physicsComponent.getShape() instanceof Circle)
+            if (gameEntity.physicsComponent.getBoundsCircle() instanceof Circle)
             {
                 SpaceTravels3.shapeRenderer.circle(
                     gameEntity.physicsComponent.getPosition().x,
                     gameEntity.physicsComponent.getPosition().y,
-                    ((Circle) gameEntity.physicsComponent.getShape()).radius);
+                    ((Circle) gameEntity.physicsComponent.getBoundsCircle()).radius);
             }
             else
             {
                 throw new IllegalArgumentException("Illegal shape of type "
-                    + gameEntity.physicsComponent.getShape().getClass().getSimpleName());
+                    + gameEntity.physicsComponent.getBoundsCircle().getClass().getSimpleName());
             }
         }
 

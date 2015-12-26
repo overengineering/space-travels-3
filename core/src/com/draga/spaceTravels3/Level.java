@@ -2,12 +2,18 @@ package com.draga.spaceTravels3;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pools;
+import com.draga.spaceTravels3.component.PhysicsComponent;
 import com.draga.spaceTravels3.event.*;
 import com.draga.spaceTravels3.gameEntity.*;
 import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
+import com.draga.spaceTravels3.physic.Projection;
+import com.draga.spaceTravels3.physic.ProjectionPoint;
 import com.google.common.base.Stopwatch;
 import com.google.common.eventbus.Subscribe;
 
@@ -21,13 +27,16 @@ public class Level
     private final float width;
     private final float height;
 
+    private final float trajectorySeconds;
+
     private final ArrayList<Pickup> pickups;
     private final Ship              ship;
     private final Thruster          thruster;
     private final Planet            destinationPlanet;
-    private       int               pickupsCollected;
 
+    private int       pickupsCollected;
     private GameState gameState;
+
     private Stopwatch elapsedPlayTime;
 
     private Sound pickupCollectedSound;
@@ -44,7 +53,8 @@ public class Level
         ArrayList<Pickup> pickups,
         Planet destinationPlanet,
         float width,
-        float height)
+        float height,
+        float trajectorySeconds)
     {
         this.ship = ship;
         this.thruster = thruster;
@@ -54,6 +64,7 @@ public class Level
         this.height = height;
         this.id = id;
         this.name = name;
+        this.trajectorySeconds = trajectorySeconds;
 
         this.gameState = GameState.COUNTDOWN;
 
@@ -96,12 +107,9 @@ public class Level
         GameEntityManager.removeGameEntity(ship);
         GameEntityManager.removeGameEntity(thruster);
 
-        elapsedPlayTime.stop();
-
-        // If wrong planet or too fast then lose.
-        if (!(shipPlanetCollisionEvent.planet.equals(destinationPlanet))
-            || ship.physicsComponent.getVelocity().len()
-            > Constants.Game.MAX_DESTINATION_PLANET_APPROACH_SPEED)
+        if (ship.physicsComponent.getVelocity().len()
+            > Constants.Game.MAX_DESTINATION_PLANET_APPROACH_SPEED
+            || !shipPlanetCollisionEvent.planet.equals(destinationPlanet))
         {
             gameState = GameState.LOSE;
             GameEntity explosion = new Explosion(
@@ -118,6 +126,9 @@ public class Level
         }
         else
         {
+            GameEntityManager.removeGameEntity(ship);
+            GameEntityManager.removeGameEntity(thruster);
+
             gameState = GameState.WIN;
 
             WinEvent winEvent = Pools.obtain(WinEvent.class);
@@ -207,5 +218,97 @@ public class Level
         {
             gameState = GameState.COUNTDOWN;
         }
+    }
+
+    public Projection processProjection(ArrayList<ProjectionPoint> projectionPoints)
+    {
+        ArrayList<Vertex> vertices = new ArrayList<>(projectionPoints.size());
+
+        int lastCollisionIndex = 0;
+        // Keep a list of PhysicsComponent that we already collided with to exclude them later on.
+        ArrayList<PhysicsComponent> alreadyCollidedPhysicsComponents = new ArrayList<>();
+        for (int i = 0, projectionPointsSize = projectionPoints.size(); i
+            < projectionPointsSize; i++)
+        {
+            ProjectionPoint projectionPoint = projectionPoints.get(i);
+
+            // Get the PhysicsComponent we are colliding with at this point excluding the one
+            // already checked for.
+            ArrayList<PhysicsComponent> physicsComponentsToCheck =
+                new ArrayList<>(projectionPoint.getCollidingPhysicsComponents());
+            physicsComponentsToCheck.removeAll(alreadyCollidedPhysicsComponents);
+
+            // If it collides with something or this is the last iteration.
+            if (!physicsComponentsToCheck.isEmpty()
+                || i == projectionPointsSize - 1)
+            {
+                Color currentColor = getColor(projectionPoint, physicsComponentsToCheck);
+                alreadyCollidedPhysicsComponents.addAll(physicsComponentsToCheck);
+
+                // Add all the vertices up to this collision with the correct color.
+                for (int j = lastCollisionIndex; j < i; j++)
+                {
+                    vertices.add(
+                        j,
+                        new Vertex(currentColor, projectionPoints.get(j).getPosition()));
+                }
+                lastCollisionIndex = i;
+
+                // If collided with a planet truncate here.
+                for (PhysicsComponent physicsComponent : physicsComponentsToCheck)
+                {
+                    if (physicsComponent.getOwnerClass().equals(Planet.class))
+                    {
+                        return new Projection(vertices);
+                    }
+                }
+            }
+        }
+
+        return new Projection(vertices);
+    }
+
+    private Color getColor(
+        ProjectionPoint projectionPoint,
+        ArrayList<PhysicsComponent> nextCollidingPhysicsComponents)
+    {
+        for (PhysicsComponent nextCollidingPhysicsComponent : nextCollidingPhysicsComponents)
+        {
+            if (nextCollidingPhysicsComponent.getOwnerClass().equals(Planet.class))
+            {
+                // If colliding with destination planet lerps from
+                // the color for winning (zero velocity),
+                // to white (max approach speed)
+                // to the color for losing (twice the maximum approach velocity)
+                if (destinationPlanet.physicsComponent.equals(nextCollidingPhysicsComponent))
+                {
+                    return Constants.Visual.HUD.TrajectoryLine.COLOR_PLANET_DESTINATION;
+                }
+                else
+                {
+                    return Constants.Visual.HUD.TrajectoryLine.COLOR_PLANET_LOSE;
+                }
+            }
+        }
+
+        for (PhysicsComponent nextCollidingPhysicsComponent : nextCollidingPhysicsComponents)
+        {
+            if (nextCollidingPhysicsComponent.getOwnerClass().equals(Pickup.class))
+            {
+                return Constants.Visual.HUD.TrajectoryLine.COLOR_PICKUP;
+            }
+        }
+
+        return Constants.Visual.HUD.TrajectoryLine.COLOR_NEUTRAL;
+    }
+
+    public Planet getDestinationPlanet()
+    {
+        return destinationPlanet;
+    }
+
+    public float getTrajectorySeconds()
+    {
+        return trajectorySeconds;
     }
 }

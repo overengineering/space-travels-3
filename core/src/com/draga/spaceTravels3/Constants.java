@@ -16,31 +16,15 @@ public abstract class Constants
         public static final float VIEWPORT_HEIGHT = 100f;
 
         // Pickup
-        public static final float PICKUP_WIDTH          = 5f;
-        public static final float PICKUP_HEIGHT         = 5f * 0.75f;
-        public static final float PICKUP_MINIMAP_RADIUS =
-            (PICKUP_WIDTH + PICKUP_HEIGHT) / 2f * 1.3f;
-        public static final Color PICKUP_MINIMAP_COLOR  = Color.GOLDENROD;
-
-        // Planet
-        public static final Color PLANET_MINIMAP_DESTINATION_COLOUR = Color.BLUE;
-        public static final Color PLANET_MINIMAP_COLOUR             = Color.RED;
+        public static final float PICKUP_WIDTH  = 5f;
+        public static final float PICKUP_HEIGHT = 5f * 0.75f;
 
         // Explosion
         public static final float EXPLOSION_LIFETIME = 2f;
 
-        // HUD
-        public static final float MINIMAP_SCALE             = 0.25f;
-        public static final float HUD_FORCE_INDICATOR_SCALE = 0.25f;
-        public static final Color JOYSTICK_OVERLAY_COLOR    = new Color(1f, 1f, 1f, 0.3f);
-
         // Ship
-        public static final float   SHIP_WIDTH                    = 10f;
-        public static final float   SHIP_HEIGHT                   = 10f;
-        public static final Color   SHIP_MINIMAP_COLOUR           = Color.WHITE;
-        public static final Vector2 SHIP_MINIMAP_TRIANGLE_VERTEX1 = new Vector2(8, 0);
-        public static final Vector2 SHIP_MINIMAP_TRIANGLE_VERTEX2 = new Vector2(-5, -5);
-        public static final Vector2 SHIP_MINIMAP_TRIANGLE_VERTEX3 = new Vector2(-5, 5);
+        public static final float SHIP_WIDTH  = 10f;
+        public static final float SHIP_HEIGHT = 10f;
 
         // Thruster.
         public static final float   THRUSTER_MAX_WIDTH      = 5;
@@ -52,16 +36,16 @@ public abstract class Constants
         public static final float SCREEN_FADE_DURATION = 3f;
         public static final Color SCREEN_FADE_COLOUR   = new Color(0, 0, 0, 0.7f);
 
-        // Minimap.
-        public static final Color MINIMAP_BACKGROUND_COLOR = new Color(0, 0.17f, 0, 0.5f);
-        public static final Color MINIMAP_BORDER_COLOR     = new Color(0, 0.4f, 0, 1);
+
+        public abstract static class Background
+        {
+            public static final int   STAR_LAYER_COUNT        = 10;
+            public static final int   STAR_COUNT              = 3000;
+            public static final int   NEBULAE_LAYER_COUNT     = 0;
+            public static final float STAR_MAX_DIAMETER_SCALE = 0.000005f;
+        }
 
 
-        // Background.
-        public static final int   BACKGROUND_STAR_LAYER_COUNT        = 10;
-        public static final int   BACKGROUND_STAR_COUNT              = 3000;
-        public static final int   BACKGROUND_NEBULAE_LAYER_COUNT     = 0;
-        public static final float BACKGROUND_STAR_MAX_DIAMETER_SCALE = 0.000005f;
         public abstract static class UI
         {
             public static final float SQRT_PIXELS      =
@@ -69,6 +53,53 @@ public abstract class Constants
             public static final float FONT_SCALE       = 0.05f;
             public static final float DEBUG_FONT_SCALE = 0.02f;
             public static final float BUTTON_PADDING   = SQRT_PIXELS * 0.01f;
+        }
+
+
+        public abstract static class HUD
+        {
+
+            // HUD
+            public static final float FORCE_INDICATOR_SCALE                  = 0.25f;
+            public static final Color JOYSTICK_OVERLAY_COLOR                 =
+                new Color(1f, 1f, 1f, 0.3f);
+            public static final Color DESTINATION_PLANET_OVERLAY_LOSE_BORDER = Color.RED;
+            public static final Color DESTINATION_PLANET_OVERLAY_LOSE_FILL   =
+                new Color(1f, 0f, 0f, 0.2f);
+            public static final Color DESTINATION_PLANET_OVERLAY_WIN_BORDER  = Color.GREEN;
+            public static final Color DESTINATION_PLANET_OVERLAY_WIN_FILL    =
+                new Color(0f, 1f, 0f, 0.2f);
+
+
+            public abstract static class Minimap
+            {
+                public static final Color PICKUP_COLOR  = Color.GOLDENROD;
+
+                public static final Color   BACKGROUND_COLOR      = new Color(0, 0.17f, 0, 0.5f);
+                public static final Color   BORDER_COLOR          = new Color(0, 0.4f, 0, 1);
+                public static final Color   SHIP_COLOUR           = Color.WHITE;
+                public static final Vector2 SHIP_TRIANGLE_VERTEX1 = new Vector2(8, 0);
+                public static final Vector2 SHIP_TRIANGLE_VERTEX2 = new Vector2(-5, -5);
+                public static final Vector2 SHIP_TRIANGLE_VERTEX3 = new Vector2(-5, 5);
+                public static final float   SCALE                 = 0.25f;
+
+                // Planet
+                public static final Color PLANET_DESTINATION_COLOUR = new Color(0, 0.7f, 1, 1);
+                public static final Color PLANET_COLOUR             = Color.RED;
+            }
+
+
+            public abstract static class TrajectoryLine
+            {
+                public static final float POINTS_TIME              = 0.05f;
+                public static final float STEP_TIME                = 1f / 100f;
+                public static final Color COLOR_NEUTRAL            = new Color(0.5f, 0.5f, 0.5f, 1);
+                public static final Color COLOR_PLANET_LOSE        = new Color(0.8f, 0.2f, 0.2f, 1);
+                public static final Color COLOR_PICKUP             = Color.GREEN;
+                public static final Color COLOR_PLANET_DESTINATION =
+                    Minimap.PLANET_DESTINATION_COLOUR;
+            }
+
         }
     }
 
@@ -94,7 +125,10 @@ public abstract class Constants
         public static final float ACCELEROMETER_RANGE                   = 0.5f;
         public static final float DEAD_ZONE                             = 0.15f;
 
-        public static float SHIP_ACCELERATION_PER_SECOND = 60f;
+        public static final float PICKUP_RADIUS =
+            (Visual.PICKUP_WIDTH + Visual.PICKUP_HEIGHT) / 2f * 1.3f;
+
+        public static float SHIP_ACCELERATION_PER_SECOND = 70f;
 
         public static int PHYSICS_STEPS = 10;
     }
@@ -109,11 +143,11 @@ public abstract class Constants
         public static final float         NANO                                = 0.000000001f;
         public static final EventBus      EVENT_BUS                           = new EventBus();
 
-        public static final String        FOLDER                              =
+        public static final String FOLDER                  =
             SpaceTravels3.class.getSimpleName();
-        public static final String        SCORES_FILENAME                     = "Scores.json";
-        public static final String        DEBUG_SETTINGS_FILENAME             =
+        public static final String SCORES_FILENAME         = "Scores.json";
+        public static final String DEBUG_SETTINGS_FILENAME =
             "DebugSettings.json";
-        public static final String        SETTINGS_FILENAME                   = "Settings.json";
+        public static final String SETTINGS_FILENAME       = "Settings.json";
     }
 }

@@ -7,11 +7,13 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
-import com.draga.PixmapUtility;
+import com.draga.utils.PixmapUtils;
 import com.draga.spaceTravels3.event.PickupCollectedEvent;
 import com.draga.spaceTravels3.gameEntity.Ship;
 import com.draga.spaceTravels3.manager.GameEntityManager;
@@ -19,22 +21,30 @@ import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.physic.PhysicsEngine;
+import com.draga.utils.GraphicsUtils;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.Stack;
 
 public class Hud implements Screen
 {
-    private final Label                 scoreLabel;
-    private final Camera                worldCamera;
-    private final Level                 level;
-    private       Stage                 stage;
-    private       ProgressBar           fuelProgressBar;
-    private       Stack<Image>          grayPickups;
-    private       Table                 pickupTable;
-    private       Ship                  ship;
-    private       MiniMap               miniMap;
-    private       TextureRegionDrawable collectedPickupDrawable;
+    private final Label        scoreLabel;
+    private final Camera       worldCamera;
+    private final Level        level;
+    private       Stage        stage;
+    private       Actor  fuelIndicator;
+    private       Stack<Image> grayPickups;
+    private       Table        pickupTable;
+    private       Ship         ship;
+
+    public MiniMap getMiniMap()
+    {
+        return miniMap;
+    }
+
+    private MiniMap               miniMap;
+    private TextureRegionDrawable collectedPickupDrawable;
+
 
     public Hud(Camera worldCamera, Level level)
     {
@@ -55,9 +65,9 @@ public class Hud implements Screen
         Table table = UIManager.addDefaultTableToStage(stage);
 
         // Top row left column
-        fuelProgressBar = getFuelProgressBar();
+        fuelIndicator = getFuelIndicator();
         table
-            .add(fuelProgressBar)
+            .add(fuelIndicator)
             .width(stage.getWidth() / 3f)
             .top()
             .left();
@@ -100,12 +110,28 @@ public class Hud implements Screen
         stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
-    private ProgressBar getFuelProgressBar()
+    private Actor getFuelIndicator()
     {
-        ProgressBar fuelProgressBar = new ProgressBar(
-            0, ship.getMaxFuel(), 0.0001f, false, UIManager.skin);
-
-        return fuelProgressBar;
+        if (ship.getMaxFuel() != -1)
+        {
+            final ProgressBar fuelProgressBar = new ProgressBar(
+                0, ship.getMaxFuel(), 0.001f, false, UIManager.skin);
+            fuelProgressBar.addAction(new Action()
+            {
+                @Override
+                public boolean act(float delta)
+                {
+                    fuelProgressBar.setValue(ship.getCurrentFuel());
+                    return false;
+                }
+            });
+            return fuelProgressBar;
+        }
+        else
+        {
+            Label infiniteFuelLabel = new Label("inf", UIManager.skin);
+            return infiniteFuelLabel;
+        }
     }
 
     private Label getScoreLabel()
@@ -147,12 +173,12 @@ public class Hud implements Screen
                 (int) smallestDimension,
                 (int) smallestDimension,
                 Pixmap.Format.RGBA8888);
-        pixmap.setColor(Constants.Visual.JOYSTICK_OVERLAY_COLOR);
+        pixmap.setColor(Constants.Visual.HUD.JOYSTICK_OVERLAY_COLOR);
 
         int numOuterArcs = 8;
         float halfSmallestDimension = smallestDimension / 2f;
 
-        PixmapUtility.dashedCircle(
+        PixmapUtils.dashedCircle(
             pixmap,
             halfSmallestDimension,
             halfSmallestDimension,
@@ -162,7 +188,7 @@ public class Hud implements Screen
             360 / numOuterArcs / 2,
             100,
             2);
-        PixmapUtility.dashedCircle(
+        PixmapUtils.dashedCircle(
             pixmap,
             halfSmallestDimension,
             halfSmallestDimension,
@@ -190,15 +216,12 @@ public class Hud implements Screen
     @Override
     public void render(float delta)
     {
-        updateFuelProgressBar();
-
         setScoreLabel(level.getScore());
 
         stage.act(delta);
         stage.draw();
 
-        Gdx.gl.glEnable(GL20.GL_BLEND);
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        GraphicsUtils.enableBlending();
 
         SpaceTravels3.shapeRenderer.begin();
 
@@ -210,28 +233,63 @@ public class Hud implements Screen
             drawVelocityIndicator();
         }
 
+        drawSpeedIndicator();
+
         miniMap.update();
         miniMap.draw();
         SpaceTravels3.shapeRenderer.end();
-        Gdx.gl.glDisable(GL20.GL_BLEND);
+        GraphicsUtils.disableBlending();
     }
 
-    private void updateFuelProgressBar()
+    private void drawSpeedIndicator()
     {
-        fuelProgressBar.setValue(ship.getCurrentFuel());
+        float radius = level.getDestinationPlanet().physicsComponent.getBoundsCircle().radius;
+        float shipSpeed = ship.physicsComponent.getVelocity().len();
+        // "That is not going to be confusing at all" (cit. Lee)
+        Color borderCollie;
+        Color fillCollins;
+        if (shipSpeed > Constants.Game.MAX_DESTINATION_PLANET_APPROACH_SPEED)
+        {
+            borderCollie = Constants.Visual.HUD.DESTINATION_PLANET_OVERLAY_LOSE_BORDER;
+            fillCollins = Constants.Visual.HUD.DESTINATION_PLANET_OVERLAY_LOSE_FILL;
+            radius *= Constants.Game.MAX_DESTINATION_PLANET_APPROACH_SPEED / shipSpeed;
+        }
+        else
+        {
+            borderCollie = Constants.Visual.HUD.DESTINATION_PLANET_OVERLAY_WIN_BORDER;
+            fillCollins = Constants.Visual.HUD.DESTINATION_PLANET_OVERLAY_WIN_FILL;
+            radius *= shipSpeed / Constants.Game.MAX_DESTINATION_PLANET_APPROACH_SPEED;
+        }
+
+        SpaceTravels3.shapeRenderer.setColor(fillCollins);
+        SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
+        int segments = (int) Math.max(1, (12 * (float) Math.cbrt(radius)));
+        SpaceTravels3.shapeRenderer.circle(
+            level.getDestinationPlanet().physicsComponent.getPosition().x,
+            level.getDestinationPlanet().physicsComponent.getPosition().y,
+            radius,
+            segments);
+
+        SpaceTravels3.shapeRenderer.setColor(borderCollie);
+        SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Line);
+        SpaceTravels3.shapeRenderer.circle(
+            level.getDestinationPlanet().physicsComponent.getPosition().x,
+            level.getDestinationPlanet().physicsComponent.getPosition().y,
+            radius,
+            segments);
     }
 
     private void drawGravityIndicator()
     {
-        Vector2 gravityVector = PhysicsEngine.getGravityForceActingOn(ship);
+        Vector2 gravityVector = PhysicsEngine.calculateGravityForce(ship.physicsComponent);
 
         SpaceTravels3.shapeRenderer.setColor(Color.BLUE);
         SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
         SpaceTravels3.shapeRenderer.circle(
             ship.physicsComponent.getPosition().x
-                + gravityVector.x * Constants.Visual.HUD_FORCE_INDICATOR_SCALE,
+                + gravityVector.x * Constants.Visual.HUD.FORCE_INDICATOR_SCALE,
             ship.physicsComponent.getPosition().y
-                + gravityVector.y * Constants.Visual.HUD_FORCE_INDICATOR_SCALE,
+                + gravityVector.y * Constants.Visual.HUD.FORCE_INDICATOR_SCALE,
             0.5f);
 
         SpaceTravels3.shapeRenderer.setColor(new Color(0, 0, 1f, 0.4f));
@@ -239,7 +297,7 @@ public class Hud implements Screen
         SpaceTravels3.shapeRenderer.circle(
             ship.physicsComponent.getPosition().x,
             ship.physicsComponent.getPosition().y,
-            gravityVector.len() * Constants.Visual.HUD_FORCE_INDICATOR_SCALE,
+            gravityVector.len() * Constants.Visual.HUD.FORCE_INDICATOR_SCALE,
             24);
     }
 
@@ -250,10 +308,10 @@ public class Hud implements Screen
         SpaceTravels3.shapeRenderer.circle(
             ship.physicsComponent.getPosition().x
                 + ship.physicsComponent.getVelocity().x
-                * Constants.Visual.HUD_FORCE_INDICATOR_SCALE,
+                * Constants.Visual.HUD.FORCE_INDICATOR_SCALE,
             ship.physicsComponent.getPosition().y
                 + ship.physicsComponent.getVelocity().y
-                * Constants.Visual.HUD_FORCE_INDICATOR_SCALE,
+                * Constants.Visual.HUD.FORCE_INDICATOR_SCALE,
             0.5f);
 
         SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Line);
@@ -261,7 +319,7 @@ public class Hud implements Screen
         SpaceTravels3.shapeRenderer.circle(
             ship.physicsComponent.getPosition().x,
             ship.physicsComponent.getPosition().y,
-            ship.physicsComponent.getVelocity().len() * Constants.Visual.HUD_FORCE_INDICATOR_SCALE,
+            ship.physicsComponent.getVelocity().len() * Constants.Visual.HUD.FORCE_INDICATOR_SCALE,
             24);
     }
 

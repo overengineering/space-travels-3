@@ -1,6 +1,6 @@
 {
   "class": "SerialisableLevel",
-  "name": "Level 1",
+  "name": "Level 3",
   "width": 300,
   "height": 150,
   "fuel": 6.0,
@@ -24,38 +24,42 @@
       "destination": true
     },
     {
+      "texturePath": "planet/mars256.png",
+      "x": 150,
+      "y": 75,
+      "radius": 8,
+      "mass": 20000
+    },
+    {
       "texturePath": "planet/jupiter256.png",
-      "x": 200,
-      "y": 130,
-      "radius": 25,
-      "mass": 100000
+      "x": 100,
+      "y": 90,
+      "radius": 7,
+      "mass": 20000
     },
     {
       "texturePath": "planet/mars256.png",
-      "x": 50,
-      "y": 30,
-      "radius": 3.397,
-      "mass": 3000
-    },
-    {
-      "texturePath": "planet/venus256.png",
-      "x": 80,
-      "y": 80,
-      "radius": 6.052,
-      "mass": 10000
+      "x": 200,
+      "y": 110,
+      "radius": 6,
+      "mass": 20000
     }
   ],
   "serialisedPickups": [
     {
-      "x": 10,
-      "y": 10
+      "x": 140,
+      "y": 60
     },
     {
-      "x": 50,
-      "y": 10
+      "x": 160,
+      "y": 60
     },
     {
-      "x": 10,
+      "x": 150,
+      "y": 90
+    },
+    {
+      "x": 200,
       "y": 100
     }
   ]

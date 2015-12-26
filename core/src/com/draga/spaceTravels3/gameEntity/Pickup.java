@@ -1,7 +1,6 @@
 package com.draga.spaceTravels3.gameEntity;
 
 import com.badlogic.gdx.math.MathUtils;
-import com.draga.shape.Circle;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.component.PhysicsComponent;
 import com.draga.spaceTravels3.component.graphicComponent.StaticGraphicComponent;
@@ -20,8 +19,9 @@ public class Pickup extends GameEntity
             x,
             y,
             0,
-            new Circle((Constants.Visual.PICKUP_WIDTH + Constants.Visual.PICKUP_HEIGHT) / 4f),
+            (Constants.Visual.PICKUP_WIDTH + Constants.Visual.PICKUP_HEIGHT) / 4f,
             new GameEntityGroup(collidesWith),
+            this.getClass(),
             false);
         this.physicsComponent.setAngularVelocity(
             MathUtils.random(100, 300) * MathUtils.randomSign());
@@ -36,8 +36,8 @@ public class Pickup extends GameEntity
         this.miniMapGraphicComponent =
             new StarMiniMapGraphicComponent(
                 physicsComponent,
-                Constants.Visual.PICKUP_MINIMAP_COLOR,
-                Constants.Visual.PICKUP_MINIMAP_RADIUS);
+                Constants.Visual.HUD.Minimap.PICKUP_COLOR,
+                Constants.Game.PICKUP_RADIUS);
     }
 
     @Override

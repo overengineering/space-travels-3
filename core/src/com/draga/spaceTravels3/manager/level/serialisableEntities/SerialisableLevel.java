@@ -10,6 +10,7 @@ public class SerialisableLevel
     public float                    width;
     public float                    height;
     public float                    fuel;
+    public float                    trajectorySeconds;
     public SerialisableBackground   serialisedBackground;
     public SerialisableShip         serialisedShip;
     public List<SerialisablePlanet> serialisedPlanets;

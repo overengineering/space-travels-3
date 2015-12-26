@@ -1,7 +1,6 @@
 package com.draga.spaceTravels3.gameEntity;
 
 import com.badlogic.gdx.graphics.Color;
-import com.draga.shape.Circle;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.component.PhysicsComponent;
 import com.draga.spaceTravels3.component.graphicComponent.StaticGraphicComponent;
@@ -26,8 +25,9 @@ public class Planet extends GameEntity
             x,
             y,
             mass,
-            new Circle(radius),
+            radius,
             new GameEntityGroup(collidesWith),
+            this.getClass(),
             false);
 
         this.graphicComponent = new StaticGraphicComponent(
@@ -37,8 +37,8 @@ public class Planet extends GameEntity
             this.physicsComponent);
 
         Color miniMapColour = isDestination
-            ? Constants.Visual.PLANET_MINIMAP_DESTINATION_COLOUR
-            : Constants.Visual.PLANET_MINIMAP_COLOUR;
+            ? Constants.Visual.HUD.Minimap.PLANET_DESTINATION_COLOUR
+            : Constants.Visual.HUD.Minimap.PLANET_COLOUR;
         this.miniMapGraphicComponent = new CircleMiniMapGraphicsComponent(
             this.physicsComponent,
             miniMapColour,

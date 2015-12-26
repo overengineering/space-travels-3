@@ -17,7 +17,11 @@ import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.physic.PhysicDebugDrawer;
 import com.draga.spaceTravels3.physic.PhysicsEngine;
+import com.draga.spaceTravels3.physic.Projection;
+import com.draga.spaceTravels3.physic.ProjectionPoint;
 import com.google.common.eventbus.Subscribe;
+
+import java.util.ArrayList;
 
 public class GameScreen implements Screen
 {
@@ -31,6 +35,8 @@ public class GameScreen implements Screen
     private ExtendViewport extendViewport;
 
     private Level level;
+
+    private Projection shipProjection;
 
     public GameScreen(Level level)
     {
@@ -51,9 +57,10 @@ public class GameScreen implements Screen
             Constants.Visual.VIEWPORT_HEIGHT);
         extendViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        updateCamera();
-
         hud = new Hud(extendViewport.getCamera(), level);
+
+        // Run a frame to do things like generate a Projection.
+        update(0);
 
         this.overlayScreen = new CountdownScreen();
     }
@@ -131,15 +138,33 @@ public class GameScreen implements Screen
         {
             gameEntity.update(deltaTime);
         }
+
+        updateShipProjection();
+        this.hud.getMiniMap().setShipProjection(this.shipProjection);
+    }
+
+    private void updateShipProjection()
+    {
+        ArrayList<ProjectionPoint> projectionPoints = PhysicsEngine.gravityProjection(
+            this.level.getShip().physicsComponent,
+            this.level.getTrajectorySeconds(),
+            Constants.Visual.HUD.TrajectoryLine.POINTS_TIME);
+
+        this.shipProjection = this.level.processProjection(projectionPoints);
     }
 
     public void draw()
     {
         updateCamera();
 
-        SpaceTravels3.spriteBatch.begin();
+        SpaceTravels3.shapeRenderer.setProjectionMatrix(this.extendViewport.getCamera().combined);
+        SpaceTravels3.shapeRenderer.begin();
+        this.shipProjection.draw();
+        SpaceTravels3.shapeRenderer.end();
 
+        SpaceTravels3.spriteBatch.begin();
         background.draw(extendViewport.getCamera());
+
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
             gameEntity.graphicComponent.draw();

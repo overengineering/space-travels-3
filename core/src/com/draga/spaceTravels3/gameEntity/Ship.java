@@ -1,7 +1,6 @@
 package com.draga.spaceTravels3.gameEntity;
 
 import com.badlogic.gdx.math.Vector2;
-import com.draga.shape.Circle;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.component.PhysicsComponent;
 import com.draga.spaceTravels3.component.graphicComponent.StaticGraphicComponent;
@@ -43,8 +42,9 @@ public class Ship extends GameEntity
                 x,
                 y,
                 mass,
-                new Circle(Constants.Game.SHIP_COLLISION_RADIUS),
+                Constants.Game.SHIP_COLLISION_RADIUS,
                 new GameEntityGroup(collidesWith),
+                this.getClass(),
                 true);
 
         this.graphicComponent = new StaticGraphicComponent(
@@ -55,10 +55,10 @@ public class Ship extends GameEntity
 
         this.miniMapGraphicComponent = new TriangleMiniMapGraphicComponent(
             this.physicsComponent,
-            Constants.Visual.SHIP_MINIMAP_COLOUR,
-            Constants.Visual.SHIP_MINIMAP_TRIANGLE_VERTEX1,
-            Constants.Visual.SHIP_MINIMAP_TRIANGLE_VERTEX2,
-            Constants.Visual.SHIP_MINIMAP_TRIANGLE_VERTEX3);
+            Constants.Visual.HUD.Minimap.SHIP_COLOUR,
+            Constants.Visual.HUD.Minimap.SHIP_TRIANGLE_VERTEX1,
+            Constants.Visual.HUD.Minimap.SHIP_TRIANGLE_VERTEX2,
+            Constants.Visual.HUD.Minimap.SHIP_TRIANGLE_VERTEX3);
     }
 
     public float getMaxFuel()
@@ -71,19 +71,22 @@ public class Ship extends GameEntity
     {
         Vector2 inputForce = InputManager.getInputForce();
 
-        float fuelConsumption = inputForce.len() * Constants.Game.FUEL_PER_SECOND * deltaTime;
-
-        // If the fuel is or is going to be completely consumed then only apply the input force
-        // that the fuel can afford.
-        if (fuelConsumption > currentFuel)
+        if (this.maxFuel != -1)
         {
-            inputForce.scl(currentFuel / fuelConsumption);
-            fuelConsumption = currentFuel;
-        }
+            float fuelConsumption = inputForce.len() * Constants.Game.FUEL_PER_SECOND * deltaTime;
 
-        currentFuel = SettingsManager.getDebugSettings().infiniteFuel
-            ? maxFuel
-            : currentFuel - fuelConsumption;
+            // If the fuel is or is going to be completely consumed then only apply the input force
+            // that the fuel can afford.
+            if (fuelConsumption > currentFuel)
+            {
+                inputForce.scl(currentFuel / fuelConsumption);
+                fuelConsumption = currentFuel;
+            }
+
+            currentFuel = SettingsManager.getDebugSettings().infiniteFuel
+                ? maxFuel
+                : currentFuel - fuelConsumption;
+        }
 
         this.physicsComponent.getVelocity()
             .add(inputForce.cpy().scl(deltaTime * Constants.Game.SHIP_ACCELERATION_PER_SECOND));

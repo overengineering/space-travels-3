@@ -25,9 +25,9 @@ public class Background implements Disposable
         layers = new ArrayList<>();
         layerParallaxScale = new ArrayList<>();
 
-        addNebulaeLayers(Constants.Visual.BACKGROUND_NEBULAE_LAYER_COUNT);
+        addNebulaeLayers(Constants.Visual.Background.NEBULAE_LAYER_COUNT);
 
-        addStarLayers(Constants.Visual.BACKGROUND_STAR_LAYER_COUNT);
+        addStarLayers(Constants.Visual.Background.STAR_LAYER_COUNT);
     }
 
     private void addNebulaeLayers(int count)
@@ -43,7 +43,7 @@ public class Background implements Disposable
         }
         Gdx.app.debug(
             LOGGING_TAG,
-            Constants.Visual.BACKGROUND_NEBULAE_LAYER_COUNT
+            Constants.Visual.Background.NEBULAE_LAYER_COUNT
                 + " layers of nebulae took "
                 + stopwatch.elapsed(
                 TimeUnit.NANOSECONDS) * Constants.General.NANO
@@ -61,7 +61,7 @@ public class Background implements Disposable
             float parallaxScale = MathUtils.random(0.05f, 0.3f);
             layerParallaxScale.add(parallaxScale);
         }
-        Gdx.app.debug(LOGGING_TAG, Constants.Visual.BACKGROUND_STAR_LAYER_COUNT
+        Gdx.app.debug(LOGGING_TAG, Constants.Visual.Background.STAR_LAYER_COUNT
             + " layers of stars took " + stopwatch.elapsed(
             TimeUnit.NANOSECONDS) * Constants.General.NANO + "s");
     }
@@ -107,10 +107,10 @@ public class Background implements Disposable
         Pixmap pixmap = new Pixmap(width, height, Pixmap.Format.RGBA8888);
         Pixmap.setBlending(Pixmap.Blending.None);
 
-        float maxDiameter = width * height * Constants.Visual.BACKGROUND_STAR_MAX_DIAMETER_SCALE;
+        float maxDiameter = width * height * Constants.Visual.Background.STAR_MAX_DIAMETER_SCALE;
 
-        for (int i = 0; i < Constants.Visual.BACKGROUND_STAR_COUNT
-            / Constants.Visual.BACKGROUND_STAR_LAYER_COUNT; i++)
+        for (int i = 0; i < Constants.Visual.Background.STAR_COUNT
+            / Constants.Visual.Background.STAR_LAYER_COUNT; i++)
         {
             float diameter = MathUtils.randomTriangular(0.1f, maxDiameter, 0.1f);
             int radius = MathUtils.round(diameter / 2f);

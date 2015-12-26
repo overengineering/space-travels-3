@@ -1,35 +1,66 @@
 package com.draga.spaceTravels3.component;
 
 import com.badlogic.gdx.math.Vector2;
-import com.draga.shape.Shape;
+import com.draga.shape.Circle;
+import com.draga.spaceTravels3.gameEntity.GameEntity;
 import com.draga.spaceTravels3.gameEntity.GameEntityGroup;
 
-public class PhysicsComponent
-{
-    public final boolean affectedByGravity;
+import java.io.Serializable;
 
-    private final float           mass;
-    private final Vector2         position;
-    private final Vector2         velocity;
-    private final Shape           shape;
-    private final GameEntityGroup collisionGroup;
-    private       float           angle;
-    private       float           angularVelocity;
+public class PhysicsComponent implements Serializable
+{
+    private final boolean affectedByGravity;
+
+    private final Vector2 position;
+    private final Vector2 velocity;
+
+    private final Circle boundsCircle;
+
+    private final float mass;
+
+    private final GameEntityGroup             collidesWith;
+    private final Class<? extends GameEntity> ownerClass;
+
+    private float angle;
+    private float angularVelocity;
 
     public PhysicsComponent(
         float x,
         float y,
         float mass,
-        Shape shape,
-        GameEntityGroup collisionGroup,
+        float boundsRadius,
+        GameEntityGroup collidesWith,
+        Class<? extends GameEntity> ownerClass,
         boolean affectedByGravity)
     {
+        this.ownerClass = ownerClass;
         this.position = new Vector2(x, y);
         this.velocity = new Vector2();
         this.mass = mass;
-        this.shape = shape;
-        this.collisionGroup = collisionGroup;
+        this.boundsCircle = new Circle(boundsRadius);
+        this.collidesWith = collidesWith;
         this.affectedByGravity = affectedByGravity;
+    }
+
+    public PhysicsComponent(PhysicsComponent originalPhysicsComponent)
+    {
+        this.ownerClass = originalPhysicsComponent.ownerClass;
+        this.position = new Vector2(originalPhysicsComponent.position);
+        this.velocity = new Vector2(originalPhysicsComponent.velocity);
+        this.mass = originalPhysicsComponent.mass;
+        this.boundsCircle = new Circle(originalPhysicsComponent.getBoundsCircle().radius);
+        this.collidesWith = new GameEntityGroup(originalPhysicsComponent.collidesWith);
+        this.affectedByGravity = originalPhysicsComponent.affectedByGravity;
+    }
+
+    public Class<? extends GameEntity> getOwnerClass()
+    {
+        return ownerClass;
+    }
+
+    public boolean isAffectedByGravity()
+    {
+        return affectedByGravity;
     }
 
     public float getAngularVelocity()
@@ -62,9 +93,9 @@ public class PhysicsComponent
         this.angle = angle;
     }
 
-    public Shape getShape()
+    public Circle getBoundsCircle()
     {
-        return shape;
+        return boundsCircle;
     }
 
     public void dispose()
@@ -76,8 +107,8 @@ public class PhysicsComponent
         return mass;
     }
 
-    public GameEntityGroup getCollisionGroup()
+    public GameEntityGroup getCollidesWith()
     {
-        return collisionGroup;
+        return collidesWith;
     }
 }
