@@ -69,11 +69,13 @@ public abstract class Constants
             public static final Color DESTINATION_PLANET_OVERLAY_WIN_BORDER  = Color.GREEN;
             public static final Color DESTINATION_PLANET_OVERLAY_WIN_FILL    =
                 new Color(0f, 1f, 0f, 0.2f);
+            public static final float JOYSTICK_OVERLAY_WIDTH                 = 0.002083f
+                * Constants.Visual.UI.SQRT_PIXELS;
 
 
             public abstract static class Minimap
             {
-                public static final Color PICKUP_COLOR  = Color.GOLDENROD;
+                public static final Color PICKUP_COLOR = Color.GOLDENROD;
 
                 public static final Color   BACKGROUND_COLOR      = new Color(0, 0.17f, 0, 0.5f);
                 public static final Color   BORDER_COLOR          = new Color(0, 0.4f, 0, 1);
