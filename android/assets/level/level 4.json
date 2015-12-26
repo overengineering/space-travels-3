@@ -1,0 +1,102 @@
+{
+  "class": "SerialisableLevel",
+  "name": "Level 4",
+  "trajectorySeconds": 5.0,
+  "maxLandingSpeed": 70,
+
+  "serialisedBackground": {
+    "texturePath": "background/background1080.jpg"
+  },
+  "serialisedShip": {
+    "x": 10,
+    "y": 75,
+    "mass": 1,
+    "fuel": 6.0,
+    "infiniteFuel": false
+  },
+  "serialisedPlanets": [
+    {
+      "texturePath": "planet/earth256.png",
+      "x": 220,
+      "y": 150,
+      "radius": 5.5,
+      "mass": 20000,
+      "destination": true
+    },
+    {
+      "texturePath": "planet/mars256.png",
+      "x": 230,
+      "y": 120,
+      "radius": 4,
+      "mass": 20000
+    },
+    {
+      "texturePath": "planet/jupiter256.png",
+      "x": 170,
+      "y": 120,
+      "radius": 7,
+      "mass": 20000
+    },
+    {
+      "texturePath": "planet/mars256.png",
+      "x": 160,
+      "y": 170,
+      "radius": 6,
+      "mass": 20000
+    },
+    {
+      "texturePath": "planet/mars256.png",
+      "x": 250,
+      "y": 250,
+      "radius": 12,
+      "mass": 50000
+    },
+    {
+      "texturePath": "planet/mars256.png",
+      "x": 310,
+      "y": 145,
+      "radius": 6,
+      "mass": 20000
+    },
+    {
+      "texturePath": "planet/mars256.png",
+      "x": 250,
+      "y": 50,
+      "radius": 6,
+      "mass": 20000
+    },
+    {
+      "texturePath": "planet/mars256.png",
+      "x": 115,
+      "y": 55,
+      "radius": 6,
+      "mass": 20000
+    }
+  ],
+  "serialisedPickups": [
+    {
+      "x": 230,
+      "y": 105
+    },
+    {
+      "x": 160,
+      "y": 110
+    },
+    {
+      "x": 145,
+      "y": 170
+    },
+    {
+      "x": 250,
+      "y": 280
+    },
+    {
+      "x": 330,
+      "y": 145
+    },
+    {
+      "x": 250,
+      "y": 40
+    }
+  ]
+}

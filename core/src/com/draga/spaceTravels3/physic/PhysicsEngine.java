@@ -75,10 +75,10 @@ public class PhysicsEngine
     
     /**
      * Check for collisions following this pattern to avoid duplicates:
-     * \ X0 \ X1 \ X2
+     *    \ X0 \ X1 \ X2
      * Y0 \    \    \
-     * Y1 \ X  \    \
-     * Y2 \ X  \ X  \
+     * Y1 \ V  \    \
+     * Y2 \ V  \ V  \
      */
     private static void checkCollisions()
     {
@@ -254,14 +254,14 @@ public class PhysicsEngine
                 stepGravity(physicsComponent, otherPhysicsComponents, stepTime);
                 applyVelocity(physicsComponent, stepTime);
 
-                for (PhysicsComponent otherPhysicsComponent : otherPhysicsComponents)
+                /*for (PhysicsComponent otherPhysicsComponent : otherPhysicsComponents)
                 {
                     if (!collidingPhysicsComponents.contains(otherPhysicsComponent)
                         && areColliding(physicsComponent, otherPhysicsComponent))
                     {
                         collidingPhysicsComponents.add(otherPhysicsComponent);
                     }
-                }
+                }*/
             }
 
             ProjectionPoint projectionPoint = new ProjectionPoint(
