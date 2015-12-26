@@ -34,7 +34,7 @@ public class Level
     private final Thruster          thruster;
     private final Planet            destinationPlanet;
 
-    private       int               pickupsCollected;
+    private int       pickupsCollected;
     private GameState gameState;
 
     private Stopwatch elapsedPlayTime;
@@ -104,12 +104,13 @@ public class Level
                 "Linear velocity on collision: " + ship.physicsComponent.getVelocity().len());
         }
 
+        GameEntityManager.removeGameEntity(ship);
+        GameEntityManager.removeGameEntity(thruster);
 
         if (ship.physicsComponent.getVelocity().len()
-            > Constants.Game.MAX_DESTINATION_PLANET_APPROACH_SPEED)
+            > Constants.Game.MAX_DESTINATION_PLANET_APPROACH_SPEED
+            || !shipPlanetCollisionEvent.planet.equals(destinationPlanet))
         {
-            GameEntityManager.removeGameEntity(ship);
-            GameEntityManager.removeGameEntity(thruster);
             gameState = GameState.LOSE;
             GameEntity explosion = new Explosion(
                 shipPlanetCollisionEvent.ship.physicsComponent.getPosition().x,
@@ -125,27 +126,14 @@ public class Level
         }
         else
         {
-            if (shipPlanetCollisionEvent.planet.equals(destinationPlanet))
-            {
-                GameEntityManager.removeGameEntity(ship);
-                GameEntityManager.removeGameEntity(thruster);
+            GameEntityManager.removeGameEntity(ship);
+            GameEntityManager.removeGameEntity(thruster);
 
-                gameState = GameState.WIN;
+            gameState = GameState.WIN;
 
-                WinEvent winEvent = Pools.obtain(WinEvent.class);
-                Constants.General.EVENT_BUS.post(winEvent);
-                Pools.free(winEvent);
-            }
-            else
-            {
-                Vector2 distance = shipPlanetCollisionEvent.ship.physicsComponent.getPosition()
-                    .cpy()
-                    .sub(shipPlanetCollisionEvent.planet.physicsComponent.getPosition());
-
-                // TODO: Scale by distance from planet
-                shipPlanetCollisionEvent.ship.physicsComponent.getVelocity()
-                    .add(distance.nor().scl(0.4f));
-            }
+            WinEvent winEvent = Pools.obtain(WinEvent.class);
+            Constants.General.EVENT_BUS.post(winEvent);
+            Pools.free(winEvent);
         }
     }
 
