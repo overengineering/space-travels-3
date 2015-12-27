@@ -2,9 +2,10 @@ package com.draga.spaceTravels3.gameEntity;
 
 import com.badlogic.gdx.graphics.Color;
 import com.draga.spaceTravels3.Constants;
-import com.draga.spaceTravels3.component.PhysicsComponent;
+import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 import com.draga.spaceTravels3.component.graphicComponent.StaticGraphicComponent;
 import com.draga.spaceTravels3.component.miniMapGraphicComponent.CircleMiniMapGraphicsComponent;
+import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponentType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,8 @@ public class Planet extends GameEntity
             radius,
             new GameEntityGroup(collidesWith),
             this.getClass(),
-            false);
+            false,
+            PhysicsComponentType.STATIC);
 
         this.graphicComponent = new StaticGraphicComponent(
             texturePath,

@@ -1,4 +1,4 @@
-package com.draga.spaceTravels3.component;
+package com.draga.spaceTravels3.component.physicsComponent;
 
 import com.badlogic.gdx.math.Vector2;
 import com.draga.shape.Circle;
@@ -10,6 +10,8 @@ import java.io.Serializable;
 public class PhysicsComponent implements Serializable
 {
     private final boolean affectedByGravity;
+
+    private final PhysicsComponentType physicsComponentType;
 
     private final Vector2 position;
     private final Vector2 velocity;
@@ -31,9 +33,11 @@ public class PhysicsComponent implements Serializable
         float boundsRadius,
         GameEntityGroup collidesWith,
         Class<? extends GameEntity> ownerClass,
-        boolean affectedByGravity)
+        boolean affectedByGravity,
+        PhysicsComponentType physicsComponentType)
     {
         this.ownerClass = ownerClass;
+        this.physicsComponentType = physicsComponentType;
         this.position = new Vector2(x, y);
         this.velocity = new Vector2();
         this.mass = mass;
@@ -51,6 +55,7 @@ public class PhysicsComponent implements Serializable
         this.boundsCircle = new Circle(originalPhysicsComponent.getBoundsCircle().radius);
         this.collidesWith = new GameEntityGroup(originalPhysicsComponent.collidesWith);
         this.affectedByGravity = originalPhysicsComponent.affectedByGravity;
+        this.physicsComponentType = originalPhysicsComponent.physicsComponentType;
     }
 
     public Class<? extends GameEntity> getOwnerClass()
@@ -110,5 +115,10 @@ public class PhysicsComponent implements Serializable
     public GameEntityGroup getCollidesWith()
     {
         return collidesWith;
+    }
+
+    public PhysicsComponentType getPhysicsComponentType()
+    {
+        return physicsComponentType;
     }
 }

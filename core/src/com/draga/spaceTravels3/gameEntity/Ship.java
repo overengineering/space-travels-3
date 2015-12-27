@@ -2,9 +2,10 @@ package com.draga.spaceTravels3.gameEntity;
 
 import com.badlogic.gdx.math.Vector2;
 import com.draga.spaceTravels3.Constants;
-import com.draga.spaceTravels3.component.PhysicsComponent;
+import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 import com.draga.spaceTravels3.component.graphicComponent.StaticGraphicComponent;
 import com.draga.spaceTravels3.component.miniMapGraphicComponent.TriangleMiniMapGraphicComponent;
+import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponentType;
 import com.draga.spaceTravels3.manager.InputManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 
@@ -45,7 +46,8 @@ public class Ship extends GameEntity
                 Constants.Game.SHIP_COLLISION_RADIUS,
                 new GameEntityGroup(collidesWith),
                 this.getClass(),
-                true);
+                true,
+                PhysicsComponentType.DYNAMIC);
 
         this.graphicComponent = new StaticGraphicComponent(
             texturePath,

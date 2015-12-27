@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.draga.spaceTravels3.SpaceTravels3;
-import com.draga.spaceTravels3.component.PhysicsComponent;
+import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 
 public class StarMiniMapGraphicComponent extends MiniMapGraphicComponent
 {

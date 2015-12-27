@@ -3,7 +3,8 @@ package com.draga.spaceTravels3.physic;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.draga.spaceTravels3.Constants;
-import com.draga.spaceTravels3.component.PhysicsComponent;
+import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
+import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponentType;
 import com.draga.spaceTravels3.gameEntity.GameEntity;
 import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
@@ -47,7 +48,11 @@ public class PhysicsEngine
     {
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
-            stepPhysicsComponent(gameEntity.physicsComponent, deltaTime);
+            if (gameEntity.physicsComponent.getPhysicsComponentType()
+                == PhysicsComponentType.DYNAMIC)
+            {
+                stepPhysicsComponent(gameEntity.physicsComponent, deltaTime);
+            }
         }
         
         checkCollisions();
@@ -79,6 +84,7 @@ public class PhysicsEngine
      * Y0 \    \    \
      * Y1 \ X  \    \
      * Y2 \ X  \ X  \
+     * Collision checks are skipped between static objects.
      */
     private static void checkCollisions()
     {
@@ -88,15 +94,21 @@ public class PhysicsEngine
             for (int y = 0; y < x; y++)
             {
                 GameEntity gameEntityB = GameEntityManager.getGameEntities().get(y);
-                if (areColliding(gameEntityA.physicsComponent, gameEntityB.physicsComponent))
+                if (gameEntityA.physicsComponent.getPhysicsComponentType()
+                    == PhysicsComponentType.DYNAMIC
+                    || gameEntityB.physicsComponent.getPhysicsComponentType()
+                    == PhysicsComponentType.DYNAMIC)
                 {
-                    Gdx.app.debug(
-                        LOGGING_TAG,
-                        "Collision between "
-                            + gameEntityA.getClass().getSimpleName()
-                            + " and "
-                            + gameEntityB.getClass().getSimpleName());
-                    CollisionResolver.resolve(gameEntityA, gameEntityB);
+                    if (areColliding(gameEntityA.physicsComponent, gameEntityB.physicsComponent))
+                    {
+                        Gdx.app.debug(
+                            LOGGING_TAG,
+                            "Collision between "
+                                + gameEntityA.getClass().getSimpleName()
+                                + " and "
+                                + gameEntityB.getClass().getSimpleName());
+                        CollisionResolver.resolve(gameEntityA, gameEntityB);
+                    }
                 }
             }
         }

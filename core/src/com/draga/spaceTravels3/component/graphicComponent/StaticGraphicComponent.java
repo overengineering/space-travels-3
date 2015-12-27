@@ -2,7 +2,7 @@ package com.draga.spaceTravels3.component.graphicComponent;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.draga.spaceTravels3.SpaceTravels3;
-import com.draga.spaceTravels3.component.PhysicsComponent;
+import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 
 public class StaticGraphicComponent extends GraphicComponent

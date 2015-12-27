@@ -1,7 +1,7 @@
 package com.draga.spaceTravels3.physic;
 
 import com.badlogic.gdx.math.Vector2;
-import com.draga.spaceTravels3.component.PhysicsComponent;
+import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 
 import java.util.ArrayList;
 

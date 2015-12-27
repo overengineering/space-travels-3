@@ -2,13 +2,9 @@ package com.draga.spaceTravels3.physic;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Frustum;
 import com.badlogic.gdx.math.Vector2;
-import com.draga.spaceTravels3.Constants;
-import com.draga.spaceTravels3.Level;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.Vertex;
-import com.draga.spaceTravels3.component.PhysicsComponent;
 import com.draga.utils.GraphicsUtils;
 
 import java.util.ArrayList;
