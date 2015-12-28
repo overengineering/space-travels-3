@@ -2,6 +2,7 @@ package com.draga.spaceTravels3.physic;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.PerformanceCounter;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.component.PhysicsComponent;
 import com.draga.spaceTravels3.gameEntity.GameEntity;
@@ -16,27 +17,29 @@ public class PhysicsEngine
 {
     private static final String LOGGING_TAG =
         PhysicsEngine.class.getSimpleName();
-    
-    private static Stopwatch updateTimer = Stopwatch.createUnstarted();
-    private static float updateTime;
-    
-    public static float getUpdateTime()
+
+    private static final PerformanceCounter GRAVITY_PROJECTION_PERFORMANCE_COUNTER =
+        new PerformanceCounter("gravityProjection");
+    private static final PerformanceCounter STEP_PERFORMANCE_COUNTER               =
+        new PerformanceCounter("step");
+
+    public static PerformanceCounter getStepPerformanceCounter()
     {
-        return updateTime;
+        return STEP_PERFORMANCE_COUNTER;
     }
-    
+
     public static void update(float elapsed)
     {
-        updateTimer.start();
+        STEP_PERFORMANCE_COUNTER.start();
         
         for (int step = 0; step < Constants.Game.PHYSICS_STEPS; step++)
         {
             GameEntityManager.update();
             step(elapsed / Constants.Game.PHYSICS_STEPS);
         }
-        
-        updateTime = updateTimer.elapsed(TimeUnit.NANOSECONDS) * Constants.General.NANO;
-        updateTimer.reset();
+
+        STEP_PERFORMANCE_COUNTER.stop();
+        STEP_PERFORMANCE_COUNTER.tick();
     }
     
     /**
@@ -214,7 +217,6 @@ public class PhysicsEngine
     
     public static void create()
     {
-        updateTimer = Stopwatch.createUnstarted();
     }
     
     public static void dispose()
@@ -222,11 +224,18 @@ public class PhysicsEngine
         
     }
     
+    public static PerformanceCounter getGravityProjectionPerformanceCounter()
+    {
+        return GRAVITY_PROJECTION_PERFORMANCE_COUNTER;
+    }
+
     public static ArrayList<ProjectionPoint> gravityProjection(
         PhysicsComponent originalPhysicsComponent,
         float projectionSeconds,
         float pointTime)
     {
+        GRAVITY_PROJECTION_PERFORMANCE_COUNTER.start();
+
         int points = Math.round(projectionSeconds / pointTime);
 
         // Create a copy of the PhysicsComponent so that it won't be changed.
@@ -270,6 +279,9 @@ public class PhysicsEngine
                 collidingPhysicsComponents);
             projectionPoints.add(projectionPoint);
         }
+
+        GRAVITY_PROJECTION_PERFORMANCE_COUNTER.stop();
+        GRAVITY_PROJECTION_PERFORMANCE_COUNTER.tick();
 
         return projectionPoints;
     }
