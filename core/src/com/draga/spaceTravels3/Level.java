@@ -3,8 +3,7 @@ package com.draga.spaceTravels3;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Pools;
 import com.draga.spaceTravels3.component.PhysicsComponent;
 import com.draga.spaceTravels3.event.*;
@@ -24,17 +23,17 @@ public class Level
 {
     private static final String LOGGING_TAG = Level.class.getSimpleName();
 
-    private final float width;
-    private final float height;
-
     private final float trajectorySeconds;
+    private final float maxLandingSpeed;
 
     private final ArrayList<Pickup> pickups;
     private final Ship              ship;
     private final Thruster          thruster;
     private final Planet            destinationPlanet;
 
-    private int       pickupsCollected;
+    private final Rectangle bounds;
+
+    private int pickupsCollected;
     private GameState gameState;
 
     private Stopwatch elapsedPlayTime;
@@ -52,19 +51,17 @@ public class Level
         ArrayList<Planet> planets,
         ArrayList<Pickup> pickups,
         Planet destinationPlanet,
-        float width,
-        float height,
-        float trajectorySeconds)
+        float trajectorySeconds,
+        float maxLandingSpeed)
     {
         this.ship = ship;
         this.thruster = thruster;
         this.destinationPlanet = destinationPlanet;
         this.pickups = pickups;
-        this.width = width;
-        this.height = height;
         this.id = id;
         this.name = name;
         this.trajectorySeconds = trajectorySeconds;
+        this.maxLandingSpeed = maxLandingSpeed;
 
         this.gameState = GameState.COUNTDOWN;
 
@@ -80,10 +77,46 @@ public class Level
         {
             GameEntityManager.addGameEntity(pickup);
         }
+        GameEntityManager.update();
+
+        this.bounds = getBounds(
+            this.ship.physicsComponent.getPosition().x,
+            this.ship.physicsComponent.getPosition().y);
 
         Constants.General.EVENT_BUS.register(this);
 
         elapsedPlayTime = Stopwatch.createUnstarted();
+    }
+
+    /**
+     * Return a rectangle that includes all the physic components and a little buffer.
+     * @param x
+     * @param y
+     */
+    private Rectangle getBounds(float x, float y)
+    {
+        Rectangle bounds = new Rectangle(
+            x,
+            y,
+            0,
+            0);
+
+        for (GameEntity gameEntity : GameEntityManager.getGameEntities())
+        {
+            PhysicsComponent physicsComponent = gameEntity.physicsComponent;
+            Rectangle gameEntityBounds = new Rectangle(
+                physicsComponent.getPosition().x - physicsComponent.getBoundsCircle().radius,
+                physicsComponent.getPosition().y - physicsComponent.getBoundsCircle().radius,
+                physicsComponent.getBoundsCircle().radius * 2f,
+                physicsComponent.getBoundsCircle().radius * 2f);
+            bounds.merge(gameEntityBounds);
+        }
+        bounds.width += Constants.Game.LEVEL_BOUNDS_BUFFER;
+        bounds.height += Constants.Game.LEVEL_BOUNDS_BUFFER;
+        bounds.x -= Constants.Game.LEVEL_BOUNDS_BUFFER;
+        bounds.y -= Constants.Game.LEVEL_BOUNDS_BUFFER;
+
+        return bounds;
     }
 
     @Subscribe
@@ -108,7 +141,7 @@ public class Level
         GameEntityManager.removeGameEntity(thruster);
 
         if (ship.physicsComponent.getVelocity().len()
-            > Constants.Game.MAX_DESTINATION_PLANET_APPROACH_SPEED
+            > this.getMaxLandingSpeed()
             || !shipPlanetCollisionEvent.planet.equals(destinationPlanet))
         {
             gameState = GameState.LOSE;
@@ -143,7 +176,9 @@ public class Level
         float timePoints = elapsedPlayTime.elapsed(TimeUnit.NANOSECONDS)
             * Constants.General.NANO
             * Constants.Game.TIME_POINTS;
-        float fuelPoints = ship.getCurrentFuel() / ship.getMaxFuel() * Constants.Game.FUEL_POINTS;
+        float fuelPoints = ship.isInfiniteFuel()
+            ? 0
+            : ship.getCurrentFuel() / ship.getMaxFuel() * Constants.Game.FUEL_POINTS;
 
         float score = pickupPoints;
         score -= timePoints;
@@ -181,12 +216,12 @@ public class Level
 
     public float getWidth()
     {
-        return width;
+        return bounds.getWidth();
     }
 
     public float getHeight()
     {
-        return height;
+        return bounds.getHeight();
     }
 
     public ArrayList<Pickup> getPickups()
@@ -310,5 +345,10 @@ public class Level
     public float getTrajectorySeconds()
     {
         return trajectorySeconds;
+    }
+
+    public float getMaxLandingSpeed()
+    {
+        return maxLandingSpeed;
     }
 }

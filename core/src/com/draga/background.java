@@ -38,7 +38,7 @@ public class Background implements Disposable
             Texture texture = getNebulaLayer();
             layers.add(texture);
 
-            float parallaxScale = MathUtils.random(0.05f, 0.3f);
+            float parallaxScale = MathUtils.random(0.05f, 0.2f);
             layerParallaxScale.add(parallaxScale);
         }
         Gdx.app.debug(
