@@ -97,30 +97,67 @@ public class PhysicsEngine
         for (int x = 1; x < GameEntityManager.getGameEntities().size(); x++)
         {
             GameEntity gameEntityA = GameEntityManager.getGameEntities().get(x);
-            for (int y = 0; y < x; y++)
+
+            if (physicsComponentCollisionCache.containsKey(gameEntityA.physicsComponent))
             {
-                GameEntity gameEntityB = GameEntityManager.getGameEntities().get(y);
-                if (gameEntityA.physicsComponent.getPhysicsComponentType()
-                    == PhysicsComponentType.DYNAMIC
-                    || gameEntityB.physicsComponent.getPhysicsComponentType()
-                    == PhysicsComponentType.DYNAMIC)
+                CollisionCache collisionCache =
+                    physicsComponentCollisionCache.get(gameEntityA.physicsComponent);
+                ArrayList<PhysicsComponent> possibleCollidingStaticPhysicsComponents =
+                    collisionCache.getPossibleCollidingPhysicsComponents(
+                        gameEntityA.physicsComponent.getPosition().x,
+                        gameEntityA.physicsComponent.getPosition().y);
+                for (int y = 0; y < x; y++)
                 {
-                    if (areColliding(gameEntityA.physicsComponent, gameEntityB.physicsComponent))
+                    GameEntity gameEntityB = GameEntityManager.getGameEntities().get(y);
+                    if (gameEntityB.physicsComponent.getPhysicsComponentType()
+                        == PhysicsComponentType.DYNAMIC
+                        || possibleCollidingStaticPhysicsComponents.contains(gameEntityB.physicsComponent))
                     {
-                        Gdx.app.debug(
-                            LOGGING_TAG,
-                            "Collision between "
-                                + gameEntityA.getClass().getSimpleName()
-                                + " and "
-                                + gameEntityB.getClass().getSimpleName());
-                        CollisionResolver.resolve(gameEntityA, gameEntityB);
+                        if (areColliding(
+                            gameEntityA.physicsComponent,
+                            gameEntityB.physicsComponent))
+                        {
+                            Gdx.app.debug(
+                                LOGGING_TAG,
+                                "Collision between "
+                                    + gameEntityA.getClass().getSimpleName()
+                                    + " and "
+                                    + gameEntityB.getClass().getSimpleName());
+                            CollisionResolver.resolve(gameEntityA, gameEntityB);
+                        }
+                    }
+                }
+
+            }
+            else
+            {
+                for (int y = 0; y < x; y++)
+                {
+                    GameEntity gameEntityB = GameEntityManager.getGameEntities().get(y);
+                    if (gameEntityA.physicsComponent.getPhysicsComponentType()
+                        == PhysicsComponentType.DYNAMIC
+                        || gameEntityB.physicsComponent.getPhysicsComponentType()
+                        == PhysicsComponentType.DYNAMIC)
+                    {
+                        if (areColliding(
+                            gameEntityA.physicsComponent,
+                            gameEntityB.physicsComponent))
+                        {
+                            Gdx.app.debug(
+                                LOGGING_TAG,
+                                "Collision between "
+                                    + gameEntityA.getClass().getSimpleName()
+                                    + " and "
+                                    + gameEntityB.getClass().getSimpleName());
+                            CollisionResolver.resolve(gameEntityA, gameEntityB);
+                        }
                     }
                 }
             }
         }
     }
     
-    private static ArrayList<PhysicsComponent> getAllPhysicsComponentsExcept(PhysicsComponent excludePhysicsComponent)
+    protected static ArrayList<PhysicsComponent> getAllPhysicsComponentsExcept(PhysicsComponent excludePhysicsComponent)
     {
         ArrayList<PhysicsComponent> physicsComponents = getAllPhysicsComponents();
         physicsComponents.remove(excludePhysicsComponent);
@@ -162,7 +199,7 @@ public class PhysicsEngine
      * Check if both {@link PhysicsComponent} can collide with each other and if the two are
      * overlapping.
      */
-    private static boolean areColliding(
+    protected static boolean areColliding(
         PhysicsComponent physicsComponentA,
         PhysicsComponent physicsComponentB)
     {
@@ -274,12 +311,47 @@ public class PhysicsEngine
                 stepGravity(physicsComponent, otherPhysicsComponents, stepTime);
                 applyVelocity(physicsComponent, stepTime);
 
-                for (PhysicsComponent otherPhysicsComponent : otherPhysicsComponents)
+                if (physicsComponentCollisionCache.containsKey(originalPhysicsComponent))
                 {
-                    if (!collidingPhysicsComponents.contains(otherPhysicsComponent)
-                        && areColliding(physicsComponent, otherPhysicsComponent))
+                    CollisionCache collisionCache =
+                        physicsComponentCollisionCache.get(originalPhysicsComponent);
+                    ArrayList<PhysicsComponent> possibleCollidingPhysicsComponents =
+                        collisionCache.getPossibleCollidingPhysicsComponents(
+                            physicsComponent.getPosition().x,
+                            physicsComponent.getPosition().y);
+                    for (PhysicsComponent otherPhysicsComponent : otherPhysicsComponents)
                     {
-                        collidingPhysicsComponents.add(otherPhysicsComponent);
+                        if (otherPhysicsComponent.getPhysicsComponentType()
+                            == PhysicsComponentType.DYNAMIC)
+                        {
+                            if (!collidingPhysicsComponents.contains(otherPhysicsComponent)
+                                && areColliding(physicsComponent, otherPhysicsComponent))
+                            {
+                                collidingPhysicsComponents.add(otherPhysicsComponent);
+                            }
+                        }
+                        else
+                        {
+                            if (!collidingPhysicsComponents.contains(otherPhysicsComponent)
+                                && possibleCollidingPhysicsComponents.contains(otherPhysicsComponent)
+                                && areColliding(physicsComponent, otherPhysicsComponent))
+                            {
+                                collidingPhysicsComponents.add(otherPhysicsComponent);
+                            }
+
+                        }
+                    }
+
+                }
+                else
+                {
+                    for (PhysicsComponent otherPhysicsComponent : otherPhysicsComponents)
+                    {
+                        if (!collidingPhysicsComponents.contains(otherPhysicsComponent)
+                            && areColliding(physicsComponent, otherPhysicsComponent))
+                        {
+                            collidingPhysicsComponents.add(otherPhysicsComponent);
+                        }
                     }
                 }
             }
@@ -303,108 +375,9 @@ public class PhysicsEngine
         return gravityForce;
     }
 
-    public static void cachePhysicsComponentCollisions(PhysicsComponent originalPhysicsComponent)
+    public static void cachePhysicsComponentCollisions(PhysicsComponent physicsComponent)
     {
-        Stopwatch stopwatch = Stopwatch.createStarted();
-
-        PhysicsComponent physicsComponent = new PhysicsComponent(originalPhysicsComponent);
-
-        ArrayList<PhysicsComponent> collidablePhysicsComponents = new ArrayList<>();
-        for (PhysicsComponent otherPhysicsComponent : getAllPhysicsComponentsExcept(
-            originalPhysicsComponent))
-        {
-            if (otherPhysicsComponent.getPhysicsComponentType() == PhysicsComponentType.STATIC
-                && otherPhysicsComponent.getCollidesWith()
-                .contains(physicsComponent.getOwnerClass())
-                && physicsComponent.getCollidesWith()
-                .contains(otherPhysicsComponent.getOwnerClass()))
-            {
-                collidablePhysicsComponents.add(otherPhysicsComponent);
-            }
-        }
-
-
-
-        // Calculate the size and position of the grid of points to be checked
-        float x1 = Float.MAX_VALUE;
-        float x2 = Float.MIN_VALUE;
-        float y1 = Float.MAX_VALUE;
-        float y2 = Float.MIN_VALUE;
-        for (PhysicsComponent otherPhysicsComponent : collidablePhysicsComponents)
-        {
-            if (otherPhysicsComponent.getPhysicsComponentType() == PhysicsComponentType.STATIC)
-            {
-                if (x1
-                    > otherPhysicsComponent.getPosition().x
-                    - otherPhysicsComponent.getBoundsCircle().radius)
-                {
-                    x1 = otherPhysicsComponent.getPosition().x
-                        - otherPhysicsComponent.getBoundsCircle().radius;
-                }
-                if (x2
-                    < otherPhysicsComponent.getPosition().x
-                    + otherPhysicsComponent.getBoundsCircle().radius)
-                {
-                    x2 = otherPhysicsComponent.getPosition().x
-                        + otherPhysicsComponent.getBoundsCircle().radius;
-                }
-                if (y1
-                    > otherPhysicsComponent.getPosition().y
-                    - otherPhysicsComponent.getBoundsCircle().radius)
-                {
-                    y1 = otherPhysicsComponent.getPosition().y
-                        - otherPhysicsComponent.getBoundsCircle().radius;
-                }
-                if (y2
-                    < otherPhysicsComponent.getPosition().y
-                    + otherPhysicsComponent.getBoundsCircle().radius)
-                {
-                    y2 = otherPhysicsComponent.getPosition().y
-                        + otherPhysicsComponent.getBoundsCircle().radius;
-                }
-            }
-        }
-
-        // The offset are the coordinates of the bottom left corner of the grid.
-        float offsetX = x1;
-        float offsetY = y1;
-
-        float width = x2 - x1;
-        float height = y2 - y1;
-
-        int arrayWidth = MathUtils.ceil(width / CollisionCache.GRANULARITY);
-        int arrayHeight = MathUtils.ceil(height / CollisionCache.GRANULARITY);
-
-        ArrayList<PhysicsComponent>[][] collisions = new ArrayList[arrayWidth][arrayHeight];
-
-        for (int x = 0; x < arrayWidth; x++)
-        {
-            for (int y = 0; y < arrayHeight; y++)
-            {
-                physicsComponent.getPosition()
-                    .set(
-                        CollisionCache.GRANULARITY * x + offsetX,
-                        CollisionCache.GRANULARITY * y + offsetY);
-                for (PhysicsComponent collidablePhysicsComponent : collidablePhysicsComponents)
-                {
-                    if (areColliding(physicsComponent, collidablePhysicsComponent))
-                    {
-                        if (collisions[x][y] == null)
-                        {
-                            collisions[x][y] = new ArrayList<>();
-                        }
-                        collisions[x][y].add(collidablePhysicsComponent);
-                    }
-                }
-
-            }
-        }
-
-        Gdx.app.debug(LOGGING_TAG,
-            "Cache collision for "
-                + physicsComponent.getOwnerClass()
-                + " took "
-                + stopwatch.elapsed(TimeUnit.NANOSECONDS) * Constants.General.NANO
-                + "s");
+        CollisionCache collisionCache = new CollisionCache(physicsComponent);
+        physicsComponentCollisionCache.put(physicsComponent, collisionCache);
     }
 }

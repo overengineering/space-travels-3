@@ -42,6 +42,9 @@ public class GameScreen implements Screen
     {
         this.background = new Background();
         this.level = level;
+
+        PhysicsEngine.create();
+        PhysicsEngine.cachePhysicsComponentCollisions(level.getShip().physicsComponent);
     }
 
     @Override
@@ -222,6 +225,8 @@ public class GameScreen implements Screen
         background.dispose();
 
         AssMan.getAssMan().clear();
+
+        PhysicsEngine.dispose();
     }
 
     @Subscribe

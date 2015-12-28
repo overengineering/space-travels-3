@@ -80,8 +80,6 @@ public class Level
         }
         GameEntityManager.update();
 
-        PhysicsEngine.cachePhysicsComponentCollisions(ship.physicsComponent);
-
         this.bounds = getBounds(
             this.ship.physicsComponent.getPosition().x,
             this.ship.physicsComponent.getPosition().y);
