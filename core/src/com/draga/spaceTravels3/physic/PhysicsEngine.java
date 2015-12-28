@@ -263,14 +263,14 @@ public class PhysicsEngine
                 stepGravity(physicsComponent, otherPhysicsComponents, stepTime);
                 applyVelocity(physicsComponent, stepTime);
 
-                /*for (PhysicsComponent otherPhysicsComponent : otherPhysicsComponents)
+                for (PhysicsComponent otherPhysicsComponent : otherPhysicsComponents)
                 {
                     if (!collidingPhysicsComponents.contains(otherPhysicsComponent)
                         && areColliding(physicsComponent, otherPhysicsComponent))
                     {
                         collidingPhysicsComponents.add(otherPhysicsComponent);
                     }
-                }*/
+                }
             }
 
             ProjectionPoint projectionPoint = new ProjectionPoint(
