@@ -1,10 +1,8 @@
 {
   "class": "SerialisableLevel",
   "name": "Level 3",
-  "width": 300,
-  "height": 150,
-  "fuel": 6.0,
   "trajectorySeconds": 5.0,
+  "maxLandingSpeed": 70,
 
   "serialisedBackground": {
     "texturePath": "background/background1080.jpg"
@@ -12,7 +10,9 @@
   "serialisedShip": {
     "x": 10,
     "y": 75,
-    "mass": 1
+    "mass": 1,
+    "fuel": 6.0,
+    "infiniteFuel": false
   },
   "serialisedPlanets": [
     {

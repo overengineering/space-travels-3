@@ -1,6 +1,7 @@
 package com.draga.spaceTravels3.physic;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
@@ -11,6 +12,8 @@ import com.draga.spaceTravels3.manager.SettingsManager;
 import com.google.common.base.Stopwatch;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
 public class PhysicsEngine
@@ -20,6 +23,9 @@ public class PhysicsEngine
     
     private static Stopwatch updateTimer = Stopwatch.createUnstarted();
     private static float updateTime;
+
+    private static HashMap<PhysicsComponent, CollisionCache>
+        physicsComponentCollisionCache;
     
     public static float getUpdateTime()
     {
@@ -227,11 +233,13 @@ public class PhysicsEngine
     public static void create()
     {
         updateTimer = Stopwatch.createUnstarted();
+        physicsComponentCollisionCache = new HashMap<>();
     }
     
     public static void dispose()
     {
-        
+        updateTimer = null;
+        physicsComponentCollisionCache = null;
     }
     
     public static ArrayList<ProjectionPoint> gravityProjection(
@@ -293,5 +301,110 @@ public class PhysicsEngine
         Vector2 gravityForce = calculateGravityForce(physicsComponent, otherPhysicsComponents);
         
         return gravityForce;
+    }
+
+    public static void cachePhysicsComponentCollisions(PhysicsComponent originalPhysicsComponent)
+    {
+        Stopwatch stopwatch = Stopwatch.createStarted();
+
+        PhysicsComponent physicsComponent = new PhysicsComponent(originalPhysicsComponent);
+
+        ArrayList<PhysicsComponent> collidablePhysicsComponents = new ArrayList<>();
+        for (PhysicsComponent otherPhysicsComponent : getAllPhysicsComponentsExcept(
+            originalPhysicsComponent))
+        {
+            if (otherPhysicsComponent.getPhysicsComponentType() == PhysicsComponentType.STATIC
+                && otherPhysicsComponent.getCollidesWith()
+                .contains(physicsComponent.getOwnerClass())
+                && physicsComponent.getCollidesWith()
+                .contains(otherPhysicsComponent.getOwnerClass()))
+            {
+                collidablePhysicsComponents.add(otherPhysicsComponent);
+            }
+        }
+
+
+
+        // Calculate the size and position of the grid of points to be checked
+        float x1 = Float.MAX_VALUE;
+        float x2 = Float.MIN_VALUE;
+        float y1 = Float.MAX_VALUE;
+        float y2 = Float.MIN_VALUE;
+        for (PhysicsComponent otherPhysicsComponent : collidablePhysicsComponents)
+        {
+            if (otherPhysicsComponent.getPhysicsComponentType() == PhysicsComponentType.STATIC)
+            {
+                if (x1
+                    > otherPhysicsComponent.getPosition().x
+                    - otherPhysicsComponent.getBoundsCircle().radius)
+                {
+                    x1 = otherPhysicsComponent.getPosition().x
+                        - otherPhysicsComponent.getBoundsCircle().radius;
+                }
+                if (x2
+                    < otherPhysicsComponent.getPosition().x
+                    + otherPhysicsComponent.getBoundsCircle().radius)
+                {
+                    x2 = otherPhysicsComponent.getPosition().x
+                        + otherPhysicsComponent.getBoundsCircle().radius;
+                }
+                if (y1
+                    > otherPhysicsComponent.getPosition().y
+                    - otherPhysicsComponent.getBoundsCircle().radius)
+                {
+                    y1 = otherPhysicsComponent.getPosition().y
+                        - otherPhysicsComponent.getBoundsCircle().radius;
+                }
+                if (y2
+                    < otherPhysicsComponent.getPosition().y
+                    + otherPhysicsComponent.getBoundsCircle().radius)
+                {
+                    y2 = otherPhysicsComponent.getPosition().y
+                        + otherPhysicsComponent.getBoundsCircle().radius;
+                }
+            }
+        }
+
+        // The offset are the coordinates of the bottom left corner of the grid.
+        float offsetX = x1;
+        float offsetY = y1;
+
+        float width = x2 - x1;
+        float height = y2 - y1;
+
+        int arrayWidth = MathUtils.ceil(width / CollisionCache.GRANULARITY);
+        int arrayHeight = MathUtils.ceil(height / CollisionCache.GRANULARITY);
+
+        ArrayList<PhysicsComponent>[][] collisions = new ArrayList[arrayWidth][arrayHeight];
+
+        for (int x = 0; x < arrayWidth; x++)
+        {
+            for (int y = 0; y < arrayHeight; y++)
+            {
+                physicsComponent.getPosition()
+                    .set(
+                        CollisionCache.GRANULARITY * x + offsetX,
+                        CollisionCache.GRANULARITY * y + offsetY);
+                for (PhysicsComponent collidablePhysicsComponent : collidablePhysicsComponents)
+                {
+                    if (areColliding(physicsComponent, collidablePhysicsComponent))
+                    {
+                        if (collisions[x][y] == null)
+                        {
+                            collisions[x][y] = new ArrayList<>();
+                        }
+                        collisions[x][y].add(collidablePhysicsComponent);
+                    }
+                }
+
+            }
+        }
+
+        Gdx.app.debug(LOGGING_TAG,
+            "Cache collision for "
+                + physicsComponent.getOwnerClass()
+                + " took "
+                + stopwatch.elapsed(TimeUnit.NANOSECONDS) * Constants.General.NANO
+                + "s");
     }
 }

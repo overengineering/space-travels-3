@@ -39,8 +39,6 @@ public class MiniMap
         this.backgroundProjectionMatrix = getBackgroundProjectionMatrix();
         this.miniMapAspectRatio =
             orthographicCamera.viewportWidth / orthographicCamera.viewportHeight;
-
-
     }
 
     private Matrix4 getBackgroundProjectionMatrix()

@@ -39,7 +39,7 @@ public abstract class Constants
 
         public abstract static class Background
         {
-            public static final int   STAR_LAYER_COUNT        = 10;
+            public static final int   STAR_LAYER_COUNT        = 3;
             public static final int   STAR_COUNT              = 3000;
             public static final int   NEBULAE_LAYER_COUNT     = 0;
             public static final float STAR_MAX_DIAMETER_SCALE = 0.000005f;
@@ -116,7 +116,6 @@ public abstract class Constants
         public static final float TIME_POINTS   = 10f;
         public static final float PICKUP_POINTS = 1000f;
 
-        public static final float MAX_DESTINATION_PLANET_APPROACH_SPEED = 60f;
         public static final float SHIP_COLLISION_RADIUS                 =
             (Constants.Visual.SHIP_WIDTH + Constants.Visual.SHIP_HEIGHT) / 2f
                 * 0.8f
@@ -127,10 +126,11 @@ public abstract class Constants
         public static final float ACCELEROMETER_RANGE                   = 0.5f;
         public static final float DEAD_ZONE                             = 0.15f;
 
-        public static final float PICKUP_RADIUS =
+        public static final float PICKUP_RADIUS       =
             (Visual.PICKUP_WIDTH + Visual.PICKUP_HEIGHT) / 2f * 1.3f;
+        public static final float LEVEL_BOUNDS_BUFFER = 10;
 
-        public static float SHIP_ACCELERATION_PER_SECOND = 70f;
+        public static float SHIP_ACCELERATION_PER_SECOND = 40f;
 
         public static int PHYSICS_STEPS = 10;
     }

@@ -21,18 +21,22 @@ public class Ship extends GameEntity
     private static final float MAX_ROTATION_DEGREES_PER_SEC = 360f;
 
     // State.
-    private float maxFuel;
-    private float currentFuel;
+    private float   maxFuel;
+    private float   currentFuel;
+    private boolean infiniteFuel;
 
     public Ship(
         float x,
         float y,
         float mass,
         String texturePath,
-        float maxFuel)
+        float maxFuel,
+        boolean infiniteFuel)
     {
         this.maxFuel = maxFuel;
         this.currentFuel = maxFuel;
+        this.infiniteFuel = infiniteFuel;
+
 
         List<Class<? extends GameEntity>> collidesWith = new ArrayList<>();
         collidesWith.add(Planet.class);
@@ -63,17 +67,23 @@ public class Ship extends GameEntity
             Constants.Visual.HUD.Minimap.SHIP_TRIANGLE_VERTEX3);
     }
 
+    public boolean isInfiniteFuel()
+    {
+        return infiniteFuel;
+    }
+
+
     public float getMaxFuel()
     {
         return maxFuel;
     }
-    
+
     @Override
     public void update(float deltaTime)
     {
         Vector2 inputForce = InputManager.getInputForce();
 
-        if (this.maxFuel != -1)
+        if (!this.infiniteFuel)
         {
             float fuelConsumption = inputForce.len() * Constants.Game.FUEL_PER_SECOND * deltaTime;
 

@@ -29,7 +29,8 @@ public abstract class LevelManager
             serialisableLevel.serialisedShip.y,
             serialisableLevel.serialisedShip.mass,
             AssMan.getAssList().shipTexture,
-            serialisableLevel.fuel);
+            serialisableLevel.serialisedShip.fuel,
+            serialisableLevel.serialisedShip.infiniteFuel);
 
         ArrayList<Planet> planets = new ArrayList<>(serialisableLevel.serialisedPlanets.size());
         Planet destinationPlanet = null;
@@ -72,9 +73,8 @@ public abstract class LevelManager
             planets,
             pickups,
             destinationPlanet,
-            serialisableLevel.width,
-            serialisableLevel.height,
-            serialisableLevel.trajectorySeconds);
+            serialisableLevel.trajectorySeconds,
+            serialisableLevel.maxLandingSpeed);
 
         // Run one update so everything is in place for the countdown
         GameEntityManager.update();
