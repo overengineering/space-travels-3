@@ -30,4 +30,10 @@ public class CircleMiniMapGraphicsComponent extends MiniMapGraphicComponent
             this.physicsComponent.getPosition().y,
             radius);
     }
+
+    @Override
+    public void dispose()
+    {
+
+    }
 }

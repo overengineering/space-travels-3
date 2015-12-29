@@ -5,7 +5,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.utils.Pools;
+import com.draga.Vector2;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponentType;
@@ -15,15 +17,15 @@ import com.google.common.base.Stopwatch;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-public class CollisionCache
+public class CollisionCache implements Pool.Poolable
 {
     private static final String LOGGING_TAG = CollisionCache.class.getSimpleName();
 
     public static final float GRANULARITY = 1f;
 
-    private final ArrayList<PhysicsComponent>[][] collisions;
+    private ArrayList<PhysicsComponent>[][] collisions;
 
-    private final Vector2 offset;
+    private       Vector2 offset;
     private final int     arrayHeight;
     private final int     arrayWidth;
 
@@ -93,7 +95,7 @@ public class CollisionCache
         y2 += physicsComponent.getBoundsCircle().radius;
 
         // The offset are the coordinates of the bottom left corner of the grid.
-        this.offset = new Vector2(x1, y1);
+        this.offset = Vector2.newVector2(x1, y1);
 
         float width = x2 - x1;
         float height = y2 - y1;
@@ -223,5 +225,13 @@ public class CollisionCache
                 }
             }
         }
+    }
+
+    @Override
+    public void reset()
+    {
+        Pools.free(this.offset);
+        this.offset= null;
+        this.collisions = null;
     }
 }

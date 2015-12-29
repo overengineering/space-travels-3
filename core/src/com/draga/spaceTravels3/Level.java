@@ -11,7 +11,6 @@ import com.draga.spaceTravels3.gameEntity.*;
 import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
-import com.draga.spaceTravels3.physic.PhysicsEngine;
 import com.draga.spaceTravels3.physic.Projection;
 import com.draga.spaceTravels3.physic.ProjectionPoint;
 import com.google.common.base.Stopwatch;
@@ -160,9 +159,6 @@ public class Level
         }
         else
         {
-            GameEntityManager.removeGameEntity(ship);
-            GameEntityManager.removeGameEntity(thruster);
-
             gameState = GameState.WIN;
 
             WinEvent winEvent = Pools.obtain(WinEvent.class);
@@ -263,6 +259,7 @@ public class Level
         int lastCollisionIndex = 0;
         // Keep a list of PhysicsComponent that we already collided with to exclude them later on.
         ArrayList<PhysicsComponent> alreadyCollidedPhysicsComponents = new ArrayList<>();
+        outerFor:
         for (int i = 0, projectionPointsSize = projectionPoints.size(); i
             < projectionPointsSize; i++)
         {
@@ -278,15 +275,15 @@ public class Level
             if (!physicsComponentsToCheck.isEmpty()
                 || i == projectionPointsSize - 1)
             {
-                Color currentColor = getColor(projectionPoint, physicsComponentsToCheck);
+                Color currentColor = getColor(physicsComponentsToCheck);
                 alreadyCollidedPhysicsComponents.addAll(physicsComponentsToCheck);
 
                 // Add all the vertices up to this collision with the correct color.
                 for (int j = lastCollisionIndex; j < i; j++)
                 {
-                    vertices.add(
-                        j,
-                        new Vertex(currentColor, projectionPoints.get(j).getPosition()));
+                    Vertex vertex = Pools.obtain(Vertex.class);
+                    vertex.set(currentColor, projectionPoints.get(j).getPosition());
+                    vertices.add(j,vertex);
                 }
                 lastCollisionIndex = i;
 
@@ -295,17 +292,23 @@ public class Level
                 {
                     if (physicsComponent.getOwnerClass().equals(Planet.class))
                     {
-                        return new Projection(vertices);
+                        break outerFor;
                     }
                 }
             }
         }
 
-        return new Projection(vertices);
+        for (ProjectionPoint projectionPoint : projectionPoints)
+        {
+            Pools.free(projectionPoint);
+        }
+
+        Projection projection = Pools.obtain(Projection.class);
+        projection.set(vertices);
+        return projection;
     }
 
     private Color getColor(
-        ProjectionPoint projectionPoint,
         ArrayList<PhysicsComponent> nextCollidingPhysicsComponents)
     {
         for (PhysicsComponent nextCollidingPhysicsComponent : nextCollidingPhysicsComponents)

@@ -3,7 +3,7 @@ package com.draga.utils;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
+import com.draga.Vector2;
 
 public final class ShapeRendererUtils
 {
@@ -61,35 +61,37 @@ public final class ShapeRendererUtils
 
         ImmediateModeRenderer renderer = shapeRenderer.getRenderer();
 
-        Vector2 perpendicular = new Vector2();
-        float x2 = x + cx;
-        float y2 = y + cy;
-        for (int i = 0; i < segments; i++)
+        try (Vector2 perpendicular = Vector2.newVector2(0f, 0f))
         {
-            float x1 = x2;
-            float y1 = y2;
-            float temp = cx;
-            cx = cos * cx - sin * cy;
-            cy = sin * temp + cos * cy;
-            x2 = x + cx;
-            y2 = y + cy;
+            float x2 = x + cx;
+            float y2 = y + cy;
+            for (int i = 0; i < segments; i++)
+            {
+                float x1 = x2;
+                float y1 = y2;
+                float temp = cx;
+                cx = cos * cx - sin * cy;
+                cy = sin * temp + cos * cy;
+                x2 = x + cx;
+                y2 = y + cy;
 
-            perpendicular.set(y2 - y1, x1 - x2).nor();
-            float tx = perpendicular.x * halfWidth;
-            float ty = perpendicular.y * halfWidth;
-            renderer.color(colorBits);
-            renderer.vertex(x1 + tx, y1 + ty, 0);
-            renderer.color(colorBits);
-            renderer.vertex(x1 - tx, y1 - ty, 0);
-            renderer.color(colorBits);
-            renderer.vertex(x2 + tx, y2 + ty, 0);
+                perpendicular.set(y2 - y1, x1 - x2).nor();
+                float tx = perpendicular.x * halfWidth;
+                float ty = perpendicular.y * halfWidth;
+                renderer.color(colorBits);
+                renderer.vertex(x1 + tx, y1 + ty, 0);
+                renderer.color(colorBits);
+                renderer.vertex(x1 - tx, y1 - ty, 0);
+                renderer.color(colorBits);
+                renderer.vertex(x2 + tx, y2 + ty, 0);
 
-            renderer.color(colorBits);
-            renderer.vertex(x2 - tx, y2 - ty, 0);
-            renderer.color(colorBits);
-            renderer.vertex(x2 + tx, y2 + ty, 0);
-            renderer.color(colorBits);
-            renderer.vertex(x1 - tx, y1 - ty, 0);
+                renderer.color(colorBits);
+                renderer.vertex(x2 - tx, y2 - ty, 0);
+                renderer.color(colorBits);
+                renderer.vertex(x2 + tx, y2 + ty, 0);
+                renderer.color(colorBits);
+                renderer.vertex(x1 - tx, y1 - ty, 0);
+            }
         }
 
         shapeRenderer.set(oldShapeType);

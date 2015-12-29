@@ -1,6 +1,6 @@
 package com.draga.spaceTravels3.input.inputProvider;
 
-import com.badlogic.gdx.math.Vector2;
+import com.draga.Vector2;
 import com.draga.spaceTravels3.input.inputModifier.InputModifier;
 
 import java.util.ArrayList;

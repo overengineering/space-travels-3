@@ -2,7 +2,7 @@ package com.draga.spaceTravels3;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.Vector2;
+import com.draga.Vector2;
 import com.google.common.eventbus.EventBus;
 
 import java.text.DecimalFormat;
@@ -30,7 +30,7 @@ public abstract class Constants
         public static final float   THRUSTER_MAX_WIDTH      = 5;
         public static final float   THRUSTER_MAX_HEIGHT     = 5;
         public static final float   THRUSTER_ANIMATION_TIME = 1f;
-        public static final Vector2 THRUSTER_OFFSET         = new Vector2(-SHIP_WIDTH / 4f, 0);
+        public static final Vector2 THRUSTER_OFFSET         = Vector2.newVector2(-SHIP_WIDTH / 4f, 0);
 
         // Screen.
         public static final float SCREEN_FADE_DURATION = 3f;
@@ -80,9 +80,9 @@ public abstract class Constants
                 public static final Color   BACKGROUND_COLOR      = new Color(0, 0.17f, 0, 0.5f);
                 public static final Color   BORDER_COLOR          = new Color(0, 0.4f, 0, 1);
                 public static final Color   SHIP_COLOUR           = Color.WHITE;
-                public static final Vector2 SHIP_TRIANGLE_VERTEX1 = new Vector2(8, 0);
-                public static final Vector2 SHIP_TRIANGLE_VERTEX2 = new Vector2(-5, -5);
-                public static final Vector2 SHIP_TRIANGLE_VERTEX3 = new Vector2(-5, 5);
+                public static final Vector2 SHIP_TRIANGLE_VERTEX1 = Vector2.newVector2(8, 0);
+                public static final Vector2 SHIP_TRIANGLE_VERTEX2 = Vector2.newVector2(-5, -5);
+                public static final Vector2 SHIP_TRIANGLE_VERTEX3 = Vector2.newVector2(-5, 5);
                 public static final float   SCALE                 = 0.25f;
 
                 // Planet

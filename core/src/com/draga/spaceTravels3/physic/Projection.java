@@ -2,18 +2,20 @@ package com.draga.spaceTravels3.physic;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.utils.Pools;
+import com.draga.Vector2;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.Vertex;
 import com.draga.utils.GraphicsUtils;
 
 import java.util.ArrayList;
 
-public class Projection
+public class Projection implements Pool.Poolable
 {
-    private final ArrayList<Vertex> vertices;
+    private ArrayList<Vertex> vertices;
 
-    public Projection(ArrayList<Vertex> vertices)
+    public void set(ArrayList<Vertex> vertices)
     {
         this.vertices = vertices;
     }
@@ -39,5 +41,15 @@ public class Projection
         }
 
         GraphicsUtils.disableBlending();
+    }
+
+    @Override
+    public void reset()
+    {
+        for (Vertex vertex : this.vertices)
+        {
+            Pools.free(vertex);
+        }
+        this.vertices = null;
     }
 }

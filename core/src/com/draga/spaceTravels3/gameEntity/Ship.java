@@ -1,10 +1,10 @@
 package com.draga.spaceTravels3.gameEntity;
 
-import com.badlogic.gdx.math.Vector2;
+import com.draga.Vector2;
 import com.draga.spaceTravels3.Constants;
-import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 import com.draga.spaceTravels3.component.graphicComponent.StaticGraphicComponent;
 import com.draga.spaceTravels3.component.miniMapGraphicComponent.TriangleMiniMapGraphicComponent;
+import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponentType;
 import com.draga.spaceTravels3.manager.InputManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
@@ -62,9 +62,9 @@ public class Ship extends GameEntity
         this.miniMapGraphicComponent = new TriangleMiniMapGraphicComponent(
             this.physicsComponent,
             Constants.Visual.HUD.Minimap.SHIP_COLOUR,
-            Constants.Visual.HUD.Minimap.SHIP_TRIANGLE_VERTEX1,
-            Constants.Visual.HUD.Minimap.SHIP_TRIANGLE_VERTEX2,
-            Constants.Visual.HUD.Minimap.SHIP_TRIANGLE_VERTEX3);
+            Constants.Visual.HUD.Minimap.SHIP_TRIANGLE_VERTEX1.cpy(),
+            Constants.Visual.HUD.Minimap.SHIP_TRIANGLE_VERTEX2.cpy(),
+            Constants.Visual.HUD.Minimap.SHIP_TRIANGLE_VERTEX3.cpy());
     }
 
     public boolean isInfiniteFuel()
@@ -81,29 +81,33 @@ public class Ship extends GameEntity
     @Override
     public void update(float deltaTime)
     {
-        Vector2 inputForce = InputManager.getInputForce();
-
-        if (!this.infiniteFuel)
+        try (Vector2 inputForce = InputManager.getInputForce().cpy())
         {
-            float fuelConsumption = inputForce.len() * Constants.Game.FUEL_PER_SECOND * deltaTime;
+            inputForce.scl(deltaTime);
 
-            // If the fuel is or is going to be completely consumed then only apply the input force
-            // that the fuel can afford.
-            if (fuelConsumption > currentFuel)
+            if (!this.infiniteFuel)
             {
-                inputForce.scl(currentFuel / fuelConsumption);
-                fuelConsumption = currentFuel;
+                float fuelConsumption =
+                    inputForce.len() * Constants.Game.FUEL_PER_SECOND * deltaTime;
+
+                // If the fuel is or is going to be completely consumed then only apply the input force
+                // that the fuel can afford.
+                if (fuelConsumption > currentFuel)
+                {
+                    inputForce.scl(currentFuel / fuelConsumption);
+                    fuelConsumption = currentFuel;
+                }
+
+                currentFuel = SettingsManager.getDebugSettings().infiniteFuel
+                    ? maxFuel
+                    : currentFuel - fuelConsumption;
             }
 
-            currentFuel = SettingsManager.getDebugSettings().infiniteFuel
-                ? maxFuel
-                : currentFuel - fuelConsumption;
+            rotateTo(inputForce);
+
+            this.physicsComponent.getVelocity()
+                .add(inputForce.scl(Constants.Game.SHIP_ACCELERATION_PER_SECOND));
         }
-
-        this.physicsComponent.getVelocity()
-            .add(inputForce.cpy().scl(deltaTime * Constants.Game.SHIP_ACCELERATION_PER_SECOND));
-
-        rotateTo(inputForce, deltaTime);
     }
 
     /**
@@ -111,7 +115,7 @@ public class Ship extends GameEntity
      *
      * @param inputForce The input force, should be long between 0 and 1.
      */
-    private void rotateTo(Vector2 inputForce, float deltaTime)
+    private void rotateTo(Vector2 inputForce)
     {
         if (inputForce.len() == 0)
         {
@@ -131,7 +135,7 @@ public class Ship extends GameEntity
         }
 
         // Scale the difference of rotation by the deltaTime time and input length.
-        diffRotation *= inputForce.len() * deltaTime * ROTATION_SCALE;
+        diffRotation *= inputForce.len() * ROTATION_SCALE;
 
         // bring the rotation to the max if it's over it
         if (Math.abs(diffRotation) > MAX_ROTATION_DEGREES_PER_SEC)

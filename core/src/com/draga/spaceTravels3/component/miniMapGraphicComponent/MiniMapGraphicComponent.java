@@ -13,6 +13,12 @@ public abstract class MiniMapGraphicComponent
             {
 
             }
+
+            @Override
+            public void dispose()
+            {
+
+            }
         };
     protected PhysicsComponent physicsComponent;
     protected Color            colour;
@@ -27,8 +33,5 @@ public abstract class MiniMapGraphicComponent
 
     public abstract void draw();
 
-    public void dispose()
-    {
-
-    }
+    public abstract void dispose();
 }

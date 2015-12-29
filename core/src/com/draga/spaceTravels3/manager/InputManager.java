@@ -1,7 +1,8 @@
 package com.draga.spaceTravels3.manager;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Pools;
+import com.draga.Vector2;
 import com.draga.spaceTravels3.input.inputProvider.AccelerometerInputProvider;
 import com.draga.spaceTravels3.input.inputProvider.InputProvider;
 import com.draga.spaceTravels3.input.inputProvider.KeyboardInputProvider;
@@ -19,7 +20,7 @@ public class InputManager
 
     public static void create()
     {
-        inputForce = new Vector2();
+        inputForce = Vector2.newVector2(0f, 0f);
         touchInputProvider = new TouchInputProvider();
         accelerometerInputProvider = new AccelerometerInputProvider();
         keyboardInputProvider = new KeyboardInputProvider();
@@ -38,6 +39,11 @@ public class InputManager
 
     public static void update()
     {
+        if (inputForce != null)
+        {
+            Pools.free(inputForce);
+        }
+
         Vector2 input;
         switch (Gdx.app.getType())
         {
@@ -46,7 +52,7 @@ public class InputManager
                 switch (SettingsManager.getSettings().inputType)
                 {
                     case ACCELEROMETER:
-                        input = accelerometerInputProvider.getInput();
+                        input =  accelerometerInputProvider.getInput();
                         break;
                     case TOUCH:
                         input = touchInputProvider.getInput();
@@ -56,7 +62,7 @@ public class InputManager
                             LOGGING_TAG,
                             SettingsManager.getSettings().inputType
                                 + " input type not implemented.");
-                        input = new Vector2();
+                        input = Vector2.newVector2(0f, 0f);
                 }
                 break;
             case Desktop:
@@ -69,7 +75,7 @@ public class InputManager
             default:
                 Gdx.app.error(
                     LOGGING_TAG, "Device type " + Gdx.input.getRotation() + " not implemented.");
-                input = new Vector2();
+                input = Vector2.newVector2(0f, 0f);
                 break;
         }
         inputForce = input;

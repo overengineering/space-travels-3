@@ -1,9 +1,8 @@
 package com.draga.spaceTravels3.physic;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.PerformanceCounter;
+import com.draga.Vector2;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponentType;
@@ -84,10 +83,10 @@ public class PhysicsEngine
     
     /**
      * Check for collisions following this pattern to avoid duplicates:
-     * \ X0 \ X1 \ X2
-     * Y0 \    \    \
-     * Y1 \ X  \    \
-     * Y2 \ X  \ X  \
+     * ___|_X0_|_X1_|_X2_
+     * Y0 |
+     * Y1 | X
+     * Y2 | X    X
      * Collision checks are skipped between static objects.
      */
     private static void checkCollisions()
@@ -170,9 +169,10 @@ public class PhysicsEngine
         PhysicsComponent physicsComponent,
         ArrayList<PhysicsComponent> otherPhysicsComponents, float deltaTime)
     {
-        Vector2 gravityForce = calculateGravityForce(physicsComponent, otherPhysicsComponents);
-        
-        physicsComponent.getVelocity().add(gravityForce.scl(deltaTime));
+        try (Vector2 gravityForce = calculateGravityForce(physicsComponent, otherPhysicsComponents))
+        {
+            physicsComponent.getVelocity().add(gravityForce.scl(deltaTime));
+        }
     }
     
     /**
@@ -180,8 +180,11 @@ public class PhysicsEngine
      */
     private static void applyVelocity(PhysicsComponent physicsComponent, float deltaTime)
     {
-        physicsComponent.getPosition()
-            .add(physicsComponent.getVelocity().cpy().scl(deltaTime));
+        try (Vector2 velocity = physicsComponent.getVelocity().cpy())
+        {
+            physicsComponent.getPosition()
+                .add(velocity.scl(deltaTime));
+        }
     }
     
     /**
@@ -221,15 +224,35 @@ public class PhysicsEngine
         PhysicsComponent physicsComponent,
         ArrayList<PhysicsComponent> otherPhysicComponents)
     {
-        Vector2 totalForce = new Vector2();
+        Vector2 force = Vector2.newVector2(0f, 0f);
+
         for (PhysicsComponent otherPhysicsComponent : otherPhysicComponents)
         {
-            Vector2 force =
-                calculateGravityForce(physicsComponent, otherPhysicsComponent);
-            totalForce.add(force);
+            addGravityForce(physicsComponent, otherPhysicsComponent, force);
         }
         
-        return totalForce;
+        return force;
+    }
+
+    private static void addGravityForce(
+        PhysicsComponent physicsComponentA,
+        PhysicsComponent physicsComponentB,
+        Vector2 force)
+    {
+        float x = physicsComponentB.getPosition().x - physicsComponentA.getPosition().x;
+        float y = physicsComponentB.getPosition().y - physicsComponentA.getPosition().y;
+
+        float len2 = x * x + y * y;
+        double len = Math.sqrt(len2);
+
+        float scale = physicsComponentA.getMass()
+            * physicsComponentB.getMass()
+            / len2;
+
+        x *= scale / len;
+        y *= scale / len;
+
+        force.add(x, y);
     }
     
     private static boolean areOverlapping(
@@ -238,47 +261,11 @@ public class PhysicsEngine
     {
         float overlappingDistance =
             physicsComponentA.getBoundsCircle().radius + physicsComponentB.getBoundsCircle().radius;
-        float distance = physicsComponentA.getPosition().dst(physicsComponentB.getPosition());
+        float distance2 = physicsComponentA.getPosition().dst2(physicsComponentB.getPosition());
         
-        boolean areOverlapping = distance <= overlappingDistance;
+        boolean areOverlapping = distance2 <= overlappingDistance * overlappingDistance;
         
         return areOverlapping;
-    }
-    
-    private static Vector2 calculateGravityForce(
-        PhysicsComponent physicsComponentA,
-        PhysicsComponent physicsComponentB)
-    {
-        float x = physicsComponentB.getPosition().x - physicsComponentA.getPosition().x;
-        float y = physicsComponentB.getPosition().y - physicsComponentA.getPosition().y;
-
-        float len2 = x * x + y * y;
-
-        float force = physicsComponentA.getMass()
-            * physicsComponentB.getMass()
-            / len2;
-
-        float force2 = force * force;
-        
-        x *= force2 / len2;
-        y *= force2 / len2;
-
-        return new Vector2(x, y);
-
-        /*Vector2 distance = physicsComponentB.getPosition()
-            .cpy()
-            .sub(physicsComponentA.getPosition());
-        float distanceLen2 = distance.len2();
-        
-        Vector2 direction = distance.nor();
-        
-        float force = physicsComponentA.getMass()
-            * physicsComponentB.getMass()
-            / distanceLen2;
-        
-        Vector2 gravityForce = direction.scl(force);
-        
-        return gravityForce;*/
     }
     
     public static void create()
@@ -375,7 +362,6 @@ public class PhysicsEngine
 
             ProjectionPoint projectionPoint = new ProjectionPoint(
                 physicsComponent.getPosition().cpy(),
-                physicsComponent.getVelocity().cpy(),
                 collidingPhysicsComponents);
             projectionPoints.add(projectionPoint);
         }
@@ -391,7 +377,7 @@ public class PhysicsEngine
         ArrayList<PhysicsComponent> otherPhysicsComponents =
             getAllPhysicsComponentsExcept(physicsComponent);
         Vector2 gravityForce = calculateGravityForce(physicsComponent, otherPhysicsComponents);
-        
+
         return gravityForce;
     }
 

@@ -2,15 +2,16 @@ package com.draga.spaceTravels3.component.miniMapGraphicComponent;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Pools;
+import com.draga.Vector2;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 
 public class TriangleMiniMapGraphicComponent extends MiniMapGraphicComponent
 {
-    private final Vector2 vertex1;
-    private final Vector2 vertex2;
-    private final Vector2 vertex3;
+    private Vector2 vertex1;
+    private Vector2 vertex2;
+    private Vector2 vertex3;
 
     public TriangleMiniMapGraphicComponent(
         PhysicsComponent physicsComponent,
@@ -32,18 +33,35 @@ public class TriangleMiniMapGraphicComponent extends MiniMapGraphicComponent
         SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
         SpaceTravels3.shapeRenderer.setColor(this.colour);
 
-        Vector2 vertex1Rotated = vertex1.cpy().rotate(this.physicsComponent.getAngle());
-        Vector2 vertex2Rotated = vertex2.cpy().rotate(this.physicsComponent.getAngle());
-        Vector2 vertex3Rotated = vertex3.cpy().rotate(this.physicsComponent.getAngle());
+        try (
+            Vector2 vertex1Rotated = vertex1.cpy();
+            Vector2 vertex2Rotated = vertex2.cpy();
+            Vector2 vertex3Rotated = vertex3.cpy())
+        {
+            vertex1Rotated.rotate(this.physicsComponent.getAngle());
+            vertex2Rotated.rotate(this.physicsComponent.getAngle());
+            vertex3Rotated.rotate(this.physicsComponent.getAngle());
 
-        float x = this.physicsComponent.getPosition().x;
-        float y = this.physicsComponent.getPosition().y;
-        SpaceTravels3.shapeRenderer.triangle(
-            vertex1Rotated.x + x,
-            vertex1Rotated.y + y,
-            vertex2Rotated.x + x,
-            vertex2Rotated.y + y,
-            vertex3Rotated.x + x,
-            vertex3Rotated.y + y);
+            float x = this.physicsComponent.getPosition().x;
+            float y = this.physicsComponent.getPosition().y;
+            SpaceTravels3.shapeRenderer.triangle(
+                vertex1Rotated.x + x,
+                vertex1Rotated.y + y,
+                vertex2Rotated.x + x,
+                vertex2Rotated.y + y,
+                vertex3Rotated.x + x,
+                vertex3Rotated.y + y);
+        }
+    }
+
+    @Override
+    public void dispose()
+    {
+        Pools.free(this.vertex1);
+        Pools.free(this.vertex2);
+        Pools.free(this.vertex3);
+        this.vertex1 = null;
+        this.vertex2 = null;
+        this.vertex3 = null;
     }
 }

@@ -2,7 +2,7 @@ package com.draga.utils;
 
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
+import com.draga.Vector2;
 
 public final class PixmapUtils
 {
@@ -56,50 +56,52 @@ public final class PixmapUtils
         float cy = radius * MathUtils.sin(start * MathUtils.degreesToRadians);
         float halfWidth = width * 0.5f;
 
-        Vector2 perpendicular = new Vector2();
-        float x2 = x + cx;
-        float y2 = y + cy;
-        for (int i = 0; i < segments; i++)
+        try (Vector2 perpendicular = Vector2.newVector2(0f, 0f))
         {
-            float x1 = x2;
-            float y1 = y2;
-            float temp = cx;
-            cx = cos * cx - sin * cy;
-            cy = sin * temp + cos * cy;
-            x2 = x + cx;
-            y2 = y + cy;
+            float x2 = x + cx;
+            float y2 = y + cy;
+            for (int i = 0; i < segments; i++)
+            {
+                float x1 = x2;
+                float y1 = y2;
+                float temp = cx;
+                cx = cos * cx - sin * cy;
+                cy = sin * temp + cos * cy;
+                x2 = x + cx;
+                y2 = y + cy;
 
-            perpendicular.set(y2 - y1, x1 - x2).nor();
-            float tx = perpendicular.x * halfWidth;
-            float ty = perpendicular.y * halfWidth;
+                perpendicular.set(y2 - y1, x1 - x2).nor();
+                float tx = perpendicular.x * halfWidth;
+                float ty = perpendicular.y * halfWidth;
 
-            int p1x = Math.round(x1 + tx);
-            int p1y = Math.round(y1 + ty);
-            int p2x = Math.round(x1 - tx);
-            int p2y = Math.round(y1 - ty);
-            int p3x = Math.round(x2 + tx);
-            int p3y = Math.round(y2 + ty);
-            int p4x = Math.round(x2 - tx);
-            int p4y = Math.round(y2 - ty);
+                int p1x = Math.round(x1 + tx);
+                int p1y = Math.round(y1 + ty);
+                int p2x = Math.round(x1 - tx);
+                int p2y = Math.round(y1 - ty);
+                int p3x = Math.round(x2 + tx);
+                int p3y = Math.round(y2 + ty);
+                int p4x = Math.round(x2 - tx);
+                int p4y = Math.round(y2 - ty);
 
-            // Two triangles to form a rectangle.
-            pixmap.fillTriangle(
-                p1x,
-                p1y,
-                p2x,
-                p2y,
-                p3x,
-                p3y
-            );
+                // Two triangles to form a rectangle.
+                pixmap.fillTriangle(
+                    p1x,
+                    p1y,
+                    p2x,
+                    p2y,
+                    p3x,
+                    p3y
+                );
 
-            pixmap.fillTriangle(
-                p4x,
-                p4y,
-                p3x,
-                p3y,
-                p2x,
-                p2y
-            );
+                pixmap.fillTriangle(
+                    p4x,
+                    p4y,
+                    p3x,
+                    p3y,
+                    p2x,
+                    p2y
+                );
+            }
         }
     }
 }
