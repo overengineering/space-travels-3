@@ -1,6 +1,7 @@
 package com.draga.spaceTravels3.physic;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.PerformanceCounter;
 import com.draga.spaceTravels3.Constants;
@@ -18,9 +19,9 @@ public class PhysicsEngine
     private static final String             LOGGING_TAG                            =
         PhysicsEngine.class.getSimpleName();
     private static final PerformanceCounter GRAVITY_PROJECTION_PERFORMANCE_COUNTER =
-        new PerformanceCounter("gravityProjection");
+        new PerformanceCounter("gravityProjection", 60);
     private static final PerformanceCounter STEP_PERFORMANCE_COUNTER               =
-        new PerformanceCounter("step");
+        new PerformanceCounter("step", 60);
     private static HashMap<PhysicsComponent, CollisionCache>
         physicsComponentCollisionCache;
 
@@ -248,7 +249,23 @@ public class PhysicsEngine
         PhysicsComponent physicsComponentA,
         PhysicsComponent physicsComponentB)
     {
-        Vector2 distance = physicsComponentB.getPosition()
+        float x = physicsComponentB.getPosition().x - physicsComponentA.getPosition().x;
+        float y = physicsComponentB.getPosition().y - physicsComponentA.getPosition().y;
+
+        float len2 = x * x + y * y;
+
+        float force = physicsComponentA.getMass()
+            * physicsComponentB.getMass()
+            / len2;
+
+        float force2 = force * force;
+        
+        x *= force2 / len2;
+        y *= force2 / len2;
+
+        return new Vector2(x, y);
+
+        /*Vector2 distance = physicsComponentB.getPosition()
             .cpy()
             .sub(physicsComponentA.getPosition());
         float distanceLen2 = distance.len2();
@@ -261,7 +278,7 @@ public class PhysicsEngine
         
         Vector2 gravityForce = direction.scl(force);
         
-        return gravityForce;
+        return gravityForce;*/
     }
     
     public static void create()
