@@ -15,7 +15,7 @@ import java.util.HashMap;
 
 public class PhysicsEngine
 {
-    private static final String LOGGING_TAG =
+    private static final String             LOGGING_TAG                            =
         PhysicsEngine.class.getSimpleName();
     private static final PerformanceCounter GRAVITY_PROJECTION_PERFORMANCE_COUNTER =
         new PerformanceCounter("gravityProjection");
@@ -313,6 +313,7 @@ public class PhysicsEngine
                 stepGravity(physicsComponent, otherPhysicsComponents, stepTime);
                 applyVelocity(physicsComponent, stepTime);
 
+                // If we have collision with static physComp cached..
                 if (physicsComponentCollisionCache.containsKey(originalPhysicsComponent))
                 {
                     CollisionCache collisionCache =
@@ -323,28 +324,25 @@ public class PhysicsEngine
                             physicsComponent.getPosition().y);
                     for (PhysicsComponent otherPhysicsComponent : otherPhysicsComponents)
                     {
-                        if (otherPhysicsComponent.getPhysicsComponentType()
-                            == PhysicsComponentType.DYNAMIC)
+                        if (!collidingPhysicsComponents.contains(otherPhysicsComponent))
                         {
-                            if (!collidingPhysicsComponents.contains(otherPhysicsComponent)
+                            if (otherPhysicsComponent.getPhysicsComponentType()
+                                == PhysicsComponentType.DYNAMIC
+                                && areColliding(physicsComponent, otherPhysicsComponent))
+                            {
+                                collidingPhysicsComponents.add(otherPhysicsComponent);
+                            }
+                            else if (possibleCollidingPhysicsComponents.contains(
+                                otherPhysicsComponent)
                                 && areColliding(physicsComponent, otherPhysicsComponent))
                             {
                                 collidingPhysicsComponents.add(otherPhysicsComponent);
                             }
                         }
-                        else
-                        {
-                            if (!collidingPhysicsComponents.contains(otherPhysicsComponent)
-                                && possibleCollidingPhysicsComponents.contains(otherPhysicsComponent)
-                                && areColliding(physicsComponent, otherPhysicsComponent))
-                            {
-                                collidingPhysicsComponents.add(otherPhysicsComponent);
-                            }
 
-                        }
                     }
-
                 }
+                // If we DON'T have collision with static physComp cached..
                 else
                 {
                     for (PhysicsComponent otherPhysicsComponent : otherPhysicsComponents)

@@ -159,6 +159,9 @@ public class CollisionCache
                         case 3:
                             pixmap.setColor(Color.BLUE);
                             break;
+                        default:
+                            pixmap.setColor(Color.WHITE);
+                            break;
                     }
                     pixmap.drawPixel(x, y);
                 }
