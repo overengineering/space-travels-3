@@ -2,7 +2,7 @@ package com.draga.spaceTravels3.gameEntity;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.draga.Vector2;
+import com.draga.PooledVector2;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.component.graphicComponent.AnimatedGraphicComponent;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
@@ -50,7 +50,7 @@ public class Thruster extends GameEntity
     @Override
     public void update(float deltaTime)
     {
-        Vector2 inputForce = InputManager.getInputForce();
+        PooledVector2 inputForce = InputManager.getInputForce();
         if (ship.getCurrentFuel() <= 0)
         {
             inputForce.setZero();
@@ -60,12 +60,12 @@ public class Thruster extends GameEntity
         this.graphicComponent.setWidth(Constants.Visual.THRUSTER_MAX_WIDTH * thrusterScale);
         this.graphicComponent.setHeight(Constants.Visual.THRUSTER_MAX_HEIGHT * thrusterScale);
 
-        try (Vector2 thrusterOffsetPosition = Constants.Visual.THRUSTER_OFFSET.cpy())
+        try (PooledVector2 thrusterOffsetPosition = Constants.Visual.THRUSTER_OFFSET.cpy())
         {
             thrusterOffsetPosition.sub(this.graphicComponent.getHalfWidth(), 0)
                 .rotate(this.ship.physicsComponent.getAngle());
 
-            try (Vector2 shipPosition = this.ship.physicsComponent.getPosition().cpy())
+            try (PooledVector2 shipPosition = this.ship.physicsComponent.getPosition().cpy())
             {
                 this.physicsComponent.getPosition()
                     .set(shipPosition

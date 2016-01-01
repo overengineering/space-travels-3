@@ -1,7 +1,7 @@
 package com.draga.spaceTravels3.input.inputProvider;
 
 import com.badlogic.gdx.Gdx;
-import com.draga.Vector2;
+import com.draga.PooledVector2;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.input.inputModifier.DeadZoneInputModifier;
 import com.draga.spaceTravels3.input.inputModifier.RangeInputModifier;
@@ -21,30 +21,30 @@ public class AccelerometerInputProvider extends InputProvider
     }
 
     @Override
-    protected Vector2 getRawInput()
+    protected PooledVector2 getRawInput()
     {
-        Vector2 input;
+        PooledVector2 input;
         // Rotate the vector "manually" instead of using input.rotate(Gdx.input.getRotation())
         // because it doesn't need expensive operations.
         switch (Gdx.input.getRotation())
         {
             case 0:
-                input = Vector2.newVector2(
+                input = PooledVector2.newVector2(
                     Gdx.input.getAccelerometerX(),
                     Gdx.input.getAccelerometerY());
                 break;
             case 90:
-                input = Vector2.newVector2(
+                input = PooledVector2.newVector2(
                     Gdx.input.getAccelerometerY(),
                     -Gdx.input.getAccelerometerX());
                 break;
             case 180:
-                input = Vector2.newVector2(
+                input = PooledVector2.newVector2(
                     -Gdx.input.getAccelerometerX(),
                     -Gdx.input.getAccelerometerY());
                 break;
             case 270:
-                input = Vector2.newVector2(
+                input = PooledVector2.newVector2(
                     -Gdx.input.getAccelerometerY(),
                     Gdx.input.getAccelerometerX());
                 break;
@@ -52,7 +52,7 @@ public class AccelerometerInputProvider extends InputProvider
                 Gdx.app.error(
                     LOGGING_TAG,
                     "Orientation " + Gdx.input.getRotation() + " not implemented.");
-                input = Vector2.newVector2(0f, 0f);
+                input = PooledVector2.newVector2(0f, 0f);
         }
 
         input.scl(1f / Constants.Game.ACCELEROMETER_RANGE);

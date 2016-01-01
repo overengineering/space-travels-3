@@ -2,7 +2,7 @@ package com.draga.spaceTravels3.physic;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.PerformanceCounter;
-import com.draga.Vector2;
+import com.draga.PooledVector2;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponentType;
@@ -169,7 +169,7 @@ public class PhysicsEngine
         PhysicsComponent physicsComponent,
         ArrayList<PhysicsComponent> otherPhysicsComponents, float deltaTime)
     {
-        try (Vector2 gravityForce = calculateGravityForce(physicsComponent, otherPhysicsComponents))
+        try (PooledVector2 gravityForce = calculateGravityForce(physicsComponent, otherPhysicsComponents))
         {
             physicsComponent.getVelocity().add(gravityForce.scl(deltaTime));
         }
@@ -180,7 +180,7 @@ public class PhysicsEngine
      */
     private static void applyVelocity(PhysicsComponent physicsComponent, float deltaTime)
     {
-        try (Vector2 velocity = physicsComponent.getVelocity().cpy())
+        try (PooledVector2 velocity = physicsComponent.getVelocity().cpy())
         {
             physicsComponent.getPosition()
                 .add(velocity.scl(deltaTime));
@@ -220,11 +220,11 @@ public class PhysicsEngine
         return physicsComponents;
     }
     
-    public static Vector2 calculateGravityForce(
+    public static PooledVector2 calculateGravityForce(
         PhysicsComponent physicsComponent,
         ArrayList<PhysicsComponent> otherPhysicComponents)
     {
-        Vector2 force = Vector2.newVector2(0f, 0f);
+        PooledVector2 force = PooledVector2.newVector2(0f, 0f);
 
         for (PhysicsComponent otherPhysicsComponent : otherPhysicComponents)
         {
@@ -237,7 +237,7 @@ public class PhysicsEngine
     private static void addGravityForce(
         PhysicsComponent physicsComponentA,
         PhysicsComponent physicsComponentB,
-        Vector2 force)
+        PooledVector2 force)
     {
         float x = physicsComponentB.getPosition().x - physicsComponentA.getPosition().x;
         float y = physicsComponentB.getPosition().y - physicsComponentA.getPosition().y;
@@ -372,11 +372,11 @@ public class PhysicsEngine
         return projectionPoints;
     }
     
-    public static Vector2 calculateGravityForce(PhysicsComponent physicsComponent)
+    public static PooledVector2 calculateGravityForce(PhysicsComponent physicsComponent)
     {
         ArrayList<PhysicsComponent> otherPhysicsComponents =
             getAllPhysicsComponentsExcept(physicsComponent);
-        Vector2 gravityForce = calculateGravityForce(physicsComponent, otherPhysicsComponents);
+        PooledVector2 gravityForce = calculateGravityForce(physicsComponent, otherPhysicsComponents);
 
         return gravityForce;
     }

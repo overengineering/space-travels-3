@@ -15,7 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
-import com.draga.Vector2;
+import com.draga.PooledVector2;
 import com.draga.spaceTravels3.event.PickupCollectedEvent;
 import com.draga.spaceTravels3.gameEntity.Ship;
 import com.draga.spaceTravels3.manager.GameEntityManager;
@@ -245,7 +245,7 @@ public class Hud implements Screen
 
     private void drawGravityIndicator()
     {
-        try (Vector2 gravityVector = PhysicsEngine.calculateGravityForce(ship.physicsComponent))
+        try (PooledVector2 gravityVector = PhysicsEngine.calculateGravityForce(ship.physicsComponent))
         {
 
             SpaceTravels3.shapeRenderer.setColor(Color.BLUE);

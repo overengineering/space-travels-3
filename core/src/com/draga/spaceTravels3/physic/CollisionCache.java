@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
-import com.draga.Vector2;
+import com.draga.PooledVector2;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponentType;
@@ -25,9 +25,9 @@ public class CollisionCache implements Pool.Poolable
 
     private ArrayList<PhysicsComponent>[][] collisions;
 
-    private       Vector2 offset;
-    private final int     arrayHeight;
-    private final int     arrayWidth;
+    private       PooledVector2 offset;
+    private final int           arrayHeight;
+    private final int           arrayWidth;
 
     public CollisionCache(PhysicsComponent originalPhysicsComponent)
     {
@@ -95,7 +95,7 @@ public class CollisionCache implements Pool.Poolable
         y2 += physicsComponent.getBoundsCircle().radius;
 
         // The offset are the coordinates of the bottom left corner of the grid.
-        this.offset = Vector2.newVector2(x1, y1);
+        this.offset = PooledVector2.newVector2(x1, y1);
 
         float width = x2 - x1;
         float height = y2 - y1;
@@ -230,7 +230,7 @@ public class CollisionCache implements Pool.Poolable
     @Override
     public void reset()
     {
-        Pools.free(this.offset);
+        this.offset.close();
         this.offset= null;
         this.collisions = null;
     }

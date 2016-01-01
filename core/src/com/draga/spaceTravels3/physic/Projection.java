@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
-import com.draga.Vector2;
+import com.draga.PooledVector2;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.Vertex;
 import com.draga.utils.GraphicsUtils;
@@ -32,8 +32,8 @@ public class Projection implements Pool.Poolable
             Color color = vertexA.getColor().cpy().lerp(vertexB.getColor(), 0.5f);
             SpaceTravels3.shapeRenderer.setColor(color);
 
-            Vector2 projectionPointA = vertexA.getPosition();
-            Vector2 projectionPointB = vertexB.getPosition();
+            PooledVector2 projectionPointA = vertexA.getPosition();
+            PooledVector2 projectionPointB = vertexB.getPosition();
 
             SpaceTravels3.shapeRenderer.line(
                 projectionPointA.x, projectionPointA.y,

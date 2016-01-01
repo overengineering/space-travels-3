@@ -1,6 +1,6 @@
 package com.draga.spaceTravels3.input.inputModifier;
 
-import com.draga.Vector2;
+import com.draga.PooledVector2;
 
 public class RangeInputModifier implements InputModifier
 {
@@ -12,9 +12,9 @@ public class RangeInputModifier implements InputModifier
     }
 
     @Override
-    public void modify(Vector2 vector2)
+    public void modify(PooledVector2 pooledVector2)
     {
         // Scale the input by the maxRawInput so that I'll be between 0 and 1.
-        vector2.scl(1 / maxRawInput);
+        pooledVector2.scl(1 / maxRawInput);
     }
 }

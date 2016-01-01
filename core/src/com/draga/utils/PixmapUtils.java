@@ -2,7 +2,7 @@ package com.draga.utils;
 
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.math.MathUtils;
-import com.draga.Vector2;
+import com.draga.PooledVector2;
 
 public final class PixmapUtils
 {
@@ -56,7 +56,7 @@ public final class PixmapUtils
         float cy = radius * MathUtils.sin(start * MathUtils.degreesToRadians);
         float halfWidth = width * 0.5f;
 
-        try (Vector2 perpendicular = Vector2.newVector2(0f, 0f))
+        try (PooledVector2 perpendicular = PooledVector2.newVector2(0f, 0f))
         {
             float x2 = x + cx;
             float y2 = y + cy;

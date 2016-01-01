@@ -1,6 +1,6 @@
 package com.draga.spaceTravels3.input.inputModifier;
 
-import com.draga.Vector2;
+import com.draga.PooledVector2;
 
 public class DeadZoneInputModifier implements InputModifier
 {
@@ -12,12 +12,12 @@ public class DeadZoneInputModifier implements InputModifier
     }
 
     @Override
-    public void modify(Vector2 input)
+    public void modify(PooledVector2 input)
     {
         applyDeadZone(input);
     }
 
-    private void applyDeadZone(Vector2 input)
+    private void applyDeadZone(PooledVector2 input)
     {
         input.x = applyDeadZone(input.x);
         input.y = applyDeadZone(input.y);

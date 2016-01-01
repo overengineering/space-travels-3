@@ -1,7 +1,7 @@
 package com.draga.spaceTravels3.component.physicsComponent;
 
 import com.badlogic.gdx.utils.Pools;
-import com.draga.Vector2;
+import com.draga.PooledVector2;
 import com.draga.shape.Circle;
 import com.draga.spaceTravels3.gameEntity.GameEntity;
 import com.draga.spaceTravels3.gameEntity.GameEntityGroup;
@@ -14,8 +14,8 @@ public class PhysicsComponent implements Serializable
 
     private final PhysicsComponentType physicsComponentType;
 
-    private final Vector2 position;
-    private final Vector2 velocity;
+    private final PooledVector2 position;
+    private final PooledVector2 velocity;
 
     private final Circle boundsCircle;
 
@@ -39,8 +39,8 @@ public class PhysicsComponent implements Serializable
     {
         this.ownerClass = ownerClass;
         this.physicsComponentType = physicsComponentType;
-        this.position = Vector2.newVector2(x, y);
-        this.velocity = Vector2.newVector2(0f, 0f);
+        this.position = PooledVector2.newVector2(x, y);
+        this.velocity = PooledVector2.newVector2(0f, 0f);
         this.mass = mass;
         this.boundsCircle = new Circle(boundsRadius);
         this.collidesWith = collidesWith;
@@ -79,12 +79,12 @@ public class PhysicsComponent implements Serializable
         this.angularVelocity = angularVelocity;
     }
 
-    public Vector2 getPosition()
+    public PooledVector2 getPosition()
     {
         return position;
     }
 
-    public Vector2 getVelocity()
+    public PooledVector2 getVelocity()
     {
         return velocity;
     }
@@ -106,8 +106,8 @@ public class PhysicsComponent implements Serializable
 
     public void dispose()
     {
-        Pools.free(this.position);
-        Pools.free(this.velocity);
+        this.position.close();
+        this.velocity.close();
     }
 
     public float getMass()

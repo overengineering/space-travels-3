@@ -1,6 +1,6 @@
 package com.draga.spaceTravels3.gameEntity;
 
-import com.draga.Vector2;
+import com.draga.PooledVector2;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.component.graphicComponent.StaticGraphicComponent;
 import com.draga.spaceTravels3.component.miniMapGraphicComponent.TriangleMiniMapGraphicComponent;
@@ -81,7 +81,7 @@ public class Ship extends GameEntity
     @Override
     public void update(float deltaTime)
     {
-        try (Vector2 inputForce = InputManager.getInputForce().cpy())
+        try (PooledVector2 inputForce = InputManager.getInputForce().cpy())
         {
             inputForce.scl(deltaTime);
 
@@ -115,7 +115,7 @@ public class Ship extends GameEntity
      *
      * @param inputForce The input force, should be long between 0 and 1.
      */
-    private void rotateTo(Vector2 inputForce)
+    private void rotateTo(PooledVector2 inputForce)
     {
         if (inputForce.len() == 0)
         {

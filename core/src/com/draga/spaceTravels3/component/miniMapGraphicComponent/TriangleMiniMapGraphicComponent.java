@@ -3,22 +3,22 @@ package com.draga.spaceTravels3.component.miniMapGraphicComponent;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Pools;
-import com.draga.Vector2;
+import com.draga.PooledVector2;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 
 public class TriangleMiniMapGraphicComponent extends MiniMapGraphicComponent
 {
-    private Vector2 vertex1;
-    private Vector2 vertex2;
-    private Vector2 vertex3;
+    private PooledVector2 vertex1;
+    private PooledVector2 vertex2;
+    private PooledVector2 vertex3;
 
     public TriangleMiniMapGraphicComponent(
         PhysicsComponent physicsComponent,
         Color color,
-        Vector2 vertex1,
-        Vector2 vertex2,
-        Vector2 vertex3)
+        PooledVector2 vertex1,
+        PooledVector2 vertex2,
+        PooledVector2 vertex3)
     {
         super(physicsComponent,color);
 
@@ -34,9 +34,9 @@ public class TriangleMiniMapGraphicComponent extends MiniMapGraphicComponent
         SpaceTravels3.shapeRenderer.setColor(this.colour);
 
         try (
-            Vector2 vertex1Rotated = vertex1.cpy();
-            Vector2 vertex2Rotated = vertex2.cpy();
-            Vector2 vertex3Rotated = vertex3.cpy())
+            PooledVector2 vertex1Rotated = vertex1.cpy();
+            PooledVector2 vertex2Rotated = vertex2.cpy();
+            PooledVector2 vertex3Rotated = vertex3.cpy())
         {
             vertex1Rotated.rotate(this.physicsComponent.getAngle());
             vertex2Rotated.rotate(this.physicsComponent.getAngle());
@@ -57,9 +57,9 @@ public class TriangleMiniMapGraphicComponent extends MiniMapGraphicComponent
     @Override
     public void dispose()
     {
-        Pools.free(this.vertex1);
-        Pools.free(this.vertex2);
-        Pools.free(this.vertex3);
+        this.vertex1.close();
+        this.vertex2.close();
+        this.vertex3.close();
         this.vertex1 = null;
         this.vertex2 = null;
         this.vertex3 = null;

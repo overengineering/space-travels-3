@@ -2,9 +2,8 @@ package com.draga.spaceTravels3.component.miniMapGraphicComponent;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
-import com.draga.Vector2;
+import com.draga.PooledVector2;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 
@@ -14,9 +13,9 @@ public class StarMiniMapGraphicComponent extends MiniMapGraphicComponent
     public static final int POINT_DEGREES = 360 / POINTS;
 
     // Vertex of the triangle of a point, they will then get rotated and drawn again.
-    private Vector2 vertex1;
-    private Vector2 vertex2;
-    private Vector2 vertex3;
+    private PooledVector2 vertex1;
+    private PooledVector2 vertex2;
+    private PooledVector2 vertex3;
 
     public StarMiniMapGraphicComponent(
         PhysicsComponent physicsComponent,
@@ -25,9 +24,9 @@ public class StarMiniMapGraphicComponent extends MiniMapGraphicComponent
     {
         super(physicsComponent, colour);
 
-        vertex1 = Vector2.newVector2(0, radius);
-        vertex2 = Vector2.newVector2(radius / 2, 0);
-        vertex3 = Vector2.newVector2(-radius / 2, 0);
+        vertex1 = PooledVector2.newVector2(0, radius);
+        vertex2 = PooledVector2.newVector2(radius / 2, 0);
+        vertex3 = PooledVector2.newVector2(-radius / 2, 0);
     }
 
     @Override
@@ -37,9 +36,9 @@ public class StarMiniMapGraphicComponent extends MiniMapGraphicComponent
         SpaceTravels3.shapeRenderer.setColor(this.colour);
 
         try (
-            Vector2 vertex1Rotated = vertex1.cpy();
-            Vector2 vertex2Rotated = vertex2.cpy();
-            Vector2 vertex3Rotated = vertex3.cpy())
+            PooledVector2 vertex1Rotated = vertex1.cpy();
+            PooledVector2 vertex2Rotated = vertex2.cpy();
+            PooledVector2 vertex3Rotated = vertex3.cpy())
         {
             for (int i = 0; i < POINTS; i++)
             {
@@ -64,9 +63,9 @@ public class StarMiniMapGraphicComponent extends MiniMapGraphicComponent
     @Override
     public void dispose()
     {
-        Pools.free(this.vertex1);
-        Pools.free(this.vertex2);
-        Pools.free(this.vertex3);
+        this.vertex1.close();
+        this.vertex2.close();
+        this.vertex3.close();
         this.vertex1 = null;
         this.vertex2 = null;
         this.vertex3 = null;
