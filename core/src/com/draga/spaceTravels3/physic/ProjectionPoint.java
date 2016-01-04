@@ -1,23 +1,21 @@
 package com.draga.spaceTravels3.physic;
 
-import com.badlogic.gdx.math.Vector2;
-import com.draga.spaceTravels3.component.PhysicsComponent;
+import com.badlogic.gdx.utils.Pool;
+import com.draga.PooledVector2;
+import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 
 import java.util.ArrayList;
 
-public class ProjectionPoint
+public class ProjectionPoint implements Pool.Poolable
 {
-    private Vector2 position;
-    private Vector2 velocity;
+    private PooledVector2               position;
     private ArrayList<PhysicsComponent> collidingPhysicsComponents;
 
     public ProjectionPoint(
-                Vector2 position,
-         Vector2 velocity,
-         ArrayList<PhysicsComponent> collidingPhysicsComponents)
+        PooledVector2 position,
+        ArrayList<PhysicsComponent> collidingPhysicsComponents)
     {
         this.position = position;
-        this.velocity = velocity;
         this.collidingPhysicsComponents = collidingPhysicsComponents;
     }
 
@@ -26,13 +24,16 @@ public class ProjectionPoint
         return collidingPhysicsComponents;
     }
 
-    public Vector2 getVelocity()
-    {
-        return velocity;
-    }
-
-    public Vector2 getPosition()
+    public PooledVector2 getPosition()
     {
         return position;
+    }
+
+    @Override
+    public void reset()
+    {
+        this.position.close();
+        this.position = null;
+        this.collidingPhysicsComponents = null;
     }
 }

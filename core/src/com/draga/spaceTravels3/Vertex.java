@@ -1,36 +1,35 @@
 package com.draga.spaceTravels3;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
+import com.draga.PooledVector2;
 
 public class Vertex implements Pool.Poolable
 {
-    private Color   color;
-    private Vector2 position;
+    private Color         color;
+    private PooledVector2 position;
 
-    public Vertex(Color color, Vector2 position)
+    public void set(Color color, PooledVector2 position)
     {
-
         this.color = color;
         this.position = position;
     }
 
-    public Vector2 getPosition()
+    public PooledVector2 getPosition()
     {
         return position;
     }
 
     public Color getColor()
     {
-
         return color;
     }
 
     @Override
     public void reset()
     {
-        this.color = null;
+        this.position.close();
         this.position = null;
+        this.color = null;
     }
 }

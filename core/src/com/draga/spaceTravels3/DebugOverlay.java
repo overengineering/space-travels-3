@@ -23,7 +23,7 @@ public class DebugOverlay implements Screen
     {
         label1 = getLabel();
         label1.setText(
-            "Time    avr   |   min   |   max   ");
+            "mean   ");
         label2 = getLabel();
         label3 = getLabel();
         label4 = getLabel();
@@ -97,10 +97,8 @@ public class DebugOverlay implements Screen
     private void updateLabel2()
     {
         String message = String.format(
-            "Engine : %9f|%9f|%9f",
-            PhysicsEngine.getStepPerformanceCounter().time.average,
-            PhysicsEngine.getStepPerformanceCounter().time.min,
-            PhysicsEngine.getStepPerformanceCounter().time.max);
+            "Engine :%9f ",
+            PhysicsEngine.getStepPerformanceCounter().time.mean.getMean());
         label2.setText(message);
 
     }
@@ -122,10 +120,8 @@ public class DebugOverlay implements Screen
     public void updateLabel3()
     {
         String message = String.format(
-            "Projection : %9f|%9f|%9f",
-            PhysicsEngine.getGravityProjectionPerformanceCounter().time.average,
-            PhysicsEngine.getGravityProjectionPerformanceCounter().time.min,
-            PhysicsEngine.getGravityProjectionPerformanceCounter().time.max);
+            "Projection :%9f ",
+            PhysicsEngine.getGravityProjectionPerformanceCounter().time.mean.getMean());
         label3.setText(message);
     }
 

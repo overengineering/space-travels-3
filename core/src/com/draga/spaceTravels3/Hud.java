@@ -3,17 +3,19 @@ package com.draga.spaceTravels3;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
-import com.draga.utils.PixmapUtils;
+import com.draga.PooledVector2;
 import com.draga.spaceTravels3.event.PickupCollectedEvent;
 import com.draga.spaceTravels3.gameEntity.Ship;
 import com.draga.spaceTravels3.manager.GameEntityManager;
@@ -22,30 +24,23 @@ import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.physic.PhysicsEngine;
 import com.draga.utils.GraphicsUtils;
+import com.draga.utils.PixmapUtils;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.Stack;
 
 public class Hud implements Screen
 {
-    private final Label scoreLabel;
+    private final Label        scoreLabel;
     private final Camera       worldCamera;
     private final Level        level;
     private       Stage        stage;
-    private       Actor  fuelIndicator;
+    private       Actor        fuelIndicator;
     private       Stack<Image> grayPickups;
     private       Table        pickupTable;
     private       Ship         ship;
-
-    public MiniMap getMiniMap()
-    {
-        return miniMap;
-    }
-
     private MiniMap               miniMap;
     private TextureRegionDrawable collectedPickupDrawable;
-
-
     public Hud(Camera worldCamera, Level level)
     {
         this.level = level;
@@ -58,7 +53,7 @@ public class Hud implements Screen
         Texture pickupTexture = AssMan.getAssMan().get(AssMan.getAssList().pickupTexture);
         collectedPickupDrawable = new TextureRegionDrawable(new TextureRegion(pickupTexture));
 
-        this.miniMap = new MiniMap(ship, level.getWidth(), level.getHeight());
+        this.miniMap = new MiniMap(level);
 
         stage = new Stage();
 
@@ -207,6 +202,11 @@ public class Hud implements Screen
         scoreLabel.setText(String.valueOf(score));
     }
 
+    public MiniMap getMiniMap()
+    {
+        return miniMap;
+    }
+
     @Override
     public void show()
     {
@@ -225,15 +225,17 @@ public class Hud implements Screen
 
         SpaceTravels3.shapeRenderer.begin();
 
-        if (SettingsManager.getSettings().hudForceIndicators
-            && GameEntityManager.getGameEntities().contains(ship))
+        if (GameEntityManager.getGameEntities().contains(ship))
         {
             SpaceTravels3.shapeRenderer.setProjectionMatrix(worldCamera.combined);
-            drawGravityIndicator();
-            drawVelocityIndicator();
+            if (SettingsManager.getSettings().hudForceIndicators)
+            {
+                drawGravityIndicator();
+                drawVelocityIndicator();
+            }
+            drawApproachSpeedIndicator();
         }
 
-        drawSpeedIndicator();
 
         miniMap.update();
         miniMap.draw();
@@ -241,7 +243,53 @@ public class Hud implements Screen
         GraphicsUtils.disableBlending();
     }
 
-    private void drawSpeedIndicator()
+    private void drawGravityIndicator()
+    {
+        try (PooledVector2 gravityVector = PhysicsEngine.calculateGravityForce(ship.physicsComponent))
+        {
+
+            SpaceTravels3.shapeRenderer.setColor(Color.BLUE);
+            SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
+            SpaceTravels3.shapeRenderer.circle(
+                ship.physicsComponent.getPosition().x
+                    + gravityVector.x * Constants.Visual.HUD.FORCE_INDICATOR_SCALE,
+                ship.physicsComponent.getPosition().y
+                    + gravityVector.y * Constants.Visual.HUD.FORCE_INDICATOR_SCALE,
+                0.5f);
+
+            SpaceTravels3.shapeRenderer.setColor(new Color(0, 0, 1f, 0.4f));
+            SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Line);
+            SpaceTravels3.shapeRenderer.circle(
+                ship.physicsComponent.getPosition().x,
+                ship.physicsComponent.getPosition().y,
+                gravityVector.len() * Constants.Visual.HUD.FORCE_INDICATOR_SCALE,
+                24);
+        }
+    }
+
+    private void drawVelocityIndicator()
+    {
+        SpaceTravels3.shapeRenderer.setColor(Color.WHITE);
+        SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
+        SpaceTravels3.shapeRenderer.circle(
+            ship.physicsComponent.getPosition().x
+                + ship.physicsComponent.getVelocity().x
+                * Constants.Visual.HUD.FORCE_INDICATOR_SCALE,
+            ship.physicsComponent.getPosition().y
+                + ship.physicsComponent.getVelocity().y
+                * Constants.Visual.HUD.FORCE_INDICATOR_SCALE,
+            0.5f);
+
+        SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Line);
+        SpaceTravels3.shapeRenderer.setColor(new Color(1, 1, 1, 0.4f));
+        SpaceTravels3.shapeRenderer.circle(
+            ship.physicsComponent.getPosition().x,
+            ship.physicsComponent.getPosition().y,
+            ship.physicsComponent.getVelocity().len() * Constants.Visual.HUD.FORCE_INDICATOR_SCALE,
+            24);
+    }
+
+    private void drawApproachSpeedIndicator()
     {
         float radius = level.getDestinationPlanet().physicsComponent.getBoundsCircle().radius;
         float shipSpeed = ship.physicsComponent.getVelocity().len();
@@ -277,50 +325,6 @@ public class Hud implements Screen
             level.getDestinationPlanet().physicsComponent.getPosition().y,
             radius,
             segments);
-    }
-
-    private void drawGravityIndicator()
-    {
-        Vector2 gravityVector = PhysicsEngine.calculateGravityForce(ship.physicsComponent);
-
-        SpaceTravels3.shapeRenderer.setColor(Color.BLUE);
-        SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
-        SpaceTravels3.shapeRenderer.circle(
-            ship.physicsComponent.getPosition().x
-                + gravityVector.x * Constants.Visual.HUD.FORCE_INDICATOR_SCALE,
-            ship.physicsComponent.getPosition().y
-                + gravityVector.y * Constants.Visual.HUD.FORCE_INDICATOR_SCALE,
-            0.5f);
-
-        SpaceTravels3.shapeRenderer.setColor(new Color(0, 0, 1f, 0.4f));
-        SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Line);
-        SpaceTravels3.shapeRenderer.circle(
-            ship.physicsComponent.getPosition().x,
-            ship.physicsComponent.getPosition().y,
-            gravityVector.len() * Constants.Visual.HUD.FORCE_INDICATOR_SCALE,
-            24);
-    }
-
-    private void drawVelocityIndicator()
-    {
-        SpaceTravels3.shapeRenderer.setColor(Color.WHITE);
-        SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
-        SpaceTravels3.shapeRenderer.circle(
-            ship.physicsComponent.getPosition().x
-                + ship.physicsComponent.getVelocity().x
-                * Constants.Visual.HUD.FORCE_INDICATOR_SCALE,
-            ship.physicsComponent.getPosition().y
-                + ship.physicsComponent.getVelocity().y
-                * Constants.Visual.HUD.FORCE_INDICATOR_SCALE,
-            0.5f);
-
-        SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Line);
-        SpaceTravels3.shapeRenderer.setColor(new Color(1, 1, 1, 0.4f));
-        SpaceTravels3.shapeRenderer.circle(
-            ship.physicsComponent.getPosition().x,
-            ship.physicsComponent.getPosition().y,
-            ship.physicsComponent.getVelocity().len() * Constants.Visual.HUD.FORCE_INDICATOR_SCALE,
-            24);
     }
 
     @Override

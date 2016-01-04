@@ -46,7 +46,6 @@ public class SpaceTravels3 extends Game
         AssMan.create();
         UIManager.create();
         SoundManager.create();
-        PhysicsEngine.create();
         InputManager.create();
 
         if (Constants.General.IS_DEBUGGING)
@@ -76,7 +75,6 @@ public class SpaceTravels3 extends Game
         UIManager.dispose();
         AssMan.dispose();
         SoundManager.dispose();
-        PhysicsEngine.dispose();
         InputManager.dispose();
 
         spriteBatch.dispose();
