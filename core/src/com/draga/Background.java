@@ -50,7 +50,7 @@ public class Background implements Disposable
 
         for (int i = 0; i < starsCount; i++)
         {
-            float diameter = MathUtils.randomTriangular(0.1f, maxDiameter, 0.1f);
+            float diameter = MathUtils.randomTriangular(0.1f, maxDiameter, -100f);
             int radius = MathUtils.round(diameter / 2f);
             int x = MathUtils.random(radius, width - 1 - radius);
             int y = MathUtils.random(radius, height - 1 - radius);
@@ -83,7 +83,6 @@ public class Background implements Disposable
                     alpha += alphaStep;
                 }
             }
-
         }
 
         Texture texture = new Texture(pixmap);
