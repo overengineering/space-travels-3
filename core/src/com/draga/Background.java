@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Disposable;
 import com.draga.spaceTravels3.Constants;
@@ -50,7 +51,7 @@ public class Background implements Disposable
 
         for (int i = 0; i < starsCount; i++)
         {
-            float diameter = MathUtils.randomTriangular(0.1f, maxDiameter, -100f);
+            float diameter = MathUtils.randomTriangular(0.1f, maxDiameter, 0.1f);
             int radius = MathUtils.round(diameter / 2f);
             int x = MathUtils.random(radius, width - 1 - radius);
             int y = MathUtils.random(radius, height - 1 - radius);
@@ -66,22 +67,14 @@ public class Background implements Disposable
             }
             else
             {
-                float alphaStep = 1f / (radius + 1);
-                float alpha = alphaStep;
-                for (int j = radius; j >= 0; j--)
+                Interpolation alphaInterpolation = Interpolation.pow4;
+                for (int j = radius; j > 0; j--)
                 {
-                    pixmap.setColor(r, g, b, alpha);
-                    if (j == 0)
-                    {
-                        pixmap.drawPixel(x, y);
-                    }
-                    else
-                    {
-                        pixmap.fillCircle(x, y, j);
-                    }
-
-                    alpha += alphaStep;
+                    pixmap.setColor(r, g, b, alphaInterpolation.apply(0f, 1f, (j + 1f) / radius));
+                    pixmap.fillCircle(x, y, j);
                 }
+                pixmap.setColor(r, g, b, 1f);
+                pixmap.drawPixel(x, y);
             }
         }
 
