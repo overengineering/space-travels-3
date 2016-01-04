@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.draga.BackgroundAsyncLoader;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.Level;
 import com.draga.spaceTravels3.SpaceTravels3;
@@ -28,12 +29,12 @@ public class LoadingScreen implements Screen
 {
     private static final String LOGGING_TAG = LoadingScreen.class.getSimpleName();
 
-    private final String            levelId;
-    private       Stage             stage;
-    private       ProgressBar       progressBar;
-    private       SerialisableLevel serialisableLevel;
-    private       Stopwatch         stopwatch;
-    private Level level;
+    private final String                levelId;
+    private       Stage                 stage;
+    private       ProgressBar           progressBar;
+    private       SerialisableLevel     serialisableLevel;
+    private       Stopwatch             stopwatch;
+    private       BackgroundAsyncLoader backgroundAsyncLoader;
     
     public LoadingScreen(String levelId)
     {
@@ -43,28 +44,32 @@ public class LoadingScreen implements Screen
     @Override
     public void show()
     {
-        stopwatch = Stopwatch.createStarted();
+        this.stopwatch = Stopwatch.createStarted();
 
-        this.serialisableLevel = LevelManager.getSerialisableLevel(levelId);
+        this.serialisableLevel = LevelManager.getSerialisableLevel(this.levelId);
 
         loadAssets(this.serialisableLevel);
 
-        stage = new Stage();
-        Gdx.input.setInputProcessor(stage);
+        this.backgroundAsyncLoader = new BackgroundAsyncLoader(
+            Constants.Visual.Background.STAR_LAYER_COUNT,
+            Constants.Visual.Background.STAR_COUNT);
+
+        this.stage = new Stage();
+        Gdx.input.setInputProcessor(this.stage);
 
         Actor headerLabel = getHeaderLabel();
 
-        progressBar = getProgressBar();
+        this.progressBar = getProgressBar();
 
-        Table table = UIManager.addDefaultTableToStage(stage);
+        Table table = UIManager.addDefaultTableToStage(this.stage);
 
         table.add(headerLabel);
         table.row();
         table
-            .add(progressBar)
-            .width(stage.getWidth() * 0.75f);
+            .add(this.progressBar)
+            .width(this.stage.getWidth() * 0.75f);
 
-        stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
+        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
     private void loadAssets(SerialisableLevel serialisableLevel)
@@ -88,6 +93,8 @@ public class LoadingScreen implements Screen
         }
         AssMan.getAssMan().load(AssMan.getAssList().explosionTextureAtlas, TextureAtlas.class);
         AssMan.getAssMan().load(AssMan.getAssList().pickupTexture, Texture.class);
+
+        AssMan.getAssMan().update();
     }
 
     public Label getHeaderLabel()
@@ -103,7 +110,7 @@ public class LoadingScreen implements Screen
     {
         ProgressBar progressBar = new ProgressBar(
             0,
-            AssMan.getAssMan().getQueuedAssets() + AssMan.getAssMan().getLoadedAssets(),
+            getTotalAssetsCount(),
             1,
             false,
             UIManager.skin);
@@ -111,10 +118,18 @@ public class LoadingScreen implements Screen
         return progressBar;
     }
 
+    private float getTotalAssetsCount()
+    {
+        return AssMan.getAssMan().getQueuedAssets()
+            + AssMan.getAssMan().getLoadedAssets()
+            + this.backgroundAsyncLoader.totalLayers();
+    }
+
     @Override
     public void render(float deltaTime)
     {
-        if (AssMan.getAssMan().update())
+        if (AssMan.getAssMan().update()
+            && this.backgroundAsyncLoader.doneLoading())
         {
             if (Constants.General.IS_DEBUGGING)
             {
@@ -125,32 +140,36 @@ public class LoadingScreen implements Screen
                     LOGGING_TAG,
                     String.format(
                         "Loading time: %fs",
-                        stopwatch.elapsed(TimeUnit.NANOSECONDS) * Constants.General.NANO));
+                        this.stopwatch.elapsed(TimeUnit.NANOSECONDS) * Constants.General.NANO));
             }
-            level = LevelManager.getLevel(serialisableLevel);
-            GameScreen gameScreen = new GameScreen(level);
+            Level level = LevelManager.getLevel(this.serialisableLevel);
+            GameScreen gameScreen =
+                new GameScreen(level, this.backgroundAsyncLoader.getBackground());
             SpaceTravels3.getGame().setScreen(gameScreen);
             return;
         }
         updateProgressBar();
 
-        stage.act(deltaTime);
-        stage.draw();
+        this.stage.act(deltaTime);
+        this.stage.draw();
     }
 
     private void updateProgressBar()
     {
-        progressBar.setRange(
-            0,
-            AssMan.getAssMan().getQueuedAssets() + AssMan.getAssMan()
-                .getLoadedAssets());
-        progressBar.setValue(AssMan.getAssMan().getLoadedAssets());
+        this.progressBar.setRange(0,getTotalAssetsCount());
+        this.progressBar.setValue(getLoadedAssetsCount());
+    }
+
+    private int getLoadedAssetsCount()
+    {
+        return AssMan.getAssMan().getLoadedAssets()
+            + this.backgroundAsyncLoader.layersDone();
     }
 
     @Override
     public void resize(int width, int height)
     {
-        stage.getViewport().update(width, height);
+        this.stage.getViewport().update(width, height);
     }
 
     @Override
@@ -173,6 +192,6 @@ public class LoadingScreen implements Screen
     @Override
     public void dispose()
     {
-        stage.dispose();
+        this.stage.dispose();
     }
 }

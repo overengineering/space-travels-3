@@ -30,7 +30,8 @@ public abstract class Constants
         public static final float         THRUSTER_MAX_WIDTH      = 5;
         public static final float         THRUSTER_MAX_HEIGHT     = 5;
         public static final float         THRUSTER_ANIMATION_TIME = 1f;
-        public static final PooledVector2 THRUSTER_OFFSET         = PooledVector2.newVector2(-SHIP_WIDTH / 4f, 0);
+        public static final PooledVector2 THRUSTER_OFFSET         =
+            PooledVector2.newVector2(-SHIP_WIDTH / 4f, 0);
 
         // Screen.
         public static final float SCREEN_FADE_DURATION = 3f;
@@ -39,10 +40,11 @@ public abstract class Constants
 
         public abstract static class Background
         {
-            public static final int   STAR_LAYER_COUNT        = 3;
+            public static final int   STAR_LAYER_COUNT        = 5;
             public static final int   STAR_COUNT              = 3000;
-            public static final int   NEBULAE_LAYER_COUNT     = 0;
-            public static final float STAR_MAX_DIAMETER_SCALE = 0.000005f;
+            public static final float STAR_MAX_DIAMETER_SCALE = 0.000004f;
+            public static final float MIN_PARALLAX            = 0.05f;
+            public static final float MAX_PARALLAX            = 0.3f;
         }
 
 
@@ -77,12 +79,16 @@ public abstract class Constants
             {
                 public static final Color PICKUP_COLOR = Color.GOLDENROD;
 
-                public static final Color         BACKGROUND_COLOR      = new Color(0, 0.17f, 0, 0.5f);
+                public static final Color         BACKGROUND_COLOR      =
+                    new Color(0, 0.17f, 0, 0.5f);
                 public static final Color         BORDER_COLOR          = new Color(0, 0.4f, 0, 1);
                 public static final Color         SHIP_COLOUR           = Color.WHITE;
-                public static final PooledVector2 SHIP_TRIANGLE_VERTEX1 = PooledVector2.newVector2(8, 0);
-                public static final PooledVector2 SHIP_TRIANGLE_VERTEX2 = PooledVector2.newVector2(-5, -5);
-                public static final PooledVector2 SHIP_TRIANGLE_VERTEX3 = PooledVector2.newVector2(-5, 5);
+                public static final PooledVector2 SHIP_TRIANGLE_VERTEX1 =
+                    PooledVector2.newVector2(8, 0);
+                public static final PooledVector2 SHIP_TRIANGLE_VERTEX2 =
+                    PooledVector2.newVector2(-5, -5);
+                public static final PooledVector2 SHIP_TRIANGLE_VERTEX3 =
+                    PooledVector2.newVector2(-5, 5);
                 public static final float         SCALE                 = 0.25f;
 
                 // Planet
@@ -116,15 +122,15 @@ public abstract class Constants
         public static final float TIME_POINTS   = 10f;
         public static final float PICKUP_POINTS = 1000f;
 
-        public static final float SHIP_COLLISION_RADIUS                 =
+        public static final float SHIP_COLLISION_RADIUS =
             (Constants.Visual.SHIP_WIDTH + Constants.Visual.SHIP_HEIGHT) / 2f
                 * 0.8f
                 / 2f;
         /**
          * Change tilt range. E.g. 1.0f = 90 degree max. 0.5f = 45 degrees max.
          */
-        public static final float ACCELEROMETER_RANGE                   = 0.5f;
-        public static final float DEAD_ZONE                             = 0.15f;
+        public static final float ACCELEROMETER_RANGE   = 0.5f;
+        public static final float DEAD_ZONE             = 0.15f;
 
         public static final float PICKUP_RADIUS       =
             (Visual.PICKUP_WIDTH + Visual.PICKUP_HEIGHT) / 2f * 1.3f;
