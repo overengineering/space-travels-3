@@ -46,6 +46,7 @@ public class GameScreen implements Screen
 
         PhysicsEngine.create();
         PhysicsEngine.cachePhysicsComponentCollisions(level.getShip().physicsComponent);
+        PhysicsEngine.cacheGravity();
     }
 
     @Override

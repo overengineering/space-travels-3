@@ -1,6 +1,7 @@
 package com.draga.spaceTravels3.physic;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g3d.particles.influencers.DynamicsModifier;
 import com.badlogic.gdx.utils.PerformanceCounter;
 import com.draga.PooledVector2;
 import com.draga.spaceTravels3.Constants;
@@ -9,9 +10,11 @@ import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponentType;
 import com.draga.spaceTravels3.gameEntity.GameEntity;
 import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
+import com.google.common.base.Stopwatch;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 public class PhysicsEngine
 {
@@ -22,7 +25,8 @@ public class PhysicsEngine
     private static final PerformanceCounter STEP_PERFORMANCE_COUNTER               =
         new PerformanceCounter("step", 60);
     private static HashMap<PhysicsComponent, CollisionCache>
-        physicsComponentCollisionCache;
+                       physicsComponentCollisionCache;
+    private static GravityCache gravityCache;
 
     public static PerformanceCounter getStepPerformanceCounter()
     {
@@ -70,10 +74,14 @@ public class PhysicsEngine
         if (!SettingsManager.getDebugSettings().noGravity
             && physicsComponent.isAffectedByGravity())
         {
-            ArrayList<PhysicsComponent> otherPhysicsComponents =
-                getAllPhysicsComponentsExcept(physicsComponent);
-            
-            stepGravity(physicsComponent, otherPhysicsComponents, deltaTime);
+//            ArrayList<PhysicsComponent> otherPhysicsComponents =
+//                getAllPhysicsComponentsExcept(physicsComponent);
+//
+//            stepGravity(physicsComponent, otherPhysicsComponents, deltaTime);
+            try(PooledVector2 gravity = gravityCache.getCachedGravity(physicsComponent))
+            {
+                physicsComponent.getVelocity().add(gravity.scl(deltaTime));
+            }
         }
         
         applyVelocity(physicsComponent, deltaTime);
@@ -169,7 +177,9 @@ public class PhysicsEngine
         PhysicsComponent physicsComponent,
         ArrayList<PhysicsComponent> otherPhysicsComponents, float deltaTime)
     {
-        try (PooledVector2 gravityForce = calculateGravityForce(physicsComponent, otherPhysicsComponents))
+        try (PooledVector2 gravityForce = calculateGravityForce(
+            physicsComponent,
+            otherPhysicsComponents))
         {
             physicsComponent.getVelocity().add(gravityForce.scl(deltaTime));
         }
@@ -209,7 +219,7 @@ public class PhysicsEngine
             && areOverlapping(physicsComponentA, physicsComponentB);
     }
     
-    private static ArrayList<PhysicsComponent> getAllPhysicsComponents()
+    public static ArrayList<PhysicsComponent> getAllPhysicsComponents()
     {
         ArrayList<PhysicsComponent> physicsComponents = new ArrayList<>();
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
@@ -234,6 +244,19 @@ public class PhysicsEngine
         return force;
     }
 
+    private static boolean areOverlapping(
+        PhysicsComponent physicsComponentA,
+        PhysicsComponent physicsComponentB)
+    {
+        float overlappingDistance =
+            physicsComponentA.getBoundsCircle().radius + physicsComponentB.getBoundsCircle().radius;
+        float distance2 = physicsComponentA.getPosition().dst2(physicsComponentB.getPosition());
+
+        boolean areOverlapping = distance2 <= overlappingDistance * overlappingDistance;
+
+        return areOverlapping;
+    }
+    
     private static void addGravityForce(
         PhysicsComponent physicsComponentA,
         PhysicsComponent physicsComponentB,
@@ -253,19 +276,6 @@ public class PhysicsEngine
         y *= scale / len;
 
         force.add(x, y);
-    }
-    
-    private static boolean areOverlapping(
-        PhysicsComponent physicsComponentA,
-        PhysicsComponent physicsComponentB)
-    {
-        float overlappingDistance =
-            physicsComponentA.getBoundsCircle().radius + physicsComponentB.getBoundsCircle().radius;
-        float distance2 = physicsComponentA.getPosition().dst2(physicsComponentB.getPosition());
-        
-        boolean areOverlapping = distance2 <= overlappingDistance * overlappingDistance;
-        
-        return areOverlapping;
     }
     
     public static void create()
@@ -314,7 +324,11 @@ public class PhysicsEngine
                     stepTime = remainingStepTime;
                 }
 
-                stepGravity(physicsComponent, otherPhysicsComponents, stepTime);
+                try(PooledVector2 gravity = gravityCache.getCachedGravity(physicsComponent))
+                {
+                    physicsComponent.getVelocity().add(gravity.scl(stepTime));
+                }
+
                 applyVelocity(physicsComponent, stepTime);
 
                 // If we have collision with static physComp cached..
@@ -376,7 +390,8 @@ public class PhysicsEngine
     {
         ArrayList<PhysicsComponent> otherPhysicsComponents =
             getAllPhysicsComponentsExcept(physicsComponent);
-        PooledVector2 gravityForce = calculateGravityForce(physicsComponent, otherPhysicsComponents);
+        PooledVector2 gravityForce =
+            calculateGravityForce(physicsComponent, otherPhysicsComponents);
 
         return gravityForce;
     }
@@ -385,5 +400,10 @@ public class PhysicsEngine
     {
         CollisionCache collisionCache = new CollisionCache(physicsComponent);
         physicsComponentCollisionCache.put(physicsComponent, collisionCache);
+    }
+
+    public static void cacheGravity()
+    {
+        gravityCache = new GravityCache();
     }
 }
