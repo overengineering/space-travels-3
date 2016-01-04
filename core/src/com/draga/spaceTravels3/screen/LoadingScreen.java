@@ -34,7 +34,6 @@ public class LoadingScreen implements Screen
     private       ProgressBar           progressBar;
     private       SerialisableLevel     serialisableLevel;
     private       Stopwatch             stopwatch;
-    private       Level                 level;
     private       BackgroundAsyncLoader backgroundAsyncLoader;
     
     public LoadingScreen(String levelId)
@@ -143,9 +142,9 @@ public class LoadingScreen implements Screen
                         "Loading time: %fs",
                         this.stopwatch.elapsed(TimeUnit.NANOSECONDS) * Constants.General.NANO));
             }
-            this.level = LevelManager.getLevel(this.serialisableLevel);
+            Level level = LevelManager.getLevel(this.serialisableLevel);
             GameScreen gameScreen =
-                new GameScreen(this.level, this.backgroundAsyncLoader.getBackground());
+                new GameScreen(level, this.backgroundAsyncLoader.getBackground());
             SpaceTravels3.getGame().setScreen(gameScreen);
             return;
         }
