@@ -15,16 +15,16 @@ public class GravityCacheNode
     private static final float MIN_AREA        = 1f;
 
     private final Rectangle bounds;
-    private       Vector2 centre;
-    private       float halfHeight;
-    private       float halfWidth;
+    private       Vector2   centre;
+    private       float     halfHeight;
+    private       float     halfWidth;
 
-    private       boolean hasChildren;
+    private boolean hasChildren;
 
-    private       GravityCacheNode topLeftNode;
-    private       GravityCacheNode topRightNode;
-    private       GravityCacheNode bottomLeftNode;
-    private       GravityCacheNode bottomRightNode;
+    private GravityCacheNode topLeftNode;
+    private GravityCacheNode topRightNode;
+    private GravityCacheNode bottomLeftNode;
+    private GravityCacheNode bottomRightNode;
 
     private Vector2 topLeftGravity;
     private Vector2 topRightGravity;
@@ -65,11 +65,11 @@ public class GravityCacheNode
 
         for (PhysicsComponent physicsComponent : staticPhysicsComponentsWithMass)
         {
-            float leftX = physicsComponent.getPosition().x - bounds.x;
-            float rightX = physicsComponent.getPosition().x - (bounds.x + bounds.width);
+            float leftX = physicsComponent.getPosition().x - this.bounds.x;
+            float rightX = physicsComponent.getPosition().x - (this.bounds.x + this.bounds.width);
 
-            float topY = physicsComponent.getPosition().y - (bounds.y + bounds.height);
-            float bottomY = physicsComponent.getPosition().y - bounds.y;
+            float topY = physicsComponent.getPosition().y - (this.bounds.y + this.bounds.height);
+            float bottomY = physicsComponent.getPosition().y - this.bounds.y;
 
             addGravity(
                 physicsComponent,
@@ -125,33 +125,34 @@ public class GravityCacheNode
         float bottomGravityLen = bottomGravity.len();
 
         if (this.bounds.width * this.bounds.height > MIN_AREA
-            && (Math.abs(centreGravityLen - topLeftGravityLen) > SPLIT_THRESHOLD
-                || Math.abs(centreGravityLen - topRightGravityLen) > SPLIT_THRESHOLD
-                || Math.abs(centreGravityLen - bottomLeftGravityLen) > SPLIT_THRESHOLD
-                || Math.abs(centreGravityLen - bottomRightGravityLen) > SPLIT_THRESHOLD))
+            && (
+            Math.abs(centreGravityLen - this.topLeftGravityLen) > SPLIT_THRESHOLD
+                || Math.abs(centreGravityLen - this.topRightGravityLen) > SPLIT_THRESHOLD
+                || Math.abs(centreGravityLen - this.bottomLeftGravityLen) > SPLIT_THRESHOLD
+                || Math.abs(centreGravityLen - this.bottomRightGravityLen) > SPLIT_THRESHOLD))
         {
             this.hasChildren = true;
 
             Rectangle boundsTopLeft = new Rectangle(
                 this.bounds.x,
-                this.bounds.y + halfHeight,
-                halfWidth,
-                halfHeight);
+                this.bounds.y + this.halfHeight,
+                this.halfWidth,
+                this.halfHeight);
             Rectangle boundsTopRight = new Rectangle(
-                this.bounds.x + halfWidth,
-                this.bounds.y + halfHeight,
-                halfWidth,
-                halfHeight);
+                this.bounds.x + this.halfWidth,
+                this.bounds.y + this.halfHeight,
+                this.halfWidth,
+                this.halfHeight);
             Rectangle boundsBottomLeft = new Rectangle(
                 this.bounds.x,
                 this.bounds.y,
-                halfWidth,
-                halfHeight);
+                this.halfWidth,
+                this.halfHeight);
             Rectangle boundsBottomRight = new Rectangle(
-                this.bounds.x + halfWidth,
+                this.bounds.x + this.halfWidth,
                 this.bounds.y,
-                halfWidth,
-                halfHeight);
+                this.halfWidth,
+                this.halfHeight);
             this.topLeftNode = new GravityCacheNode(
                 boundsTopLeft,
                 staticPhysicsComponentsWithMass, this.topLeftGravity,
@@ -235,13 +236,13 @@ public class GravityCacheNode
     {
         for (PhysicsComponent physicsComponent : staticPhysicsComponentsWithMass)
         {
-            float leftX = physicsComponent.getPosition().x - bounds.x;
-            float centreX = physicsComponent.getPosition().x - (bounds.x + halfWidth);
-            float rightX = physicsComponent.getPosition().x - (bounds.x + bounds.width);
+            float leftX = physicsComponent.getPosition().x - this.bounds.x;
+            float centreX = physicsComponent.getPosition().x - (this.bounds.x + this.halfWidth);
+            float rightX = physicsComponent.getPosition().x - (this.bounds.x + this.bounds.width);
 
-            float topY = physicsComponent.getPosition().y - (bounds.y + bounds.height);
-            float centreY = physicsComponent.getPosition().y - (bounds.y + halfHeight);
-            float bottomY = physicsComponent.getPosition().y - bounds.y;
+            float topY = physicsComponent.getPosition().y - (this.bounds.y + this.bounds.height);
+            float centreY = physicsComponent.getPosition().y - (this.bounds.y + this.halfHeight);
+            float bottomY = physicsComponent.getPosition().y - this.bounds.y;
 
             addGravity(
                 physicsComponent,
@@ -289,7 +290,7 @@ public class GravityCacheNode
     {
         this.bounds = bounds;
 
-        calculateCentreAndHalfMeasures(bounds);
+        this.calculateCentreAndHalfMeasures(bounds);
 
         this.topLeftGravity = topLeftGravity;
         this.topRightGravity = topRightGravity;
@@ -301,41 +302,41 @@ public class GravityCacheNode
         this.bottomLeftGravityLen = bottomLeftGravityLen;
         this.bottomRightGravityLen = bottomRightGravityLen;
 
-        calculateChildren(staticPhysicsComponentsWithMass);
+        this.calculateChildren(staticPhysicsComponentsWithMass);
     }
 
     public Rectangle getBounds()
     {
-        return bounds;
+        return this.bounds;
     }
 
     public GravityCacheNode getTopLeftNode()
     {
-        return topLeftNode;
+        return this.topLeftNode;
     }
 
     public GravityCacheNode getTopRightNode()
     {
-        return topRightNode;
+        return this.topRightNode;
     }
 
     public GravityCacheNode getBottomLeftNode()
     {
-        return bottomLeftNode;
+        return this.bottomLeftNode;
     }
 
     public GravityCacheNode getBottomRightNode()
     {
-        return bottomRightNode;
+        return this.bottomRightNode;
     }
 
     public PooledVector2 getGravity(Vector2 position)
     {
         if (this.hasChildren)
         {
-            if (position.x < centre.x)
+            if (position.x < this.centre.x)
             {
-                if (position.y < centre.y)
+                if (position.y < this.centre.y)
                 {
                     return this.bottomLeftNode.getGravity(position);
                 }
@@ -346,7 +347,7 @@ public class GravityCacheNode
             }
             else
             {
-                if (position.y < centre.y)
+                if (position.y < this.centre.y)
                 {
                     return this.bottomRightNode.getGravity(position);
                 }
@@ -364,14 +365,14 @@ public class GravityCacheNode
         float topYWeight = 0.5f - bottomYWeight;
 
         PooledVector2 gravity = PooledVector2.newVector2(
-            topLeftGravity.x * leftXWeight
-                + topRightGravity.x * rightXWeight
-                + bottomLeftGravity.x * leftXWeight
-                + bottomRightGravity.x * rightXWeight,
-            topLeftGravity.y * topYWeight
-                + topRightGravity.y * topYWeight
-                + bottomLeftGravity.y * bottomYWeight
-                + bottomRightGravity.y * bottomYWeight);
+            this.topLeftGravity.x * leftXWeight
+                + this.topRightGravity.x * rightXWeight
+                + this.bottomLeftGravity.x * leftXWeight
+                + this.bottomRightGravity.x * rightXWeight,
+            this.topLeftGravity.y * topYWeight
+                + this.topRightGravity.y * topYWeight
+                + this.bottomLeftGravity.y * bottomYWeight
+                + this.bottomRightGravity.y * bottomYWeight);
         return gravity;
     }
 }
