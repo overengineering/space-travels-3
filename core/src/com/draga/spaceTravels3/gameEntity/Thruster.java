@@ -51,7 +51,7 @@ public class Thruster extends GameEntity
     public void update(float deltaTime)
     {
         PooledVector2 inputForce = InputManager.getInputForce();
-        if (ship.getCurrentFuel() <= 0)
+        if (!ship.isInfiniteFuel() && ship.getCurrentFuel() <= 0)
         {
             inputForce.setZero();
         }
