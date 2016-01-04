@@ -11,27 +11,30 @@ public class GravityCacheNode
 {
     private static final String LOGGING_TAG = GravityCacheNode.class.getSimpleName();
 
-    private static final float SPLIT_THRESHOLD_2 = 100F;
-    private static final float MIN_AREA          = 1f;
+    private static final float SPLIT_THRESHOLD = 10f;
+    private static final float MIN_AREA        = 1f;
+
     private final Rectangle bounds;
+    private       Vector2 centre;
+    private       float halfHeight;
+    private       float halfWidth;
+
     private       boolean hasChildren;
+
     private       GravityCacheNode topLeftNode;
     private       GravityCacheNode topRightNode;
     private       GravityCacheNode bottomLeftNode;
     private       GravityCacheNode bottomRightNode;
-    private       Vector2 centre;
-    private       float halfHeight;
-    private       float halfWidth;
 
     private Vector2 topLeftGravity;
     private Vector2 topRightGravity;
     private Vector2 bottomLeftGravity;
     private Vector2 bottomRightGravity;
 
-    private float topLeftGravityLen2;
-    private float topRightGravityLen2;
-    private float bottomLeftGravityLen2;
-    private float bottomRightGravityLen2;
+    private float topLeftGravityLen;
+    private float topRightGravityLen;
+    private float bottomLeftGravityLen;
+    private float bottomRightGravityLen;
 
     public GravityCacheNode(
         Rectangle bounds,
@@ -93,10 +96,10 @@ public class GravityCacheNode
                 this.bottomRightGravity);
         }
 
-        this.topLeftGravityLen2 = this.topLeftGravity.len2();
-        this.topRightGravityLen2 = this.topRightGravity.len2();
-        this.bottomLeftGravityLen2 = this.bottomLeftGravity.len2();
-        this.bottomRightGravityLen2 = this.bottomRightGravity.len2();
+        this.topLeftGravityLen = this.topLeftGravity.len();
+        this.topRightGravityLen = this.topRightGravity.len();
+        this.bottomLeftGravityLen = this.bottomLeftGravity.len();
+        this.bottomRightGravityLen = this.bottomRightGravity.len();
     }
 
     private void calculateChildren(ArrayList<PhysicsComponent> staticPhysicsComponentsWithMass)
@@ -115,18 +118,17 @@ public class GravityCacheNode
             rightGravity,
             bottomGravity);
 
-        float centreGravityLen2 = centreGravity.len2();
-        float topGravityLen2 = topGravity.len2();
-        float leftGravityLen2 = leftGravity.len2();
-        float rightGravityLen2 = rightGravity.len2();
-        float bottomGravityLen2 = bottomGravity.len2();
+        float centreGravityLen = centreGravity.len();
+        float topGravityLen = topGravity.len();
+        float leftGravityLen = leftGravity.len();
+        float rightGravityLen = rightGravity.len();
+        float bottomGravityLen = bottomGravity.len();
 
         if (this.bounds.width * this.bounds.height > MIN_AREA
-            && (
-            Math.abs(centreGravityLen2 - topLeftGravityLen2) > SPLIT_THRESHOLD_2
-                || Math.abs(centreGravityLen2 - topRightGravityLen2) > SPLIT_THRESHOLD_2
-                || Math.abs(centreGravityLen2 - bottomLeftGravityLen2) > SPLIT_THRESHOLD_2
-                || Math.abs(centreGravityLen2 - bottomRightGravityLen2) > SPLIT_THRESHOLD_2))
+            && (Math.abs(centreGravityLen - topLeftGravityLen) > SPLIT_THRESHOLD
+                || Math.abs(centreGravityLen - topRightGravityLen) > SPLIT_THRESHOLD
+                || Math.abs(centreGravityLen - bottomLeftGravityLen) > SPLIT_THRESHOLD
+                || Math.abs(centreGravityLen - bottomRightGravityLen) > SPLIT_THRESHOLD))
         {
             this.hasChildren = true;
 
@@ -156,10 +158,10 @@ public class GravityCacheNode
                 topGravity,
                 leftGravity,
                 centreGravity,
-                this.topLeftGravityLen2,
-                topGravityLen2,
-                leftGravityLen2,
-                centreGravityLen2
+                this.topLeftGravityLen,
+                topGravityLen,
+                leftGravityLen,
+                centreGravityLen
             );
             this.topRightNode = new GravityCacheNode(
                 boundsTopRight,
@@ -167,10 +169,10 @@ public class GravityCacheNode
                 this.topRightGravity,
                 centreGravity,
                 rightGravity,
-                topGravityLen2,
-                this.topRightGravityLen2,
-                centreGravityLen2,
-                rightGravityLen2
+                topGravityLen,
+                this.topRightGravityLen,
+                centreGravityLen,
+                rightGravityLen
             );
             this.bottomLeftNode = new GravityCacheNode(
                 boundsBottomLeft,
@@ -178,10 +180,10 @@ public class GravityCacheNode
                 centreGravity,
                 this.bottomLeftGravity,
                 bottomGravity,
-                leftGravityLen2,
-                centreGravityLen2,
-                this.bottomLeftGravityLen2,
-                bottomGravityLen2
+                leftGravityLen,
+                centreGravityLen,
+                this.bottomLeftGravityLen,
+                bottomGravityLen
             );
             this.bottomRightNode = new GravityCacheNode(
                 boundsBottomRight,
@@ -189,10 +191,10 @@ public class GravityCacheNode
                 rightGravity,
                 bottomGravity,
                 this.bottomRightGravity,
-                centreGravityLen2,
-                rightGravityLen2,
-                bottomGravityLen2,
-                this.bottomRightGravityLen2
+                centreGravityLen,
+                rightGravityLen,
+                bottomGravityLen,
+                this.bottomRightGravityLen
             );
         }
         else
@@ -280,10 +282,10 @@ public class GravityCacheNode
         Vector2 topRightGravity,
         Vector2 bottomLeftGravity,
         Vector2 bottomRightGravity,
-        float topLeftGravityLen2,
-        float topRightGravityLen2,
-        float bottomLeftGravityLen2,
-        float bottomRightGravityLen2)
+        float topLeftGravityLen,
+        float topRightGravityLen,
+        float bottomLeftGravityLen,
+        float bottomRightGravityLen)
     {
         this.bounds = bounds;
 
@@ -294,10 +296,10 @@ public class GravityCacheNode
         this.bottomLeftGravity = bottomLeftGravity;
         this.bottomRightGravity = bottomRightGravity;
 
-        this.topLeftGravityLen2 = topLeftGravityLen2;
-        this.topRightGravityLen2 = topRightGravityLen2;
-        this.bottomLeftGravityLen2 = bottomLeftGravityLen2;
-        this.bottomRightGravityLen2 = bottomRightGravityLen2;
+        this.topLeftGravityLen = topLeftGravityLen;
+        this.topRightGravityLen = topRightGravityLen;
+        this.bottomLeftGravityLen = bottomLeftGravityLen;
+        this.bottomRightGravityLen = bottomRightGravityLen;
 
         calculateChildren(staticPhysicsComponentsWithMass);
     }
