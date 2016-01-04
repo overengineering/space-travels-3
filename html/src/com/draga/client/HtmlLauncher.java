@@ -3,7 +3,7 @@ package com.draga.client;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
-import com.draga.SpaceTravels3;
+import com.draga.spaceTravels3.SpaceTravels3;
 
 public class HtmlLauncher extends GwtApplication
 {
