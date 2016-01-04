@@ -21,7 +21,9 @@ import java.util.concurrent.TimeUnit;
 public class GravityCache
 {
     private static final String LOGGING_TAG = GravityCache.class.getSimpleName();
-    private static final float  MIN_GRAVITY = 100f;
+
+    private static final float  MIN_GRAVITY = 1f;
+
     private final GravityCacheNode rootNode;
 
     private Rectangle bounds;
@@ -46,8 +48,6 @@ public class GravityCache
 
         float elapsed = stopwatch.elapsed(TimeUnit.NANOSECONDS) * Constants.General.NANO;
         Gdx.app.debug(LOGGING_TAG, "Caching gravity took " + elapsed + "s");
-
-//        saveBitMap();
     }
 
     private Rectangle calculateBounds(ArrayList<PhysicsComponent> staticPhysicsComponentsWithMass)
@@ -69,18 +69,14 @@ public class GravityCache
                 LOGGING_TAG,
                 "Barycentre calculated at x: " + barycentre.x + " y: " + barycentre.y);
 
-
-            // TODO: does this even?
-            float halfSizeSqrt = totalMass / MIN_GRAVITY;
-            float halfSize = halfSizeSqrt * halfSizeSqrt;
+            float radius = (float) Math.sqrt(totalMass / MIN_GRAVITY);
 
             bounds = new Rectangle(
-                barycentre.x - halfSize,
-                barycentre.y - halfSize,
-                halfSize * 2,
-                halfSize * 2);
+                barycentre.x - radius,
+                barycentre.y - radius,
+                radius * 2,
+                radius * 2);
         }
-
 
         return bounds;
     }
