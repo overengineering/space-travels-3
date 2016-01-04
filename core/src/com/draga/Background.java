@@ -35,7 +35,9 @@ public class Background implements Disposable
             starsCount);
         this.layers.add(texture);
 
-        float parallaxScale = MathUtils.random(0.05f, 0.3f);
+        float parallaxScale = MathUtils.random(
+            Constants.Visual.Background.MIN_PARALLAX,
+            Constants.Visual.Background.MAX_PARALLAX);
         this.layerParallaxScale.add(parallaxScale);
 
         Gdx.app.debug(LOGGING_TAG, "Generating star layer took " + stopwatch.elapsed(
@@ -48,6 +50,7 @@ public class Background implements Disposable
         Pixmap.setBlending(Pixmap.Blending.None);
 
         float maxDiameter = width * height * Constants.Visual.Background.STAR_MAX_DIAMETER_SCALE;
+        Interpolation alphaInterpolation = Interpolation.pow4;
 
         for (int i = 0; i < starsCount; i++)
         {
@@ -67,10 +70,13 @@ public class Background implements Disposable
             }
             else
             {
-                Interpolation alphaInterpolation = Interpolation.pow4;
                 for (int j = radius; j > 0; j--)
                 {
-                    pixmap.setColor(r, g, b, alphaInterpolation.apply(0f, 1f, (j + 1f) / radius));
+                    pixmap.setColor(
+                        r,
+                        g,
+                        b,
+                        1f - alphaInterpolation.apply(j / (radius + 1f)));
                     pixmap.fillCircle(x, y, j);
                 }
                 pixmap.setColor(r, g, b, 1f);
