@@ -103,6 +103,14 @@ public class DebugOverlay implements Screen
 
     }
 
+    public void updateLabel3()
+    {
+        String message = String.format(
+            "Projection :%9f ",
+            PhysicsEngine.getGravityProjectionPerformanceCounter().time.mean.getMean());
+        label3.setText(message);
+    }
+
     public void updateLabel4()
     {
         String formattedJavaHeap = Constants.General.COMMA_SEPARATED_THOUSANDS_FORMATTER.format(
@@ -115,14 +123,19 @@ public class DebugOverlay implements Screen
             formattedJavaHeap,
             formattedNativeHeap);
         label4.setText(message);
-    }
 
-    public void updateLabel3()
-    {
-        String message = String.format(
-            "Projection :%9f ",
-            PhysicsEngine.getGravityProjectionPerformanceCounter().time.mean.getMean());
-        label3.setText(message);
+        if (Gdx.graphics.getFramesPerSecond() < 50)
+        {
+            label4.setColor(Color.RED);
+        }
+        else if (Gdx.graphics.getFramesPerSecond() < 60)
+        {
+            label4.setColor(Color.YELLOW);
+        }
+        else
+        {
+            label4.setColor(Color.WHITE);
+        }
     }
 
     @Override
