@@ -69,38 +69,37 @@ public class Ship extends GameEntity
 
     public boolean isInfiniteFuel()
     {
-        return infiniteFuel;
+        return this.infiniteFuel;
     }
 
 
     public float getMaxFuel()
     {
-        return maxFuel;
+        return this.maxFuel;
     }
 
     @Override
     public void update(float deltaTime)
     {
-        try (PooledVector2 inputForce = InputManager.getInputForce().cpy())
+        try (PooledVector2 inputForce = InputManager.getInputForce())
         {
             inputForce.scl(deltaTime);
 
             if (!this.infiniteFuel)
             {
-                float fuelConsumption =
-                    inputForce.len() * Constants.Game.FUEL_PER_SECOND * deltaTime;
+                float fuelConsumption = inputForce.len() * Constants.Game.FUEL_PER_SECOND;
 
                 // If the fuel is or is going to be completely consumed then only apply the input force
                 // that the fuel can afford.
-                if (fuelConsumption > currentFuel)
+                if (fuelConsumption > this.currentFuel)
                 {
-                    inputForce.scl(currentFuel / fuelConsumption);
-                    fuelConsumption = currentFuel;
+                    inputForce.scl(this.currentFuel / fuelConsumption);
+                    fuelConsumption = this.currentFuel;
                 }
 
-                currentFuel = SettingsManager.getDebugSettings().infiniteFuel
-                    ? maxFuel
-                    : currentFuel - fuelConsumption;
+                this.currentFuel = SettingsManager.getDebugSettings().infiniteFuel
+                    ? this.maxFuel
+                    : this.currentFuel - fuelConsumption;
             }
 
             rotateTo(inputForce);
@@ -160,6 +159,6 @@ public class Ship extends GameEntity
 
     public float getCurrentFuel()
     {
-        return currentFuel;
+        return this.currentFuel;
     }
 }
