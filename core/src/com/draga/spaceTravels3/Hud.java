@@ -61,10 +61,11 @@ public class Hud implements Screen
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
         // Top row left column
-        float width = this.stage.getWidth() / 3f;
-        this.fuelIndicator = getFuelIndicator(width);
+        float fuelIndicatorWidth = this.stage.getWidth() / 3f;
+        this.fuelIndicator = getFuelIndicator(fuelIndicatorWidth);
         table
             .add(this.fuelIndicator)
+            .width(fuelIndicatorWidth)
             .top()
             .left();
 

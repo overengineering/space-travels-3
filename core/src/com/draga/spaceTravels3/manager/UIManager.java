@@ -4,12 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 
@@ -179,30 +181,66 @@ public class UIManager
 
     public static ProgressBar getDelimitedProgressBar(float max, float width)
     {
+        int delimiterWidth = 1;
+
+        int chunkWidth = Math.round(width / max);
+        int height = Math.round((Gdx.graphics.getHeight() / 30f));
+
+        TiledDrawable backgroundTiledDrawable =
+            getDelimitedTiledDrawableChunk(
+                delimiterWidth,
+                chunkWidth,
+                Color.DARK_GRAY,
+                Color.WHITE,
+                height);
+
+        TiledDrawable knobBeforeTiledDrawable =
+            getDelimitedTiledDrawableChunk(
+                delimiterWidth,
+                chunkWidth,
+                Color.LIGHT_GRAY,
+                Color.WHITE,
+                height);
+
+        ProgressBar.ProgressBarStyle progressBarStyle = new ProgressBar.ProgressBarStyle();
+        progressBarStyle.background = backgroundTiledDrawable;
+        progressBarStyle.knobBefore = knobBeforeTiledDrawable;
+
+        ProgressBar progressBar = new ProgressBar(0, max, 0.01f, false, progressBarStyle);
+
+        // TODO: dispose?
+        return progressBar;
+    }
+
+    private static TiledDrawable getDelimitedTiledDrawableChunk(
+        int delimiterWidth,
+        int width,
+        Color backgroundColor,
+        Color delimiterColor,
+        int height)
+    {
         Pixmap pixmap = new Pixmap(
-            Math.round(width / max),
-            Math.round((Gdx.graphics.getHeight() / 30f)),
+            width,
+            height,
             Pixmap.Format.RGBA8888);
 
-        pixmap.setColor(Color.LIGHT_GRAY);
-        pixmap.fillRectangle(0, 0, pixmap.getWidth()-1, pixmap.getHeight());
+        pixmap.setColor(backgroundColor);
+        pixmap.fillRectangle(0, 0, pixmap.getWidth() - delimiterWidth, pixmap.getHeight());
 
-        pixmap.setColor(Color.RED);
-        pixmap.fillRectangle(pixmap.getWidth() - 1, 0, 1, pixmap.getHeight());
+        pixmap.setColor(delimiterColor);
+        pixmap.fillRectangle(
+            pixmap.getWidth() - delimiterWidth,
+            0,
+            delimiterWidth,
+            pixmap.getHeight());
 
         Texture texture = new Texture(pixmap);
         texture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 
-        Sprite sprite = new Sprite(texture);
-        sprite.setRegion(0f, 0f, /*pixmap.getWidth() / width*/4f, 1f);
+        TextureRegion textureRegion = new TextureRegion(texture);
 
-        ProgressBar.ProgressBarStyle progressBarStyle = new ProgressBar.ProgressBarStyle();
-        progressBarStyle.background = new SpriteDrawable(sprite);
+        TiledDrawable tiledDrawable = new TiledDrawable(textureRegion);
 
-        progressBarStyle.knob = skin.newDrawable("progressbar", Color.BLUE);
-
-        ProgressBar progressBar = new ProgressBar(0, max, 0.01f, false, progressBarStyle);
-
-        return progressBar;
+        return tiledDrawable;
     }
 }
