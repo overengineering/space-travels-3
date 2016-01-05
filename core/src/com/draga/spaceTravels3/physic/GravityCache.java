@@ -16,24 +16,28 @@ import com.draga.utils.FileUtils;
 import com.google.common.base.Stopwatch;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 public class GravityCache
 {
     private static final String LOGGING_TAG = GravityCache.class.getSimpleName();
-
-    private static final float  MIN_GRAVITY = 1f;
-
+    
+    private static final float MIN_GRAVITY = 1f;
+    
     private final GravityCacheNode rootNode;
-
-    private Rectangle bounds;
-
+    
+    private Rectangle                                   bounds;
+    private HashMap<PhysicsComponent, GravityCacheNode> lastUsedCacheNode;
+    
     public GravityCache()
     {
         Stopwatch stopwatch = Stopwatch.createStarted();
-
+        
         ArrayList<PhysicsComponent> staticPhysicsComponentsWithMass = new ArrayList<>();
-
+        
+        this.lastUsedCacheNode = new HashMap<>();
+        
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
             if (gameEntity.physicsComponent.getPhysicsComponentType() == PhysicsComponentType.STATIC
@@ -42,15 +46,15 @@ public class GravityCache
                 staticPhysicsComponentsWithMass.add(gameEntity.physicsComponent);
             }
         }
-
-        this.bounds = calculateBounds(staticPhysicsComponentsWithMass);
-        this.rootNode = calculateNodes(staticPhysicsComponentsWithMass);
-
+        
+        calculateBounds(staticPhysicsComponentsWithMass);
+        this.rootNode = new GravityCacheNode(this.bounds, staticPhysicsComponentsWithMass);
+        
         float elapsed = stopwatch.elapsed(TimeUnit.NANOSECONDS) * Constants.General.NANO;
         Gdx.app.debug(LOGGING_TAG, "Caching gravity took " + elapsed + "s");
     }
-
-    private Rectangle calculateBounds(ArrayList<PhysicsComponent> staticPhysicsComponentsWithMass)
+    
+    private void calculateBounds(ArrayList<PhysicsComponent> staticPhysicsComponentsWithMass)
     {
         try (PooledVector2 barycentre = PooledVector2.newVector2(0f, 0f))
         {
@@ -68,58 +72,114 @@ public class GravityCache
             Gdx.app.debug(
                 LOGGING_TAG,
                 "Barycentre calculated at x: " + barycentre.x + " y: " + barycentre.y);
-
+            
             float radius = (float) Math.sqrt(totalMass / MIN_GRAVITY);
-
-            bounds = new Rectangle(
+            
+            this.bounds = new Rectangle(
                 barycentre.x - radius,
                 barycentre.y - radius,
                 radius * 2,
                 radius * 2);
         }
-
-        return bounds;
     }
-
-    private GravityCacheNode calculateNodes(ArrayList<PhysicsComponent> staticPhysicsComponentsWithMass)
-    {
-        GravityCacheNode rootNode =
-            new GravityCacheNode(this.bounds, staticPhysicsComponentsWithMass);
-
-        return rootNode;
-    }
-
+    
     public PooledVector2 getCachedGravity(PhysicsComponent physicsComponent)
     {
-        // Outside the bounds.
-        if (!this.rootNode.getBounds().contains(physicsComponent.getPosition()))
+        GravityCacheNode gravityCacheNode = getStartingNode(physicsComponent);
+        if (gravityCacheNode == null)
         {
             return PooledVector2.newVector2(0f, 0f);
         }
-
-        PooledVector2 gravity = this.rootNode.getGravity(physicsComponent.getPosition());
-
+        
+        // Move to the leaf node containing the physicsComponent
+        gravityCacheNode = getLeafContaining(physicsComponent, gravityCacheNode);
+    
+        this.lastUsedCacheNode.put(physicsComponent, gravityCacheNode);
+        
+        PooledVector2 gravity = gravityCacheNode.getGravity(physicsComponent.getPosition());
+        gravity.scl(physicsComponent.getMass());
+        
         return gravity;
     }
-
+    
+    private GravityCacheNode getLeafContaining(
+        PhysicsComponent physicsComponent,
+        GravityCacheNode gravityCacheNode)
+    {
+        while (gravityCacheNode.hasChildren())
+        {
+            if (physicsComponent.getPosition().x < gravityCacheNode.getCentre().x)
+            {
+                if (physicsComponent.getPosition().y < gravityCacheNode.getCentre().y)
+                {
+                    gravityCacheNode = gravityCacheNode.getBottomLeftNode();
+                }
+                else
+                {
+                    gravityCacheNode = gravityCacheNode.getTopLeftNode();
+                }
+            }
+            else
+            {
+                if (physicsComponent.getPosition().y < gravityCacheNode.getCentre().y)
+                {
+                    gravityCacheNode = gravityCacheNode.getBottomRightNode();
+                }
+                else
+                {
+                    gravityCacheNode = gravityCacheNode.getTopRightNode();
+                }
+            }
+        }
+        return gravityCacheNode;
+    }
+    
+    private GravityCacheNode getStartingNode(PhysicsComponent physicsComponent)
+    {
+        if (this.lastUsedCacheNode.containsKey(physicsComponent))
+        {
+            GravityCacheNode gravityCacheNode = this.lastUsedCacheNode.get(physicsComponent);
+            
+            // Go up until the physicsComponent is in the boundaries
+            while (!gravityCacheNode.getBounds().contains(physicsComponent.getPosition()))
+            {
+                // gravityCacheNode is the rootNode, return an empty Vector2
+                if (gravityCacheNode.getParentNode() == null)
+                {
+                    return null;
+                }
+                gravityCacheNode = gravityCacheNode.getParentNode();
+            }
+            return gravityCacheNode;
+        }
+        else
+        {
+            if (!this.rootNode.getBounds().contains(physicsComponent.getPosition()))
+            {
+                return null;
+            }
+            return this.rootNode;
+        }
+    }
+    
     private void saveBitMap()
     {
         float scale = 10000f / this.bounds.width;
         int pixmapWidth = MathUtils.ceil(this.bounds.width * scale);
         int pixmapHeight = MathUtils.ceil(this.bounds.height * scale);
-
+        
         Pixmap pixmap = new Pixmap(
             pixmapWidth,
             pixmapHeight,
             Pixmap.Format.RGBA8888);
-
+        
         pixmap.setColor(Color.WHITE);
-
-        drawGravityCacheNodeRecursive(pixmap, rootNode, -this.bounds.x, -this.bounds.y, scale);
-
+        
+        drawGravityCacheNodeRecursive(pixmap, this.rootNode, -this.bounds.x, -this.bounds.y, scale);
+        
         PixmapIO.writePNG(FileUtils.getFileHandle("gravityBitmap.png"), pixmap);
     }
-
+    
     private void drawGravityCacheNodeRecursive(
         Pixmap pixmap,
         GravityCacheNode gravityCacheNode,
@@ -134,7 +194,7 @@ public class GravityCache
             (int) (((gravityCacheNode.getBounds().y + offsetY) * scale) + scaledHeight),
             (int) scaledWidth,
             (int) scaledHeight);
-
+        
         if (gravityCacheNode.getTopLeftNode() != null)
         {
             drawGravityCacheNodeRecursive(

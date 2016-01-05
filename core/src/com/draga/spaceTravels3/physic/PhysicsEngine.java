@@ -74,10 +74,6 @@ public class PhysicsEngine
         if (!SettingsManager.getDebugSettings().noGravity
             && physicsComponent.isAffectedByGravity())
         {
-//            ArrayList<PhysicsComponent> otherPhysicsComponents =
-//                getAllPhysicsComponentsExcept(physicsComponent);
-//
-//            stepGravity(physicsComponent, otherPhysicsComponents, deltaTime);
             try(PooledVector2 gravity = gravityCache.getCachedGravity(physicsComponent))
             {
                 physicsComponent.getVelocity().add(gravity.scl(deltaTime));
