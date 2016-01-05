@@ -1,6 +1,7 @@
-package com.draga.spaceTravels3.component;
+package com.draga.spaceTravels3.component.physicsComponent;
 
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Pools;
+import com.draga.PooledVector2;
 import com.draga.shape.Circle;
 import com.draga.spaceTravels3.gameEntity.GameEntity;
 import com.draga.spaceTravels3.gameEntity.GameEntityGroup;
@@ -11,8 +12,10 @@ public class PhysicsComponent implements Serializable
 {
     private final boolean affectedByGravity;
 
-    private final Vector2 position;
-    private final Vector2 velocity;
+    private final PhysicsComponentType physicsComponentType;
+
+    private final PooledVector2 position;
+    private final PooledVector2 velocity;
 
     private final Circle boundsCircle;
 
@@ -31,11 +34,13 @@ public class PhysicsComponent implements Serializable
         float boundsRadius,
         GameEntityGroup collidesWith,
         Class<? extends GameEntity> ownerClass,
-        boolean affectedByGravity)
+        boolean affectedByGravity,
+        PhysicsComponentType physicsComponentType)
     {
         this.ownerClass = ownerClass;
-        this.position = new Vector2(x, y);
-        this.velocity = new Vector2();
+        this.physicsComponentType = physicsComponentType;
+        this.position = PooledVector2.newVector2(x, y);
+        this.velocity = PooledVector2.newVector2(0f, 0f);
         this.mass = mass;
         this.boundsCircle = new Circle(boundsRadius);
         this.collidesWith = collidesWith;
@@ -45,12 +50,13 @@ public class PhysicsComponent implements Serializable
     public PhysicsComponent(PhysicsComponent originalPhysicsComponent)
     {
         this.ownerClass = originalPhysicsComponent.ownerClass;
-        this.position = new Vector2(originalPhysicsComponent.position);
-        this.velocity = new Vector2(originalPhysicsComponent.velocity);
+        this.position = originalPhysicsComponent.position.cpy();
+        this.velocity = originalPhysicsComponent.velocity.cpy();
         this.mass = originalPhysicsComponent.mass;
         this.boundsCircle = new Circle(originalPhysicsComponent.getBoundsCircle().radius);
         this.collidesWith = new GameEntityGroup(originalPhysicsComponent.collidesWith);
         this.affectedByGravity = originalPhysicsComponent.affectedByGravity;
+        this.physicsComponentType = originalPhysicsComponent.physicsComponentType;
     }
 
     public Class<? extends GameEntity> getOwnerClass()
@@ -73,12 +79,12 @@ public class PhysicsComponent implements Serializable
         this.angularVelocity = angularVelocity;
     }
 
-    public Vector2 getPosition()
+    public PooledVector2 getPosition()
     {
         return position;
     }
 
-    public Vector2 getVelocity()
+    public PooledVector2 getVelocity()
     {
         return velocity;
     }
@@ -100,6 +106,8 @@ public class PhysicsComponent implements Serializable
 
     public void dispose()
     {
+        this.position.close();
+        this.velocity.close();
     }
 
     public float getMass()
@@ -110,5 +118,10 @@ public class PhysicsComponent implements Serializable
     public GameEntityGroup getCollidesWith()
     {
         return collidesWith;
+    }
+
+    public PhysicsComponentType getPhysicsComponentType()
+    {
+        return physicsComponentType;
     }
 }

@@ -3,6 +3,7 @@ package com.draga.spaceTravels3;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -25,6 +26,8 @@ public class SpaceTravels3 extends Game
 
     private DebugOverlay debugOverlay;
 
+    private Screen lastScreen;
+
     public static Game getGame()
     {
         return SpaceTravels3.game;
@@ -43,7 +46,6 @@ public class SpaceTravels3 extends Game
         AssMan.create();
         UIManager.create();
         SoundManager.create();
-        PhysicsEngine.create();
         InputManager.create();
 
         if (Constants.General.IS_DEBUGGING)
@@ -58,6 +60,7 @@ public class SpaceTravels3 extends Game
         }
 
         this.setScreen(new MenuScreen());
+        this.lastScreen = this.getScreen();
     }
 
     @Override
@@ -72,7 +75,6 @@ public class SpaceTravels3 extends Game
         UIManager.dispose();
         AssMan.dispose();
         SoundManager.dispose();
-        PhysicsEngine.dispose();
         InputManager.dispose();
 
         spriteBatch.dispose();
@@ -99,14 +101,23 @@ public class SpaceTravels3 extends Game
     @Override
     public void render()
     {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-
-        super.render();
-
-        if (Constants.General.IS_DEBUGGING)
+        // If the screen of the game has been changed then skip this frame because it could have
+        // a delta time too big.
+        if (this.lastScreen != null && this.getScreen() == this.lastScreen)
         {
-            this.debugOverlay.render(Gdx.graphics.getDeltaTime());
+            Gdx.gl.glClearColor(0, 0, 0, 1);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+
+            super.render();
+
+            if (Constants.General.IS_DEBUGGING)
+            {
+                this.debugOverlay.render(Gdx.graphics.getRawDeltaTime());
+            }
+        }
+        else
+        {
+            this.lastScreen = this.getScreen();
         }
     }
 

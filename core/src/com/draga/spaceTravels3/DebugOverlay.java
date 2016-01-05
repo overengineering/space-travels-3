@@ -12,13 +12,23 @@ import com.draga.spaceTravels3.physic.PhysicsEngine;
 
 public class DebugOverlay implements Screen
 {
-    private final Label generalLabel;
-    private final Label physicEngineLabel;
+    private final Label label1;
+    private final Label label2;
+    private final Label label3;
+    private final Label label4;
 
     private Stage stage;
 
     public DebugOverlay()
     {
+        label1 = getLabel();
+        label1.setText(
+            "mean   ");
+        label2 = getLabel();
+        label3 = getLabel();
+        label4 = getLabel();
+
+
         stage = new Stage();
 
         Table table = new Table();
@@ -29,17 +39,27 @@ public class DebugOverlay implements Screen
             .add()
             .expand();
 
-        physicEngineLabel = getLabel();
         table.row();
         table
-            .add(physicEngineLabel)
+            .add(label1)
             .bottom()
             .right();
 
-        generalLabel = getLabel();
         table.row();
         table
-            .add(generalLabel)
+            .add(label2)
+            .bottom()
+            .right();
+
+        table.row();
+        table
+            .add(label3)
+            .bottom()
+            .right();
+
+        table.row();
+        table
+            .add(label4)
             .bottom()
             .right();
 
@@ -67,13 +87,31 @@ public class DebugOverlay implements Screen
     @Override
     public void render(float delta)
     {
-        updateGeneralLabel();
-        updatePhysicEngineLabel();
+        updateLabel2();
+        updateLabel3();
+        updateLabel4();
         stage.act(delta);
         stage.draw();
     }
 
-    public void updateGeneralLabel()
+    private void updateLabel2()
+    {
+        String message = String.format(
+            "Engine :%9f ",
+            PhysicsEngine.getStepPerformanceCounter().time.mean.getMean());
+        label2.setText(message);
+
+    }
+
+    public void updateLabel3()
+    {
+        String message = String.format(
+            "Projection :%9f ",
+            PhysicsEngine.getGravityProjectionPerformanceCounter().time.mean.getMean());
+        label3.setText(message);
+    }
+
+    public void updateLabel4()
     {
         String formattedJavaHeap = Constants.General.COMMA_SEPARATED_THOUSANDS_FORMATTER.format(
             Gdx.app.getJavaHeap());
@@ -84,15 +122,20 @@ public class DebugOverlay implements Screen
             Gdx.graphics.getFramesPerSecond(),
             formattedJavaHeap,
             formattedNativeHeap);
-        generalLabel.setText(message);
-    }
+        label4.setText(message);
 
-    public void updatePhysicEngineLabel()
-    {
-        String message = String.format(
-            "Engine update time: %9f",
-            PhysicsEngine.getUpdateTime());
-        physicEngineLabel.setText(message);
+        if (Gdx.graphics.getFramesPerSecond() < 50)
+        {
+            label4.setColor(Color.RED);
+        }
+        else if (Gdx.graphics.getFramesPerSecond() < 60)
+        {
+            label4.setColor(Color.YELLOW);
+        }
+        else
+        {
+            label4.setColor(Color.WHITE);
+        }
     }
 
     @Override

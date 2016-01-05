@@ -1,8 +1,8 @@
 package com.draga.spaceTravels3.input.inputModifier;
 
-import com.badlogic.gdx.math.Vector2;
+import com.draga.PooledVector2;
 
 public interface InputModifier
 {
-    void modify(Vector2 vector2);
+    void modify(PooledVector2 pooledVector2);
 }

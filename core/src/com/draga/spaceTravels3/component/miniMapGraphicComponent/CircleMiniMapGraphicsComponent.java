@@ -3,7 +3,7 @@ package com.draga.spaceTravels3.component.miniMapGraphicComponent;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.draga.spaceTravels3.SpaceTravels3;
-import com.draga.spaceTravels3.component.PhysicsComponent;
+import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 
 public class CircleMiniMapGraphicsComponent extends MiniMapGraphicComponent
 {
@@ -29,5 +29,11 @@ public class CircleMiniMapGraphicsComponent extends MiniMapGraphicComponent
             this.physicsComponent.getPosition().x,
             this.physicsComponent.getPosition().y,
             radius);
+    }
+
+    @Override
+    public void dispose()
+    {
+
     }
 }

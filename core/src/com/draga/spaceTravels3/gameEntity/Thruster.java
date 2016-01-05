@@ -2,11 +2,11 @@ package com.draga.spaceTravels3.gameEntity;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.math.Vector2;
-import com.draga.shape.Circle;
+import com.draga.PooledVector2;
 import com.draga.spaceTravels3.Constants;
-import com.draga.spaceTravels3.component.PhysicsComponent;
 import com.draga.spaceTravels3.component.graphicComponent.AnimatedGraphicComponent;
+import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
+import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponentType;
 import com.draga.spaceTravels3.manager.InputManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
@@ -30,7 +30,8 @@ public class Thruster extends GameEntity
             0f,
             new GameEntityGroup(GameEntityGroup.GroupOverride.NONE),
             this.getClass(),
-            false);
+            false,
+            PhysicsComponentType.DYNAMIC);
 
         this.graphicComponent = new AnimatedGraphicComponent(
             AssMan.getAssList().thrusterTextureAtlas,
@@ -49,8 +50,8 @@ public class Thruster extends GameEntity
     @Override
     public void update(float deltaTime)
     {
-        Vector2 inputForce = InputManager.getInputForce();
-        if (ship.getCurrentFuel() <= 0)
+        PooledVector2 inputForce = InputManager.getInputForce();
+        if (!ship.isInfiniteFuel() && ship.getCurrentFuel() <= 0)
         {
             inputForce.setZero();
         }
@@ -59,15 +60,18 @@ public class Thruster extends GameEntity
         this.graphicComponent.setWidth(Constants.Visual.THRUSTER_MAX_WIDTH * thrusterScale);
         this.graphicComponent.setHeight(Constants.Visual.THRUSTER_MAX_HEIGHT * thrusterScale);
 
-        Vector2 thrusterOffsetPosition = Constants.Visual.THRUSTER_OFFSET
-            .cpy()
-            .sub(this.graphicComponent.getHalfWidth(), 0)
-            .rotate(this.ship.physicsComponent.getAngle());
+        try (PooledVector2 thrusterOffsetPosition = Constants.Visual.THRUSTER_OFFSET.cpy())
+        {
+            thrusterOffsetPosition.sub(this.graphicComponent.getHalfWidth(), 0)
+                .rotate(this.ship.physicsComponent.getAngle());
 
-        this.physicsComponent.getPosition()
-            .set(this.ship.physicsComponent.getPosition()
-                .cpy()
-                .add(thrusterOffsetPosition));
+            try (PooledVector2 shipPosition = this.ship.physicsComponent.getPosition().cpy())
+            {
+                this.physicsComponent.getPosition()
+                    .set(shipPosition
+                        .add(thrusterOffsetPosition));
+            }
+        }
         this.physicsComponent.getVelocity()
             .set(this.ship.physicsComponent.getVelocity());
 

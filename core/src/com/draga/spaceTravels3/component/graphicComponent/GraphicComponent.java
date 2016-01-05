@@ -1,6 +1,6 @@
 package com.draga.spaceTravels3.component.graphicComponent;
 
-import com.draga.spaceTravels3.component.PhysicsComponent;
+import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 
 public abstract class GraphicComponent
 {

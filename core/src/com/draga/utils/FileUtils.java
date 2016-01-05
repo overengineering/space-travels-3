@@ -41,7 +41,7 @@ public final class FileUtils
 
     public static FileHandle getSettingsFileHandle()
     {
-        FileHandle fileHandle = getExternalStorageFileHandle(Constants.General.SETTINGS_FILENAME);
+        FileHandle fileHandle = getFileHandle(Constants.General.SETTINGS_FILENAME);
 
         return fileHandle;
     }
@@ -49,7 +49,15 @@ public final class FileUtils
     public static FileHandle getDebugSettingsFileHandle()
     {
         FileHandle fileHandle =
-            getExternalStorageFileHandle(Constants.General.DEBUG_SETTINGS_FILENAME);
+            getFileHandle(Constants.General.DEBUG_SETTINGS_FILENAME);
+
+        return fileHandle;
+    }
+
+    public static FileHandle getFileHandle(String fileName)
+    {
+        FileHandle fileHandle =
+            getExternalStorageFileHandle(fileName);
 
         return fileHandle;
     }

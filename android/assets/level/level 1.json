@@ -17,46 +17,26 @@
   "serialisedPlanets": [
     {
       "texturePath": "planet/earth256.png",
-      "x": 280,
+      "x": 287,
       "y": 75,
-      "radius": 6.378,
-      "mass": 20000,
+      "radius": 13.378,
+      "mass": 10000,
       "destination": true
     },
     {
       "texturePath": "planet/jupiter256.png",
-      "x": 200,
-      "y": 130,
-      "radius": 25,
-      "mass": 100000
+      "x": 137,
+      "y": 82,
+      "radius": 13,
+      "mass": 20000
     },
     {
       "texturePath": "planet/mars256.png",
-      "x": 50,
-      "y": 30,
-      "radius": 3.397,
-      "mass": 3000
-    },
-    {
-      "texturePath": "planet/venus256.png",
-      "x": 80,
-      "y": 80,
-      "radius": 6.052,
+      "x": 120,
+      "y": 25,
+      "radius": 10.5,
       "mass": 10000
     }
   ],
-  "serialisedPickups": [
-    {
-      "x": 10,
-      "y": 10
-    },
-    {
-      "x": 50,
-      "y": 10
-    },
-    {
-      "x": 10,
-      "y": 100
-    }
-  ]
+  "serialisedPickups": []
 }

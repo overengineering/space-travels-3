@@ -184,21 +184,22 @@ public class UIManager
             Math.round((Gdx.graphics.getHeight() / 30f)),
             Pixmap.Format.RGBA8888);
 
-        pixmap.setColor(Color.WHITE);
-        pixmap.fillRectangle(0, 0, pixmap.getWidth() - 1, pixmap.getHeight());
+        pixmap.setColor(Color.LIGHT_GRAY);
+        pixmap.fillRectangle(0, 0, pixmap.getWidth()-1, pixmap.getHeight());
 
-        pixmap.setColor(Color.BLUE);
+        pixmap.setColor(Color.RED);
         pixmap.fillRectangle(pixmap.getWidth() - 1, 0, 1, pixmap.getHeight());
 
         Texture texture = new Texture(pixmap);
         texture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
-        TextureRegion textureRegion = new TextureRegion(texture, (int) width, pixmap.getHeight());
-        textureRegion.setRegion(0, 0, width, pixmap.getHeight());
+
+        Sprite sprite = new Sprite(texture);
+        sprite.setRegion(0f, 0f, /*pixmap.getWidth() / width*/4f, 1f);
 
         ProgressBar.ProgressBarStyle progressBarStyle = new ProgressBar.ProgressBarStyle();
-        progressBarStyle.background = new TextureRegionDrawable(textureRegion);
+        progressBarStyle.background = new SpriteDrawable(sprite);
 
-        progressBarStyle.knob = skin.newDrawable("progressbar", Color.RED);
+        progressBarStyle.knob = skin.newDrawable("progressbar", Color.BLUE);
 
         ProgressBar progressBar = new ProgressBar(0, max, 0.01f, false, progressBarStyle);
 

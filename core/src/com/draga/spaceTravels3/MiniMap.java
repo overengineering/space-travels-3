@@ -5,10 +5,11 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Rectangle;
 import com.draga.shape.Circle;
 import com.draga.spaceTravels3.gameEntity.GameEntity;
-import com.draga.spaceTravels3.gameEntity.Ship;
 import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.spaceTravels3.physic.Projection;
 import com.draga.utils.GraphicsUtils;
@@ -17,20 +18,19 @@ import static com.draga.spaceTravels3.Constants.Visual.HUD.Minimap.SCALE;
 
 public class MiniMap
 {
+    private static final int SCISSOR_WIDTH = MathUtils.round(Gdx.graphics.getWidth() * SCALE) + 1;
+    private static final int SCISSOR_HEIGHT = MathUtils.round(Gdx.graphics.getHeight() * SCALE) + 1;
+
     private final OrthographicCamera orthographicCamera;
     private final Matrix4            backgroundProjectionMatrix;
-    private       Ship               ship;
-    private       float              worldWidth;
-    private       float              worldHeight;
+    private final Level              level;
     private       float              miniMapAspectRatio;
 
     private Projection shipProjection;
 
-    public MiniMap(Ship ship, float worldWidth, float worldHeight)
+    public MiniMap(Level level)
     {
-        this.ship = ship;
-        this.worldWidth = worldWidth;
-        this.worldHeight = worldHeight;
+        this.level = level;
         this.orthographicCamera =
             new OrthographicCamera(
                 Gdx.graphics.getWidth(),
@@ -43,7 +43,8 @@ public class MiniMap
 
     private Matrix4 getBackgroundProjectionMatrix()
     {
-        OrthographicCamera backgroundCamera = new OrthographicCamera(worldWidth, worldHeight);
+        OrthographicCamera backgroundCamera =
+            new OrthographicCamera(level.getWidth(), level.getHeight());
         backgroundCamera.zoom = 1f / SCALE;
         backgroundCamera.position.set(
             (backgroundCamera.viewportWidth / 2f) * backgroundCamera.zoom,
@@ -66,13 +67,19 @@ public class MiniMap
         Gdx.gl20.glScissor(
             0,
             0,
-            MathUtils.round(Gdx.graphics.getWidth() * SCALE) + 1,
-            MathUtils.round(Gdx.graphics.getHeight() * SCALE) + 1);
-        this.shipProjection.draw();
+            SCISSOR_WIDTH,
+            SCISSOR_HEIGHT);
+
+        if (this.shipProjection != null)
+        {
+            this.shipProjection.draw();
+        }
+
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
             gameEntity.miniMapGraphicComponent.draw();
         }
+
         Gdx.gl20.glDisable(GL20.GL_SCISSOR_TEST);
     }
 
@@ -86,8 +93,8 @@ public class MiniMap
         SpaceTravels3.shapeRenderer.rect(
             0,
             0,
-            worldWidth,
-            worldHeight);
+            level.getWidth(),
+            level.getHeight());
 
         Color minimapBorderColor = Constants.Visual.HUD.Minimap.BORDER_COLOR;
         SpaceTravels3.shapeRenderer.setColor(minimapBorderColor);
@@ -95,29 +102,25 @@ public class MiniMap
         SpaceTravels3.shapeRenderer.rect(
             0,
             0,
-            worldWidth,
-            worldHeight);
+            level.getWidth(),
+            level.getHeight());
 
         GraphicsUtils.disableBlending();
     }
 
     public void update()
     {
-        Circle shipBoundsCircle = ship.physicsComponent.getBoundsCircle();
+        Circle shipBoundsCircle = level.getShip().physicsComponent.getBoundsCircle();
 
         Rectangle shipRect = new Rectangle(
-            ship.physicsComponent.getPosition().x
+            level.getShip().physicsComponent.getPosition().x
                 - shipBoundsCircle.radius,
-            ship.physicsComponent.getPosition().y
+            level.getShip().physicsComponent.getPosition().y
                 - shipBoundsCircle.radius,
             shipBoundsCircle.radius * 2,
             shipBoundsCircle.radius * 2);
 
-        Rectangle worldRect = new Rectangle(
-            0,
-            0,
-            worldWidth,
-            worldHeight);
+        Rectangle worldRect = level.getBounds();
 
         keepInView(shipRect, worldRect);
     }

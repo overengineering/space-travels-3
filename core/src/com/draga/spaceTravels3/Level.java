@@ -5,7 +5,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Pools;
-import com.draga.spaceTravels3.component.PhysicsComponent;
+import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 import com.draga.spaceTravels3.event.*;
 import com.draga.spaceTravels3.gameEntity.*;
 import com.draga.spaceTravels3.manager.GameEntityManager;
@@ -33,7 +33,7 @@ public class Level
 
     private final Rectangle bounds;
 
-    private int       pickupsCollected;
+    private int pickupsCollected;
     private GameState gameState;
 
     private Stopwatch elapsedPlayTime;
@@ -79,7 +79,9 @@ public class Level
         }
         GameEntityManager.update();
 
-        this.bounds = getBounds();
+        this.bounds = getBounds(
+            this.ship.physicsComponent.getPosition().x,
+            this.ship.physicsComponent.getPosition().y);
 
         Constants.General.EVENT_BUS.register(this);
 
@@ -88,10 +90,16 @@ public class Level
 
     /**
      * Return a rectangle that includes all the physic components and a little buffer.
+     * @param x
+     * @param y
      */
-    private Rectangle getBounds()
+    private Rectangle getBounds(float x, float y)
     {
-        Rectangle bounds = new Rectangle();
+        Rectangle bounds = new Rectangle(
+            x,
+            y,
+            0,
+            0);
 
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
@@ -151,9 +159,6 @@ public class Level
         }
         else
         {
-            GameEntityManager.removeGameEntity(ship);
-            GameEntityManager.removeGameEntity(thruster);
-
             gameState = GameState.WIN;
 
             WinEvent winEvent = Pools.obtain(WinEvent.class);
@@ -254,6 +259,7 @@ public class Level
         int lastCollisionIndex = 0;
         // Keep a list of PhysicsComponent that we already collided with to exclude them later on.
         ArrayList<PhysicsComponent> alreadyCollidedPhysicsComponents = new ArrayList<>();
+        outerFor:
         for (int i = 0, projectionPointsSize = projectionPoints.size(); i
             < projectionPointsSize; i++)
         {
@@ -269,15 +275,15 @@ public class Level
             if (!physicsComponentsToCheck.isEmpty()
                 || i == projectionPointsSize - 1)
             {
-                Color currentColor = getColor(projectionPoint, physicsComponentsToCheck);
+                Color currentColor = getColor(physicsComponentsToCheck);
                 alreadyCollidedPhysicsComponents.addAll(physicsComponentsToCheck);
 
                 // Add all the vertices up to this collision with the correct color.
                 for (int j = lastCollisionIndex; j < i; j++)
                 {
-                    vertices.add(
-                        j,
-                        new Vertex(currentColor, projectionPoints.get(j).getPosition()));
+                    Vertex vertex = Pools.obtain(Vertex.class);
+                    vertex.set(currentColor, projectionPoints.get(j).getPosition());
+                    vertices.add(j,vertex);
                 }
                 lastCollisionIndex = i;
 
@@ -286,17 +292,23 @@ public class Level
                 {
                     if (physicsComponent.getOwnerClass().equals(Planet.class))
                     {
-                        return new Projection(vertices);
+                        break outerFor;
                     }
                 }
             }
         }
 
-        return new Projection(vertices);
+        for (ProjectionPoint projectionPoint : projectionPoints)
+        {
+            Pools.free(projectionPoint);
+        }
+
+        Projection projection = Pools.obtain(Projection.class);
+        projection.set(vertices);
+        return projection;
     }
 
     private Color getColor(
-        ProjectionPoint projectionPoint,
         ArrayList<PhysicsComponent> nextCollidingPhysicsComponents)
     {
         for (PhysicsComponent nextCollidingPhysicsComponent : nextCollidingPhysicsComponents)
@@ -342,5 +354,10 @@ public class Level
     public float getMaxLandingSpeed()
     {
         return maxLandingSpeed;
+    }
+
+    public Rectangle getBounds()
+    {
+        return bounds;
     }
 }

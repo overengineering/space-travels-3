@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.draga.Background;
 import com.draga.spaceTravels3.*;
@@ -38,10 +39,14 @@ public class GameScreen implements Screen
 
     private Projection shipProjection;
 
-    public GameScreen(Level level)
+    public GameScreen(Level level, Background background)
     {
-        this.background = new Background();
+        this.background = background;
         this.level = level;
+
+        PhysicsEngine.create();
+        PhysicsEngine.cachePhysicsComponentCollisions(level.getShip().physicsComponent);
+        PhysicsEngine.cacheGravity();
     }
 
     @Override
@@ -63,19 +68,6 @@ public class GameScreen implements Screen
         update(0);
 
         this.overlayScreen = new CountdownScreen();
-    }
-
-    private void updateCamera()
-    {
-        Camera camera = extendViewport.getCamera();
-
-        camera.position.set(
-            level.getShip().physicsComponent.getPosition().x,
-            level.getShip().physicsComponent.getPosition().y,
-            0f);
-        camera.update();
-
-        SpaceTravels3.spriteBatch.setProjectionMatrix(extendViewport.getCamera().combined);
     }
 
     @Override
@@ -128,39 +120,17 @@ public class GameScreen implements Screen
         }
     }
 
-    public void update(float deltaTime)
-    {
-        InputManager.update();
-
-        PhysicsEngine.update(deltaTime);
-
-        for (GameEntity gameEntity : GameEntityManager.getGameEntities())
-        {
-            gameEntity.update(deltaTime);
-        }
-
-        updateShipProjection();
-        this.hud.getMiniMap().setShipProjection(this.shipProjection);
-    }
-
-    private void updateShipProjection()
-    {
-        ArrayList<ProjectionPoint> projectionPoints = PhysicsEngine.gravityProjection(
-            this.level.getShip().physicsComponent,
-            this.level.getTrajectorySeconds(),
-            Constants.Visual.HUD.TrajectoryLine.POINTS_TIME);
-
-        this.shipProjection = this.level.processProjection(projectionPoints);
-    }
-
     public void draw()
     {
         updateCamera();
 
-        SpaceTravels3.shapeRenderer.setProjectionMatrix(this.extendViewport.getCamera().combined);
-        SpaceTravels3.shapeRenderer.begin();
-        this.shipProjection.draw();
-        SpaceTravels3.shapeRenderer.end();
+        if (this.shipProjection != null)
+        {
+            SpaceTravels3.shapeRenderer.setProjectionMatrix(this.extendViewport.getCamera().combined);
+            SpaceTravels3.shapeRenderer.begin();
+            this.shipProjection.draw();
+            SpaceTravels3.shapeRenderer.end();
+        }
 
         SpaceTravels3.spriteBatch.begin();
         background.draw(extendViewport.getCamera());
@@ -176,6 +146,23 @@ public class GameScreen implements Screen
         {
             PhysicDebugDrawer.draw(extendViewport.getCamera());
         }
+    }
+
+    private void updateCamera()
+    {
+        if (!GameEntityManager.getGameEntities().contains(level.getShip()))
+        {
+            return;
+        }
+        Camera camera = extendViewport.getCamera();
+
+        camera.position.set(
+            level.getShip().physicsComponent.getPosition().x,
+            level.getShip().physicsComponent.getPosition().y,
+            0f);
+        camera.update();
+
+        SpaceTravels3.spriteBatch.setProjectionMatrix(extendViewport.getCamera().combined);
     }
 
     public void resize(int width, int height)
@@ -222,6 +209,53 @@ public class GameScreen implements Screen
         background.dispose();
 
         AssMan.getAssMan().clear();
+
+        PhysicsEngine.dispose();
+
+        if (this.shipProjection != null)
+        {
+            Pools.free(this.shipProjection);
+        }
+    }
+
+    public void update(float deltaTime)
+    {
+        InputManager.update();
+
+        PhysicsEngine.update(deltaTime);
+
+        for (GameEntity gameEntity : GameEntityManager.getGameEntities())
+        {
+            gameEntity.update(deltaTime);
+        }
+
+        updateShipProjection();
+        this.hud.getMiniMap().setShipProjection(this.shipProjection);
+    }
+
+    private void updateShipProjection()
+    {
+        if (this.shipProjection != null)
+        {
+            Pools.free(this.shipProjection);
+        }
+
+        if (level.getGameState() == GameState.PLAY
+            || level.getGameState() == GameState.COUNTDOWN
+            || level.getGameState() == GameState.PAUSE
+            )
+        {
+            ArrayList<ProjectionPoint> projectionPoints = PhysicsEngine.gravityProjection(
+                this.level.getShip().physicsComponent,
+                this.level.getTrajectorySeconds(),
+                Constants.Visual.HUD.TrajectoryLine.POINTS_TIME);
+
+            this.shipProjection = this.level.processProjection(projectionPoints);
+        }
+        else
+        {
+            this.shipProjection = null;
+        }
     }
 
     @Subscribe

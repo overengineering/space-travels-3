@@ -1,6 +1,7 @@
 package com.draga.spaceTravels3.gameEntity;
 
-import com.draga.spaceTravels3.component.PhysicsComponent;
+import com.badlogic.gdx.utils.Pools;
+import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 import com.draga.spaceTravels3.component.graphicComponent.GraphicComponent;
 import com.draga.spaceTravels3.component.miniMapGraphicComponent.MiniMapGraphicComponent;
 
