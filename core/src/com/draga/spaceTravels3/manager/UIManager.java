@@ -198,16 +198,16 @@ public class UIManager
                     delimiterWidth,
                     chunkWidth,
                     height,
-                    Constants.Visual.HUD.FUEL_PROGRESSBAR_BACKGROUND,
-                    Constants.Visual.HUD.FUEL_PROGRESSBAR_DELIMITER);
+                    Constants.Visual.DELIMITED_PROGRESSBAR_BACKGROUND,
+                    Constants.Visual.DELIMITED_PROGRESSBAR_DELIMITER);
 
             TiledDrawable knobBeforeTiledDrawable =
                 getDelimitedTiledDrawableChunk(
                     delimiterWidth,
                     chunkWidth,
                     height,
-                    Constants.Visual.HUD.FUEL_PROGRESSBAR_KNOB_BEFORE,
-                    Constants.Visual.HUD.FUEL_PROGRESSBAR_DELIMITER);
+                    Constants.Visual.DELIMITED_PROGRESSBAR_KNOB_BEFORE,
+                    Constants.Visual.DELIMITED_PROGRESSBAR_DELIMITER);
 
             ProgressBar.ProgressBarStyle progressBarStyle = new ProgressBar.ProgressBarStyle();
             progressBarStyle.background = backgroundTiledDrawable;

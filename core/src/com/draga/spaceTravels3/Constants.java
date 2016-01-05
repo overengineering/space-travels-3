@@ -34,8 +34,13 @@ public abstract class Constants
             PooledVector2.newVector2(-SHIP_WIDTH / 4f, 0);
 
         // Screen.
-        public static final float SCREEN_FADE_DURATION = 3f;
-        public static final Color SCREEN_FADE_COLOUR   = new Color(0, 0, 0, 0.7f);
+        public static final float SCREEN_FADE_DURATION              = 3f;
+        public static final Color SCREEN_FADE_COLOUR                = new Color(0, 0, 0, 0.7f);
+
+        // Delimited progress bar.
+        public static final Color DELIMITED_PROGRESSBAR_BACKGROUND  = Color.DARK_GRAY;
+        public static final Color DELIMITED_PROGRESSBAR_DELIMITER   = Color.WHITE;
+        public static final Color DELIMITED_PROGRESSBAR_KNOB_BEFORE = Color.LIGHT_GRAY;
 
 
         public abstract static class Background
@@ -73,9 +78,6 @@ public abstract class Constants
                 new Color(0f, 1f, 0f, 0.2f);
             public static final float JOYSTICK_OVERLAY_WIDTH                 = 0.002083f
                 * Constants.Visual.UI.SQRT_PIXELS;
-            public static final Color FUEL_PROGRESSBAR_BACKGROUND            = Color.DARK_GRAY;
-            public static final Color FUEL_PROGRESSBAR_DELIMITER = Color.WHITE;
-            public static final Color FUEL_PROGRESSBAR_KNOB_BEFORE = Color.LIGHT_GRAY;
 
 
             public abstract static class Minimap
