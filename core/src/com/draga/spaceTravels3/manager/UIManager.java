@@ -17,6 +17,8 @@ import com.draga.spaceTravels3.manager.asset.AssMan;
 
 public class UIManager
 {
+    private static final String LOGGING_TAG = UIManager.class.getSimpleName();
+
     public static Skin skin;
 
     public static Table addDefaultTableToStage(Stage stage)
@@ -186,38 +188,44 @@ public class UIManager
         int chunkWidth = Math.round(width / max);
         int height = Math.round((Gdx.graphics.getHeight() / 30f));
 
-        TiledDrawable backgroundTiledDrawable =
-            getDelimitedTiledDrawableChunk(
-                delimiterWidth,
-                chunkWidth,
-                Color.DARK_GRAY,
-                Color.WHITE,
-                height);
+        String progressBarStyleName =
+            String.format("delimitedProgressBar%d/%d/%d", delimiterWidth, chunkWidth, height);
 
-        TiledDrawable knobBeforeTiledDrawable =
-            getDelimitedTiledDrawableChunk(
-                delimiterWidth,
-                chunkWidth,
-                Color.LIGHT_GRAY,
-                Color.WHITE,
-                height);
+        if (!skin.has(progressBarStyleName, ProgressBar.ProgressBarStyle.class))
+        {
+            TiledDrawable backgroundTiledDrawable =
+                getDelimitedTiledDrawableChunk(
+                    delimiterWidth,
+                    chunkWidth,
+                    height,
+                    Constants.Visual.HUD.FUEL_PROGRESSBAR_BACKGROUND,
+                    Constants.Visual.HUD.FUEL_PROGRESSBAR_DELIMITER);
 
-        ProgressBar.ProgressBarStyle progressBarStyle = new ProgressBar.ProgressBarStyle();
-        progressBarStyle.background = backgroundTiledDrawable;
-        progressBarStyle.knobBefore = knobBeforeTiledDrawable;
+            TiledDrawable knobBeforeTiledDrawable =
+                getDelimitedTiledDrawableChunk(
+                    delimiterWidth,
+                    chunkWidth,
+                    height,
+                    Constants.Visual.HUD.FUEL_PROGRESSBAR_KNOB_BEFORE,
+                    Constants.Visual.HUD.FUEL_PROGRESSBAR_DELIMITER);
 
-        ProgressBar progressBar = new ProgressBar(0, max, 0.01f, false, progressBarStyle);
+            ProgressBar.ProgressBarStyle progressBarStyle = new ProgressBar.ProgressBarStyle();
+            progressBarStyle.background = backgroundTiledDrawable;
+            progressBarStyle.knobBefore = knobBeforeTiledDrawable;
 
-        // TODO: dispose?
+            skin.add(progressBarStyleName, progressBarStyle);
+        }
+
+        ProgressBar progressBar = new ProgressBar(0, max, 0.01f, false, skin, progressBarStyleName);
+
         return progressBar;
     }
 
     private static TiledDrawable getDelimitedTiledDrawableChunk(
         int delimiterWidth,
         int width,
-        Color backgroundColor,
-        Color delimiterColor,
-        int height)
+        int height, Color backgroundColor,
+        Color delimiterColor)
     {
         Pixmap pixmap = new Pixmap(
             width,
@@ -235,6 +243,7 @@ public class UIManager
             pixmap.getHeight());
 
         Texture texture = new Texture(pixmap);
+        pixmap.dispose();
         texture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 
         TextureRegion textureRegion = new TextureRegion(texture);
