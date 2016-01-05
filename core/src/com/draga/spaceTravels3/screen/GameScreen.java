@@ -41,7 +41,8 @@ public class GameScreen implements Screen
 
     public GameScreen(Level level)
     {
-        this.background = AssMan.getAssMan().get("background", Background.class);
+        this.background =
+            AssMan.getAssMan().get(Constants.Visual.Background.BACKGROUND_ASSET_DESCRIPTOR);
         this.level = level;
 
         PhysicsEngine.create();
@@ -133,7 +134,7 @@ public class GameScreen implements Screen
         }
 
         SpaceTravels3.spriteBatch.begin();
-        background.draw(extendViewport.getCamera());
+        background.draw(extendViewport.getCamera(), SpaceTravels3.spriteBatch);
 
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {

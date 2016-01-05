@@ -92,7 +92,7 @@ public class LoadingScreen implements Screen
         assMan.load(AssMan.getAssList().explosionTextureAtlas, TextureAtlas.class);
         assMan.load(AssMan.getAssList().pickupTexture, Texture.class);
 
-        assMan.load("background", Background.class);
+        assMan.load(Constants.Visual.Background.BACKGROUND_ASSET_DESCRIPTOR);
 
         assMan.update();
     }

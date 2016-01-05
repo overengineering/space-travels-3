@@ -1,60 +1,52 @@
 package com.draga;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
-import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.AsynchronousAssetLoader;
-import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
-import com.draga.spaceTravels3.Constants;
 
 public class BackgroundLoader
-    extends AsynchronousAssetLoader<Background, BackgroundLoader.BackgroundParameter>
+    extends AsynchronousAssetLoader<Background, BackgroundParameters>
 {
-    private static final FileHandleResolver NULL_FILE_HANDLE_RESOLVER = new FileHandleResolver()
-    {
-        @Override
-        public FileHandle resolve(String fileName)
-        {
-            return null;
-        }
-    };
+    private static final String LOGGING_TAG =
+        BackgroundLoader.class.getSimpleName();
+
     private Background background;
 
     public BackgroundLoader()
     {
-        super(NULL_FILE_HANDLE_RESOLVER);
+        super(NullFileHandleResolver.NULL_FILE_HANDLE_RESOLVER);
     }
 
     @Override
     public void loadAsync(
-        AssetManager manager,
+        AssetManager assetManager,
         String fileName,
-        FileHandle file,
-        BackgroundParameter parameter)
+        FileHandle fileHandle,
+        BackgroundParameters backgroundParameters)
     {
-        if (parameter == null)
+        if (backgroundParameters == null)
         {
-            parameter = new BackgroundParameter();
+            Gdx.app.error(LOGGING_TAG, "BackgroundParameters can't be null");
         }
 
         this.background = new Background();
-        for (int i = 0; i < parameter.layers; i++)
-        {
-            this.background.addStarLayerPixmap(
-                parameter.starsCount / parameter.layers,
-                parameter.minParallax,
-                parameter.maxParallax);
-        }
+        this.background.generateStarLayersPixmap(
+            backgroundParameters.layerCount,
+            backgroundParameters.starsCount,
+            backgroundParameters.minParallax,
+            backgroundParameters.maxParallax,
+            backgroundParameters.starMaxDiameterScale);
     }
 
     @Override
     public Background loadSync(
-        AssetManager manager,
+        AssetManager assetManager,
         String fileName,
-        FileHandle file,
-        BackgroundParameter parameter)
+        FileHandle fileHandle,
+        BackgroundParameters backgroundParameters)
     {
         this.background.loadLayersFromPixmaps();
 
@@ -63,16 +55,8 @@ public class BackgroundLoader
 
     @Override
     public Array<AssetDescriptor> getDependencies(
-        String fileName, FileHandle file, BackgroundParameter parameter)
+        String fileName, FileHandle fileHandle, BackgroundParameters backgroundParameters)
     {
         return null;
-    }
-
-    public class BackgroundParameter extends AssetLoaderParameters<Background>
-    {
-        public int   layers      = Constants.Visual.Background.LAYER_COUNT;
-        public int   starsCount  = Constants.Visual.Background.STAR_COUNT;
-        public float minParallax = Constants.Visual.Background.MIN_PARALLAX;
-        public float maxParallax = Constants.Visual.Background.MAX_PARALLAX;
     }
 }

@@ -4,11 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Disposable;
-import com.draga.spaceTravels3.Constants;
-import com.draga.spaceTravels3.SpaceTravels3;
 import com.google.common.base.Stopwatch;
 
 import java.util.ArrayList;
@@ -18,32 +17,35 @@ public class Background implements Disposable
 {
     private static final String LOGGING_TAG = Background.class.getSimpleName();
 
-    private ArrayList<Texture> layers;
+    private ArrayList<Texture> textures;
     private ArrayList<Float>   layerParallaxScale;
     private ArrayList<Pixmap>  pixmaps;
 
     public Background()
     {
-        this.layers = new ArrayList<>();
+        this.textures = new ArrayList<>();
         this.layerParallaxScale = new ArrayList<>();
         this.pixmaps = new ArrayList<>();
     }
 
-    public void draw(Camera camera)
+    /**
+     * Draw the texture layers with parallax.
+     */
+    public void draw(Camera camera, Batch batch)
     {
         float x = camera.position.x - camera.viewportWidth / 2f;
         float y = camera.position.y - camera.viewportHeight / 2f;
 
-        for (int i = 0; i < this.layers.size(); i++)
+        for (int i = 0; i < this.textures.size(); i++)
         {
             float offsetX = camera.position.x * this.layerParallaxScale.get(i);
             float offsetY = camera.position.y * this.layerParallaxScale.get(i);
-            Texture texture = this.layers.get(i);
+            Texture texture = this.textures.get(i);
 
             float u = offsetX / camera.viewportWidth;
             float v = offsetY / camera.viewportHeight;
 
-            SpaceTravels3.spriteBatch.draw(
+            batch.draw(
                 texture,
                 x,
                 y,
@@ -56,22 +58,73 @@ public class Background implements Disposable
         }
     }
 
+    /**
+     * Disposes any texture and pixmap previously generated.
+     */
     public void dispose()
     {
-        for (Texture layer : this.layers)
+        for (Pixmap pixmap : this.pixmaps)
         {
-            layer.dispose();
+            pixmap.dispose();
+        }
+
+        for (Texture texture : this.textures)
+        {
+            texture.dispose();
         }
     }
 
-    public void addStarLayerPixmap(int starsCount, float minParallax, float maxParallax)
+    /**
+     * Turns the generated pixmaps into textures and disposes them. Requires a GL context.
+     * This has been separated to allow async loading in the {@link BackgroundLoader}.
+     */
+    public void loadLayersFromPixmaps()
+    {
+        for (Pixmap pixmap : this.pixmaps)
+        {
+            Texture texture = new Texture(pixmap);
+            pixmap.dispose();
+            texture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+            this.textures.add(texture);
+        }
+
+        this.pixmaps.clear();
+    }
+
+    /**
+     * Generate pixmaps layers of stars to be then turn into textures. Doesn't require a GL context.
+     * This has been separated to allow async loading in the {@link BackgroundLoader}.
+     */
+    public void generateStarLayersPixmap(
+        int layerCount,
+        int starsCount,
+        float minParallax,
+        float maxParallax,
+        float starMaxDiameterScale)
+    {
+        for (int i = 0; i < layerCount; i++)
+        {
+            generateStarLayerPixmap(
+                starsCount / layerCount,
+                minParallax,
+                maxParallax,
+                starMaxDiameterScale);
+        }
+    }
+
+    private void generateStarLayerPixmap(
+        int starsCount,
+        float minParallax,
+        float maxParallax,
+        float starMaxDiameterScale)
     {
         Stopwatch stopwatch = Stopwatch.createStarted();
 
         Pixmap pixmap = getStarLayerPixmap(
             Gdx.graphics.getWidth(),
             Gdx.graphics.getHeight(),
-            starsCount);
+            starsCount,
+            starMaxDiameterScale);
         this.pixmaps.add(pixmap);
 
         float parallaxScale = MathUtils.random(
@@ -80,16 +133,19 @@ public class Background implements Disposable
         this.layerParallaxScale.add(parallaxScale);
 
         Gdx.app.debug(LOGGING_TAG, "Generating star layer took " + stopwatch.elapsed(
-            TimeUnit.NANOSECONDS) * Constants.General.NANO + "s");
+            TimeUnit.NANOSECONDS) / MathUtils.nanoToSec + "s");
 
     }
 
-    private Pixmap getStarLayerPixmap(int width, int height, int starsCount)
+    private Pixmap getStarLayerPixmap(
+        int width,
+        int height,
+        int starsCount, float starMaxDiameterScale)
     {
         Pixmap pixmap = new Pixmap(width, height, Pixmap.Format.RGBA8888);
         Pixmap.setBlending(Pixmap.Blending.None);
 
-        float maxDiameter = width * height * Constants.Visual.Background.STAR_MAX_DIAMETER_SCALE;
+        float maxDiameter = width * height * starMaxDiameterScale;
         Interpolation alphaInterpolation = Interpolation.pow4;
 
         for (int i = 0; i < starsCount; i++)
@@ -125,18 +181,5 @@ public class Background implements Disposable
         }
 
         return pixmap;
-    }
-
-    public void loadLayersFromPixmaps()
-    {
-        for (Pixmap pixmap : this.pixmaps)
-        {
-            Texture texture = new Texture(pixmap);
-            pixmap.dispose();
-            texture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
-            this.layers.add(texture);
-        }
-
-        this.pixmaps.clear();
     }
 }
