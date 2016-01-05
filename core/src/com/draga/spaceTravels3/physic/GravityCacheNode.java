@@ -19,6 +19,8 @@ public class GravityCacheNode
     private       float     halfHeight;
     private       float     halfWidth;
 
+    private GravityCacheNode parentNode;
+
     private boolean hasChildren;
 
     private GravityCacheNode topLeftNode;
@@ -40,6 +42,8 @@ public class GravityCacheNode
         Rectangle bounds,
         ArrayList<PhysicsComponent> staticPhysicsComponentsWithMass)
     {
+        this.parentNode = null;
+
         this.bounds = bounds;
 
         calculateCentreAndHalfMeasures(bounds);
@@ -154,6 +158,7 @@ public class GravityCacheNode
                 this.halfWidth,
                 this.halfHeight);
             this.topLeftNode = new GravityCacheNode(
+                this,
                 boundsTopLeft,
                 staticPhysicsComponentsWithMass, this.topLeftGravity,
                 topGravity,
@@ -162,9 +167,9 @@ public class GravityCacheNode
                 this.topLeftGravityLen,
                 topGravityLen,
                 leftGravityLen,
-                centreGravityLen
-            );
+                centreGravityLen);
             this.topRightNode = new GravityCacheNode(
+                this,
                 boundsTopRight,
                 staticPhysicsComponentsWithMass, topGravity,
                 this.topRightGravity,
@@ -173,9 +178,9 @@ public class GravityCacheNode
                 topGravityLen,
                 this.topRightGravityLen,
                 centreGravityLen,
-                rightGravityLen
-            );
+                rightGravityLen);
             this.bottomLeftNode = new GravityCacheNode(
+                this,
                 boundsBottomLeft,
                 staticPhysicsComponentsWithMass, leftGravity,
                 centreGravity,
@@ -184,9 +189,9 @@ public class GravityCacheNode
                 leftGravityLen,
                 centreGravityLen,
                 this.bottomLeftGravityLen,
-                bottomGravityLen
-            );
+                bottomGravityLen);
             this.bottomRightNode = new GravityCacheNode(
+                this,
                 boundsBottomRight,
                 staticPhysicsComponentsWithMass, centreGravity,
                 rightGravity,
@@ -195,8 +200,7 @@ public class GravityCacheNode
                 centreGravityLen,
                 rightGravityLen,
                 bottomGravityLen,
-                this.bottomRightGravityLen
-            );
+                this.bottomRightGravityLen);
         }
         else
         {
@@ -277,6 +281,7 @@ public class GravityCacheNode
     }
 
     public GravityCacheNode(
+        GravityCacheNode parentNode,
         Rectangle bounds,
         ArrayList<PhysicsComponent> staticPhysicsComponentsWithMass,
         Vector2 topLeftGravity,
@@ -288,6 +293,8 @@ public class GravityCacheNode
         float bottomLeftGravityLen,
         float bottomRightGravityLen)
     {
+        this.parentNode = parentNode;
+
         this.bounds = bounds;
 
         this.calculateCentreAndHalfMeasures(bounds);
@@ -303,6 +310,11 @@ public class GravityCacheNode
         this.bottomRightGravityLen = bottomRightGravityLen;
 
         this.calculateChildren(staticPhysicsComponentsWithMass);
+    }
+
+    public GravityCacheNode getParentNode()
+    {
+        return this.parentNode;
     }
 
     public Rectangle getBounds()
@@ -332,33 +344,6 @@ public class GravityCacheNode
 
     public PooledVector2 getGravity(Vector2 position)
     {
-        if (this.hasChildren)
-        {
-            if (position.x < this.centre.x)
-            {
-                if (position.y < this.centre.y)
-                {
-                    return this.bottomLeftNode.getGravity(position);
-                }
-                else
-                {
-                    return this.topLeftNode.getGravity(position);
-                }
-            }
-            else
-            {
-                if (position.y < this.centre.y)
-                {
-                    return this.bottomRightNode.getGravity(position);
-                }
-                else
-                {
-                    return this.topRightNode.getGravity(position);
-                }
-            }
-        }
-
-        // In this node.
         float leftXWeight = (position.x - this.bounds.x) / this.bounds.width / 2f;
         float bottomYWeight = (position.y - this.bounds.y) / this.bounds.height / 2f;
         float rightXWeight = 0.5f - leftXWeight;
@@ -374,5 +359,15 @@ public class GravityCacheNode
                 + this.bottomLeftGravity.y * bottomYWeight
                 + this.bottomRightGravity.y * bottomYWeight);
         return gravity;
+    }
+
+    public boolean hasChildren()
+    {
+        return this.hasChildren;
+    }
+    
+    public Vector2 getCentre()
+    {
+        return this.centre;
     }
 }
