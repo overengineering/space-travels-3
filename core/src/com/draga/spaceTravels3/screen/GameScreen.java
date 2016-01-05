@@ -39,9 +39,9 @@ public class GameScreen implements Screen
 
     private Projection shipProjection;
 
-    public GameScreen(Level level, Background background)
+    public GameScreen(Level level)
     {
-        this.background = background;
+        this.background = AssMan.getAssMan().get("background", Background.class);
         this.level = level;
 
         PhysicsEngine.create();

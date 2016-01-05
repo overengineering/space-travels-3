@@ -3,6 +3,8 @@ package com.draga.spaceTravels3.manager.asset;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.utils.Json;
+import com.draga.Background;
+import com.draga.BackgroundLoader;
 
 public class AssMan
 {
@@ -12,6 +14,7 @@ public class AssMan
     public static void create()
     {
         ASSET_MANAGER = new AssetManager();
+        ASSET_MANAGER.setLoader(Background.class, new BackgroundLoader());
 
         ASSET_LIST = new Json().fromJson(
             AssList.class,

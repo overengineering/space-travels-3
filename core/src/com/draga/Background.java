@@ -20,31 +20,71 @@ public class Background implements Disposable
 
     private ArrayList<Texture> layers;
     private ArrayList<Float>   layerParallaxScale;
+    private ArrayList<Pixmap>  pixmaps;
 
     public Background()
     {
         this.layers = new ArrayList<>();
         this.layerParallaxScale = new ArrayList<>();
+        this.pixmaps = new ArrayList<>();
     }
 
-    public void addStarLayer(int starsCount)
+    public void draw(Camera camera)
+    {
+        float x = camera.position.x - camera.viewportWidth / 2f;
+        float y = camera.position.y - camera.viewportHeight / 2f;
+
+        for (int i = 0; i < this.layers.size(); i++)
+        {
+            float offsetX = camera.position.x * this.layerParallaxScale.get(i);
+            float offsetY = camera.position.y * this.layerParallaxScale.get(i);
+            Texture texture = this.layers.get(i);
+
+            float u = offsetX / camera.viewportWidth;
+            float v = offsetY / camera.viewportHeight;
+
+            SpaceTravels3.spriteBatch.draw(
+                texture,
+                x,
+                y,
+                camera.viewportWidth,
+                camera.viewportHeight,
+                u,
+                v,
+                u + 1f,
+                v + 1f);
+        }
+    }
+
+    public void dispose()
+    {
+        for (Texture layer : this.layers)
+        {
+            layer.dispose();
+        }
+    }
+
+    public void addStarLayerPixmap(int starsCount, float minParallax, float maxParallax)
     {
         Stopwatch stopwatch = Stopwatch.createStarted();
 
-        Texture texture = getStarLayer(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),
+        Pixmap pixmap = getStarLayerPixmap(
+            Gdx.graphics.getWidth(),
+            Gdx.graphics.getHeight(),
             starsCount);
-        this.layers.add(texture);
+        this.pixmaps.add(pixmap);
 
         float parallaxScale = MathUtils.random(
-            Constants.Visual.Background.MIN_PARALLAX,
-            Constants.Visual.Background.MAX_PARALLAX);
+            minParallax,
+            maxParallax);
         this.layerParallaxScale.add(parallaxScale);
 
         Gdx.app.debug(LOGGING_TAG, "Generating star layer took " + stopwatch.elapsed(
             TimeUnit.NANOSECONDS) * Constants.General.NANO + "s");
+
     }
 
-    private static Texture getStarLayer(int width, int height, int starsCount)
+    private Pixmap getStarLayerPixmap(int width, int height, int starsCount)
     {
         Pixmap pixmap = new Pixmap(width, height, Pixmap.Format.RGBA8888);
         Pixmap.setBlending(Pixmap.Blending.None);
@@ -84,49 +124,19 @@ public class Background implements Disposable
             }
         }
 
-        Texture texture = new Texture(pixmap);
-        pixmap.dispose();
-        texture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
-        return texture;
+        return pixmap;
     }
 
-    public void draw(Camera camera)
+    public void loadLayersFromPixmaps()
     {
-        float x = camera.position.x - camera.viewportWidth / 2f;
-        float y = camera.position.y - camera.viewportHeight / 2f;
-
-        for (int i = 0; i < this.layers.size(); i++)
+        for (Pixmap pixmap : this.pixmaps)
         {
-            float offsetX = camera.position.x * this.layerParallaxScale.get(i);
-            float offsetY = camera.position.y * this.layerParallaxScale.get(i);
-            Texture texture = this.layers.get(i);
-
-            float u = offsetX / camera.viewportWidth;
-            float v = offsetY / camera.viewportHeight;
-
-            SpaceTravels3.spriteBatch.draw(
-                texture,
-                x,
-                y,
-                camera.viewportWidth,
-                camera.viewportHeight,
-                u,
-                v,
-                u + 1f,
-                v + 1f);
+            Texture texture = new Texture(pixmap);
+            pixmap.dispose();
+            texture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+            this.layers.add(texture);
         }
-    }
 
-    public void dispose()
-    {
-        for (Texture layer : this.layers)
-        {
-            layer.dispose();
-        }
-    }
-
-    public int getLayerCount()
-    {
-        return this.layers.size();
+        this.pixmaps.clear();
     }
 }
