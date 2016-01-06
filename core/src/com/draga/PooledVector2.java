@@ -1,6 +1,7 @@
 package com.draga;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
 
 import java.util.Stack;
 
@@ -10,16 +11,15 @@ public class PooledVector2 extends com.badlogic.gdx.math.Vector2 implements Auto
 
     private static final float GROWTH = 1.2f;
 
-    private final static Stack<PooledVector2> freeObjects = new Stack<>();
+    private static final Stack<PooledVector2> freeObjects = new Stack<>();
 
     private PooledVector2()
     {
     }
 
-    @Override
-    public PooledVector2 cpy()
+    public static PooledVector2 newVector2(Vector2 vector2)
     {
-        return newVector2(this.x, this.y);
+        return newVector2(vector2.x, vector2.y);
     }
 
     public static PooledVector2 newVector2(float x, float y)
@@ -36,8 +36,15 @@ public class PooledVector2 extends com.badlogic.gdx.math.Vector2 implements Auto
     }
 
     @Override
+    public PooledVector2 cpy()
+    {
+        return newVector2(this.x, this.y);
+    }
+
+    @Override
     public void close()
     {
+        // TODO: let java handle size?
         if (freeObjects.size() == freeObjects.capacity())
         {
             freeObjects.ensureCapacity((int) (freeObjects.size() * GROWTH));

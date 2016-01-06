@@ -85,6 +85,8 @@ public class GravityCache
     
     public PooledVector2 getCachedGravity(PhysicsComponent physicsComponent)
     {
+        // TODO: clean up the cache from time to time because if we copy the phys comps it fill
+        // fill up
         GravityCacheNode gravityCacheNode = getStartingNode(physicsComponent);
         if (gravityCacheNode == null)
         {
@@ -100,6 +102,34 @@ public class GravityCache
         gravity.scl(physicsComponent.getMass());
         
         return gravity;
+    }
+    
+    private GravityCacheNode getStartingNode(PhysicsComponent physicsComponent)
+    {
+        if (this.lastUsedCacheNode.containsKey(physicsComponent))
+        {
+            GravityCacheNode gravityCacheNode = this.lastUsedCacheNode.get(physicsComponent);
+
+            // Go up until the physicsComponent is in the boundaries
+            while (!gravityCacheNode.getBounds().contains(physicsComponent.getPosition()))
+            {
+                // gravityCacheNode is the rootNode, return an empty Vector2
+                if (gravityCacheNode.getParentNode() == null)
+                {
+                    return null;
+                }
+                gravityCacheNode = gravityCacheNode.getParentNode();
+            }
+            return gravityCacheNode;
+        }
+        else
+        {
+            if (!this.rootNode.getBounds().contains(physicsComponent.getPosition()))
+            {
+                return null;
+            }
+            return this.rootNode;
+        }
     }
     
     private GravityCacheNode getLeafContaining(
@@ -132,34 +162,6 @@ public class GravityCache
             }
         }
         return gravityCacheNode;
-    }
-    
-    private GravityCacheNode getStartingNode(PhysicsComponent physicsComponent)
-    {
-        if (this.lastUsedCacheNode.containsKey(physicsComponent))
-        {
-            GravityCacheNode gravityCacheNode = this.lastUsedCacheNode.get(physicsComponent);
-            
-            // Go up until the physicsComponent is in the boundaries
-            while (!gravityCacheNode.getBounds().contains(physicsComponent.getPosition()))
-            {
-                // gravityCacheNode is the rootNode, return an empty Vector2
-                if (gravityCacheNode.getParentNode() == null)
-                {
-                    return null;
-                }
-                gravityCacheNode = gravityCacheNode.getParentNode();
-            }
-            return gravityCacheNode;
-        }
-        else
-        {
-            if (!this.rootNode.getBounds().contains(physicsComponent.getPosition()))
-            {
-                return null;
-            }
-            return this.rootNode;
-        }
     }
     
     private void saveBitMap()

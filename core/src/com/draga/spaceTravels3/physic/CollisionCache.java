@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Pool;
-import com.badlogic.gdx.utils.Pools;
 import com.draga.PooledVector2;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
@@ -19,15 +18,12 @@ import java.util.concurrent.TimeUnit;
 
 public class CollisionCache implements Pool.Poolable
 {
+    public static final  float  GRANULARITY = 1f;
     private static final String LOGGING_TAG = CollisionCache.class.getSimpleName();
-
-    public static final float GRANULARITY = 1f;
-
-    private ArrayList<PhysicsComponent>[][] collisions;
-
-    private       PooledVector2 offset;
-    private final int           arrayHeight;
-    private final int           arrayWidth;
+    private final int                             arrayHeight;
+    private final int                             arrayWidth;
+    private       ArrayList<PhysicsComponent>[][] collisions;
+    private       PooledVector2                   offset;
 
     public CollisionCache(PhysicsComponent originalPhysicsComponent)
     {
@@ -103,25 +99,25 @@ public class CollisionCache implements Pool.Poolable
         this.arrayWidth = MathUtils.ceil(width / CollisionCache.GRANULARITY);
         this.arrayHeight = MathUtils.ceil(height / CollisionCache.GRANULARITY);
 
-        collisions = new ArrayList[arrayWidth][arrayHeight];
+        this.collisions = new ArrayList[this.arrayWidth][this.arrayHeight];
 
-        for (int x = 0; x < arrayWidth; x++)
+        for (int x = 0; x < this.arrayWidth; x++)
         {
-            for (int y = 0; y < arrayHeight; y++)
+            for (int y = 0; y < this.arrayHeight; y++)
             {
                 physicsComponent.getPosition()
                     .set(
-                        CollisionCache.GRANULARITY * x + offset.x,
-                        CollisionCache.GRANULARITY * y + offset.y);
+                        CollisionCache.GRANULARITY * x + this.offset.x,
+                        CollisionCache.GRANULARITY * y + this.offset.y);
                 for (PhysicsComponent collidablePhysicsComponent : collidablePhysicsComponents)
                 {
                     if (PhysicsEngine.areColliding(physicsComponent, collidablePhysicsComponent))
                     {
-                        if (collisions[x][y] == null)
+                        if (this.collisions[x][y] == null)
                         {
-                            collisions[x][y] = new ArrayList<>();
+                            this.collisions[x][y] = new ArrayList<>();
                         }
-                        collisions[x][y].add(collidablePhysicsComponent);
+                        this.collisions[x][y].add(collidablePhysicsComponent);
                     }
                 }
 
@@ -139,15 +135,15 @@ public class CollisionCache implements Pool.Poolable
 
     private void saveBitMap()
     {
-        Pixmap pixmap = new Pixmap(arrayWidth, arrayHeight, Pixmap.Format.RGBA8888);
+        Pixmap pixmap = new Pixmap(this.arrayWidth, this.arrayHeight, Pixmap.Format.RGBA8888);
 
-        for (int x = 0; x < arrayWidth; x++)
+        for (int x = 0; x < this.arrayWidth; x++)
         {
-            for (int y = 0; y < arrayHeight; y++)
+            for (int y = 0; y < this.arrayHeight; y++)
             {
-                if (collisions[x][y] != null)
+                if (this.collisions[x][y] != null)
                 {
-                    switch (collisions[x][y].size())
+                    switch (this.collisions[x][y].size())
                     {
                         case 0:
                             pixmap.setColor(Color.CLEAR);
@@ -177,15 +173,15 @@ public class CollisionCache implements Pool.Poolable
     {
         ArrayList<PhysicsComponent> pointCollisions = new ArrayList<>();
 
-        int floorX = MathUtils.floor(x - offset.x);
-        int floorY = MathUtils.floor(y - offset.y);
-        int ceilX = MathUtils.ceil(x - offset.x);
-        int ceilY = MathUtils.ceil(y - offset.y);
+        int floorX = MathUtils.floor(x - this.offset.x);
+        int floorY = MathUtils.floor(y - this.offset.y);
+        int ceilX = MathUtils.ceil(x - this.offset.x);
+        int ceilY = MathUtils.ceil(y - this.offset.y);
 
-        boolean floorXInArray = floorX >= 0 && floorX < arrayWidth;
-        boolean floorYInArray = floorY >= 0 && floorY < arrayHeight;
-        boolean ceilXInArray = ceilX >= 0 && ceilX < arrayWidth;
-        boolean ceilYInArray = ceilY >= 0 && ceilY < arrayHeight;
+        boolean floorXInArray = floorX >= 0 && floorX < this.arrayWidth;
+        boolean floorYInArray = floorY >= 0 && floorY < this.arrayHeight;
+        boolean ceilXInArray = ceilX >= 0 && ceilX < this.arrayWidth;
+        boolean ceilYInArray = ceilY >= 0 && ceilY < this.arrayHeight;
 
         if (floorXInArray)
         {
