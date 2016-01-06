@@ -7,17 +7,14 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.draga.spaceTravels3.manager.InputManager;
-import com.draga.spaceTravels3.manager.SettingsManager;
-import com.draga.spaceTravels3.manager.SoundManager;
-import com.draga.spaceTravels3.manager.UIManager;
+import com.badlogic.gdx.math.MathUtils;
+import com.draga.spaceTravels3.manager.*;
 import com.draga.spaceTravels3.manager.asset.AssMan;
-import com.draga.spaceTravels3.physic.PhysicsEngine;
 import com.draga.spaceTravels3.screen.MenuScreen;
 
 public class SpaceTravels3 extends Game
 {
-    private final static String LOGGING_TAG = SpaceTravels3.class.getSimpleName();
+    private static final String LOGGING_TAG = SpaceTravels3.class.getSimpleName();
 
     public static SpriteBatch   spriteBatch;
     public static ShapeRenderer shapeRenderer;
@@ -36,6 +33,8 @@ public class SpaceTravels3 extends Game
     @Override
     public void create()
     {
+        MathUtils.random.setSeed(System.currentTimeMillis());
+
         game = this;
         spriteBatch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
@@ -47,6 +46,9 @@ public class SpaceTravels3 extends Game
         UIManager.create();
         SoundManager.create();
         InputManager.create();
+        MusicManager.create();
+
+        MusicManager.playRandomMusic();
 
         if (Constants.General.IS_DEBUGGING)
         {
@@ -76,6 +78,7 @@ public class SpaceTravels3 extends Game
         AssMan.dispose();
         SoundManager.dispose();
         InputManager.dispose();
+        MusicManager.dispose();
 
         spriteBatch.dispose();
         shapeRenderer.dispose();

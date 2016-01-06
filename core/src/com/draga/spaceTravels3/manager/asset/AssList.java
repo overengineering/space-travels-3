@@ -1,5 +1,7 @@
 package com.draga.spaceTravels3.manager.asset;
 
+import java.util.ArrayList;
+
 public class AssList
 {
     public String shipTexture;
@@ -18,6 +20,8 @@ public class AssList
 
     public String font;
     public String debugFont;
+
+    public ArrayList<String> musics;
 
     public AssList()
     {

@@ -19,7 +19,7 @@ public final class BeepingClickListener extends ClickListener
         @Override
         public void clicked(InputEvent event, float x, float y)
         {
-            SoundManager.buttonSound.play(SettingsManager.getSettings().volume);
+            SoundManager.buttonSound.play(SettingsManager.getSettings().volumeFX);
         }
     };
 

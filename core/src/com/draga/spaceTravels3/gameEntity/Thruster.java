@@ -41,17 +41,17 @@ public class Thruster extends GameEntity
             this.physicsComponent,
             Animation.PlayMode.LOOP);
 
-        sound = AssMan.getAssMan().get(AssMan.getAssList().thrusterSound);
+        this.sound = AssMan.getAssMan().get(AssMan.getAssList().thrusterSound);
 
         // Sound must be loopable.
-        soundInstance = sound.loop(0);
+        this.soundInstance = this.sound.loop(0);
     }
 
     @Override
     public void update(float deltaTime)
     {
         PooledVector2 inputForce = InputManager.getInputForce();
-        if (!ship.isInfiniteFuel() && ship.getCurrentFuel() <= 0)
+        if (!this.ship.isInfiniteFuel() && this.ship.getCurrentFuel() <= 0)
         {
             inputForce.setZero();
         }
@@ -77,14 +77,14 @@ public class Thruster extends GameEntity
 
         this.physicsComponent.setAngle(this.ship.physicsComponent.getAngle());
 
-        sound.setVolume(
-            soundInstance,
-            inputForce.len() * SettingsManager.getSettings().volume);
+        this.sound.setVolume(
+            this.soundInstance,
+            inputForce.len() * SettingsManager.getSettings().volumeFX);
     }
 
     @Override
     public void dispose()
     {
-        sound.stop();
+        this.sound.stop();
     }
 }

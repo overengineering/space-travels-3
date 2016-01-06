@@ -46,18 +46,18 @@ public final class FileUtils
         return fileHandle;
     }
 
-    public static FileHandle getDebugSettingsFileHandle()
-    {
-        FileHandle fileHandle =
-            getFileHandle(Constants.General.DEBUG_SETTINGS_FILENAME);
-
-        return fileHandle;
-    }
-
     public static FileHandle getFileHandle(String fileName)
     {
         FileHandle fileHandle =
             getExternalStorageFileHandle(fileName);
+
+        return fileHandle;
+    }
+
+    public static FileHandle getDebugSettingsFileHandle()
+    {
+        FileHandle fileHandle =
+            getFileHandle(Constants.General.DEBUG_SETTINGS_FILENAME);
 
         return fileHandle;
     }

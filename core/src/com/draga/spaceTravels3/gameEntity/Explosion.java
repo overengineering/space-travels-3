@@ -3,8 +3,8 @@ package com.draga.spaceTravels3.gameEntity;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.draga.spaceTravels3.Constants;
-import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 import com.draga.spaceTravels3.component.graphicComponent.AnimatedGraphicComponent;
+import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponentType;
 import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
@@ -34,8 +34,8 @@ public class Explosion extends GameEntity
             this.physicsComponent,
             Animation.PlayMode.NORMAL);
 
-        sound = AssMan.getAssMan().get(AssMan.getAssList().explosionSound);
-        sound.play(SettingsManager.getSettings().volume);
+        this.sound = AssMan.getAssMan().get(AssMan.getAssList().explosionSound);
+        this.sound.play(SettingsManager.getSettings().volumeFX);
     }
 
     @Override
@@ -52,8 +52,8 @@ public class Explosion extends GameEntity
     @Override
     public void dispose()
     {
-        sound.stop();
-        sound.dispose();
+        this.sound.stop();
+        this.sound.dispose();
         super.dispose();
     }
 }
