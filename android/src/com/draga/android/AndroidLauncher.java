@@ -3,7 +3,9 @@ package com.draga.android;
 import android.os.Bundle;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
+import com.crashlytics.android.Crashlytics;
 import com.draga.spaceTravels3.SpaceTravels3;
+import io.fabric.sdk.android.Fabric;
 
 public class AndroidLauncher extends AndroidApplication
 {
@@ -11,6 +13,7 @@ public class AndroidLauncher extends AndroidApplication
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
 
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
         config.useCompass = false;
