@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -15,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
+import com.draga.joystick.Joystick;
 import com.draga.PooledVector2;
 import com.draga.spaceTravels3.event.PickupCollectedEvent;
 import com.draga.spaceTravels3.gameEntity.Ship;
@@ -24,7 +24,6 @@ import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.physic.PhysicsEngine;
 import com.draga.utils.GraphicsUtils;
-import com.draga.utils.PixmapUtils;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.Stack;
@@ -35,7 +34,6 @@ public class Hud implements Screen
     private final Camera                worldCamera;
     private final Level                 level;
     private       Stage                 stage;
-    private       Actor                 fuelIndicator;
     private       Stack<Image>          grayPickups;
     private       Table                 pickupTable;
     private       Ship                  ship;
@@ -62,9 +60,9 @@ public class Hud implements Screen
 
         // Top row left column
         float fuelIndicatorWidth = this.stage.getWidth() / 3f;
-        this.fuelIndicator = getFuelIndicator(fuelIndicatorWidth);
+        Actor fuelIndicator = getFuelIndicator(fuelIndicatorWidth);
         table
-            .add(this.fuelIndicator)
+            .add(fuelIndicator)
             .width(fuelIndicatorWidth)
             .top()
             .left();
@@ -94,7 +92,9 @@ public class Hud implements Screen
         if (SettingsManager.getSettings().inputType == InputType.TOUCH
             || Gdx.app.getType() == Application.ApplicationType.Desktop)
         {
-            Image joystickOverlayImage = createJoystickOverlay();
+            Joystick joystickTexture =
+                AssMan.getAssMan().get(Constants.Visual.HUD.JOYSTICK_ASSET_DESCRIPTOR);
+            Image joystickOverlayImage = new Image(joystickTexture);
             joystickOverlayImage.setScaling(Scaling.fit);
 
             Container<Image> joystickOverlayContainer = new Container<>(joystickOverlayImage);
@@ -160,44 +160,6 @@ public class Hud implements Screen
         }
 
         return this.pickupTable;
-    }
-
-    private Image createJoystickOverlay()
-    {
-        float smallestDimension = Math.min(this.stage.getWidth(), this.stage.getHeight());
-
-        Pixmap pixmap =
-            new Pixmap(
-                (int) smallestDimension,
-                (int) smallestDimension,
-                Pixmap.Format.RGBA8888);
-        pixmap.setColor(Constants.Visual.HUD.JOYSTICK_OVERLAY_COLOR);
-
-        int numOuterArcs = 8;
-        float halfSmallestDimension = smallestDimension / 2f;
-
-        PixmapUtils.dashedCircle(
-            pixmap,
-            halfSmallestDimension,
-            halfSmallestDimension,
-            halfSmallestDimension,
-            numOuterArcs,
-            15,
-            360 / numOuterArcs / 2,
-            100,
-            Constants.Visual.HUD.JOYSTICK_OVERLAY_WIDTH);
-        PixmapUtils.dashedCircle(
-            pixmap,
-            halfSmallestDimension,
-            halfSmallestDimension,
-            halfSmallestDimension * Constants.Game.DEAD_ZONE,
-            4,
-            30,
-            0,
-            100,
-            Constants.Visual.HUD.JOYSTICK_OVERLAY_WIDTH);
-
-        return new Image(new Texture(pixmap));
     }
 
     private void setScoreLabel(int score)

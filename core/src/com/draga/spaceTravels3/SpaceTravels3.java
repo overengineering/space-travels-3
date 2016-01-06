@@ -124,7 +124,7 @@ public class SpaceTravels3 extends Game
     @Override
     public void resize(int width, int height)
     {
-        String log = String.format("Resize to %4d width x %4d height", width, height);
+        String log = String.format("Resize to %4d strokeSize x %4d height", width, height);
         Gdx.app.debug(LOGGING_TAG, log);
 
         super.resize(width, height);

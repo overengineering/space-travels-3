@@ -6,7 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.draga.Background;
+import com.draga.background.Background;
 import com.draga.spaceTravels3.*;
 import com.draga.spaceTravels3.event.CountdownFinishedEvent;
 import com.draga.spaceTravels3.event.LoseEvent;
@@ -39,9 +39,10 @@ public class GameScreen implements Screen
 
     private Projection shipProjection;
 
-    public GameScreen(Level level, Background background)
+    public GameScreen(Level level)
     {
-        this.background = background;
+        this.background =
+            AssMan.getAssMan().get(Constants.Visual.Background.BACKGROUND_ASSET_DESCRIPTOR);
         this.level = level;
 
         PhysicsEngine.create();
@@ -133,7 +134,7 @@ public class GameScreen implements Screen
         }
 
         SpaceTravels3.spriteBatch.begin();
-        background.draw(extendViewport.getCamera());
+        background.draw(extendViewport.getCamera(), SpaceTravels3.spriteBatch);
 
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
