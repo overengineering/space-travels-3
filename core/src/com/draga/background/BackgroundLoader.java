@@ -1,4 +1,4 @@
-package com.draga;
+package com.draga.background;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
@@ -6,6 +6,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.AsynchronousAssetLoader;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
+import com.draga.NullFileHandleResolver;
 
 public class BackgroundLoader
     extends AsynchronousAssetLoader<Background, BackgroundParameters>

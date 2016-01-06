@@ -6,7 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.draga.Background;
+import com.draga.background.Background;
 import com.draga.spaceTravels3.*;
 import com.draga.spaceTravels3.event.CountdownFinishedEvent;
 import com.draga.spaceTravels3.event.LoseEvent;

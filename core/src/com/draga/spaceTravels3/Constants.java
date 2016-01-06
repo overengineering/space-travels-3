@@ -3,7 +3,9 @@ package com.draga.spaceTravels3;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.Color;
-import com.draga.BackgroundParameters;
+import com.draga.background.BackgroundParameters;
+import com.draga.joystick.Joystick;
+import com.draga.joystick.JoystickParameters;
 import com.draga.PooledVector2;
 import com.google.common.eventbus.EventBus;
 
@@ -61,10 +63,10 @@ public abstract class Constants
                     MAX_PARALLAX,
                     STAR_MAX_DIAMETER_SCALE);
 
-            public static final AssetDescriptor<com.draga.Background> BACKGROUND_ASSET_DESCRIPTOR =
-                new AssetDescriptor<com.draga.Background>(
-                    "background",
-                    com.draga.Background.class,
+            public static final AssetDescriptor<com.draga.background.Background> BACKGROUND_ASSET_DESCRIPTOR =
+                new AssetDescriptor<>(
+                    com.draga.background.Background.class.getSimpleName(),
+                    com.draga.background.Background.class,
                     BACKGROUND_PARAMETERS);
         }
 
@@ -83,17 +85,33 @@ public abstract class Constants
         {
 
             // HUD
-            public static final float FORCE_INDICATOR_SCALE                  = 0.25f;
-            public static final Color JOYSTICK_OVERLAY_COLOR                 =
-                new Color(1f, 1f, 1f, 0.3f);
-            public static final Color DESTINATION_PLANET_OVERLAY_LOSE_BORDER = Color.RED;
-            public static final Color DESTINATION_PLANET_OVERLAY_LOSE_FILL   =
+            public static final  float FORCE_INDICATOR_SCALE                  = 0.25f;
+            public static final  Color DESTINATION_PLANET_OVERLAY_LOSE_BORDER = Color.RED;
+            public static final  Color DESTINATION_PLANET_OVERLAY_LOSE_FILL   =
                 new Color(1f, 0f, 0f, 0.2f);
-            public static final Color DESTINATION_PLANET_OVERLAY_WIN_BORDER  = Color.GREEN;
-            public static final Color DESTINATION_PLANET_OVERLAY_WIN_FILL    =
+            public static final  Color DESTINATION_PLANET_OVERLAY_WIN_BORDER  = Color.GREEN;
+            public static final  Color DESTINATION_PLANET_OVERLAY_WIN_FILL    =
                 new Color(0f, 1f, 0f, 0.2f);
-            public static final float JOYSTICK_OVERLAY_WIDTH                 = 0.002083f
+            private static final Color JOYSTICK_OVERLAY_COLOR                 =
+                new Color(1f, 1f, 1f, 0.3f);
+            private static final float JOYSTICK_OVERLAY_STROKE_SIZE           = 0.002083f
                 * Constants.Visual.UI.SQRT_PIXELS;
+
+            private static final float JOYSTICK_SIZE = Math.min(
+                Gdx.graphics.getWidth(),
+                Gdx.graphics.getHeight());
+
+            private static final JoystickParameters JOYSTICK_PARAMETERS = new JoystickParameters(
+                JOYSTICK_OVERLAY_COLOR,
+                JOYSTICK_SIZE,
+                JOYSTICK_OVERLAY_STROKE_SIZE,
+                Game.DEAD_ZONE);
+
+            public static final AssetDescriptor<Joystick> JOYSTICK_ASSET_DESCRIPTOR =
+                new AssetDescriptor<>(
+                    Joystick.class.getSimpleName(),
+                    Joystick.class,
+                    JOYSTICK_PARAMETERS);
 
 
             public abstract static class Minimap

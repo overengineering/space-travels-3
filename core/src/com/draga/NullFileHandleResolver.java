@@ -5,7 +5,7 @@ import com.badlogic.gdx.files.FileHandle;
 
 public class NullFileHandleResolver
 {
-    static final FileHandleResolver NULL_FILE_HANDLE_RESOLVER = new FileHandleResolver()
+    public static final FileHandleResolver NULL_FILE_HANDLE_RESOLVER = new FileHandleResolver()
     {
         @Override
         public FileHandle resolve(String fileName)

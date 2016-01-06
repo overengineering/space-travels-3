@@ -1,4 +1,4 @@
-package com.draga;
+package com.draga.background;
 
 import com.badlogic.gdx.assets.AssetLoaderParameters;
 

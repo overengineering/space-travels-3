@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.draga.Background;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.Level;
 import com.draga.spaceTravels3.SpaceTravels3;
@@ -93,6 +92,8 @@ public class LoadingScreen implements Screen
         assMan.load(AssMan.getAssList().pickupTexture, Texture.class);
 
         assMan.load(Constants.Visual.Background.BACKGROUND_ASSET_DESCRIPTOR);
+
+        assMan.load(Constants.Visual.HUD.JOYSTICK_ASSET_DESCRIPTOR);
 
         assMan.update();
     }

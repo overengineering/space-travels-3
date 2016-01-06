@@ -12,10 +12,10 @@ public class DesktopLauncher
         config.width = 1280;
         config.height = 720;
 
-//        config.width = 1800;
+//        config.strokeSize = 1800;
 //        config.height = 1000;
 
-//        config.width = 100;
+//        config.strokeSize = 100;
 //        config.height = 100;
 //        config.fullscreen = true;
         config.fullscreen = false;
