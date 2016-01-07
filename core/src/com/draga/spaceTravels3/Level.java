@@ -90,8 +90,6 @@ public class Level
 
     /**
      * Return a rectangle that includes all the physic components and a little buffer.
-     * @param x
-     * @param y
      */
     private Rectangle getBounds(float x, float y)
     {
@@ -136,6 +134,8 @@ public class Level
                 LOGGING_TAG,
                 "Linear velocity on collision: " + this.ship.physicsComponent.getVelocity().len());
         }
+
+        this.elapsedPlayTime.stop();
 
         GameEntityManager.removeGameEntity(this.ship);
         GameEntityManager.removeGameEntity(this.thruster);
