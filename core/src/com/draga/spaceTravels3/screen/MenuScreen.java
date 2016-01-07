@@ -3,6 +3,7 @@ package com.draga.spaceTravels3.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -29,10 +30,10 @@ public class MenuScreen implements Screen
     @Override
     public void show()
     {
-        stage = new Stage();
-        Gdx.input.setInputProcessor(stage);
+        this.stage = new Stage();
+        Gdx.input.setInputProcessor(this.stage);
 
-        Table table = UIManager.addDefaultTableToStage(stage);
+        Table table = UIManager.addDefaultTableToStage(this.stage);
 
         // Header label.
         Label headerLabel = getHeaderLabel();
@@ -82,57 +83,43 @@ public class MenuScreen implements Screen
             .add(playButton)
             .bottom();
 
-        stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
+        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
     
     public Label getHeaderLabel()
     {
-        Label headerLabel = new Label("Space Travels 3", UIManager.skin);
+        Label headerLabel = new Label("Space Travels 3", UIManager.skin, "large", Color.WHITE);
 
         return headerLabel;
-    }
-
-    public TextButton getPlayButton()
-    {
-        TextButton playButton = new BeepingTextButton("Play", UIManager.skin);
-
-        playButton.addListener(
-            new ClickListener()
-            {
-                @Override
-                public void clicked(InputEvent event, float x, float y)
-                {
-                    StartGameScreen();
-                }
-            });
-
-        return playButton;
     }
 
     private ScrollPane getLevelList()
     {
         java.util.List<SerialisableLevel> serialisableLevels = LevelManager.getSerialisableLevels();
 
-        buttonGroup = new ButtonGroup<>();
+        this.buttonGroup = new ButtonGroup<>();
 
-        buttonGroup.setMaxCheckCount(1);
-        buttonGroup.setMinCheckCount(1);
-        buttonGroup.setUncheckLast(true);
+        this.buttonGroup.setMaxCheckCount(1);
+        this.buttonGroup.setMinCheckCount(1);
+        this.buttonGroup.setUncheckLast(true);
 
         Table table = UIManager.getDefaultTable();
 
         for (SerialisableLevel serialisableLevel : serialisableLevels)
         {
-            String buttonText = serialisableLevel.name + " (" + ScoreManager.getScore(serialisableLevel.id) + ")";
+            String buttonText =
+                serialisableLevel.name + " (" + ScoreManager.getScore(serialisableLevel.id) + ")";
             TextButton textButton =
                 new BeepingTextButton(buttonText, UIManager.skin);
             textButton.setName(serialisableLevel.id);
-            buttonGroup.add(textButton);
+            this.buttonGroup.add(textButton);
             table.add(textButton);
             table.row();
         }
 
-        ScrollPane scrollPane = new ScrollPane(table);
+        ScrollPane scrollPane = new ScrollPane(table, UIManager.skin);
+        scrollPane.setScrollingDisabled(true, false);
+        scrollPane.setFadeScrollBars(false);
 
         return scrollPane;
     }
@@ -171,9 +158,26 @@ public class MenuScreen implements Screen
         return settingsTextButton;
     }
 
+    public TextButton getPlayButton()
+    {
+        TextButton playButton = new BeepingTextButton("Play", UIManager.skin);
+
+        playButton.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    StartGameScreen();
+                }
+            });
+
+        return playButton;
+    }
+
     private void StartGameScreen()
     {
-        String levelId = buttonGroup.getChecked().getName();
+        String levelId = this.buttonGroup.getChecked().getName();
         LoadingScreen loadingScreen = new LoadingScreen(levelId);
         SpaceTravels3.getGame().setScreen(loadingScreen);
     }
@@ -191,14 +195,14 @@ public class MenuScreen implements Screen
             StartGameScreen();
         }
 
-        stage.act(deltaTime);
-        stage.draw();
+        this.stage.act(deltaTime);
+        this.stage.draw();
     }
 
     @Override
     public void resize(int width, int height)
     {
-        stage.getViewport().update(width, height);
+        this.stage.getViewport().update(width, height);
     }
 
     @Override
@@ -222,6 +226,6 @@ public class MenuScreen implements Screen
     @Override
     public void dispose()
     {
-        stage.dispose();
+        this.stage.dispose();
     }
 }

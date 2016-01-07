@@ -269,7 +269,7 @@ public class GameScreen implements Screen
     public void Win(WinEvent winEvent)
     {
         Score score = this.level.getScore();
-        this.overlayScreen = new WinScreen(this.level.getId(), score.getTotalScore());
+        this.overlayScreen = new WinScreen(this.level.getId(), score);
         Pools.free(score);
     }
 

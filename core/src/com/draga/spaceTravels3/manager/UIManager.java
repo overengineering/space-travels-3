@@ -53,6 +53,11 @@ public class UIManager
     {
         Skin skin = new Skin();
 
+        BitmapFont largeFont = getBitmapFont(
+            AssMan.getAssList().font,
+            (int) (Constants.Visual.UI.SQRT_PIXELS * Constants.Visual.UI.LARGE_FONT_SCALE));
+        skin.add("large", largeFont);
+
         BitmapFont defaultFont = getBitmapFont(
             AssMan.getAssList().font,
             (int) (Constants.Visual.UI.SQRT_PIXELS * Constants.Visual.UI.FONT_SCALE));
@@ -86,7 +91,7 @@ public class UIManager
         Pixmap progressBarPixmap = getProgressBarTexture();
         skin.add("progressbar", new Texture(progressBarPixmap));
 
-        // Progress bar texture
+        // Slider texture
         Pixmap sliderPixmap = getSliderTexture();
         skin.add("slider", new Texture(sliderPixmap));
 
@@ -95,6 +100,9 @@ public class UIManager
 
         Slider.SliderStyle sliderStyle = getSliderStyle(skin);
         skin.add("default-horizontal", sliderStyle);
+
+        ScrollPane.ScrollPaneStyle scrollPaneStyle = getScrollPaneStyle(skin);
+        skin.add("default", scrollPaneStyle);
 
         return skin;
     }
@@ -147,7 +155,7 @@ public class UIManager
     private static Pixmap getProgressBarTexture()
     {
         Pixmap progressBarPixmap =
-            new Pixmap(1, (int) (Gdx.graphics.getHeight() / 30f), Pixmap.Format.RGBA8888);
+            new Pixmap(1, Gdx.graphics.getHeight() / 30, Pixmap.Format.RGBA8888);
         progressBarPixmap.setColor(Color.WHITE);
         progressBarPixmap.fill();
         return progressBarPixmap;
@@ -156,7 +164,7 @@ public class UIManager
     private static Pixmap getSliderTexture()
     {
         Pixmap progressBarPixmap =
-            new Pixmap(1, (int) (Gdx.graphics.getHeight() / 15f), Pixmap.Format.RGBA8888);
+            new Pixmap(1, Gdx.graphics.getHeight() / 15, Pixmap.Format.RGBA8888);
         progressBarPixmap.setColor(Color.WHITE);
         progressBarPixmap.fill();
         return progressBarPixmap;
@@ -179,6 +187,17 @@ public class UIManager
         sliderStyle.knob = skin.newDrawable("slider", Color.WHITE);
 
         return sliderStyle;
+    }
+
+    private static ScrollPane.ScrollPaneStyle getScrollPaneStyle(Skin skin)
+    {
+        ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle();
+        scrollPaneStyle.hScrollKnob = skin.newDrawable("progressbar", Color.WHITE);
+        scrollPaneStyle.vScrollKnob = skin.newDrawable("progressbar", Color.WHITE);
+        scrollPaneStyle.hScroll = skin.newDrawable("progressbar", Color.DARK_GRAY);
+        scrollPaneStyle.vScroll = skin.newDrawable("progressbar", Color.DARK_GRAY);
+
+        return scrollPaneStyle;
     }
 
     public static ProgressBar getDelimitedProgressBar(float max, float width)

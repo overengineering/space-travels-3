@@ -75,7 +75,8 @@ public abstract class Constants
         {
             public static final float SQRT_PIXELS      =
                 (float) Math.sqrt(Gdx.graphics.getWidth() * Gdx.graphics.getHeight());
-            public static final float FONT_SCALE       = 0.05f;
+            public static final float LARGE_FONT_SCALE = 0.05f;
+            public static final float FONT_SCALE       = 0.03f;
             public static final float DEBUG_FONT_SCALE = 0.02f;
             public static final float BUTTON_PADDING   = SQRT_PIXELS * 0.01f;
         }

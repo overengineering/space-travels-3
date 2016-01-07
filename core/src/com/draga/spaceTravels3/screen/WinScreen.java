@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.spaceTravels3.Constants;
+import com.draga.spaceTravels3.Score;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.manager.ScoreManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
@@ -28,7 +29,7 @@ public class WinScreen implements Screen
     private final Sound  sound;
     private final String levelId;
 
-    public WinScreen(String levelId, int score)
+    public WinScreen(String levelId, Score score)
     {
         this.sound = AssMan.getAssMan().get(AssMan.getAssList().winSound);
         this.sound.play(SettingsManager.getSettings().volumeFX);
@@ -52,13 +53,13 @@ public class WinScreen implements Screen
         table.add(headerLabel);
 
         // Best score.
-        ScoreManager.saveHighScore(levelId, score);
+        ScoreManager.saveHighScore(levelId, score.getTotalScore());
         table.row();
-        Label newBestScoreLabel = getBestScoreLabel(score, previousBestScore);
+        Label newBestScoreLabel = getBestScoreLabel(score.getTotalScore(), previousBestScore);
         table.add(newBestScoreLabel);
 
         // Current score.
-        Label scoreLabel = getScoreLabel(score);
+        Label scoreLabel = getScoreLabel(score.getTotalScore());
         table.row();
         table.add(scoreLabel);
 
