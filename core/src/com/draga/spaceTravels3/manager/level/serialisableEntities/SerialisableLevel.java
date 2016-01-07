@@ -9,7 +9,6 @@ public class SerialisableLevel
     public String                   name;
     public float                    trajectorySeconds;
     public float                    maxLandingSpeed;
-    public SerialisableBackground   serialisedBackground;
     public SerialisableShip         serialisedShip;
     public List<SerialisablePlanet> serialisedPlanets;
     public List<SerialisablePickup> serialisedPickups;

@@ -3,10 +3,6 @@
   "name": "Level 4",
   "trajectorySeconds": 5.0,
   "maxLandingSpeed": 70,
-
-  "serialisedBackground": {
-    "texturePath": "background/background1080.jpg"
-  },
   "serialisedShip": {
     "x": 10,
     "y": 75,

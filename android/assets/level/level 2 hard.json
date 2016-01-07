@@ -3,10 +3,6 @@
   "name": "Level 2 hard",
   "trajectorySeconds": 0,
   "maxLandingSpeed": 60,
-
-  "serialisedBackground": {
-    "texturePath": "background/background1080.jpg"
-  },
   "serialisedShip": {
     "x": 10,
     "y": 75,

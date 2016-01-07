@@ -79,7 +79,6 @@ public class LoadingScreen implements Screen
         assMan.load(AssMan.getAssList().winSound, Sound.class);
 
         assMan.load(AssMan.getAssList().pickupGreyTexture, Texture.class);
-        assMan.load(serialisableLevel.serialisedBackground.texturePath, Texture.class);
         assMan.load(
             AssMan.getAssList().shipTexture, Texture.class);
         assMan.load(
