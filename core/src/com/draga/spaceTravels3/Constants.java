@@ -3,10 +3,10 @@ package com.draga.spaceTravels3;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.Color;
+import com.draga.PooledVector2;
 import com.draga.background.BackgroundParameters;
 import com.draga.joystick.Joystick;
 import com.draga.joystick.JoystickParameters;
-import com.draga.PooledVector2;
 import com.google.common.eventbus.EventBus;
 
 import java.text.DecimalFormat;
@@ -75,7 +75,8 @@ public abstract class Constants
         {
             public static final float SQRT_PIXELS      =
                 (float) Math.sqrt(Gdx.graphics.getWidth() * Gdx.graphics.getHeight());
-            public static final float FONT_SCALE       = 0.05f;
+            public static final float LARGE_FONT_SCALE = 0.05f;
+            public static final float FONT_SCALE       = 0.03f;
             public static final float DEBUG_FONT_SCALE = 0.02f;
             public static final float BUTTON_PADDING   = SQRT_PIXELS * 0.01f;
         }
@@ -187,7 +188,6 @@ public abstract class Constants
         public static final float         EARTH_GRAVITY                       = 9.80665f;
         public static final DecimalFormat COMMA_SEPARATED_THOUSANDS_FORMATTER =
             new DecimalFormat("#,###");
-        public static final float         NANO                                = 0.000000001f;
         public static final EventBus      EVENT_BUS                           = new EventBus();
 
         public static final String FOLDER                  =

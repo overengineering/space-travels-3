@@ -3,6 +3,7 @@ package com.draga.spaceTravels3;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Pools;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
@@ -33,7 +34,7 @@ public class Level
 
     private final Rectangle bounds;
 
-    private int pickupsCollected;
+    private int       pickupsCollected;
     private GameState gameState;
 
     private Stopwatch elapsedPlayTime;
@@ -172,20 +173,17 @@ public class Level
         return this.maxLandingSpeed;
     }
 
-    public int getScore()
+    public Score getScore()
     {
-        float pickupPoints = this.pickupsCollected * Constants.Game.PICKUP_POINTS;
-        float timePoints = this.elapsedPlayTime.elapsed(TimeUnit.NANOSECONDS)
-            * Constants.General.NANO
-            * Constants.Game.TIME_POINTS;
-        float fuelPoints = this.ship.isInfiniteFuel()
-            ? 0
-            : this.ship.getCurrentFuel() / this.ship.getMaxFuel() * Constants.Game.FUEL_POINTS;
+        Score score = Pools.obtain(Score.class);
+        score.set(
+            this.pickupsCollected,
+            this.elapsedPlayTime.elapsed(TimeUnit.NANOSECONDS) * MathUtils.nanoToSec,
+            this.ship.isInfiniteFuel()
+                ? 0
+                : this.ship.getCurrentFuel() / this.ship.getMaxFuel());
 
-        float score = pickupPoints;
-        score -= timePoints;
-        score += fuelPoints;
-        return Math.round(score);
+        return score;
     }
 
     public String getId()
@@ -288,7 +286,7 @@ public class Level
                 {
                     Vertex vertex = Pools.obtain(Vertex.class);
                     vertex.set(currentColor, projectionPoints.get(j).getPosition());
-                    vertices.add(j,vertex);
+                    vertices.add(j, vertex);
                 }
                 lastCollisionIndex = i;
 

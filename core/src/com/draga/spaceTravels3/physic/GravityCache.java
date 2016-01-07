@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.draga.PooledVector2;
-import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponentType;
 import com.draga.spaceTravels3.gameEntity.GameEntity;
@@ -65,8 +64,8 @@ public class GravityCache
         
         calculateBounds(staticPhysicsComponentsWithMass);
         this.rootNode = new GravityCacheNode(this.bounds, staticPhysicsComponentsWithMass);
-        
-        float elapsed = stopwatch.elapsed(TimeUnit.NANOSECONDS) * Constants.General.NANO;
+
+        float elapsed = stopwatch.elapsed(TimeUnit.NANOSECONDS) * MathUtils.nanoToSec;
         Gdx.app.debug(LOGGING_TAG, "Caching gravity took " + elapsed + "s");
     }
     

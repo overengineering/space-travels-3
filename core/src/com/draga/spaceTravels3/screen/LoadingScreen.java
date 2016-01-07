@@ -6,6 +6,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -138,7 +139,7 @@ public class LoadingScreen implements Screen
                     LOGGING_TAG,
                     String.format(
                         "Loading time: %fs",
-                        this.stopwatch.elapsed(TimeUnit.NANOSECONDS) * Constants.General.NANO));
+                        this.stopwatch.elapsed(TimeUnit.NANOSECONDS) * MathUtils.nanoToSec));
             }
             Level level = LevelManager.getLevel(this.serialisableLevel);
             GameScreen gameScreen = new GameScreen(level);

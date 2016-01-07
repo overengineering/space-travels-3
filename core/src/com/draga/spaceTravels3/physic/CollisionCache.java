@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Pool;
 import com.draga.PooledVector2;
-import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponentType;
 import com.draga.utils.FileUtils;
@@ -99,6 +98,7 @@ public class CollisionCache implements Pool.Poolable
         this.arrayWidth = MathUtils.ceil(width / CollisionCache.GRANULARITY);
         this.arrayHeight = MathUtils.ceil(height / CollisionCache.GRANULARITY);
 
+        //noinspection unchecked
         this.collisions = new ArrayList[this.arrayWidth][this.arrayHeight];
 
         for (int x = 0; x < this.arrayWidth; x++)
@@ -129,7 +129,7 @@ public class CollisionCache implements Pool.Poolable
             "Cache collision for "
                 + physicsComponent.getOwnerClass()
                 + " took "
-                + stopwatch.elapsed(TimeUnit.NANOSECONDS) * Constants.General.NANO
+                + stopwatch.elapsed(TimeUnit.NANOSECONDS) * MathUtils.nanoToSec
                 + "s");
     }
 

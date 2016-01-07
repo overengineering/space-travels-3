@@ -13,9 +13,10 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.Scaling;
-import com.draga.joystick.Joystick;
 import com.draga.PooledVector2;
+import com.draga.joystick.Joystick;
 import com.draga.spaceTravels3.event.PickupCollectedEvent;
 import com.draga.spaceTravels3.gameEntity.Ship;
 import com.draga.spaceTravels3.manager.GameEntityManager;
@@ -181,7 +182,9 @@ public class Hud implements Screen
     @Override
     public void render(float delta)
     {
-        setScoreLabel(this.level.getScore());
+        Score score = this.level.getScore();
+        setScoreLabel(score.getTotalScore());
+        Pools.free(score);
 
         this.stage.act(delta);
         this.stage.draw();

@@ -58,12 +58,12 @@ public class GameScreen implements Screen
         GameScreenInputProcessor gameScreenInputProcessor = new GameScreenInputProcessor();
         Gdx.input.setInputProcessor(gameScreenInputProcessor);
 
-        extendViewport = new ExtendViewport(
+        this.extendViewport = new ExtendViewport(
             Constants.Visual.VIEWPORT_WIDTH,
             Constants.Visual.VIEWPORT_HEIGHT);
-        extendViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        this.extendViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        hud = new Hud(extendViewport.getCamera(), level);
+        this.hud = new Hud(this.extendViewport.getCamera(), this.level);
 
         // Run a frame to do things like generate a Projection.
         update(0);
@@ -79,24 +79,24 @@ public class GameScreen implements Screen
             checkDebugKeys();
         }
 
-        if (level.getGameState() != GameState.PAUSE
-            && level.getGameState() != GameState.COUNTDOWN)
+        if (this.level.getGameState() != GameState.PAUSE
+            && this.level.getGameState() != GameState.COUNTDOWN)
         {
             update(deltaTime);
         }
 
         draw();
 
-        hud.render(deltaTime);
+        this.hud.render(deltaTime);
 
-        if (overlayScreen != null)
+        if (this.overlayScreen != null)
         {
-            overlayScreen.render(deltaTime);
+            this.overlayScreen.render(deltaTime);
         }
 
         if (SettingsManager.getDebugSettings().debugDraw)
         {
-            PhysicDebugDrawer.draw(extendViewport.getCamera());
+            PhysicDebugDrawer.draw(this.extendViewport.getCamera());
         }
     }
 
@@ -116,8 +116,8 @@ public class GameScreen implements Screen
 
         if (Gdx.input.isKeyPressed(Input.Keys.F3))
         {
-            level.getShip().physicsComponent.getVelocity().set(0, 0);
-            level.getShip().physicsComponent.setAngularVelocity(0);
+            this.level.getShip().physicsComponent.getVelocity().set(0, 0);
+            this.level.getShip().physicsComponent.setAngularVelocity(0);
         }
     }
 
@@ -134,7 +134,7 @@ public class GameScreen implements Screen
         }
 
         SpaceTravels3.spriteBatch.begin();
-        background.draw(extendViewport.getCamera(), SpaceTravels3.spriteBatch);
+        this.background.draw(this.extendViewport.getCamera(), SpaceTravels3.spriteBatch);
 
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
@@ -145,47 +145,47 @@ public class GameScreen implements Screen
 
         if (SettingsManager.getDebugSettings().debugDraw)
         {
-            PhysicDebugDrawer.draw(extendViewport.getCamera());
+            PhysicDebugDrawer.draw(this.extendViewport.getCamera());
         }
     }
 
     private void updateCamera()
     {
-        if (!GameEntityManager.getGameEntities().contains(level.getShip()))
+        if (!GameEntityManager.getGameEntities().contains(this.level.getShip()))
         {
             return;
         }
-        Camera camera = extendViewport.getCamera();
+        Camera camera = this.extendViewport.getCamera();
 
         camera.position.set(
-            level.getShip().physicsComponent.getPosition().x,
-            level.getShip().physicsComponent.getPosition().y,
+            this.level.getShip().physicsComponent.getPosition().x,
+            this.level.getShip().physicsComponent.getPosition().y,
             0f);
         camera.update();
 
-        SpaceTravels3.spriteBatch.setProjectionMatrix(extendViewport.getCamera().combined);
+        SpaceTravels3.spriteBatch.setProjectionMatrix(this.extendViewport.getCamera().combined);
     }
 
     public void resize(int width, int height)
     {
-        extendViewport.update(width, height);
+        this.extendViewport.update(width, height);
     }
 
     @Override
     public void pause()
     {
-        level.pause();
+        this.level.pause();
     }
 
     @Override
     public void resume()
     {
-        if (level.getGameState() == GameState.PAUSE)
+        if (this.level.getGameState() == GameState.PAUSE)
         {
             this.overlayScreen = new CountdownScreen();
         }
 
-        level.resume();
+        this.level.resume();
     }
 
     @Override
@@ -199,15 +199,15 @@ public class GameScreen implements Screen
     {
         GameEntityManager.dispose();
         Constants.General.EVENT_BUS.unregister(this);
-        hud.dispose();
+        this.hud.dispose();
         if (this.overlayScreen != null)
         {
             this.overlayScreen.dispose();
         }
 
-        level.dispose();
+        this.level.dispose();
 
-        background.dispose();
+        this.background.dispose();
 
         AssMan.getAssMan().clear();
 
@@ -241,9 +241,9 @@ public class GameScreen implements Screen
             Pools.free(this.shipProjection);
         }
 
-        if (level.getGameState() == GameState.PLAY
-            || level.getGameState() == GameState.COUNTDOWN
-            || level.getGameState() == GameState.PAUSE
+        if (this.level.getGameState() == GameState.PLAY
+            || this.level.getGameState() == GameState.COUNTDOWN
+            || this.level.getGameState() == GameState.PAUSE
             )
         {
             ArrayList<ProjectionPoint> projectionPoints = PhysicsEngine.gravityProjection(
@@ -262,13 +262,15 @@ public class GameScreen implements Screen
     @Subscribe
     public void Lose(LoseEvent loseEvent)
     {
-        this.overlayScreen = new LoseScreen(level.getId());
+        this.overlayScreen = new LoseScreen(this.level.getId());
     }
 
     @Subscribe
     public void Win(WinEvent winEvent)
     {
-        this.overlayScreen = new WinScreen(level.getId(), level.getScore());
+        Score score = this.level.getScore();
+        this.overlayScreen = new WinScreen(this.level.getId(), score);
+        Pools.free(score);
     }
 
     @Subscribe

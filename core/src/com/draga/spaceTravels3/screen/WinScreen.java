@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.spaceTravels3.Constants;
+import com.draga.spaceTravels3.Score;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.manager.ScoreManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
@@ -28,7 +29,7 @@ public class WinScreen implements Screen
     private final Sound  sound;
     private final String levelId;
 
-    public WinScreen(String levelId, int score)
+    public WinScreen(String levelId, Score score)
     {
         this.sound = AssMan.getAssMan().get(AssMan.getAssList().winSound);
         this.sound.play(SettingsManager.getSettings().volumeFX);
@@ -52,15 +53,15 @@ public class WinScreen implements Screen
         table.add(headerLabel);
 
         // Best score.
-        ScoreManager.saveHighScore(levelId, score);
+        ScoreManager.saveHighScore(levelId, score.getTotalScore());
         table.row();
-        Label newBestScoreLabel = getBestScoreLabel(score, previousBestScore);
+        Label newBestScoreLabel = getBestScoreLabel(score.getTotalScore(), previousBestScore);
         table.add(newBestScoreLabel);
 
         // Current score.
-        Label scoreLabel = getScoreLabel(score);
+        Table reportTable = getScoreReportTable(score);
         table.row();
-        table.add(scoreLabel);
+        table.add(reportTable);
 
         // Retry button.
         table.row();
@@ -108,13 +109,46 @@ public class WinScreen implements Screen
         return newBestScoreLabel;
     }
 
-    private Label getScoreLabel(int score)
+    private Table getScoreReportTable(Score score)
     {
-        Label.LabelStyle labelStyle = UIManager.skin.get(Label.LabelStyle.class);
+        Table table = new Table();
 
-        Label scoreLabel = new Label("Score: " + score, labelStyle);
+        table
+            .add(new Label("Pickup points: ", UIManager.skin))
+            .right();
+        table
+            .add(new Label(String.valueOf(score.getPickupPoints()), UIManager.skin))
+            .right();
 
-        return scoreLabel;
+        table.row();
+
+        table
+            .add(new Label("Fuel points: ", UIManager.skin))
+            .right();
+        table
+            .add(new Label(String.valueOf(score.getFuelPoints()), UIManager.skin))
+            .right();
+
+        table.row();
+
+        table
+            .add(new Label("Time points: ", UIManager.skin))
+            .right();
+        table
+            .add(new Label(String.valueOf(score.getTimePoints()), UIManager.skin))
+            .right();
+
+        table.row();
+
+        table
+            .add(new Label("Total score: ", UIManager.skin))
+            .right();
+        table
+            .add(new Label(String.valueOf(score.getTotalScore()), UIManager.skin))
+            .right();
+
+
+        return table;
     }
 
     public TextButton getRetryButton()
