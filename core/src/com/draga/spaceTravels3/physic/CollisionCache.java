@@ -98,6 +98,7 @@ public class CollisionCache implements Pool.Poolable
         this.arrayWidth = MathUtils.ceil(width / CollisionCache.GRANULARITY);
         this.arrayHeight = MathUtils.ceil(height / CollisionCache.GRANULARITY);
 
+        //noinspection unchecked
         this.collisions = new ArrayList[this.arrayWidth][this.arrayHeight];
 
         for (int x = 0; x < this.arrayWidth; x++)
