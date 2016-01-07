@@ -26,14 +26,14 @@ public class LoseScreen implements Screen
 
     public LoseScreen(String levelId)
     {
-        sound = AssMan.getAssMan().get(AssMan.getAssList().loseSound);
-        sound.play(SettingsManager.getSettings().volume);
+        this.sound = AssMan.getAssMan().get(AssMan.getAssList().loseSound);
+        this.sound.play(SettingsManager.getSettings().volumeFX);
 
         this.levelId = levelId;
         this.stage = new Stage();
-        Gdx.input.setInputProcessor(stage);
+        Gdx.input.setInputProcessor(this.stage);
 
-        Table table = UIManager.addDefaultTableToStage(stage);
+        Table table = UIManager.addDefaultTableToStage(this.stage);
         table.setBackground(UIManager.skin.newDrawable(
             "background",
             Constants.Visual.SCREEN_FADE_COLOUR));
@@ -51,7 +51,7 @@ public class LoseScreen implements Screen
         table.row();
         table.add(mainMenuTextButton);
 
-        stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
+        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
     public TextButton getRetryTextButton()
@@ -88,7 +88,7 @@ public class LoseScreen implements Screen
 
     private void Retry()
     {
-        SpaceTravels3.getGame().setScreen(new LoadingScreen(levelId));
+        SpaceTravels3.getGame().setScreen(new LoadingScreen(this.levelId));
     }
 
     @Override
@@ -119,18 +119,18 @@ public class LoseScreen implements Screen
 
     private void update(float delta)
     {
-        stage.act(delta);
+        this.stage.act(delta);
     }
 
     private void draw(float delta)
     {
-        stage.draw();
+        this.stage.draw();
     }
 
     @Override
     public void resize(int width, int height)
     {
-        stage.getViewport().update(width, height);
+        this.stage.getViewport().update(width, height);
     }
 
     @Override
@@ -154,8 +154,8 @@ public class LoseScreen implements Screen
     @Override
     public void dispose()
     {
-        sound.stop();
-        sound.dispose();
-        stage.dispose();
+        this.sound.stop();
+        this.sound.dispose();
+        this.stage.dispose();
     }
 }

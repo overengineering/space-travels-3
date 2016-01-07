@@ -65,7 +65,7 @@ public class Level
 
         this.gameState = GameState.COUNTDOWN;
 
-        pickupCollectedSound = AssMan.getAssMan().get(AssMan.getAssList().pickupCollectSound);
+        this.pickupCollectedSound = AssMan.getAssMan().get(AssMan.getAssList().pickupCollectSound);
 
         GameEntityManager.addGameEntity(thruster);
         GameEntityManager.addGameEntity(ship);
@@ -85,7 +85,7 @@ public class Level
 
         Constants.General.EVENT_BUS.register(this);
 
-        elapsedPlayTime = Stopwatch.createUnstarted();
+        this.elapsedPlayTime = Stopwatch.createUnstarted();
     }
 
     /**
@@ -122,8 +122,8 @@ public class Level
     @Subscribe
     public void pickupCollected(PickupCollectedEvent pickupCollectedEvent)
     {
-        pickupsCollected++;
-        pickupCollectedSound.play(SettingsManager.getSettings().volume);
+        this.pickupsCollected++;
+        this.pickupCollectedSound.play(SettingsManager.getSettings().volumeFX);
         GameEntityManager.removeGameEntity(pickupCollectedEvent.pickup);
     }
 
@@ -134,17 +134,17 @@ public class Level
         {
             Gdx.app.debug(
                 LOGGING_TAG,
-                "Linear velocity on collision: " + ship.physicsComponent.getVelocity().len());
+                "Linear velocity on collision: " + this.ship.physicsComponent.getVelocity().len());
         }
 
-        GameEntityManager.removeGameEntity(ship);
-        GameEntityManager.removeGameEntity(thruster);
+        GameEntityManager.removeGameEntity(this.ship);
+        GameEntityManager.removeGameEntity(this.thruster);
 
-        if (ship.physicsComponent.getVelocity().len()
+        if (this.ship.physicsComponent.getVelocity().len()
             > this.getMaxLandingSpeed()
-            || !shipPlanetCollisionEvent.planet.equals(destinationPlanet))
+            || !shipPlanetCollisionEvent.planet.equals(this.destinationPlanet))
         {
-            gameState = GameState.LOSE;
+            this.gameState = GameState.LOSE;
             GameEntity explosion = new Explosion(
                 shipPlanetCollisionEvent.ship.physicsComponent.getPosition().x,
                 shipPlanetCollisionEvent.ship.physicsComponent.getPosition().y,
@@ -159,7 +159,7 @@ public class Level
         }
         else
         {
-            gameState = GameState.WIN;
+            this.gameState = GameState.WIN;
 
             WinEvent winEvent = Pools.obtain(WinEvent.class);
             Constants.General.EVENT_BUS.post(winEvent);
@@ -167,15 +167,20 @@ public class Level
         }
     }
 
+    public float getMaxLandingSpeed()
+    {
+        return this.maxLandingSpeed;
+    }
+
     public int getScore()
     {
-        float pickupPoints = pickupsCollected * Constants.Game.PICKUP_POINTS;
-        float timePoints = elapsedPlayTime.elapsed(TimeUnit.NANOSECONDS)
+        float pickupPoints = this.pickupsCollected * Constants.Game.PICKUP_POINTS;
+        float timePoints = this.elapsedPlayTime.elapsed(TimeUnit.NANOSECONDS)
             * Constants.General.NANO
             * Constants.Game.TIME_POINTS;
-        float fuelPoints = ship.isInfiniteFuel()
+        float fuelPoints = this.ship.isInfiniteFuel()
             ? 0
-            : ship.getCurrentFuel() / ship.getMaxFuel() * Constants.Game.FUEL_POINTS;
+            : this.ship.getCurrentFuel() / this.ship.getMaxFuel() * Constants.Game.FUEL_POINTS;
 
         float score = pickupPoints;
         score -= timePoints;
@@ -185,16 +190,16 @@ public class Level
 
     public String getId()
     {
-        return id;
+        return this.id;
     }
 
     @Subscribe
     public void countdownFinished(CountdownFinishedEvent countdownFinishedEvent)
     {
-        if (gameState == GameState.COUNTDOWN)
+        if (this.gameState == GameState.COUNTDOWN)
         {
             this.gameState = GameState.PLAY;
-            elapsedPlayTime.start();
+            this.elapsedPlayTime.start();
         }
     }
 
@@ -202,53 +207,53 @@ public class Level
     {
         Constants.General.EVENT_BUS.unregister(this);
 
-        pickupCollectedSound.stop();
-        pickupCollectedSound.dispose();
+        this.pickupCollectedSound.stop();
+        this.pickupCollectedSound.dispose();
     }
 
     public Ship getShip()
     {
-        return ship;
+        return this.ship;
     }
 
     public float getWidth()
     {
-        return bounds.getWidth();
+        return this.bounds.getWidth();
     }
 
     public float getHeight()
     {
-        return bounds.getHeight();
+        return this.bounds.getHeight();
     }
 
     public ArrayList<Pickup> getPickups()
     {
-        return pickups;
+        return this.pickups;
     }
 
     public GameState getGameState()
     {
-        return gameState;
+        return this.gameState;
     }
 
     public void pause()
     {
-        if (gameState == GameState.PLAY
-            || gameState == GameState.COUNTDOWN)
+        if (this.gameState == GameState.PLAY
+            || this.gameState == GameState.COUNTDOWN)
         {
-            gameState = GameState.PAUSE;
-            if (elapsedPlayTime.isRunning())
+            this.gameState = GameState.PAUSE;
+            if (this.elapsedPlayTime.isRunning())
             {
-                elapsedPlayTime.stop();
+                this.elapsedPlayTime.stop();
             }
         }
     }
 
     public void resume()
     {
-        if (gameState == GameState.PAUSE)
+        if (this.gameState == GameState.PAUSE)
         {
-            gameState = GameState.COUNTDOWN;
+            this.gameState = GameState.COUNTDOWN;
         }
     }
 
@@ -319,7 +324,7 @@ public class Level
                 // the color for winning (zero velocity),
                 // to white (max approach speed)
                 // to the color for losing (twice the maximum approach velocity)
-                if (destinationPlanet.physicsComponent.equals(nextCollidingPhysicsComponent))
+                if (this.destinationPlanet.physicsComponent.equals(nextCollidingPhysicsComponent))
                 {
                     return Constants.Visual.HUD.TrajectoryLine.COLOR_PLANET_DESTINATION;
                 }
@@ -343,21 +348,16 @@ public class Level
 
     public Planet getDestinationPlanet()
     {
-        return destinationPlanet;
+        return this.destinationPlanet;
     }
 
     public float getTrajectorySeconds()
     {
-        return trajectorySeconds;
-    }
-
-    public float getMaxLandingSpeed()
-    {
-        return maxLandingSpeed;
+        return this.trajectorySeconds;
     }
 
     public Rectangle getBounds()
     {
-        return bounds;
+        return this.bounds;
     }
 }

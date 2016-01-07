@@ -6,11 +6,11 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.draga.SliderFixInputListener;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.InputType;
 import com.draga.spaceTravels3.SpaceTravels3;
@@ -29,10 +29,10 @@ public class SettingsMenuScreen implements Screen
     @Override
     public void show()
     {
-        stage = new Stage();
-        Gdx.input.setInputProcessor(stage);
+        this.stage = new Stage();
+        Gdx.input.setInputProcessor(this.stage);
 
-        Table table = UIManager.addDefaultTableToStage(stage);
+        Table table = UIManager.addDefaultTableToStage(this.stage);
 
         // Header label.
         Label headerLabel = getHeaderLabel();
@@ -61,7 +61,7 @@ public class SettingsMenuScreen implements Screen
             .add(backTextButton)
             .bottom();
 
-        stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
+        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
     public Label getHeaderLabel()
@@ -85,7 +85,11 @@ public class SettingsMenuScreen implements Screen
             table.row();
         }
 
-        addVolume(table);
+        addVolumeFX(table);
+
+        table.row();
+
+        addVolumeMusic(table);
 
         table.row();
 
@@ -116,34 +120,44 @@ public class SettingsMenuScreen implements Screen
         table.add(getInputTypeSelector());
     }
 
-    private void addVolume(Table table)
+    private void addVolumeFX(Table table)
     {
-        table.add(new Label("Volume", UIManager.skin));
+        table.add(new Label("Volume FX", UIManager.skin));
         final Slider volumeSlider = new Slider(0f, 1f, 0.01f, false, UIManager.skin);
-        volumeSlider.setValue(SettingsManager.getSettings().volume);
+        volumeSlider.setValue(SettingsManager.getSettings().volumeFX);
         volumeSlider.addListener(new ChangeListener()
         {
             @Override
             public void changed(ChangeEvent event, Actor actor)
             {
-                SettingsManager.getSettings().volume = volumeSlider.getValue();
+                SettingsManager.getSettings().volumeFX = volumeSlider.getValue();
             }
         });
 
-        // Fix a bug that makes the slider jump back to zero when dragging.
-        // Ref. http://badlogicgames.com/forum/viewtopic.php?f=11&t=12612
-        InputListener stopTouchDown = new InputListener()
-        {
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button)
-            {
-                event.stop();
-                return false;
-            }
-        };
-        volumeSlider.addListener(stopTouchDown);
+        volumeSlider.addListener(new SliderFixInputListener());
         table
             .add(volumeSlider)
-            .width(stage.getWidth() / 2f);
+            .width(this.stage.getWidth() / 2f);
+    }
+
+    private void addVolumeMusic(Table table)
+    {
+        table.add(new Label("Volume music", UIManager.skin));
+        final Slider volumeSlider = new Slider(0f, 1f, 0.01f, false, UIManager.skin);
+        volumeSlider.setValue(SettingsManager.getSettings().getVolumeMusic());
+        volumeSlider.addListener(new ChangeListener()
+        {
+            @Override
+            public void changed(ChangeEvent event, Actor actor)
+            {
+                SettingsManager.getSettings().setVolumeMusic(volumeSlider.getValue());
+            }
+        });
+
+        volumeSlider.addListener(new SliderFixInputListener());
+        table
+            .add(volumeSlider)
+            .width(this.stage.getWidth() / 2f);
     }
 
     private void addHudSettings(Table table)
@@ -217,14 +231,14 @@ public class SettingsMenuScreen implements Screen
             SpaceTravels3.getGame().setScreen(new MenuScreen());
         }
 
-        stage.act(delta);
-        stage.draw();
+        this.stage.act(delta);
+        this.stage.draw();
     }
 
     @Override
     public void resize(int width, int height)
     {
-        stage.getViewport().update(width, height);
+        this.stage.getViewport().update(width, height);
     }
 
     @Override
@@ -246,6 +260,6 @@ public class SettingsMenuScreen implements Screen
     @Override
     public void dispose()
     {
-        stage.dispose();
+        this.stage.dispose();
     }
 }

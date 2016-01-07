@@ -30,16 +30,16 @@ public class WinScreen implements Screen
 
     public WinScreen(String levelId, int score)
     {
-        sound = AssMan.getAssMan().get(AssMan.getAssList().winSound);
-        sound.play(SettingsManager.getSettings().volume);
+        this.sound = AssMan.getAssMan().get(AssMan.getAssList().winSound);
+        this.sound.play(SettingsManager.getSettings().volumeFX);
 
         this.levelId = levelId;
         this.stage = new Stage();
-        Gdx.input.setInputProcessor(stage);
+        Gdx.input.setInputProcessor(this.stage);
 
         int previousBestScore = ScoreManager.getScore(levelId);
 
-        Table table = UIManager.addDefaultTableToStage(stage);
+        Table table = UIManager.addDefaultTableToStage(this.stage);
         table.setBackground(UIManager.skin.newDrawable(
             "background",
             Constants.Visual.SCREEN_FADE_COLOUR));
@@ -82,7 +82,7 @@ public class WinScreen implements Screen
         table.row();
         table.add(mainMenuTextButton);
 
-        stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
+        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
     public Label getHeaderLabel()
@@ -168,7 +168,7 @@ public class WinScreen implements Screen
 
     private void Retry()
     {
-        SpaceTravels3.getGame().setScreen(new LoadingScreen(levelId));
+        SpaceTravels3.getGame().setScreen(new LoadingScreen(this.levelId));
     }
 
     @Override
@@ -193,14 +193,14 @@ public class WinScreen implements Screen
             return;
         }
 
-        stage.act(delta);
-        stage.draw();
+        this.stage.act(delta);
+        this.stage.draw();
     }
 
     @Override
     public void resize(int width, int height)
     {
-        stage.getViewport().update(width, height);
+        this.stage.getViewport().update(width, height);
     }
 
     @Override
@@ -225,8 +225,8 @@ public class WinScreen implements Screen
     @Override
     public void dispose()
     {
-        sound.stop();
-        sound.dispose();
-        stage.dispose();
+        this.sound.stop();
+        this.sound.dispose();
+        this.stage.dispose();
     }
 }
