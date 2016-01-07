@@ -25,10 +25,10 @@ public class DebugMenuScreen implements Screen
     @Override
     public void show()
     {
-        stage = new Stage();
-        Gdx.input.setInputProcessor(stage);
+        this.stage = new Stage();
+        Gdx.input.setInputProcessor(this.stage);
 
-        Table table = UIManager.addDefaultTableToStage(stage);
+        Table table = UIManager.addDefaultTableToStage(this.stage);
 
         // Empty expanded top cell to keep the menu centered
         table.row();
@@ -37,7 +37,9 @@ public class DebugMenuScreen implements Screen
             .expand();
 
         table.row();
-        table.add(GetButtonScrollPane());
+        table.add(getButtonScrollPane());
+        table.row();
+        table.add(getForceCrashButton());
 
         // Empty expanded bottom cell to keep the menu centered
         table.row();
@@ -52,10 +54,10 @@ public class DebugMenuScreen implements Screen
             .add(backTextButton)
             .bottom();
 
-        stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
+        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
-    public ScrollPane GetButtonScrollPane()
+    private ScrollPane getButtonScrollPane()
     {
         Table table = UIManager.getDefaultTable();
 
@@ -68,6 +70,21 @@ public class DebugMenuScreen implements Screen
         ScrollPane scrollPane = new ScrollPane(table);
 
         return scrollPane;
+    }
+
+    private TextButton getForceCrashButton()
+    {
+        TextButton forceCrashTextButton = new BeepingTextButton("Force crash", UIManager.skin);
+        forceCrashTextButton.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                throw new RuntimeException("This is a crash");
+            }
+        });
+
+        return forceCrashTextButton;
     }
 
     private TextButton getBackTextButton()
@@ -163,14 +180,14 @@ public class DebugMenuScreen implements Screen
             SpaceTravels3.getGame().setScreen(new MenuScreen());
         }
 
-        stage.act(delta);
-        stage.draw();
+        this.stage.act(delta);
+        this.stage.draw();
     }
 
     @Override
     public void resize(int width, int height)
     {
-        stage.getViewport().update(width, height);
+        this.stage.getViewport().update(width, height);
     }
 
     @Override
@@ -191,6 +208,6 @@ public class DebugMenuScreen implements Screen
     @Override
     public void dispose()
     {
-        stage.dispose();
+        this.stage.dispose();
     }
 }
