@@ -9,6 +9,7 @@ import com.draga.spaceTravels3.gameEntity.Ship;
 import com.draga.spaceTravels3.gameEntity.Thruster;
 import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
+import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableDifficulty;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisablePickup;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisablePlanet;
@@ -22,15 +23,18 @@ public abstract class LevelManager
     private static final String LOGGING_TAG = LevelManager.class.getSimpleName();
     private static ArrayList<SerialisableLevel> serialisableLevels;
 
-    public static Level getLevel(SerialisableLevel serialisableLevel)
+    public static Level getLevel(SerialisableLevel serialisableLevel, String difficulty)
     {
+        SerialisableDifficulty serialisableDifficulty =
+            serialisableLevel.serialisedDifficulties.get(difficulty);
+
         Ship ship = new Ship(
             serialisableLevel.serialisedShip.x,
             serialisableLevel.serialisedShip.y,
             serialisableLevel.serialisedShip.mass,
             AssMan.getAssList().shipTexture,
-            serialisableLevel.serialisedShip.fuel,
-            serialisableLevel.serialisedShip.infiniteFuel);
+            serialisableDifficulty.fuel,
+            serialisableDifficulty.infiniteFuel);
 
         ArrayList<Planet> planets = new ArrayList<>(serialisableLevel.serialisedPlanets.size());
         Planet destinationPlanet = null;
@@ -73,8 +77,8 @@ public abstract class LevelManager
             planets,
             pickups,
             destinationPlanet,
-            serialisableLevel.trajectorySeconds,
-            serialisableLevel.maxLandingSpeed);
+            serialisableDifficulty.trajectorySeconds,
+            serialisableDifficulty.maxLandingSpeed);
 
         // Run one update so everything is in place for the countdown
         GameEntityManager.update();
@@ -124,7 +128,8 @@ public abstract class LevelManager
         json.addClassTag("SerialisableLevel", SerialisableLevel.class);
         for (String levelFileNameWithExtension : levelFileNamesWithExtension)
         {
-            String levelString = Gdx.files.internal("level/" + levelFileNameWithExtension).readString();
+            String levelString =
+                Gdx.files.internal("level/" + levelFileNameWithExtension).readString();
             SerialisableLevel serialisableLevel =
                 json.fromJson(SerialisableLevel.class, levelString);
 

@@ -1,14 +1,18 @@
 {
   "class": "SerialisableLevel",
   "name": "Level 1",
-  "trajectorySeconds": 5.0,
-  "maxLandingSpeed": 100,
+  "serialisedDifficulties": {
+    "easy": {
+      "trajectorySeconds": 5,
+      "maxLandingSpeed": 100,
+      "fuel": 0,
+      "infiniteFuel": true
+    }
+  },
   "serialisedShip": {
     "x": 10,
     "y": 75,
-    "mass": 1,
-    "fuel": 0,
-    "infiniteFuel": true
+    "mass": 1
   },
   "serialisedPlanets": [
     {

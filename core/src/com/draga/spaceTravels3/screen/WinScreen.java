@@ -147,7 +147,6 @@ public class WinScreen implements Screen
             .add(new Label(String.valueOf(score.getTotalScore()), UIManager.skin))
             .right();
 
-
         return table;
     }
 

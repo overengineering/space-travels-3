@@ -30,11 +30,11 @@ public class LoadingScreen implements Screen
 {
     private static final String LOGGING_TAG = LoadingScreen.class.getSimpleName();
 
-    private final String                levelId;
-    private       Stage                 stage;
-    private       ProgressBar           progressBar;
-    private       SerialisableLevel     serialisableLevel;
-    private       Stopwatch             stopwatch;
+    private final String            levelId;
+    private       Stage             stage;
+    private       ProgressBar       progressBar;
+    private       SerialisableLevel serialisableLevel;
+    private       Stopwatch         stopwatch;
     
     public LoadingScreen(String levelId)
     {
@@ -141,7 +141,7 @@ public class LoadingScreen implements Screen
                         "Loading time: %fs",
                         this.stopwatch.elapsed(TimeUnit.NANOSECONDS) * MathUtils.nanoToSec));
             }
-            Level level = LevelManager.getLevel(this.serialisableLevel);
+            Level level = LevelManager.getLevel(this.serialisableLevel, "easy");
             GameScreen gameScreen = new GameScreen(level);
             SpaceTravels3.getGame().setScreen(gameScreen);
             return;
@@ -154,7 +154,7 @@ public class LoadingScreen implements Screen
 
     private void updateProgressBar()
     {
-        this.progressBar.setRange(0,getTotalAssetsCount());
+        this.progressBar.setRange(0, getTotalAssetsCount());
         this.progressBar.setValue(getLoadedAssetsCount());
     }
 
