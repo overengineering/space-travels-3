@@ -1,6 +1,5 @@
 package com.draga;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.Stack;
@@ -8,8 +7,6 @@ import java.util.Stack;
 public class PooledVector2 extends com.badlogic.gdx.math.Vector2 implements AutoCloseable
 {
     private static final String LOGGING_TAG = PooledVector2.class.getSimpleName();
-
-    private static final float GROWTH = 1.2f;
 
     private static final Stack<PooledVector2> freeObjects = new Stack<>();
 
@@ -44,16 +41,6 @@ public class PooledVector2 extends com.badlogic.gdx.math.Vector2 implements Auto
     @Override
     public void close()
     {
-        // TODO: let java handle size?
-        if (freeObjects.size() == freeObjects.capacity())
-        {
-            freeObjects.ensureCapacity((int) (freeObjects.size() * GROWTH));
-            Gdx.app.debug(
-                LOGGING_TAG,
-                "Pool size increased to "
-                    + freeObjects.capacity());
-        }
-
         freeObjects.push(this);
     }
 }
