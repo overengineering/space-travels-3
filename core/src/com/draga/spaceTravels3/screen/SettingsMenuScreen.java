@@ -6,11 +6,11 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.draga.SliderFixInputListener;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.InputType;
 import com.draga.spaceTravels3.SpaceTravels3;
@@ -134,17 +134,7 @@ public class SettingsMenuScreen implements Screen
             }
         });
 
-        // Fix a bug that makes the slider jump back to zero when dragging.
-        // Ref. http://badlogicgames.com/forum/viewtopic.php?f=11&t=12612
-        InputListener stopTouchDown = new InputListener()
-        {
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button)
-            {
-                event.stop();
-                return false;
-            }
-        };
-        volumeSlider.addListener(stopTouchDown);
+        volumeSlider.addListener(new SliderFixInputListener());
         table
             .add(volumeSlider)
             .width(this.stage.getWidth() / 2f);
@@ -164,17 +154,7 @@ public class SettingsMenuScreen implements Screen
             }
         });
 
-        // Fix a bug that makes the slider jump back to zero when dragging.
-        // Ref. http://badlogicgames.com/forum/viewtopic.php?f=11&t=12612
-        InputListener stopTouchDown = new InputListener()
-        {
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button)
-            {
-                event.stop();
-                return false;
-            }
-        };
-        volumeSlider.addListener(stopTouchDown);
+        volumeSlider.addListener(new SliderFixInputListener());
         table
             .add(volumeSlider)
             .width(this.stage.getWidth() / 2f);

@@ -32,8 +32,11 @@ public abstract class MusicManager
 
     public static void dispose()
     {
-        currentMusic.stop();
-        currentMusic.dispose();
+        if (currentMusic != null)
+        {
+            currentMusic.stop();
+            currentMusic.dispose();
+        }
     }
 
     public static void playRandomMusic()
@@ -67,6 +70,4 @@ public abstract class MusicManager
             currentMusic.setVolume(volume);
         }
     }
-
-
 }
