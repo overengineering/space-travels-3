@@ -175,7 +175,6 @@ public class Level
 
     public Score getScore()
     {
-        // TODO: remove nano constant and use mathutils
         Score score = Pools.obtain(Score.class);
         score.set(
             this.pickupsCollected,

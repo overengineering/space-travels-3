@@ -3,7 +3,7 @@ package com.draga.spaceTravels3.component.graphicComponent;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.draga.spaceTravels3.Constants;
+import com.badlogic.gdx.math.MathUtils;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 import com.draga.spaceTravels3.manager.asset.AssMan;
@@ -27,11 +27,11 @@ public class AnimatedGraphicComponent extends GraphicComponent
     {
         super(physicsComponent, width, height);
 
-        animationTime = Stopwatch.createStarted();
-        textureAtlas = AssMan.getAssMan().get(textureAtlasPath);
-        animation = new Animation(
-            animationTotalTime / textureAtlas.getRegions().size,
-            textureAtlas.getRegions(),
+        this.animationTime = Stopwatch.createStarted();
+        this.textureAtlas = AssMan.getAssMan().get(textureAtlasPath);
+        this.animation = new Animation(
+            animationTotalTime / this.textureAtlas.getRegions().size,
+            this.textureAtlas.getRegions(),
             playMode);
     }
 
@@ -39,19 +39,20 @@ public class AnimatedGraphicComponent extends GraphicComponent
     public void draw()
     {
         TextureRegion textureRegion =
-            animation.getKeyFrame(animationTime.elapsed(TimeUnit.NANOSECONDS) * Constants.General.NANO);
+            this.animation.getKeyFrame(this.animationTime.elapsed(TimeUnit.NANOSECONDS)
+                * MathUtils.nanoToSec);
 
         SpaceTravels3.spriteBatch.draw(
             textureRegion,
-            physicsComponent.getPosition().x - getHalfWidth(),
-            physicsComponent.getPosition().y - getHalfHeight(),
+            this.physicsComponent.getPosition().x - getHalfWidth(),
+            this.physicsComponent.getPosition().y - getHalfHeight(),
             getHalfWidth(),
             getHalfHeight(),
             getWidth(),
             getHeight(),
             1,
             1,
-            physicsComponent.getAngle());
+            this.physicsComponent.getAngle());
     }
 
     @Override
@@ -62,7 +63,7 @@ public class AnimatedGraphicComponent extends GraphicComponent
 
     public boolean isFinished()
     {
-        return animation.isAnimationFinished(animationTime.elapsed(TimeUnit.NANOSECONDS)
-            * Constants.General.NANO);
+        return this.animation.isAnimationFinished(this.animationTime.elapsed(TimeUnit.NANOSECONDS)
+            * MathUtils.nanoToSec);
     }
 }
