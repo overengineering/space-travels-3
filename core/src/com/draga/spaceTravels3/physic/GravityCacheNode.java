@@ -9,19 +9,46 @@ import java.util.ArrayList;
 
 public class GravityCacheNode
 {
-    private static final String LOGGING_TAG = GravityCacheNode.class.getSimpleName();
+    public static final  GravityCacheNode NULL_GRAVITY_CACHE_NODE =
+        new GravityCacheNode(new Rectangle(), new ArrayList<PhysicsComponent>())
+        {
+            @Override
+            public GravityCacheNode getParentNode()
+            {
+                return null;
+            }
 
-    private static final float SPLIT_THRESHOLD = 10f;
-    private static final float MIN_AREA        = 1f;
+            @Override
+            public boolean contains(Vector2 vector2)
+            {
+                return true;
+            }
+
+            @Override
+            public PooledVector2 getGravity(Vector2 position)
+            {
+                return PooledVector2.newVector2(0f, 0f);
+            }
+
+            @Override
+            public boolean hasChildren()
+            {
+                return false;
+            }
+        };
+    private static final String           LOGGING_TAG             =
+        GravityCacheNode.class.getSimpleName();
+    private static final float            SPLIT_THRESHOLD         = 10f;
+    private static final float            MIN_AREA                = 1f;
 
     private final Rectangle bounds;
-    private       Vector2   centre;
-    private       float     halfHeight;
-    private       float     halfWidth;
+
+    private Vector2 centre;
+    private float   halfHeight;
+    private float   halfWidth;
 
     private GravityCacheNode parentNode;
-
-    private boolean hasChildren;
+    private boolean          hasChildren;
 
     private GravityCacheNode topLeftNode;
     private GravityCacheNode topRightNode;
@@ -42,7 +69,7 @@ public class GravityCacheNode
         Rectangle bounds,
         ArrayList<PhysicsComponent> staticPhysicsComponentsWithMass)
     {
-        this.parentNode = null;
+        this.parentNode = NULL_GRAVITY_CACHE_NODE;
 
         this.bounds = bounds;
 
@@ -317,9 +344,9 @@ public class GravityCacheNode
         return this.parentNode;
     }
 
-    public Rectangle getBounds()
+    public boolean contains(Vector2 vector2)
     {
-        return this.bounds;
+        return this.bounds.contains(vector2.x, vector2.y);
     }
 
     public GravityCacheNode getTopLeftNode()
@@ -369,5 +396,25 @@ public class GravityCacheNode
     public Vector2 getCentre()
     {
         return this.centre;
+    }
+
+    public float getY()
+    {
+        return this.bounds.y;
+    }
+
+    public float getX()
+    {
+        return this.bounds.x;
+    }
+
+    public float getWidth()
+    {
+        return this.bounds.width;
+    }
+
+    public float getHeight()
+    {
+        return this.bounds.height;
     }
 }
