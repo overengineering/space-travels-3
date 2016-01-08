@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.draga.ExceptionHandlerProvider;
+import com.draga.GdxErrorExceptionHandler;
 import com.draga.spaceTravels3.manager.*;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.screen.MenuScreen;
@@ -34,6 +36,7 @@ public class SpaceTravels3 extends Game
     public void create()
     {
         MathUtils.random.setSeed(System.currentTimeMillis());
+        ExceptionHandlerProvider.addCustomExceptionHandler(new GdxErrorExceptionHandler());
 
         game = this;
         spriteBatch = new SpriteBatch();

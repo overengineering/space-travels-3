@@ -7,6 +7,18 @@
       "maxLandingSpeed": 100,
       "fuel": 0,
       "infiniteFuel": true
+    },
+    "medium": {
+      "trajectorySeconds": 2,
+      "maxLandingSpeed": 80,
+      "fuel": 2,
+      "infiniteFuel": false
+    },
+    "difficult": {
+      "trajectorySeconds": 0,
+      "maxLandingSpeed": 40,
+      "fuel": 1,
+      "infiniteFuel": false
     }
   },
   "serialisedShip": {

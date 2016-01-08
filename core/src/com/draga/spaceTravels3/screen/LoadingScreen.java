@@ -29,24 +29,30 @@ import java.util.concurrent.TimeUnit;
 public class LoadingScreen implements Screen
 {
     private static final String LOGGING_TAG = LoadingScreen.class.getSimpleName();
+    private final SerialisableLevel serialisableLevel;
+    private final String            difficulty;
 
-    private final String            levelId;
     private       Stage             stage;
     private       ProgressBar       progressBar;
-    private       SerialisableLevel serialisableLevel;
+
     private       Stopwatch         stopwatch;
-    
-    public LoadingScreen(String levelId)
+
+    public LoadingScreen(String levelId, String difficulty)
     {
-        this.levelId = levelId;
+        this.difficulty = difficulty;
+        this.serialisableLevel = LevelManager.getSerialisableLevel(levelId);
+    }
+
+    public LoadingScreen(SerialisableLevel serialisableLevel, String difficulty)
+    {
+        this.difficulty = difficulty;
+        this.serialisableLevel = serialisableLevel;
     }
 
     @Override
     public void show()
     {
         this.stopwatch = Stopwatch.createStarted();
-
-        this.serialisableLevel = LevelManager.getSerialisableLevel(this.levelId);
 
         loadAssets(this.serialisableLevel);
 
@@ -141,7 +147,8 @@ public class LoadingScreen implements Screen
                         "Loading time: %fs",
                         this.stopwatch.elapsed(TimeUnit.NANOSECONDS) * MathUtils.nanoToSec));
             }
-            Level level = LevelManager.getLevel(this.serialisableLevel, "easy");
+            Level level =
+                LevelManager.getLevel(this.serialisableLevel, this.difficulty);
             GameScreen gameScreen = new GameScreen(level);
             SpaceTravels3.getGame().setScreen(gameScreen);
             return;

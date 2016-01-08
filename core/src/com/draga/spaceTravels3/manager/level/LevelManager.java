@@ -2,6 +2,7 @@ package com.draga.spaceTravels3.manager.level;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Json;
+import com.draga.ExceptionHandlerProvider;
 import com.draga.spaceTravels3.Level;
 import com.draga.spaceTravels3.gameEntity.Pickup;
 import com.draga.spaceTravels3.gameEntity.Planet;
@@ -23,7 +24,9 @@ public abstract class LevelManager
     private static final String LOGGING_TAG = LevelManager.class.getSimpleName();
     private static ArrayList<SerialisableLevel> serialisableLevels;
 
-    public static Level getLevel(SerialisableLevel serialisableLevel, String difficulty)
+    public static Level getLevel(
+        SerialisableLevel serialisableLevel,
+        String difficulty)
     {
         SerialisableDifficulty serialisableDifficulty =
             serialisableLevel.serialisedDifficulties.get(difficulty);
@@ -72,6 +75,7 @@ public abstract class LevelManager
         Level level = new Level(
             serialisableLevel.id,
             serialisableLevel.name,
+            difficulty,
             ship,
             thruster,
             planets,
@@ -100,7 +104,9 @@ public abstract class LevelManager
             }
         }
 
-        Gdx.app.error(LOGGING_TAG, "Could not find a level with name \"" + levelId + "\"");
+        ExceptionHandlerProvider.handle(
+            LOGGING_TAG,
+            "Could not find a level with name \"" + levelId + "\"");
         return null;
     }
 
@@ -164,7 +170,9 @@ public abstract class LevelManager
             }
         }
 
-        Gdx.app.error(LOGGING_TAG, "Could not find a level with name \"" + levelId + "\"");
+        ExceptionHandlerProvider.handle(
+            LOGGING_TAG,
+            "Could not find a level with name \"" + levelId + "\"");
         return null;
     }
 }

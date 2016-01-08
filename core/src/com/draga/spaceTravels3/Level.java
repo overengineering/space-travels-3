@@ -33,20 +33,20 @@ public class Level
     private final Planet            destinationPlanet;
 
     private final Rectangle bounds;
+    private final String    difficulty;
+    private       int       pickupsCollected;
 
-    private int       pickupsCollected;
     private GameState gameState;
-
     private Stopwatch elapsedPlayTime;
 
     private Sound pickupCollectedSound;
 
     private String id;
     private String name;
-
     public Level(
         String id,
         String name,
+        String difficulty,
         Ship ship,
         Thruster thruster,
         ArrayList<Planet> planets,
@@ -55,12 +55,14 @@ public class Level
         float trajectorySeconds,
         float maxLandingSpeed)
     {
+        this.id = id;
+        this.name = name;
+        this.difficulty = difficulty;
+
         this.ship = ship;
         this.thruster = thruster;
         this.destinationPlanet = destinationPlanet;
         this.pickups = pickups;
-        this.id = id;
-        this.name = name;
         this.trajectorySeconds = trajectorySeconds;
         this.maxLandingSpeed = maxLandingSpeed;
 
@@ -116,6 +118,11 @@ public class Level
         bounds.y -= Constants.Game.LEVEL_BOUNDS_BUFFER;
 
         return bounds;
+    }
+
+    public String getDifficulty()
+    {
+        return this.difficulty;
     }
 
     @Subscribe

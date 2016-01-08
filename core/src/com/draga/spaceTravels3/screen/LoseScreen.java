@@ -22,10 +22,12 @@ public class LoseScreen implements Screen
 {
     private final Stage  stage;
     private final Sound  sound;
+    private final String difficulty;
     private       String levelId;
 
-    public LoseScreen(String levelId)
+    public LoseScreen(String levelId, String difficulty)
     {
+        this.difficulty = difficulty;
         this.sound = AssMan.getAssMan().get(AssMan.getAssList().loseSound);
         this.sound.play(SettingsManager.getSettings().volumeFX);
 
@@ -88,7 +90,7 @@ public class LoseScreen implements Screen
 
     private void Retry()
     {
-        SpaceTravels3.getGame().setScreen(new LoadingScreen(this.levelId));
+        SpaceTravels3.getGame().setScreen(new LoadingScreen(this.levelId, this.difficulty));
     }
 
     @Override

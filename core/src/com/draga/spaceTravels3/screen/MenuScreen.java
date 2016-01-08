@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.SpaceTravels3;
-import com.draga.spaceTravels3.manager.ScoreManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.level.LevelManager;
@@ -61,12 +60,7 @@ public class MenuScreen implements Screen
         // Debug button.
         if (Constants.General.IS_DEBUGGING)
         {
-            Actor debugButton = getDebugButton();
-
-            table.row();
-            table
-                .add(debugButton)
-                .bottom();
+            this.stage.addActor(getDebugButton());
         }
 
         // Setting button.
@@ -74,13 +68,6 @@ public class MenuScreen implements Screen
         TextButton settingsTextButton = getSettingsTextButton();
         table
             .add(settingsTextButton)
-            .bottom();
-
-        // Play button.
-        TextButton playButton = getPlayButton();
-        table.row();
-        table
-            .add(playButton)
             .bottom();
 
         this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
@@ -97,22 +84,22 @@ public class MenuScreen implements Screen
     {
         java.util.List<SerialisableLevel> serialisableLevels = LevelManager.getSerialisableLevels();
 
-        this.buttonGroup = new ButtonGroup<>();
+        final Table table = UIManager.getDefaultTable();
 
-        this.buttonGroup.setMaxCheckCount(1);
-        this.buttonGroup.setMinCheckCount(1);
-        this.buttonGroup.setUncheckLast(true);
-
-        Table table = UIManager.getDefaultTable();
-
-        for (SerialisableLevel serialisableLevel : serialisableLevels)
+        for (final SerialisableLevel serialisableLevel : serialisableLevels)
         {
-            String buttonText =
-                serialisableLevel.name + " (" + ScoreManager.getScore(serialisableLevel.id) + ")";
-            TextButton textButton =
-                new BeepingTextButton(buttonText, UIManager.skin);
-            textButton.setName(serialisableLevel.id);
-            this.buttonGroup.add(textButton);
+            String buttonText = serialisableLevel.name;
+            final TextButton textButton = new BeepingTextButton(buttonText, UIManager.skin);
+            textButton.addListener(new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    LevelScreen levelScreen = new LevelScreen(serialisableLevel);
+                    SpaceTravels3.getGame().setScreen(levelScreen);
+                    super.clicked(event, x, y);
+                }
+            });
             table.add(textButton);
             table.row();
         }
@@ -158,30 +145,6 @@ public class MenuScreen implements Screen
         return settingsTextButton;
     }
 
-    public TextButton getPlayButton()
-    {
-        TextButton playButton = new BeepingTextButton("Play", UIManager.skin);
-
-        playButton.addListener(
-            new ClickListener()
-            {
-                @Override
-                public void clicked(InputEvent event, float x, float y)
-                {
-                    StartGameScreen();
-                }
-            });
-
-        return playButton;
-    }
-
-    private void StartGameScreen()
-    {
-        String levelId = this.buttonGroup.getChecked().getName();
-        LoadingScreen loadingScreen = new LoadingScreen(levelId);
-        SpaceTravels3.getGame().setScreen(loadingScreen);
-    }
-
     @Override
     public void render(float deltaTime)
     {
@@ -189,10 +152,6 @@ public class MenuScreen implements Screen
             || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
         {
             Gdx.app.exit();
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER))
-        {
-            StartGameScreen();
         }
 
         this.stage.act(deltaTime);

@@ -1,7 +1,7 @@
 package com.draga.spaceTravels3.manager;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.utils.Pools;
+import com.draga.ExceptionHandlerProvider;
 import com.draga.PooledVector2;
 import com.draga.spaceTravels3.input.inputProvider.AccelerometerInputProvider;
 import com.draga.spaceTravels3.input.inputProvider.InputProvider;
@@ -55,7 +55,7 @@ public class InputManager
                         input = touchInputProvider.getInput();
                         break;
                     default:
-                        Gdx.app.error(
+                        ExceptionHandlerProvider.handle(
                             LOGGING_TAG,
                             SettingsManager.getSettings().inputType
                                 + " input type not implemented.");
@@ -70,7 +70,7 @@ public class InputManager
                 }
                 break;
             default:
-                Gdx.app.error(
+                ExceptionHandlerProvider.handle(
                     LOGGING_TAG, "Device type " + Gdx.input.getRotation() + " not implemented.");
                 input = PooledVector2.newVector2(0f, 0f);
                 break;
