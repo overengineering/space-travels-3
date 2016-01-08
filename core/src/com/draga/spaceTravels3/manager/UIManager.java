@@ -71,10 +71,6 @@ public class UIManager
             skin.add("debug", debugFont);
         }
 
-        // Create a texture
-        Pixmap pixmap = getTexture();
-        skin.add("background", new Texture(pixmap));
-
         // Create a button 9 patch
         NinePatch buttonNinePatch = getNinePatch();
         skin.add("button", buttonNinePatch);
@@ -87,21 +83,13 @@ public class UIManager
         Label.LabelStyle labelStyle = getLabelStyle(skin);
         skin.add("default", labelStyle, Label.LabelStyle.class);
 
-        // Progress bar texture
-        Pixmap progressBarPixmap = getProgressBarTexture();
-        skin.add("progressbar", new Texture(progressBarPixmap));
-
-        // Slider texture
-        Pixmap sliderPixmap = getSliderTexture();
-        skin.add("slider", new Texture(sliderPixmap));
-
-        ProgressBar.ProgressBarStyle progressBarStyle = getProgressBarStyle(skin);
+        ProgressBar.ProgressBarStyle progressBarStyle = getProgressBarStyle();
         skin.add("default-horizontal", progressBarStyle);
 
-        Slider.SliderStyle sliderStyle = getSliderStyle(skin);
+        Slider.SliderStyle sliderStyle = getSliderStyle();
         skin.add("default-horizontal", sliderStyle);
 
-        ScrollPane.ScrollPaneStyle scrollPaneStyle = getScrollPaneStyle(skin);
+        ScrollPane.ScrollPaneStyle scrollPaneStyle = getScrollPaneStyle();
         skin.add("default", scrollPaneStyle);
 
         return skin;
@@ -118,14 +106,6 @@ public class UIManager
         BitmapFont bitmapFont = generator.generateFont(parameter);
 
         return bitmapFont;
-    }
-
-    private static Pixmap getTexture()
-    {
-        Pixmap pixmap = new Pixmap(0, 0, Pixmap.Format.RGB888);
-        pixmap.setColor(Color.CLEAR);
-        pixmap.fill();
-        return pixmap;
     }
 
     private static NinePatch getNinePatch()
@@ -152,52 +132,64 @@ public class UIManager
         return labelStyle;
     }
 
-    private static Pixmap getProgressBarTexture()
+    private static ProgressBar.ProgressBarStyle getProgressBarStyle()
     {
-        Pixmap progressBarPixmap =
-            new Pixmap(1, Gdx.graphics.getHeight() / 30, Pixmap.Format.RGBA8888);
-        progressBarPixmap.setColor(Color.WHITE);
-        progressBarPixmap.fill();
-        return progressBarPixmap;
-    }
+        ProgressBar.ProgressBarStyle progressBarStyle = new ProgressBar.ProgressBarStyle();
+        progressBarStyle.background = getTiledDrawable(Color.DARK_GRAY);
+        progressBarStyle.knobBefore = getTiledDrawable(Color.WHITE);
 
-    private static Pixmap getSliderTexture()
-    {
-        Pixmap progressBarPixmap =
-            new Pixmap(1, Gdx.graphics.getHeight() / 15, Pixmap.Format.RGBA8888);
-        progressBarPixmap.setColor(Color.WHITE);
-        progressBarPixmap.fill();
-        return progressBarPixmap;
-    }
+        float height = Gdx.graphics.getHeight() * 0.03f;
 
-    private static ProgressBar.ProgressBarStyle getProgressBarStyle(Skin skin)
-    {
-        ProgressBar.ProgressBarStyle progressBarStyle = new ProgressBar.ProgressBarStyle(
-            skin.newDrawable("progressbar", Color.DARK_GRAY), null);
-        progressBarStyle.knobBefore = skin.newDrawable("progressbar", Color.WHITE);
+        progressBarStyle.background.setMinHeight(height);
+        progressBarStyle.knobBefore.setMinHeight(height);
 
         return progressBarStyle;
     }
 
-    private static Slider.SliderStyle getSliderStyle(Skin skin)
+    private static Slider.SliderStyle getSliderStyle()
     {
         Slider.SliderStyle sliderStyle = new Slider.SliderStyle();
-        sliderStyle.background = skin.newDrawable("slider", Color.DARK_GRAY);
-        sliderStyle.knobBefore = skin.newDrawable("slider", Color.LIGHT_GRAY);
-        sliderStyle.knob = skin.newDrawable("slider", Color.WHITE);
+        sliderStyle.background = getTiledDrawable(Color.DARK_GRAY);
+        sliderStyle.knobBefore = getTiledDrawable(Color.WHITE);
+
+        float height = Gdx.graphics.getHeight() * 0.05f;
+
+        sliderStyle.background.setMinHeight(height);
+        sliderStyle.knobBefore.setMinHeight(height);
 
         return sliderStyle;
     }
 
-    private static ScrollPane.ScrollPaneStyle getScrollPaneStyle(Skin skin)
+    private static ScrollPane.ScrollPaneStyle getScrollPaneStyle()
     {
         ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle();
-        scrollPaneStyle.hScrollKnob = skin.newDrawable("progressbar", Color.WHITE);
-        scrollPaneStyle.vScrollKnob = skin.newDrawable("progressbar", Color.WHITE);
-        scrollPaneStyle.hScroll = skin.newDrawable("progressbar", Color.DARK_GRAY);
-        scrollPaneStyle.vScroll = skin.newDrawable("progressbar", Color.DARK_GRAY);
+
+        scrollPaneStyle.hScrollKnob = getTiledDrawable(Color.WHITE);
+        scrollPaneStyle.vScrollKnob = getTiledDrawable(Color.WHITE);
+        scrollPaneStyle.hScroll = getTiledDrawable(Color.DARK_GRAY);
+        scrollPaneStyle.vScroll = getTiledDrawable(Color.DARK_GRAY);
+
+        float size = Constants.Visual.UI.SQRT_PIXELS * 0.01f;
+
+        scrollPaneStyle.vScrollKnob.setMinWidth(size);
+        scrollPaneStyle.vScroll.setMinWidth(size);
+        scrollPaneStyle.hScrollKnob.setMinHeight(size);
+        scrollPaneStyle.hScroll.setMinHeight(size);
 
         return scrollPaneStyle;
+    }
+
+    public static TiledDrawable getTiledDrawable(Color color)
+    {
+        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+
+        pixmap.setColor(color);
+        pixmap.drawPixel(0, 0);
+        TiledDrawable tiledDrawable = new TiledDrawable(new TextureRegion(new Texture(pixmap)));
+
+        pixmap.dispose();
+
+        return tiledDrawable;
     }
 
     public static ProgressBar getDelimitedProgressBar(float max, float width)

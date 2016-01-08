@@ -144,35 +144,4 @@ public abstract class LevelManager
             serialisableLevels.add(serialisableLevel);
         }
     }
-
-    /**
-     * Get the serialisable level immediately after the level specified as a parameter.
-     * Null if it was the last level.
-     */
-    public static SerialisableLevel getNextLevel(String levelId)
-    {
-        Iterator<SerialisableLevel> serialisableLevelIterator =
-            LevelManager.getSerialisableLevels().iterator();
-
-        while (serialisableLevelIterator.hasNext())
-        {
-            SerialisableLevel serialisableLevel = serialisableLevelIterator.next();
-            if (serialisableLevel.id.equals(levelId))
-            {
-                if (serialisableLevelIterator.hasNext())
-                {
-                    return serialisableLevelIterator.next();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-        }
-
-        ExceptionHandlerProvider.handle(
-            LOGGING_TAG,
-            "Could not find a level with name \"" + levelId + "\"");
-        return null;
-    }
 }

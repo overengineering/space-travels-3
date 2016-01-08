@@ -14,7 +14,7 @@
       "fuel": 2,
       "infiniteFuel": false
     },
-    "difficult": {
+    "hard": {
       "trajectorySeconds": 0,
       "maxLandingSpeed": 40,
       "fuel": 1,

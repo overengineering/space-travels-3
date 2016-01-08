@@ -32,10 +32,10 @@ public class LoadingScreen implements Screen
     private final SerialisableLevel serialisableLevel;
     private final String            difficulty;
 
-    private       Stage             stage;
-    private       ProgressBar       progressBar;
+    private Stage       stage;
+    private ProgressBar progressBar;
 
-    private       Stopwatch         stopwatch;
+    private Stopwatch stopwatch;
 
     public LoadingScreen(String levelId, String difficulty)
     {
@@ -61,12 +61,12 @@ public class LoadingScreen implements Screen
 
         Actor headerLabel = getHeaderLabel();
 
-        this.progressBar = getProgressBar();
-
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
         table.add(headerLabel);
         table.row();
+
+        this.progressBar = getProgressBar();
         table
             .add(this.progressBar)
             .width(this.stage.getWidth() * 0.75f);

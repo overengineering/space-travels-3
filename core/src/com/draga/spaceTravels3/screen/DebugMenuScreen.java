@@ -3,12 +3,14 @@ package com.draga.spaceTravels3.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.draga.ExceptionHandlerProvider;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
@@ -16,6 +18,7 @@ import com.draga.spaceTravels3.ui.BeepingTextButton;
 
 public class DebugMenuScreen implements Screen
 {
+    private static final String LOGGING_TAG = DebugMenuScreen.class.getSimpleName();
     private Stage stage;
 
     public DebugMenuScreen()
@@ -40,6 +43,8 @@ public class DebugMenuScreen implements Screen
         table.add(getButtonScrollPane());
         table.row();
         table.add(getForceCrashButton());
+        table.row();
+        table.add(getErrorButton());
 
         // Empty expanded bottom cell to keep the menu centered
         table.row();
@@ -85,6 +90,21 @@ public class DebugMenuScreen implements Screen
         });
 
         return forceCrashTextButton;
+    }
+
+    private Actor getErrorButton()
+    {
+        TextButton errorTextButton = new BeepingTextButton("Force error", UIManager.skin);
+        errorTextButton.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                ExceptionHandlerProvider.handle(LOGGING_TAG, "test");
+            }
+        });
+
+        return errorTextButton;
     }
 
     private TextButton getBackTextButton()

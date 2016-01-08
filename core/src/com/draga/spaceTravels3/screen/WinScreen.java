@@ -19,8 +19,6 @@ import com.draga.spaceTravels3.manager.ScoreManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
-import com.draga.spaceTravels3.manager.level.LevelManager;
-import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.spaceTravels3.ui.BeepingTextButton;
 
 public class WinScreen implements Screen
@@ -47,9 +45,7 @@ public class WinScreen implements Screen
         int previousBestScore = ScoreManager.getScore(levelId, difficulty);
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
-        table.setBackground(UIManager.skin.newDrawable(
-            "background",
-            Constants.Visual.SCREEN_FADE_COLOUR));
+        table.setBackground(UIManager.getTiledDrawable(Constants.Visual.SCREEN_FADE_COLOUR));
         table.addAction(Actions.sequence(
             Actions.fadeOut(0),
             Actions.fadeIn(Constants.Visual.SCREEN_FADE_DURATION, Interpolation.pow2In)));
@@ -73,16 +69,6 @@ public class WinScreen implements Screen
         table.row();
         TextButton retryButton = getRetryButton();
         table.add(retryButton);
-
-        // Next level button.
-        SerialisableLevel nextLevel = LevelManager.getNextLevel(levelId);
-        if (nextLevel != null)
-        {
-            String nextLevelId = nextLevel.id;
-            TextButton nextTextButton = getNextButton(nextLevelId);
-            table.row();
-            table.add(nextTextButton);
-        }
 
         // Main menu button.
         TextButton mainMenuTextButton = getMainMenuTextButton();
@@ -173,25 +159,6 @@ public class WinScreen implements Screen
         return retryButton;
     }
 
-    public TextButton getNextButton(final String levelId)
-    {
-        TextButton retryButton = new BeepingTextButton("Next level", UIManager.skin);
-
-        retryButton.addListener(
-            new ClickListener()
-            {
-                @Override
-                public void clicked(InputEvent event, float x, float y)
-                {
-                    SpaceTravels3.getGame().setScreen(new LoadingScreen(
-                        levelId,
-                        WinScreen.this.difficulty));
-                }
-            });
-
-        return retryButton;
-    }
-
     private TextButton getMainMenuTextButton()
     {
         TextButton mainMenuTextButton = new BeepingTextButton("Main menu", UIManager.skin);
@@ -210,6 +177,25 @@ public class WinScreen implements Screen
     private void Retry()
     {
         SpaceTravels3.getGame().setScreen(new LoadingScreen(this.levelId, this.difficulty));
+    }
+
+    public TextButton getNextButton(final String levelId)
+    {
+        TextButton retryButton = new BeepingTextButton("Next level", UIManager.skin);
+
+        retryButton.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    SpaceTravels3.getGame().setScreen(new LoadingScreen(
+                        levelId,
+                        WinScreen.this.difficulty));
+                }
+            });
+
+        return retryButton;
     }
 
     @Override

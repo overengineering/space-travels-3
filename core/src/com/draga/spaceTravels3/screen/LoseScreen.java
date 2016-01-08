@@ -36,9 +36,7 @@ public class LoseScreen implements Screen
         Gdx.input.setInputProcessor(this.stage);
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
-        table.setBackground(UIManager.skin.newDrawable(
-            "background",
-            Constants.Visual.SCREEN_FADE_COLOUR));
+        table.setBackground(UIManager.getTiledDrawable(Constants.Visual.SCREEN_FADE_COLOUR));
         table.addAction(Actions.sequence(
             Actions.fadeOut(0),
             Actions.fadeIn(Constants.Visual.SCREEN_FADE_DURATION, Interpolation.pow2In)));
