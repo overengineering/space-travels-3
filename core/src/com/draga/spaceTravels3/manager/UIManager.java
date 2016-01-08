@@ -181,10 +181,11 @@ public class UIManager
 
     public static TiledDrawable getTiledDrawable(Color color)
     {
-        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        int size = 100;
+        Pixmap pixmap = new Pixmap(size, size, Pixmap.Format.RGBA8888);
 
         pixmap.setColor(color);
-        pixmap.drawPixel(0, 0);
+        pixmap.fillRectangle(0, 0, size, size);
         TiledDrawable tiledDrawable = new TiledDrawable(new TextureRegion(new Texture(pixmap)));
 
         pixmap.dispose();
