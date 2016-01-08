@@ -2,6 +2,7 @@ package com.draga.spaceTravels3.manager.level;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Json;
+import com.draga.ExceptionHandlerProvider;
 import com.draga.spaceTravels3.Level;
 import com.draga.spaceTravels3.gameEntity.Pickup;
 import com.draga.spaceTravels3.gameEntity.Planet;
@@ -9,6 +10,7 @@ import com.draga.spaceTravels3.gameEntity.Ship;
 import com.draga.spaceTravels3.gameEntity.Thruster;
 import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
+import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableDifficulty;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisablePickup;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisablePlanet;
@@ -22,15 +24,20 @@ public abstract class LevelManager
     private static final String LOGGING_TAG = LevelManager.class.getSimpleName();
     private static ArrayList<SerialisableLevel> serialisableLevels;
 
-    public static Level getLevel(SerialisableLevel serialisableLevel)
+    public static Level getLevel(
+        SerialisableLevel serialisableLevel,
+        String difficulty)
     {
+        SerialisableDifficulty serialisableDifficulty =
+            serialisableLevel.serialisedDifficulties.get(difficulty);
+
         Ship ship = new Ship(
             serialisableLevel.serialisedShip.x,
             serialisableLevel.serialisedShip.y,
             serialisableLevel.serialisedShip.mass,
             AssMan.getAssList().shipTexture,
-            serialisableLevel.serialisedShip.fuel,
-            serialisableLevel.serialisedShip.infiniteFuel);
+            serialisableDifficulty.fuel,
+            serialisableDifficulty.infiniteFuel);
 
         ArrayList<Planet> planets = new ArrayList<>(serialisableLevel.serialisedPlanets.size());
         Planet destinationPlanet = null;
@@ -68,13 +75,14 @@ public abstract class LevelManager
         Level level = new Level(
             serialisableLevel.id,
             serialisableLevel.name,
+            difficulty,
             ship,
             thruster,
             planets,
             pickups,
             destinationPlanet,
-            serialisableLevel.trajectorySeconds,
-            serialisableLevel.maxLandingSpeed);
+            serialisableDifficulty.trajectorySeconds,
+            serialisableDifficulty.maxLandingSpeed);
 
         // Run one update so everything is in place for the countdown
         GameEntityManager.update();
@@ -96,7 +104,9 @@ public abstract class LevelManager
             }
         }
 
-        Gdx.app.error(LOGGING_TAG, "Could not find a level with name \"" + levelId + "\"");
+        ExceptionHandlerProvider.handle(
+            LOGGING_TAG,
+            "Could not find a level with name \"" + levelId + "\"");
         return null;
     }
 
@@ -124,7 +134,8 @@ public abstract class LevelManager
         json.addClassTag("SerialisableLevel", SerialisableLevel.class);
         for (String levelFileNameWithExtension : levelFileNamesWithExtension)
         {
-            String levelString = Gdx.files.internal("level/" + levelFileNameWithExtension).readString();
+            String levelString =
+                Gdx.files.internal("level/" + levelFileNameWithExtension).readString();
             SerialisableLevel serialisableLevel =
                 json.fromJson(SerialisableLevel.class, levelString);
 
@@ -132,34 +143,5 @@ public abstract class LevelManager
 
             serialisableLevels.add(serialisableLevel);
         }
-    }
-
-    /**
-     * Get the serialisable level immediately after the level specified as a parameter.
-     * Null if it was the last level.
-     */
-    public static SerialisableLevel getNextLevel(String levelId)
-    {
-        Iterator<SerialisableLevel> serialisableLevelIterator =
-            LevelManager.getSerialisableLevels().iterator();
-
-        while (serialisableLevelIterator.hasNext())
-        {
-            SerialisableLevel serialisableLevel = serialisableLevelIterator.next();
-            if (serialisableLevel.id.equals(levelId))
-            {
-                if (serialisableLevelIterator.hasNext())
-                {
-                    return serialisableLevelIterator.next();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-        }
-
-        Gdx.app.error(LOGGING_TAG, "Could not find a level with name \"" + levelId + "\"");
-        return null;
     }
 }

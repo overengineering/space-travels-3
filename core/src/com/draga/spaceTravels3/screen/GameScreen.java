@@ -262,14 +262,14 @@ public class GameScreen implements Screen
     @Subscribe
     public void Lose(LoseEvent loseEvent)
     {
-        this.overlayScreen = new LoseScreen(this.level.getId());
+        this.overlayScreen = new LoseScreen(this.level.getId(), this.level.getDifficulty());
     }
 
     @Subscribe
     public void Win(WinEvent winEvent)
     {
         Score score = this.level.getScore();
-        this.overlayScreen = new WinScreen(this.level.getId(), score);
+        this.overlayScreen = new WinScreen(this.level.getId(), this.level.getDifficulty(), score);
         Pools.free(score);
     }
 

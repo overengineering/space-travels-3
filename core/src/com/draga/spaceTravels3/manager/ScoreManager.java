@@ -2,29 +2,40 @@ package com.draga.spaceTravels3.manager;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
-import com.draga.utils.FileUtils;
+import com.draga.ExceptionHandlerProvider;
 import com.draga.spaceTravels3.Constants;
+import com.draga.utils.FileUtils;
 
 import java.util.HashMap;
 
 public abstract class ScoreManager
 {
+    private static final String LOGGING_TAG = ScoreManager.class.getSimpleName();
+
     private static final Json JSON = new Json();
 
-    private static final FileHandle               levelScoresFileHandle =
+    private static final FileHandle                                SCORE_FILE_HANDLE       =
         FileUtils.getScoreFileHandle();
-    private static final HashMap<String, Integer> levelScores           = getLevelScores();
+    private static final HashMap<String, HashMap<String, Integer>> LEVEL_DIFFICULTY_SCORES =
+        getLevelScores();
 
     /**
      * Saves the score if highest for this level.
      */
-    public static void saveHighScore(String levelId, int score)
+    public static void saveHighScore(String levelId, String difficulty, int score)
     {
-        if (!levelScores.containsKey(levelId)
-            || levelScores.get(levelId) < score)
+        HashMap<String, Integer> difficultyScores;
+        if (!LEVEL_DIFFICULTY_SCORES.containsKey(levelId))
         {
-            levelScores.put(levelId, score);
+            difficultyScores = new HashMap<>();
+            LEVEL_DIFFICULTY_SCORES.put(levelId, difficultyScores);
         }
+        else
+        {
+            difficultyScores = LEVEL_DIFFICULTY_SCORES.get(levelId);
+        }
+
+        difficultyScores.put(difficulty, score);
 
         saveLevelScores();
     }
@@ -33,37 +44,59 @@ public abstract class ScoreManager
     {
         @SuppressWarnings("ConstantConditions")
         String levelScoresString = Constants.General.IS_DEBUGGING
-            ? JSON.prettyPrint(levelScores)
-            : JSON.toJson(levelScores);
+            ? JSON.prettyPrint(LEVEL_DIFFICULTY_SCORES)
+            : JSON.toJson(LEVEL_DIFFICULTY_SCORES);
 
-        levelScoresFileHandle.writeString(levelScoresString, false);
+        SCORE_FILE_HANDLE.writeString(levelScoresString, false);
     }
 
-    private static HashMap<String, Integer> getLevelScores()
+    private static HashMap<String, HashMap<String, Integer>> getLevelScores()
     {
-        if (levelScoresFileHandle.exists())
+        try
         {
-            HashMap<String, Integer> levelScores =
-                JSON.fromJson(HashMap.class, levelScoresFileHandle.readString());
-
-            // Check the type of the first value if any is present because they used to be saved in
-            // float and for some reason they successfully make it into the HashMap but then
-            // failing to retrieve it.
-            if (!levelScores.isEmpty())
+            if (SCORE_FILE_HANDLE.exists())
             {
-                return levelScores;
+                HashMap<String, HashMap<String, Integer>> levelScores =
+                    JSON.fromJson(HashMap.class, SCORE_FILE_HANDLE);
+
+                // Ensure HashMap generic type
+                if (!levelScores.isEmpty()
+                    && levelScores.keySet().toArray()[0] instanceof String)
+                {
+                    Object firstValue = levelScores.values().toArray()[0];
+                    if (firstValue instanceof HashMap)
+                    {
+                        HashMap castedFirstValue = (HashMap) firstValue;
+                        if (!castedFirstValue.isEmpty()
+                            && castedFirstValue.keySet()
+                            .toArray()[0] instanceof String
+                            && castedFirstValue.values()
+                            .toArray()[0] instanceof HashMap)
+                        {
+                            return levelScores;
+                        }
+                    }
+                }
             }
+        } catch (Exception exception)
+        {
+            ExceptionHandlerProvider.handle(LOGGING_TAG, "Couldn't load scores", exception);
         }
 
         return new HashMap<>();
     }
 
-    public static int getScore(String levelId)
+    public static int getScore(String levelId, String difficulty)
     {
         int score = 0;
-        if (levelScores.containsKey(levelId))
+        if (LEVEL_DIFFICULTY_SCORES.containsKey(levelId))
         {
-            score = levelScores.get(levelId);
+            HashMap<String, Integer> difficultyScores =
+                ScoreManager.LEVEL_DIFFICULTY_SCORES.get(levelId);
+            if (difficultyScores.containsKey(difficulty))
+            {
+                score = difficultyScores.get(difficulty);
+            }
         }
 
         return score;

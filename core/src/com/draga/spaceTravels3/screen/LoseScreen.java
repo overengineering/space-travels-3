@@ -22,10 +22,12 @@ public class LoseScreen implements Screen
 {
     private final Stage  stage;
     private final Sound  sound;
+    private final String difficulty;
     private       String levelId;
 
-    public LoseScreen(String levelId)
+    public LoseScreen(String levelId, String difficulty)
     {
+        this.difficulty = difficulty;
         this.sound = AssMan.getAssMan().get(AssMan.getAssList().loseSound);
         this.sound.play(SettingsManager.getSettings().volumeFX);
 
@@ -34,9 +36,7 @@ public class LoseScreen implements Screen
         Gdx.input.setInputProcessor(this.stage);
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
-        table.setBackground(UIManager.skin.newDrawable(
-            "background",
-            Constants.Visual.SCREEN_FADE_COLOUR));
+        table.setBackground(UIManager.getTiledDrawable(Constants.Visual.SCREEN_FADE_COLOUR));
         table.addAction(Actions.sequence(
             Actions.fadeOut(0),
             Actions.fadeIn(Constants.Visual.SCREEN_FADE_DURATION, Interpolation.pow2In)));
@@ -88,7 +88,7 @@ public class LoseScreen implements Screen
 
     private void Retry()
     {
-        SpaceTravels3.getGame().setScreen(new LoadingScreen(this.levelId));
+        SpaceTravels3.getGame().setScreen(new LoadingScreen(this.levelId, this.difficulty));
     }
 
     @Override

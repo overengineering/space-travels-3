@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.physic.PhysicsEngine;
 
@@ -21,19 +20,19 @@ public class DebugOverlay implements Screen
 
     public DebugOverlay()
     {
-        label1 = getLabel();
-        label1.setText(
+        this.label1 = getLabel();
+        this.label1.setText(
             "mean   ");
-        label2 = getLabel();
-        label3 = getLabel();
-        label4 = getLabel();
+        this.label2 = getLabel();
+        this.label3 = getLabel();
+        this.label4 = getLabel();
 
 
-        stage = new Stage();
+        this.stage = new Stage();
 
         Table table = new Table();
         table.setFillParent(true);
-        stage.addActor(table);
+        this.stage.addActor(table);
 
         table
             .add()
@@ -41,37 +40,34 @@ public class DebugOverlay implements Screen
 
         table.row();
         table
-            .add(label1)
+            .add(this.label1)
             .bottom()
             .right();
 
         table.row();
         table
-            .add(label2)
+            .add(this.label2)
             .bottom()
             .right();
 
         table.row();
         table
-            .add(label3)
+            .add(this.label3)
             .bottom()
             .right();
 
         table.row();
         table
-            .add(label4)
+            .add(this.label4)
             .bottom()
             .right();
-
-        stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
     private Label getLabel()
     {
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = UIManager.skin.getFont("debug");
-        labelStyle.background =
-            UIManager.skin.newDrawable("background", new Color(0, 0, 0, 0.3f));
+        labelStyle.background = UIManager.getTiledDrawable(new Color(0, 0, 0, 0.3f));
 
         Label scoreLabel = new Label("", labelStyle);
 
@@ -90,8 +86,8 @@ public class DebugOverlay implements Screen
         updateLabel2();
         updateLabel3();
         updateLabel4();
-        stage.act(delta);
-        stage.draw();
+        this.stage.act(delta);
+        this.stage.draw();
     }
 
     private void updateLabel2()
@@ -99,7 +95,7 @@ public class DebugOverlay implements Screen
         String message = String.format(
             "Engine :%9f ",
             PhysicsEngine.getStepPerformanceCounter().time.mean.getMean());
-        label2.setText(message);
+        this.label2.setText(message);
 
     }
 
@@ -108,7 +104,7 @@ public class DebugOverlay implements Screen
         String message = String.format(
             "Projection :%9f ",
             PhysicsEngine.getGravityProjectionPerformanceCounter().time.mean.getMean());
-        label3.setText(message);
+        this.label3.setText(message);
     }
 
     public void updateLabel4()
@@ -122,26 +118,26 @@ public class DebugOverlay implements Screen
             Gdx.graphics.getFramesPerSecond(),
             formattedJavaHeap,
             formattedNativeHeap);
-        label4.setText(message);
+        this.label4.setText(message);
 
         if (Gdx.graphics.getFramesPerSecond() < 50)
         {
-            label4.setColor(Color.RED);
+            this.label4.setColor(Color.RED);
         }
         else if (Gdx.graphics.getFramesPerSecond() < 60)
         {
-            label4.setColor(Color.YELLOW);
+            this.label4.setColor(Color.YELLOW);
         }
         else
         {
-            label4.setColor(Color.WHITE);
+            this.label4.setColor(Color.WHITE);
         }
     }
 
     @Override
     public void resize(int width, int height)
     {
-        stage.getViewport().update(width, height);
+        this.stage.getViewport().update(width, height);
     }
 
     @Override
@@ -165,6 +161,6 @@ public class DebugOverlay implements Screen
     @Override
     public void dispose()
     {
-        stage.dispose();
+        this.stage.dispose();
     }
 }
