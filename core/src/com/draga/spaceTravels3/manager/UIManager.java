@@ -122,6 +122,7 @@ public class UIManager
         textButtonStyle.font = skin.getFont("default");
         textButtonStyle.down = skin.getDrawable("button");
         textButtonStyle.up = skin.getDrawable("button");
+
         return textButtonStyle;
     }
 
@@ -129,6 +130,7 @@ public class UIManager
     {
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = skin.getFont("default");
+
         return labelStyle;
     }
 

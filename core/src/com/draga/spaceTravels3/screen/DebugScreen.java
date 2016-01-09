@@ -2,7 +2,6 @@ package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -10,26 +9,21 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.draga.ExceptionHandlerProvider;
-import com.draga.spaceTravels3.SpaceTravels3;
+import com.draga.ErrorHandlerProvider;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.ui.BeepingTextButton;
 
-public class DebugMenuScreen implements Screen
+public class DebugScreen extends com.draga.spaceTravels3.ui.Screen
 {
-    private static final String LOGGING_TAG = DebugMenuScreen.class.getSimpleName();
+    private static final String LOGGING_TAG = DebugScreen.class.getSimpleName();
     private Stage stage;
 
-    public DebugMenuScreen()
+    public DebugScreen()
     {
-    }
+        super(true, true);
 
-    @Override
-    public void show()
-    {
         this.stage = new Stage();
-        Gdx.input.setInputProcessor(this.stage);
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
@@ -100,7 +94,7 @@ public class DebugMenuScreen implements Screen
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                ExceptionHandlerProvider.handle(LOGGING_TAG, "test");
+                ErrorHandlerProvider.handle(LOGGING_TAG, "test");
             }
         });
 
@@ -115,7 +109,7 @@ public class DebugMenuScreen implements Screen
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                SpaceTravels3.getGame().setScreen(new MenuScreen());
+                ScreenManager.removeScreen(DebugScreen.this);
             }
         });
 
@@ -192,12 +186,18 @@ public class DebugMenuScreen implements Screen
     }
 
     @Override
+    public void show()
+    {
+        Gdx.input.setInputProcessor(this.stage);
+    }
+
+    @Override
     public void render(float delta)
     {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
             || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
         {
-            SpaceTravels3.getGame().setScreen(new MenuScreen());
+            ScreenManager.removeScreen(DebugScreen.this);
         }
 
         this.stage.act(delta);

@@ -1,6 +1,5 @@
 package com.draga.spaceTravels3.screen;
 
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -10,7 +9,7 @@ import com.draga.spaceTravels3.event.CountdownFinishedEvent;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 
-public class CountdownScreen implements Screen
+public class CountdownScreen extends com.draga.spaceTravels3.ui.Screen
 {
     private Stage stage;
     private Label timerLabel;
@@ -19,20 +18,21 @@ public class CountdownScreen implements Screen
 
     public CountdownScreen()
     {
+        super(true, false);
         this.secondsRemaining = Constants.Game.COUNTDOWN_SECONDS;
 
         this.stage = new Stage();
 
         Table table = new Table();
-        stage.addActor(table);
+        this.stage.addActor(table);
         table.setFillParent(true);
 
-        timerLabel = getTimerLabel();
+        this.timerLabel = getTimerLabel();
         table
-            .add(timerLabel)
+            .add(this.timerLabel)
             .center();
 
-        stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
+        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
     private Label getTimerLabel()
@@ -56,32 +56,34 @@ public class CountdownScreen implements Screen
     @Override
     public void render(float delta)
     {
-        if (countdownFinished)
+        if (this.countdownFinished)
         {
             return;
         }
 
         this.secondsRemaining -= delta;
-        if (secondsRemaining <= 0)
+        if (this.secondsRemaining <= 0)
         {
-            secondsRemaining = 0;
-            countdownFinished = true;
+            this.secondsRemaining = 0;
+            this.countdownFinished = true;
             CountdownFinishedEvent countdownFinishedEvent =
                 Pools.obtain(CountdownFinishedEvent.class);
             Constants.General.EVENT_BUS.post(countdownFinishedEvent);
             Pools.free(countdownFinishedEvent);
+            ScreenManager.removeScreen(this);
             return;
         }
 
         this.timerLabel.setText(getLabelText());
-        stage.act(delta);
-        stage.draw();
+
+        this.stage.act(delta);
+        this.stage.draw();
     }
 
     @Override
     public void resize(int width, int height)
     {
-        stage.getViewport().update(width, height);
+        this.stage.getViewport().update(width, height);
     }
 
     @Override
@@ -99,12 +101,11 @@ public class CountdownScreen implements Screen
     @Override
     public void hide()
     {
-        dispose();
     }
 
     @Override
     public void dispose()
     {
-        stage.dispose();
+        this.stage.dispose();
     }
 }

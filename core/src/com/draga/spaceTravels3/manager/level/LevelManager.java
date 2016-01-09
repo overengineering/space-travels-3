@@ -2,7 +2,7 @@ package com.draga.spaceTravels3.manager.level;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Json;
-import com.draga.ExceptionHandlerProvider;
+import com.draga.ErrorHandlerProvider;
 import com.draga.spaceTravels3.Level;
 import com.draga.spaceTravels3.gameEntity.Pickup;
 import com.draga.spaceTravels3.gameEntity.Planet;
@@ -104,7 +104,7 @@ public abstract class LevelManager
             }
         }
 
-        ExceptionHandlerProvider.handle(
+        ErrorHandlerProvider.handle(
             LOGGING_TAG,
             "Could not find a level with name \"" + levelId + "\"");
         return null;

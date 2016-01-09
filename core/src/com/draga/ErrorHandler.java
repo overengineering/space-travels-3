@@ -1,6 +1,6 @@
 package com.draga;
 
-public interface ExceptionHandler
+public interface ErrorHandler
 {
     void handle(String tag, Exception exception, String message);
 

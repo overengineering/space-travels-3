@@ -2,7 +2,6 @@ package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -18,21 +17,18 @@ import com.draga.spaceTravels3.ui.BeepingTextButton;
 
 import java.util.LinkedHashMap;
 
-public class LevelScreen implements Screen
+public class LevelScreen extends com.draga.spaceTravels3.ui.Screen
 {
     private final SerialisableLevel serialisableLevel;
     private       Stage             stage;
 
     public LevelScreen(SerialisableLevel serialisableLevel)
     {
-        this.serialisableLevel = serialisableLevel;
-    }
+        super(true, true);
 
-    @Override
-    public void show()
-    {
+        this.serialisableLevel = serialisableLevel;
+
         this.stage = new Stage();
-        Gdx.input.setInputProcessor(this.stage);
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
@@ -130,7 +126,7 @@ public class LevelScreen implements Screen
                     LoadingScreen loadingScreen = new LoadingScreen(
                         serialisableLevel,
                         difficulty);
-                    SpaceTravels3.getGame().setScreen(loadingScreen);
+                    ScreenManager.addScreen(loadingScreen);
                     super.clicked(event, x, y);
                 }
             });
@@ -155,11 +151,17 @@ public class LevelScreen implements Screen
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                SpaceTravels3.getGame().setScreen(new MenuScreen());
+                ScreenManager.removeScreen(LevelScreen.this);
             }
         });
 
         return backTextButton;
+    }
+
+    @Override
+    public void show()
+    {
+        Gdx.input.setInputProcessor(this.stage);
     }
 
     @Override
@@ -168,8 +170,12 @@ public class LevelScreen implements Screen
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
             || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
         {
-            SpaceTravels3.getGame().setScreen(new MenuScreen());
+            ScreenManager.removeScreen(LevelScreen.this);
         }
+
+        this.stage.getBatch().begin();
+        SpaceTravels3.background.draw(this.stage.getCamera(), this.stage.getBatch());
+        this.stage.getBatch().end();
 
         this.stage.act(delta);
         this.stage.draw();
@@ -194,7 +200,7 @@ public class LevelScreen implements Screen
     @Override
     public void hide()
     {
-        dispose();
+
     }
 
     @Override

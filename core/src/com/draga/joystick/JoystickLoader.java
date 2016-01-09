@@ -7,7 +7,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.utils.Array;
-import com.draga.ExceptionHandlerProvider;
+import com.draga.ErrorHandlerProvider;
 import com.draga.NullFileHandleResolver;
 import com.draga.utils.FileUtils;
 import com.draga.utils.PixmapUtils;
@@ -34,7 +34,7 @@ public class JoystickLoader
     {
         if (joystickParameters == null)
         {
-            ExceptionHandlerProvider.handle(LOGGING_TAG, "JoystickParameters can't be null");
+            ErrorHandlerProvider.handle(LOGGING_TAG, "JoystickParameters can't be null");
         }
 
         fileName = "joystick-" + joystickParameters + ".png";

@@ -2,7 +2,6 @@ package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -20,19 +19,15 @@ import com.draga.spaceTravels3.manager.level.LevelManager;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.spaceTravels3.ui.BeepingTextButton;
 
-public class MenuScreen implements Screen
+public class MenuScreen extends com.draga.spaceTravels3.ui.Screen
 {
     private Stage stage;
 
     public MenuScreen()
     {
-    }
-    
-    @Override
-    public void show()
-    {
+        super(true, true);
+
         this.stage = new Stage();
-        Gdx.input.setInputProcessor(this.stage);
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
@@ -80,7 +75,7 @@ public class MenuScreen implements Screen
 
         return headerLabel;
     }
-
+    
     private ScrollPane getLevelList()
     {
         java.util.List<SerialisableLevel> serialisableLevels = LevelManager.getSerialisableLevels();
@@ -97,7 +92,7 @@ public class MenuScreen implements Screen
                 public void clicked(InputEvent event, float x, float y)
                 {
                     LevelScreen levelScreen = new LevelScreen(serialisableLevel);
-                    SpaceTravels3.getGame().setScreen(levelScreen);
+                    ScreenManager.addScreen(levelScreen);
                     super.clicked(event, x, y);
                 }
             });
@@ -120,7 +115,7 @@ public class MenuScreen implements Screen
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    SpaceTravels3.getGame().setScreen(new DebugMenuScreen());
+                    ScreenManager.addScreen(new DebugScreen());
                 }
             });
         return debugButton;
@@ -137,11 +132,17 @@ public class MenuScreen implements Screen
                 public void clicked(InputEvent event, float x, float y)
                 {
                     super.clicked(event, x, y);
-                    SpaceTravels3.getGame().setScreen(new SettingsMenuScreen());
+                    ScreenManager.addScreen(new SettingsScreen());
                 }
             });
 
         return settingsTextButton;
+    }
+
+    @Override
+    public void show()
+    {
+        Gdx.input.setInputProcessor(this.stage);
     }
 
     @Override
@@ -152,6 +153,10 @@ public class MenuScreen implements Screen
         {
             Gdx.app.exit();
         }
+
+        this.stage.getBatch().begin();
+        SpaceTravels3.background.draw(this.stage.getCamera(), this.stage.getBatch());
+        this.stage.getBatch().end();
 
         this.stage.act(deltaTime);
         this.stage.draw();
@@ -178,7 +183,7 @@ public class MenuScreen implements Screen
     @Override
     public void hide()
     {
-        this.dispose();
+
     }
 
     @Override

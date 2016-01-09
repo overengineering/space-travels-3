@@ -1,9 +1,9 @@
 package com.draga.android;
 
 import com.crashlytics.android.Crashlytics;
-import com.draga.ExceptionHandler;
+import com.draga.ErrorHandler;
 
-public class FabricExceptionHandler implements ExceptionHandler
+public class FabricErrorHandler implements ErrorHandler
 {
     @Override
     public void handle(String tag, Exception exception, String message)

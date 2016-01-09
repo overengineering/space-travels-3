@@ -1,7 +1,7 @@
 package com.draga.spaceTravels3.physic;
 
 import com.badlogic.gdx.utils.Pools;
-import com.draga.ExceptionHandlerProvider;
+import com.draga.ErrorHandlerProvider;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.event.PickupCollectedEvent;
 import com.draga.spaceTravels3.event.ShipPlanetCollisionEvent;
@@ -50,7 +50,7 @@ public abstract class CollisionResolver
             }
         } catch (IllegalAccessException | InvocationTargetException e)
         {
-            ExceptionHandlerProvider.handle(LOGGING_TAG, "", e);
+            ErrorHandlerProvider.handle(LOGGING_TAG, "", e);
         }
     }
 

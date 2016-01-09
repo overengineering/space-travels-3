@@ -2,7 +2,6 @@ package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -12,28 +11,30 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.spaceTravels3.Constants;
-import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.ui.BeepingTextButton;
 
-public class LoseScreen implements Screen
+public class LoseScreen extends com.draga.spaceTravels3.ui.Screen
 {
-    private final Stage  stage;
-    private final Sound  sound;
-    private final String difficulty;
-    private       String levelId;
+    private final Stage      stage;
+    private final Sound      sound;
+    private final String     difficulty;
+    private final GameScreen gameScreen;
+    private       String     levelId;
 
-    public LoseScreen(String levelId, String difficulty)
+    public LoseScreen(String levelId, String difficulty, GameScreen gameScreen)
     {
+        super(true, false);
+
         this.difficulty = difficulty;
+        this.gameScreen = gameScreen;
         this.sound = AssMan.getAssMan().get(AssMan.getAssList().loseSound);
         this.sound.play(SettingsManager.getSettings().volumeFX);
 
         this.levelId = levelId;
         this.stage = new Stage();
-        Gdx.input.setInputProcessor(this.stage);
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
         table.setBackground(UIManager.getTiledDrawable(Constants.Visual.SCREEN_FADE_COLOUR));
@@ -79,7 +80,8 @@ public class LoseScreen implements Screen
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                SpaceTravels3.getGame().setScreen(new MenuScreen());
+                ScreenManager.removeScreen(LoseScreen.this);
+                ScreenManager.removeScreen(LoseScreen.this.gameScreen);
             }
         });
 
@@ -88,13 +90,15 @@ public class LoseScreen implements Screen
 
     private void Retry()
     {
-        SpaceTravels3.getGame().setScreen(new LoadingScreen(this.levelId, this.difficulty));
+        ScreenManager.removeScreen(this);
+        ScreenManager.removeScreen(this.gameScreen);
+        ScreenManager.addScreen(new LoadingScreen(this.levelId, this.difficulty));
     }
 
     @Override
     public void show()
     {
-
+        Gdx.input.setInputProcessor(this.stage);
     }
 
     @Override
@@ -103,7 +107,8 @@ public class LoseScreen implements Screen
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
             || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
         {
-            SpaceTravels3.getGame().setScreen(new MenuScreen());
+            ScreenManager.removeScreen(this);
+            ScreenManager.removeScreen(this.gameScreen);
             return;
         }
 
@@ -113,17 +118,7 @@ public class LoseScreen implements Screen
             return;
         }
 
-        update(delta);
-        draw(delta);
-    }
-
-    private void update(float delta)
-    {
         this.stage.act(delta);
-    }
-
-    private void draw(float delta)
-    {
         this.stage.draw();
     }
 
@@ -148,7 +143,7 @@ public class LoseScreen implements Screen
     @Override
     public void hide()
     {
-        this.dispose();
+
     }
 
     @Override
