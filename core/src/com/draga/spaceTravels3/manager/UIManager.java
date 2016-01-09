@@ -225,6 +225,8 @@ public class UIManager
             progressBarStyle.background = backgroundTiledDrawable;
             progressBarStyle.knobBefore = knobBeforeTiledDrawable;
 
+            progressBarStyle.knobBefore.setMinWidth(0);
+
             skin.add(progressBarStyleName, progressBarStyle);
         }
 
