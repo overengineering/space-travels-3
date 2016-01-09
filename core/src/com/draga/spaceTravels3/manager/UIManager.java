@@ -256,7 +256,6 @@ public class UIManager
 
         Texture texture = new Texture(pixmap);
         pixmap.dispose();
-        texture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 
         TextureRegion textureRegion = new TextureRegion(texture);
 
