@@ -161,7 +161,7 @@ public class SettingsScreen extends com.draga.spaceTravels3.ui.Screen
         table.add(hudLabel);
 
         TextButton hudForceIndicatorsTextButton =
-            new BeepingTextButton("Force indicators", UIManager.skin);
+            new BeepingTextButton("Force indicators", UIManager.skin, "checkable");
         hudForceIndicatorsTextButton.setChecked(
             SettingsManager.getSettings().hudForceIndicators);
         hudForceIndicatorsTextButton.addListener(new ClickListener()
@@ -184,7 +184,7 @@ public class SettingsScreen extends com.draga.spaceTravels3.ui.Screen
         ButtonGroup<TextButton> buttonGroup = new ButtonGroup<>();
         buttonGroup.setMaxCheckCount(1);
 
-        TextButton touchButton = new BeepingTextButton("Touch", UIManager.skin);
+        TextButton touchButton = new BeepingTextButton("Touch", UIManager.skin, "checkable");
         touchButton.setChecked(SettingsManager.getSettings().inputType == InputType.TOUCH);
         touchButton.addListener(new ClickListener()
         {
@@ -198,7 +198,8 @@ public class SettingsScreen extends com.draga.spaceTravels3.ui.Screen
         buttonGroup.add(touchButton);
         table.add(touchButton);
 
-        TextButton accelerometerButton = new BeepingTextButton("Accelerometer", UIManager.skin);
+        TextButton accelerometerButton =
+            new BeepingTextButton("Accelerometer", UIManager.skin, "checkable");
         accelerometerButton.setChecked(
             SettingsManager.getSettings().inputType == InputType.ACCELEROMETER);
         accelerometerButton.addListener(new ClickListener()

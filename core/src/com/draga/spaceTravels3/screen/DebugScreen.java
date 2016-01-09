@@ -35,10 +35,6 @@ public class DebugScreen extends com.draga.spaceTravels3.ui.Screen
 
         table.row();
         table.add(getButtonScrollPane());
-        table.row();
-        table.add(getForceCrashButton());
-        table.row();
-        table.add(getErrorButton());
 
         // Empty expanded bottom cell to keep the menu centered
         table.row();
@@ -65,15 +61,107 @@ public class DebugScreen extends com.draga.spaceTravels3.ui.Screen
         table.add(getNoGravityTextButton());
         table.row();
         table.add(getInfiniteFuelTextButton());
+        table.row();
+        table.add(getForceCrashButton());
+        table.row();
+        table.add(getErrorButton());
 
         ScrollPane scrollPane = new ScrollPane(table);
 
         return scrollPane;
     }
 
+    private TextButton getBackTextButton()
+    {
+        TextButton backTextButton = new BeepingTextButton("Back", UIManager.skin);
+        backTextButton.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                ScreenManager.removeScreen(DebugScreen.this);
+            }
+        });
+
+        return backTextButton;
+    }
+
+    private TextButton getDebugDrawTextButton()
+    {
+        final TextButton debugDrawTextButton = new BeepingTextButton(
+            "Debug draw",
+            UIManager.skin,
+            "checkable");
+        debugDrawTextButton.setChecked(SettingsManager.getDebugSettings().debugDraw);
+
+        debugDrawTextButton.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    super.clicked(event, x, y);
+                    SettingsManager.getDebugSettings().debugDraw =
+                        !SettingsManager.getDebugSettings().debugDraw;
+                    debugDrawTextButton.setChecked(SettingsManager.getDebugSettings().debugDraw);
+                }
+            });
+
+        return debugDrawTextButton;
+    }
+
+    private TextButton getNoGravityTextButton()
+    {
+        final TextButton infiniteFuelTextButton = new BeepingTextButton(
+            "No gravity",
+            UIManager.skin,
+            "checkable");
+        infiniteFuelTextButton.setChecked(SettingsManager.getDebugSettings().noGravity);
+
+        infiniteFuelTextButton.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    super.clicked(event, x, y);
+                    SettingsManager.getDebugSettings().noGravity =
+                        !SettingsManager.getDebugSettings().noGravity;
+                    infiniteFuelTextButton.setChecked(SettingsManager.getDebugSettings().noGravity);
+                }
+            });
+
+        return infiniteFuelTextButton;
+    }
+
+    private TextButton getInfiniteFuelTextButton()
+    {
+        final TextButton infiniteFuelTextButton = new BeepingTextButton(
+            "Infinite fuel",
+            UIManager.skin,
+            "checkable");
+        infiniteFuelTextButton.setChecked(SettingsManager.getDebugSettings().infiniteFuel);
+
+        infiniteFuelTextButton.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    super.clicked(event, x, y);
+                    SettingsManager.getDebugSettings().infiniteFuel =
+                        !SettingsManager.getDebugSettings().infiniteFuel;
+                    infiniteFuelTextButton.setChecked(SettingsManager.getDebugSettings().infiniteFuel);
+                }
+            });
+
+        return infiniteFuelTextButton;
+    }
+
     private TextButton getForceCrashButton()
     {
-        TextButton forceCrashTextButton = new BeepingTextButton("Force crash", UIManager.skin);
+        TextButton forceCrashTextButton =
+            new BeepingTextButton("Force crash", UIManager.skin, "checkable");
         forceCrashTextButton.addListener(new ClickListener()
         {
             @Override
@@ -99,90 +187,6 @@ public class DebugScreen extends com.draga.spaceTravels3.ui.Screen
         });
 
         return errorTextButton;
-    }
-
-    private TextButton getBackTextButton()
-    {
-        TextButton backTextButton = new BeepingTextButton("Back", UIManager.skin);
-        backTextButton.addListener(new ClickListener()
-        {
-            @Override
-            public void clicked(InputEvent event, float x, float y)
-            {
-                ScreenManager.removeScreen(DebugScreen.this);
-            }
-        });
-
-        return backTextButton;
-    }
-
-    private TextButton getDebugDrawTextButton()
-    {
-        final TextButton debugDrawTextButton = new BeepingTextButton(
-            "Debug draw",
-            UIManager.skin.get(TextButton.TextButtonStyle.class));
-        debugDrawTextButton.setChecked(SettingsManager.getDebugSettings().debugDraw);
-
-        debugDrawTextButton.addListener(
-            new ClickListener()
-            {
-                @Override
-                public void clicked(InputEvent event, float x, float y)
-                {
-                    super.clicked(event, x, y);
-                    SettingsManager.getDebugSettings().debugDraw =
-                        !SettingsManager.getDebugSettings().debugDraw;
-                    debugDrawTextButton.setChecked(SettingsManager.getDebugSettings().debugDraw);
-                }
-            });
-
-        return debugDrawTextButton;
-    }
-
-    private TextButton getNoGravityTextButton()
-    {
-        final TextButton infiniteFuelTextButton = new BeepingTextButton(
-            "No gravity",
-            UIManager.skin.get(TextButton.TextButtonStyle.class));
-        infiniteFuelTextButton.setChecked(SettingsManager.getDebugSettings().noGravity);
-
-        infiniteFuelTextButton.addListener(
-            new ClickListener()
-            {
-                @Override
-                public void clicked(InputEvent event, float x, float y)
-                {
-                    super.clicked(event, x, y);
-                    SettingsManager.getDebugSettings().noGravity =
-                        !SettingsManager.getDebugSettings().noGravity;
-                    infiniteFuelTextButton.setChecked(SettingsManager.getDebugSettings().noGravity);
-                }
-            });
-
-        return infiniteFuelTextButton;
-    }
-
-    private TextButton getInfiniteFuelTextButton()
-    {
-        final TextButton infiniteFuelTextButton = new BeepingTextButton(
-            "Infinite fuel",
-            UIManager.skin.get(TextButton.TextButtonStyle.class));
-        infiniteFuelTextButton.setChecked(SettingsManager.getDebugSettings().infiniteFuel);
-
-        infiniteFuelTextButton.addListener(
-            new ClickListener()
-            {
-                @Override
-                public void clicked(InputEvent event, float x, float y)
-                {
-                    super.clicked(event, x, y);
-                    SettingsManager.getDebugSettings().infiniteFuel =
-                        !SettingsManager.getDebugSettings().infiniteFuel;
-                    infiniteFuelTextButton.setChecked(SettingsManager.getDebugSettings().infiniteFuel);
-                }
-            });
-
-        return infiniteFuelTextButton;
     }
 
     @Override
