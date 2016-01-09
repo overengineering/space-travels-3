@@ -5,14 +5,13 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.utils.Pools;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.draga.background.Background;
 import com.draga.spaceTravels3.*;
 import com.draga.spaceTravels3.event.LoseEvent;
 import com.draga.spaceTravels3.event.WinEvent;
 import com.draga.spaceTravels3.gameEntity.GameEntity;
 import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.spaceTravels3.manager.InputManager;
+import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.physic.PhysicDebugDrawer;
@@ -27,11 +26,7 @@ public class GameScreen extends com.draga.spaceTravels3.ui.Screen
 {
     private static final String LOGGING_TAG = GameScreen.class.getSimpleName();
 
-    private final Background background;
-
     private Hud hud;
-
-    private ExtendViewport extendViewport;
 
     private Level level;
 
@@ -41,8 +36,6 @@ public class GameScreen extends com.draga.spaceTravels3.ui.Screen
     {
         super(true, true);
 
-        this.background =
-            AssMan.getAssMan().get(Constants.Visual.Background.BACKGROUND_ASSET_DESCRIPTOR);
         this.level = level;
 
         PhysicsEngine.create();
@@ -51,12 +44,7 @@ public class GameScreen extends com.draga.spaceTravels3.ui.Screen
 
         Constants.General.EVENT_BUS.register(this);
 
-        this.extendViewport = new ExtendViewport(
-            Constants.Visual.VIEWPORT_WIDTH,
-            Constants.Visual.VIEWPORT_HEIGHT);
-        this.extendViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
-        this.hud = new Hud(this.extendViewport.getCamera(), this.level);
+        this.hud = new Hud(this.level);
 
         // Run a frame to do things like generate a Projection.
         update(0);
@@ -141,11 +129,6 @@ public class GameScreen extends com.draga.spaceTravels3.ui.Screen
         draw();
 
         this.hud.render(deltaTime);
-
-        if (SettingsManager.getDebugSettings().debugDraw)
-        {
-            PhysicDebugDrawer.draw(this.extendViewport.getCamera());
-        }
     }
 
     private void checkDebugKeys()
@@ -172,17 +155,17 @@ public class GameScreen extends com.draga.spaceTravels3.ui.Screen
     public void draw()
     {
         updateCamera();
+        SpaceTravels3.gameViewport.apply();
 
         if (this.shipProjection != null)
         {
-            SpaceTravels3.shapeRenderer.setProjectionMatrix(this.extendViewport.getCamera().combined);
+            SpaceTravels3.shapeRenderer.setProjectionMatrix(SpaceTravels3.gameViewport.getCamera().combined);
             SpaceTravels3.shapeRenderer.begin();
             this.shipProjection.draw();
             SpaceTravels3.shapeRenderer.end();
         }
 
         SpaceTravels3.spriteBatch.begin();
-        this.background.draw(this.extendViewport.getCamera(), SpaceTravels3.spriteBatch);
 
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
@@ -193,7 +176,7 @@ public class GameScreen extends com.draga.spaceTravels3.ui.Screen
 
         if (SettingsManager.getDebugSettings().debugDraw)
         {
-            PhysicDebugDrawer.draw(this.extendViewport.getCamera());
+            PhysicDebugDrawer.draw();
         }
     }
 
@@ -203,7 +186,7 @@ public class GameScreen extends com.draga.spaceTravels3.ui.Screen
         {
             return;
         }
-        Camera camera = this.extendViewport.getCamera();
+        Camera camera = SpaceTravels3.gameViewport.getCamera();
 
         camera.position.set(
             this.level.getShip().physicsComponent.getPosition().x,
@@ -211,12 +194,12 @@ public class GameScreen extends com.draga.spaceTravels3.ui.Screen
             0f);
         camera.update();
 
-        SpaceTravels3.spriteBatch.setProjectionMatrix(this.extendViewport.getCamera().combined);
+        SpaceTravels3.spriteBatch.setProjectionMatrix(camera.combined);
     }
 
     public void resize(int width, int height)
     {
-        this.extendViewport.update(width, height);
+        SpaceTravels3.gameViewport.update(width, height);
     }
 
     @Override
@@ -245,8 +228,6 @@ public class GameScreen extends com.draga.spaceTravels3.ui.Screen
         this.hud.dispose();
 
         this.level.dispose();
-
-        this.background.dispose();
 
         AssMan.getAssMan().clear();
 

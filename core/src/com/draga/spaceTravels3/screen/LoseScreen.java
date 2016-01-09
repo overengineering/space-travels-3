@@ -11,6 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.spaceTravels3.Constants;
+import com.draga.spaceTravels3.SpaceTravels3;
+import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
@@ -34,7 +36,7 @@ public class LoseScreen extends com.draga.spaceTravels3.ui.Screen
         this.sound.play(SettingsManager.getSettings().volumeFX);
 
         this.levelId = levelId;
-        this.stage = new Stage();
+        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
         table.setBackground(UIManager.getTiledDrawable(Constants.Visual.SCREEN_FADE_COLOUR));
@@ -117,6 +119,9 @@ public class LoseScreen extends com.draga.spaceTravels3.ui.Screen
             Retry();
             return;
         }
+
+        this.stage.getViewport().apply();
+        this.stage.getBatch().setProjectionMatrix(this.stage.getViewport().getCamera().combined);
 
         this.stage.act(delta);
         this.stage.draw();

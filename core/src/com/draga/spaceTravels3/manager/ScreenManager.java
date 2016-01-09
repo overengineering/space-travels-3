@@ -1,4 +1,4 @@
-package com.draga.spaceTravels3.screen;
+package com.draga.spaceTravels3.manager;
 
 import com.badlogic.gdx.Gdx;
 import com.draga.ErrorHandlerProvider;

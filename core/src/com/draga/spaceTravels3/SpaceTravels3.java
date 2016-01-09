@@ -4,25 +4,28 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.draga.ErrorHandlerProvider;
 import com.draga.GdxErrorHandler;
-import com.draga.background.Background;
 import com.draga.spaceTravels3.manager.*;
 import com.draga.spaceTravels3.manager.asset.AssMan;
+import com.draga.spaceTravels3.screen.BackgroundScreen;
 import com.draga.spaceTravels3.screen.MenuScreen;
-import com.draga.spaceTravels3.screen.ScreenManager;
 
 public class SpaceTravels3 implements ApplicationListener
 {
     private static final String LOGGING_TAG = SpaceTravels3.class.getSimpleName();
 
-    public static SpriteBatch   spriteBatch;
-    public static ShapeRenderer shapeRenderer;
-
-    public static Background background;
+    public static SpriteBatch     spriteBatch;
+    public static ShapeRenderer   shapeRenderer;
+    public static ScalingViewport menuViewport;
+    public static ExtendViewport  gameViewport;
 
     private DebugOverlay debugOverlay;
 
@@ -35,17 +38,18 @@ public class SpaceTravels3 implements ApplicationListener
         spriteBatch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setAutoShapeType(true);
+        menuViewport = new ScalingViewport(
+            Scaling.stretch,
+            Gdx.graphics.getWidth(),
+            Gdx.graphics.getHeight(),
+            new OrthographicCamera());
+        gameViewport =
+            new ExtendViewport(Constants.Visual.VIEWPORT_WIDTH, Constants.Visual.VIEWPORT_HEIGHT);
+        gameViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         Gdx.input.setCatchBackKey(true);
 
         AssMan.create();
-
-        AssMan.getAssMan().load(Constants.Visual.Background.BACKGROUND_ASSET_DESCRIPTOR);
-        AssMan.getAssMan().finishLoading();
-
-        background =
-            AssMan.getAssMan().get(Constants.Visual.Background.BACKGROUND_ASSET_DESCRIPTOR);
-
         ScreenManager.create();
         UIManager.create();
         SoundManager.create();
@@ -64,6 +68,9 @@ public class SpaceTravels3 implements ApplicationListener
         {
             Gdx.app.setLogLevel(Application.LOG_ERROR);
         }
+
+        BackgroundScreen backgroundScreen = new BackgroundScreen();
+        ScreenManager.addScreen(backgroundScreen);
 
         MenuScreen menuScreen = new MenuScreen();
         ScreenManager.addScreen(menuScreen);

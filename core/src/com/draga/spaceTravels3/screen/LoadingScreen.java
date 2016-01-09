@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.Level;
 import com.draga.spaceTravels3.SpaceTravels3;
+import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
@@ -49,9 +50,7 @@ public class LoadingScreen extends com.draga.spaceTravels3.ui.Screen
         this.serialisableLevel = serialisableLevel;
         this.stopwatch = Stopwatch.createStarted();
 
-        loadAssets(this.serialisableLevel);
-
-        this.stage = new Stage();
+        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
 
         Actor headerLabel = getHeaderLabel();
 
@@ -66,36 +65,6 @@ public class LoadingScreen extends com.draga.spaceTravels3.ui.Screen
             .width(this.stage.getWidth() * 0.75f);
 
         this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
-    }
-
-    private void loadAssets(SerialisableLevel serialisableLevel)
-    {
-        AssetManager assMan = AssMan.getAssMan();
-
-        // Loads sounds first 'cause of weird quirk of Android not loading them in time.
-        assMan.load(AssMan.getAssList().thrusterSound, Sound.class);
-        assMan.load(AssMan.getAssList().explosionSound, Sound.class);
-        assMan.load(AssMan.getAssList().pickupCollectSound, Sound.class);
-        assMan.load(AssMan.getAssList().loseSound, Sound.class);
-        assMan.load(AssMan.getAssList().winSound, Sound.class);
-
-        assMan.load(AssMan.getAssList().pickupGreyTexture, Texture.class);
-        assMan.load(
-            AssMan.getAssList().shipTexture, Texture.class);
-        assMan.load(
-            AssMan.getAssList().thrusterTextureAtlas, TextureAtlas.class);
-        for (SerialisablePlanet serialisablePlanet : serialisableLevel.serialisedPlanets)
-        {
-            assMan.load(serialisablePlanet.texturePath, Texture.class);
-        }
-        assMan.load(AssMan.getAssList().explosionTextureAtlas, TextureAtlas.class);
-        assMan.load(AssMan.getAssList().pickupTexture, Texture.class);
-
-        assMan.load(Constants.Visual.Background.BACKGROUND_ASSET_DESCRIPTOR);
-
-        assMan.load(Constants.Visual.HUD.JOYSTICK_ASSET_DESCRIPTOR);
-
-        assMan.update();
     }
 
     public Label getHeaderLabel()
@@ -128,7 +97,36 @@ public class LoadingScreen extends com.draga.spaceTravels3.ui.Screen
     @Override
     public void show()
     {
+        loadAssets(this.serialisableLevel);
         Gdx.input.setInputProcessor(this.stage);
+    }
+
+    private void loadAssets(SerialisableLevel serialisableLevel)
+    {
+        AssetManager assMan = AssMan.getAssMan();
+
+        // Loads sounds first 'cause of weird quirk of Android not loading them in time.
+        assMan.load(AssMan.getAssList().thrusterSound, Sound.class);
+        assMan.load(AssMan.getAssList().explosionSound, Sound.class);
+        assMan.load(AssMan.getAssList().pickupCollectSound, Sound.class);
+        assMan.load(AssMan.getAssList().loseSound, Sound.class);
+        assMan.load(AssMan.getAssList().winSound, Sound.class);
+
+        assMan.load(AssMan.getAssList().pickupGreyTexture, Texture.class);
+        assMan.load(
+            AssMan.getAssList().shipTexture, Texture.class);
+        assMan.load(
+            AssMan.getAssList().thrusterTextureAtlas, TextureAtlas.class);
+        for (SerialisablePlanet serialisablePlanet : serialisableLevel.serialisedPlanets)
+        {
+            assMan.load(serialisablePlanet.texturePath, Texture.class);
+        }
+        assMan.load(AssMan.getAssList().explosionTextureAtlas, TextureAtlas.class);
+        assMan.load(AssMan.getAssList().pickupTexture, Texture.class);
+
+        assMan.load(Constants.Visual.HUD.JOYSTICK_ASSET_DESCRIPTOR);
+
+        assMan.update();
     }
 
     @Override
@@ -156,9 +154,8 @@ public class LoadingScreen extends com.draga.spaceTravels3.ui.Screen
         }
         updateProgressBar();
 
-        this.stage.getBatch().begin();
-        SpaceTravels3.background.draw(this.stage.getCamera(), this.stage.getBatch());
-        this.stage.getBatch().end();
+        this.stage.getViewport().apply();
+        this.stage.getBatch().setProjectionMatrix(this.stage.getViewport().getCamera().combined);
 
         this.stage.act(deltaTime);
         this.stage.draw();

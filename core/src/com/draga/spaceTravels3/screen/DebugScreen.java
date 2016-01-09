@@ -10,6 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.ErrorHandlerProvider;
+import com.draga.spaceTravels3.SpaceTravels3;
+import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.ui.BeepingTextButton;
@@ -23,7 +25,7 @@ public class DebugScreen extends com.draga.spaceTravels3.ui.Screen
     {
         super(true, true);
 
-        this.stage = new Stage();
+        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
@@ -204,6 +206,8 @@ public class DebugScreen extends com.draga.spaceTravels3.ui.Screen
             ScreenManager.removeScreen(DebugScreen.this);
         }
 
+        this.stage.getViewport().apply();
+        this.stage.getBatch().setProjectionMatrix(this.stage.getViewport().getCamera().combined);
         this.stage.act(delta);
         this.stage.draw();
     }

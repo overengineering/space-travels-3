@@ -5,7 +5,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Pools;
 import com.draga.spaceTravels3.Constants;
+import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.event.CountdownFinishedEvent;
+import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 
@@ -21,7 +23,7 @@ public class CountdownScreen extends com.draga.spaceTravels3.ui.Screen
         super(true, false);
         this.secondsRemaining = Constants.Game.COUNTDOWN_SECONDS;
 
-        this.stage = new Stage();
+        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
 
         Table table = new Table();
         this.stage.addActor(table);

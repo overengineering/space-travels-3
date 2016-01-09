@@ -13,7 +13,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.Score;
+import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.manager.ScoreManager;
+import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
@@ -42,7 +44,7 @@ public class WinScreen extends com.draga.spaceTravels3.ui.Screen
         this.levelId = levelId;
         this.difficulty = difficulty;
 
-        this.stage = new Stage();
+        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
 
         int previousBestScore = ScoreManager.getScore(levelId, difficulty);
 
@@ -206,6 +208,9 @@ public class WinScreen extends com.draga.spaceTravels3.ui.Screen
             Retry();
             return;
         }
+
+        this.stage.getViewport().apply();
+        this.stage.getBatch().setProjectionMatrix(this.stage.getViewport().getCamera().combined);
 
         this.stage.act(delta);
         this.stage.draw();
