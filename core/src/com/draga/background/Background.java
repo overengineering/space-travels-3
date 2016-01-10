@@ -3,13 +3,11 @@ package com.draga.background;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Disposable;
-import com.draga.utils.FileUtils;
 import com.google.common.base.Stopwatch;
 
 import java.util.ArrayList;
@@ -181,11 +179,6 @@ public class Background implements Disposable
                 pixmap.drawPixel(x, y);
             }
         }
-
-        // TODO: remove
-        PixmapIO.writePNG(
-            FileUtils.getFileHandle("starfield" + System.nanoTime() + ".png"),
-            pixmap);
 
         return pixmap;
     }
