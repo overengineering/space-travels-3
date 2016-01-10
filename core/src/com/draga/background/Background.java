@@ -135,7 +135,7 @@ public class Background implements Disposable
         this.layerParallaxScale.add(parallaxScale);
 
         Gdx.app.debug(LOGGING_TAG, "Generating star layer took " + stopwatch.elapsed(
-            TimeUnit.NANOSECONDS) / MathUtils.nanoToSec + "s");
+            TimeUnit.NANOSECONDS) * MathUtils.nanoToSec + "s");
 
     }
 
