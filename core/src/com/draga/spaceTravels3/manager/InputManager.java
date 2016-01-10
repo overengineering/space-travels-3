@@ -8,15 +8,17 @@ import com.draga.spaceTravels3.input.inputProvider.InputProvider;
 import com.draga.spaceTravels3.input.inputProvider.KeyboardInputProvider;
 import com.draga.spaceTravels3.input.inputProvider.TouchInputProvider;
 
-public class InputManager
+public abstract class InputManager
 {
     private static final String LOGGING_TAG = InputManager.class.getSimpleName();
-
     private static PooledVector2 inputForce = PooledVector2.newVector2(0f, 0f);
-
     private static InputProvider touchInputProvider;
     private static InputProvider accelerometerInputProvider;
     private static InputProvider keyboardInputProvider;
+
+    private InputManager()
+    {
+    }
 
     public static void create()
     {

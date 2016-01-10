@@ -15,11 +15,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 
-public class UIManager
+public abstract class UIManager
 {
     private static final String LOGGING_TAG = UIManager.class.getSimpleName();
-
     public static Skin skin;
+
+    private UIManager()
+    {
+    }
 
     public static Table addDefaultTableToStage(Stage stage)
     {
