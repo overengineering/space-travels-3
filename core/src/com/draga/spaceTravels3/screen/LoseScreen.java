@@ -36,9 +36,10 @@ public class LoseScreen extends com.draga.spaceTravels3.ui.Screen
         this.sound.play(SettingsManager.getSettings().volumeFX);
 
         this.levelId = levelId;
-        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
+        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.overlaySpriteBath);
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
+
         table.setBackground(UIManager.getTiledDrawable(Constants.Visual.SCREEN_FADE_COLOUR));
         table.addAction(Actions.sequence(
             Actions.fadeOut(0),

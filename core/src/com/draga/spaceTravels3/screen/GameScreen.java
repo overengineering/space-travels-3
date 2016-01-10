@@ -165,6 +165,7 @@ public class GameScreen extends com.draga.spaceTravels3.ui.Screen
             SpaceTravels3.shapeRenderer.end();
         }
 
+        SpaceTravels3.spriteBatch.setProjectionMatrix(SpaceTravels3.gameViewport.getCamera().combined);
         SpaceTravels3.spriteBatch.begin();
 
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())

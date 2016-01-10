@@ -22,15 +22,15 @@ import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.ui.BeepingTextButton;
 import com.draga.spaceTravels3.ui.Screen;
 
-public class WinScreen extends com.draga.spaceTravels3.ui.Screen
+public class WinScreen extends Screen
 {
     private final Stage stage;
 
     private final Sound sound;
 
-    private final String                            levelId;
-    private final String                            difficulty;
-    private       com.draga.spaceTravels3.ui.Screen gameScreen;
+    private final String levelId;
+    private final String difficulty;
+    private       Screen gameScreen;
 
     public WinScreen(String levelId, String difficulty, Score score, Screen gameScreen)
     {
@@ -44,11 +44,12 @@ public class WinScreen extends com.draga.spaceTravels3.ui.Screen
         this.levelId = levelId;
         this.difficulty = difficulty;
 
-        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
+        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.overlaySpriteBath);
 
         int previousBestScore = ScoreManager.getScore(levelId, difficulty);
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
+
         table.setBackground(UIManager.getTiledDrawable(Constants.Visual.SCREEN_FADE_COLOUR));
         table.addAction(Actions.sequence(
             Actions.fadeOut(0),

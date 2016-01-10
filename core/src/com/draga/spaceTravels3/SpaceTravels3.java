@@ -23,6 +23,7 @@ public class SpaceTravels3 implements ApplicationListener
     private static final String LOGGING_TAG = SpaceTravels3.class.getSimpleName();
 
     public static SpriteBatch     spriteBatch;
+    public static SpriteBatch overlaySpriteBath;
     public static ShapeRenderer   shapeRenderer;
     public static ScalingViewport menuViewport;
     public static ExtendViewport  gameViewport;
@@ -36,6 +37,7 @@ public class SpaceTravels3 implements ApplicationListener
         ErrorHandlerProvider.addCustomExceptionHandler(new GdxErrorHandler());
 
         spriteBatch = new SpriteBatch();
+        overlaySpriteBath = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setAutoShapeType(true);
         menuViewport = new ScalingViewport(
