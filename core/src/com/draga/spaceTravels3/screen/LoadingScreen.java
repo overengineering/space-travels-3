@@ -155,7 +155,6 @@ public class LoadingScreen extends com.draga.spaceTravels3.ui.Screen
         updateProgressBar();
 
         this.stage.getViewport().apply();
-        this.stage.getBatch().setProjectionMatrix(this.stage.getViewport().getCamera().combined);
 
         this.stage.act(deltaTime);
         this.stage.draw();

@@ -156,7 +156,6 @@ public class MenuScreen extends com.draga.spaceTravels3.ui.Screen
         }
 
         this.stage.getViewport().apply();
-        this.stage.getBatch().setProjectionMatrix(this.stage.getViewport().getCamera().combined);
 
         this.stage.act(deltaTime);
         this.stage.draw();

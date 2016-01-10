@@ -235,7 +235,6 @@ public class SettingsScreen extends com.draga.spaceTravels3.ui.Screen
         }
 
         this.stage.getViewport().apply();
-        this.stage.getBatch().setProjectionMatrix(this.stage.getViewport().getCamera().combined);
 
         this.stage.act(delta);
         this.stage.draw();

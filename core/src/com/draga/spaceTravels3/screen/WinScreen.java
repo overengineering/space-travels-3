@@ -211,7 +211,6 @@ public class WinScreen extends Screen
         }
 
         this.stage.getViewport().apply();
-        this.stage.getBatch().setProjectionMatrix(this.stage.getViewport().getCamera().combined);
 
         this.stage.act(delta);
         this.stage.draw();
