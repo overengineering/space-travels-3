@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import com.google.common.base.Stopwatch;
 
@@ -21,11 +22,15 @@ public class Background implements Disposable
     private ArrayList<Float>   layerParallaxScale;
     private ArrayList<Pixmap>  pixmaps;
 
+    private Vector2 position;
+
     public Background()
     {
         this.textures = new ArrayList<>();
         this.layerParallaxScale = new ArrayList<>();
         this.pixmaps = new ArrayList<>();
+
+        this.position = new Vector2();
     }
 
     /**
@@ -33,17 +38,20 @@ public class Background implements Disposable
      */
     public void draw(Camera camera, Batch batch)
     {
-        float x = camera.position.x - camera.viewportWidth / 2f;
-        float y = camera.position.y - camera.viewportHeight / 2f;
+        float x = camera.position.x - (camera.viewportWidth / 2f);
+        float y = camera.position.y - (camera.viewportHeight / 2f);
 
         for (int i = 0; i < this.textures.size(); i++)
         {
-            float offsetX = camera.position.x * this.layerParallaxScale.get(i);
-            float offsetY = camera.position.y * this.layerParallaxScale.get(i);
-            Texture texture = this.textures.get(i);
+            Float parallax = this.layerParallaxScale.get(i);
+            float offsetX = this.position.x * parallax;
+            float offsetY = this.position.y * parallax;
+
 
             float u = offsetX / camera.viewportWidth;
             float v = offsetY / camera.viewportHeight;
+
+            Texture texture = this.textures.get(i);
 
             batch.draw(
                 texture,
@@ -181,5 +189,10 @@ public class Background implements Disposable
         }
 
         return pixmap;
+    }
+
+    public void move(Vector2 vector2)
+    {
+        this.position.add(vector2);
     }
 }

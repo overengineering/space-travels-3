@@ -4,7 +4,9 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.draga.background.Background;
 import com.draga.background.BackgroundLoader;
 import com.draga.spaceTravels3.Constants;
+import com.draga.spaceTravels3.RandomBackgroundPositionController;
 import com.draga.spaceTravels3.SpaceTravels3;
+import com.draga.spaceTravels3.manager.BackgroundPositionManager;
 import com.draga.spaceTravels3.ui.Screen;
 
 public class BackgroundScreen extends Screen
@@ -28,7 +30,7 @@ public class BackgroundScreen extends Screen
     }
 
     @Override
-    public void render(float delta)
+    public void render(float deltaTime)
     {
         if (this.background == null)
         {
@@ -36,10 +38,14 @@ public class BackgroundScreen extends Screen
             {
                 this.background =
                     this.assetManager.get(Constants.Visual.Background.BACKGROUND_ASSET_DESCRIPTOR);
+                BackgroundPositionManager.create(this.background);
+                BackgroundPositionManager.addBackgroundPositionController(new RandomBackgroundPositionController());
             }
         }
         else
         {
+            BackgroundPositionManager.update(deltaTime);
+
             SpaceTravels3.menuViewport.apply();
             SpaceTravels3.spriteBatch.setProjectionMatrix(SpaceTravels3.menuViewport.getCamera().combined);
             SpaceTravels3.spriteBatch.begin();

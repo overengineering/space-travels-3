@@ -9,10 +9,7 @@ import com.draga.spaceTravels3.*;
 import com.draga.spaceTravels3.event.LoseEvent;
 import com.draga.spaceTravels3.event.WinEvent;
 import com.draga.spaceTravels3.gameEntity.GameEntity;
-import com.draga.spaceTravels3.manager.GameEntityManager;
-import com.draga.spaceTravels3.manager.InputManager;
-import com.draga.spaceTravels3.manager.ScreenManager;
-import com.draga.spaceTravels3.manager.SettingsManager;
+import com.draga.spaceTravels3.manager.*;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.physic.PhysicDebugDrawer;
 import com.draga.spaceTravels3.physic.PhysicsEngine;
@@ -25,6 +22,7 @@ import java.util.ArrayList;
 public class GameScreen extends com.draga.spaceTravels3.ui.Screen
 {
     private static final String LOGGING_TAG = GameScreen.class.getSimpleName();
+    private final PhysicsComponentBackgroundPositionController shipBackgroundPositionController;
 
     private Hud hud;
 
@@ -37,6 +35,9 @@ public class GameScreen extends com.draga.spaceTravels3.ui.Screen
         super(true, true);
 
         this.level = level;
+
+        this.shipBackgroundPositionController =
+            new PhysicsComponentBackgroundPositionController(level.getShip().physicsComponent);
 
         PhysicsEngine.create();
         PhysicsEngine.cachePhysicsComponentCollisions(level.getShip().physicsComponent);
@@ -93,6 +94,7 @@ public class GameScreen extends com.draga.spaceTravels3.ui.Screen
     @Override
     public void show()
     {
+        BackgroundPositionManager.addBackgroundPositionController(this.shipBackgroundPositionController);
         ScreenManager.addScreen(new CountdownScreen());
 
         Gdx.input.setInputProcessor(new InputAdapter()
@@ -218,7 +220,7 @@ public class GameScreen extends com.draga.spaceTravels3.ui.Screen
     @Override
     public void hide()
     {
-
+        BackgroundPositionManager.removeBackgroundPositionController(this.shipBackgroundPositionController);
     }
 
     @Override
