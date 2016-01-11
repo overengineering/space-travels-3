@@ -1,7 +1,7 @@
 {
   "shipTexture": "spaceship/destroyer128.png",
-  "pickupTexture": "pickup/pickup.png",
-  "pickupGreyTexture": "pickup/pickupGrey.png",
+  "pickupTexture": "pickup/star64.png",
+  "pickupGreyTexture": "pickup/starGray64.png",
 
   "thrusterTextureAtlas": "thruster/thrusterSize256Frames75.txt",
   "explosionTextureAtlas": "explosion/explosion.txt",

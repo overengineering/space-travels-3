@@ -21,7 +21,7 @@ public abstract class Constants
 
         // Pickup
         public static final float PICKUP_WIDTH  = 5f;
-        public static final float PICKUP_HEIGHT = 5f * 0.75f;
+        public static final float PICKUP_HEIGHT = 5f;
 
         // Explosion
         public static final float EXPLOSION_LIFETIME = 2f;
