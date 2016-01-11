@@ -255,12 +255,13 @@ public class GameScreen extends com.draga.spaceTravels3.ui.Screen
     public void Win(WinEvent winEvent)
     {
         Score score = this.level.getScore();
-        Pools.free(score);
 
         ScreenManager.addScreen(new WinScreen(
             this.level.getId(),
             this.level.getDifficulty(),
             score,
             this));
+
+        Pools.free(score);
     }
 }
