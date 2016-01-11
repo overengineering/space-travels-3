@@ -6,9 +6,9 @@ import com.draga.ErrorHandler;
 public class FabricErrorHandler implements ErrorHandler
 {
     @Override
-    public void handle(String tag, Exception exception, String message)
+    public void handle(String tag, Throwable throwable, String message)
     {
-        Crashlytics.logException(exception);
+        Crashlytics.logException(throwable);
         Crashlytics.log(tag + " : " + message);
     }
 

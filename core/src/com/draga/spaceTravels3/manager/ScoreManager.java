@@ -46,7 +46,7 @@ public abstract class ScoreManager
             difficultyScores.put(difficulty, score);
             saveLevelScores();
             ScoreUpdatedEvent scoreUpdatedEvent = Pools.obtain(ScoreUpdatedEvent.class);
-            scoreUpdatedEvent.set(levelId, difficulty);
+            scoreUpdatedEvent.set(levelId, difficulty, score);
             Constants.General.EVENT_BUS.post(scoreUpdatedEvent);
             Pools.free(scoreUpdatedEvent);
         }

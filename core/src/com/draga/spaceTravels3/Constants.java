@@ -3,6 +3,7 @@ package com.draga.spaceTravels3;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.Color;
+import com.draga.ErrorHandlerProvider;
 import com.draga.PooledVector2;
 import com.draga.background.BackgroundParameters;
 import com.draga.joystick.Joystick;
@@ -63,7 +64,8 @@ public abstract class Constants
                     MAX_PARALLAX,
                     STAR_MAX_DIAMETER_SCALE);
 
-            public static final AssetDescriptor<com.draga.background.Background> BACKGROUND_ASSET_DESCRIPTOR =
+            public static final AssetDescriptor<com.draga.background.Background>
+                BACKGROUND_ASSET_DESCRIPTOR =
                 new AssetDescriptor<>(
                     com.draga.background.Background.class.getSimpleName(),
                     com.draga.background.Background.class,
@@ -188,7 +190,8 @@ public abstract class Constants
         public static final float         EARTH_GRAVITY                       = 9.80665f;
         public static final DecimalFormat COMMA_SEPARATED_THOUSANDS_FORMATTER =
             new DecimalFormat("#,###");
-        public static final EventBus      EVENT_BUS                           = new EventBus();
+        public static final EventBus      EVENT_BUS                           = new EventBus(
+            ErrorHandlerProvider.GUAVA_SUBSCRIBER_EXCEPTION_HANDLER);
 
         public static final String FOLDER                  =
             SpaceTravels3.class.getSimpleName();

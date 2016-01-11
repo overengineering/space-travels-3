@@ -22,19 +22,23 @@ import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLe
 import com.draga.spaceTravels3.ui.BeepingTextButton;
 import com.google.common.eventbus.Subscribe;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 public class LevelScreen extends com.draga.spaceTravels3.ui.Screen
 {
-    private final SerialisableLevel serialisableLevel;
-    private       Actor             difficultiesList;
-    private       Stage             stage;
+    private final SerialisableLevel      serialisableLevel;
+    private       Actor                  difficultiesList;
+    private       Stage                  stage;
+    private       HashMap<String, Label> difficultyHighScoreLabels;
 
     public LevelScreen(SerialisableLevel serialisableLevel)
     {
         super(true, true);
 
         this.serialisableLevel = serialisableLevel;
+
+        this.difficultyHighScoreLabels = new HashMap<>();
 
         this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
 
@@ -92,14 +96,11 @@ public class LevelScreen extends com.draga.spaceTravels3.ui.Screen
             Integer score = ScoreManager.getScore(
                 serialisableLevel.id,
                 difficulty);
-            if (score != null)
-            {
-                difficultyTable.add("High score : " + String.valueOf(score));
-            }
-            else
-            {
-                difficultyTable.add("");
-            }
+
+            Label difficultyHighScoreLabel = new Label(getHighScoreText(score), UIManager.skin);
+            this.difficultyHighScoreLabels.put(difficulty, difficultyHighScoreLabel);
+
+            difficultyTable.add(difficultyHighScoreLabel);
             difficultyTable.row();
 
             difficultyTable.add("");
@@ -177,6 +178,18 @@ public class LevelScreen extends com.draga.spaceTravels3.ui.Screen
         return backTextButton;
     }
 
+    private String getHighScoreText(Integer score)
+    {
+        if (score != null)
+        {
+            return "High score : " + String.valueOf(score);
+        }
+        else
+        {
+            return "";
+        }
+    }
+
     @Override
     public void show()
     {
@@ -229,6 +242,10 @@ public class LevelScreen extends com.draga.spaceTravels3.ui.Screen
     @Subscribe
     public void ScoreUpdated(ScoreUpdatedEvent scoreUpdatedEvent)
     {
-        this.difficultiesList = getDifficultiesList(this.serialisableLevel);
+        if (scoreUpdatedEvent.levelID.equals(this.serialisableLevel.id))
+        {
+            this.difficultyHighScoreLabels.get(scoreUpdatedEvent.difficulty)
+                .setText(getHighScoreText(scoreUpdatedEvent.score));
+        }
     }
 }

@@ -5,9 +5,9 @@ import com.badlogic.gdx.Gdx;
 public class GdxErrorHandler implements ErrorHandler
 {
     @Override
-    public void handle(String tag, Exception exception, String message)
+    public void handle(String tag, Throwable throwable, String message)
     {
-        Gdx.app.error(tag, message, exception);
+        Gdx.app.error(tag, message, throwable);
     }
 
     @Override
