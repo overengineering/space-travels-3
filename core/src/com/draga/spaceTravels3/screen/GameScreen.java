@@ -256,6 +256,11 @@ public class GameScreen extends com.draga.spaceTravels3.ui.Screen
     {
         Score score = this.level.getScore();
 
+        ScoreManager.saveHighScore(
+            this.level.getId(),
+            this.level.getDifficulty(),
+            score.getTotalScore());
+
         ScreenManager.addScreen(new WinScreen(
             this.level.getId(),
             this.level.getDifficulty(),

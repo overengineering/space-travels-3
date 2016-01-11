@@ -35,7 +35,7 @@ public abstract class UIManager
 
     public static Table getDefaultTable()
     {
-        Table table = new Table();
+        Table table = new Table(skin);
         table.defaults().pad(Constants.Visual.UI.BUTTON_PADDING);
         table.pad(Constants.Visual.UI.SQRT_PIXELS / 50f);
 

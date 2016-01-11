@@ -5,9 +5,14 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.SpaceTravels3;
+import com.draga.spaceTravels3.event.ScoreUpdatedEvent;
 import com.draga.spaceTravels3.manager.ScoreManager;
 import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
@@ -15,12 +20,14 @@ import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableDifficulty;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.spaceTravels3.ui.BeepingTextButton;
+import com.google.common.eventbus.Subscribe;
 
 import java.util.LinkedHashMap;
 
 public class LevelScreen extends com.draga.spaceTravels3.ui.Screen
 {
     private final SerialisableLevel serialisableLevel;
+    private       Actor             difficultiesList;
     private       Stage             stage;
 
     public LevelScreen(SerialisableLevel serialisableLevel)
@@ -44,7 +51,8 @@ public class LevelScreen extends com.draga.spaceTravels3.ui.Screen
 
         // Setting buttons
         table.row();
-        table.add(getDifficultiesList(this.serialisableLevel));
+        this.difficultiesList = getDifficultiesList(this.serialisableLevel);
+        table.add(this.difficultiesList);
 
         // Add a row with an expanded cell to fill the gap.
         table.row();
@@ -60,6 +68,8 @@ public class LevelScreen extends com.draga.spaceTravels3.ui.Screen
             .bottom();
 
         this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
+
+        Constants.General.EVENT_BUS.register(this);
     }
 
     private Actor getDifficultiesList(final SerialisableLevel serialisableLevel)
@@ -72,52 +82,60 @@ public class LevelScreen extends com.draga.spaceTravels3.ui.Screen
         {
             SerialisableDifficulty serialisableDifficulty = serialisedDifficulties.get(difficulty);
 
-            VerticalGroup verticalGroup = new VerticalGroup();
+            Table difficultyTable = new Table(UIManager.skin);
 
-            verticalGroup.addActor(new Label(difficulty, UIManager.skin));
-            int score = ScoreManager.getScore(
+            // Header.
+            difficultyTable.add(new Label(difficulty, UIManager.skin));
+            difficultyTable.row();
+
+            // Score.
+            Integer score = ScoreManager.getScore(
                 serialisableLevel.id,
                 difficulty);
-            verticalGroup.addActor(new Label(
-                "High score : " + String.valueOf(score),
-                UIManager.skin));
-            verticalGroup.addActor(new Label("", UIManager.skin));
-
-            Table difficultyTable = UIManager.getDefaultTable();
-
-            difficultyTable
-                .add(new Label("Projection line: ", UIManager.skin))
-                .right();
-            difficultyTable
-                .add(new Label(
-                    String.valueOf(serialisableDifficulty.trajectorySeconds),
-                    UIManager.skin))
-                .right();
+            if (score != null)
+            {
+                difficultyTable.add("High score : " + String.valueOf(score));
+            }
+            else
+            {
+                difficultyTable.add("");
+            }
             difficultyTable.row();
 
-            difficultyTable
-                .add(new Label("Maximum landing speed: ", UIManager.skin))
-                .right();
-            difficultyTable
-                .add(new Label(
-                    String.valueOf(serialisableDifficulty.maxLandingSpeed),
-                    UIManager.skin))
-                .right();
+            difficultyTable.add("");
             difficultyTable.row();
 
-            difficultyTable
-                .add(new Label("Fuel: ", UIManager.skin))
+            // Difficulty details.
+            Table innerDifficultyTable = UIManager.getDefaultTable();
+
+            innerDifficultyTable
+                .add("Projection line: ")
                 .right();
-            difficultyTable
-                .add(new Label(
-                    serialisableDifficulty.infiniteFuel
-                        ? "infinite"
-                        : String.valueOf(serialisableDifficulty.fuel),
-                    UIManager.skin))
+            innerDifficultyTable
+                .add(String.valueOf(serialisableDifficulty.trajectorySeconds))
+                .right();
+            innerDifficultyTable.row();
+
+            innerDifficultyTable
+                .add("Maximum landing speed: ")
+                .right();
+            innerDifficultyTable
+                .add(String.valueOf(serialisableDifficulty.maxLandingSpeed))
+                .right();
+            innerDifficultyTable.row();
+
+            innerDifficultyTable.add("Fuel: ")
+                .right();
+            innerDifficultyTable
+                .add(serialisableDifficulty.infiniteFuel
+                    ? "infinite"
+                    : String.valueOf(serialisableDifficulty.fuel))
                 .right();
 
-            verticalGroup.addActor(difficultyTable);
+            difficultyTable.add(innerDifficultyTable);
+            difficultyTable.row();
 
+            // Play button.
             BeepingTextButton beepingTextButton = new BeepingTextButton("Play", UIManager.skin);
             beepingTextButton.addListener(new ClickListener()
             {
@@ -132,9 +150,9 @@ public class LevelScreen extends com.draga.spaceTravels3.ui.Screen
                 }
             });
 
-            verticalGroup.addActor(beepingTextButton);
+            difficultyTable.add(beepingTextButton);
 
-            table.add(verticalGroup);
+            table.add(difficultyTable);
         }
 
         ScrollPane scrollPane = new ScrollPane(table, UIManager.skin);
@@ -205,5 +223,12 @@ public class LevelScreen extends com.draga.spaceTravels3.ui.Screen
     public void dispose()
     {
         this.stage.dispose();
+        Constants.General.EVENT_BUS.unregister(this);
+    }
+
+    @Subscribe
+    public void ScoreUpdated(ScoreUpdatedEvent scoreUpdatedEvent)
+    {
+        this.difficultiesList = getDifficultiesList(this.serialisableLevel);
     }
 }

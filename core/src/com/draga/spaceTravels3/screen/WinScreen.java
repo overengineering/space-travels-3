@@ -46,8 +46,6 @@ public class WinScreen extends Screen
 
         this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.overlaySpriteBath);
 
-        int previousBestScore = ScoreManager.getScore(levelId, difficulty);
-
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
         table.setBackground(UIManager.getTiledDrawable(Constants.Visual.SCREEN_FADE_COLOUR));
@@ -60,9 +58,8 @@ public class WinScreen extends Screen
         table.add(headerLabel);
 
         // Best score.
-        ScoreManager.saveHighScore(levelId, difficulty, score.getTotalScore());
         table.row();
-        Label newBestScoreLabel = getBestScoreLabel(score.getTotalScore(), previousBestScore);
+        Label newBestScoreLabel = getBestScoreLabel(score.getTotalScore());
         table.add(newBestScoreLabel);
 
         // Current score.
@@ -92,13 +89,25 @@ public class WinScreen extends Screen
         return headerLabel;
     }
 
-    private Label getBestScoreLabel(int score, int previousBestScore)
+    private Label getBestScoreLabel(int score)
     {
+        Integer previousBestScore = ScoreManager.getScore(this.levelId, this.difficulty);
+
         Label.LabelStyle labelStyle = UIManager.skin.get(Label.LabelStyle.class);
 
-        String text = score > previousBestScore
-            ? "New best score! It was: " + previousBestScore
-            : "Best score: " + previousBestScore;
+        String text;
+        if (previousBestScore == null)
+        {
+            text = "New score!";
+        }
+        else if (score > previousBestScore)
+        {
+            text = "New best score! It was: " + previousBestScore;
+        }
+        else
+        {
+            text = "Best score: " + previousBestScore;
+        }
 
         Label newBestScoreLabel =
             new Label(text, labelStyle);
