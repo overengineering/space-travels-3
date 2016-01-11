@@ -2,7 +2,6 @@ package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -16,12 +15,14 @@ import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.Score;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.manager.ScoreManager;
+import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.ui.BeepingTextButton;
+import com.draga.spaceTravels3.ui.Screen;
 
-public class WinScreen implements Screen
+public class WinScreen extends Screen
 {
     private final Stage stage;
 
@@ -29,22 +30,26 @@ public class WinScreen implements Screen
 
     private final String levelId;
     private final String difficulty;
+    private       Screen gameScreen;
 
-    public WinScreen(String levelId, String difficulty, Score score)
+    public WinScreen(String levelId, String difficulty, Score score, Screen gameScreen)
     {
+        super(true, false);
+
+        this.gameScreen = gameScreen;
+
         this.sound = AssMan.getAssMan().get(AssMan.getAssList().winSound);
         this.sound.play(SettingsManager.getSettings().volumeFX);
 
         this.levelId = levelId;
         this.difficulty = difficulty;
 
-        this.stage = new Stage();
-
-        Gdx.input.setInputProcessor(this.stage);
+        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.overlaySpriteBath);
 
         int previousBestScore = ScoreManager.getScore(levelId, difficulty);
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
+
         table.setBackground(UIManager.getTiledDrawable(Constants.Visual.SCREEN_FADE_COLOUR));
         table.addAction(Actions.sequence(
             Actions.fadeOut(0),
@@ -167,7 +172,8 @@ public class WinScreen implements Screen
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                SpaceTravels3.getGame().setScreen(new MenuScreen());
+                ScreenManager.removeScreen(WinScreen.this);
+                ScreenManager.removeScreen(WinScreen.this.gameScreen);
             }
         });
 
@@ -176,32 +182,15 @@ public class WinScreen implements Screen
 
     private void Retry()
     {
-        SpaceTravels3.getGame().setScreen(new LoadingScreen(this.levelId, this.difficulty));
-    }
-
-    public TextButton getNextButton(final String levelId)
-    {
-        TextButton retryButton = new BeepingTextButton("Next level", UIManager.skin);
-
-        retryButton.addListener(
-            new ClickListener()
-            {
-                @Override
-                public void clicked(InputEvent event, float x, float y)
-                {
-                    SpaceTravels3.getGame().setScreen(new LoadingScreen(
-                        levelId,
-                        WinScreen.this.difficulty));
-                }
-            });
-
-        return retryButton;
+        ScreenManager.removeScreen(this);
+        ScreenManager.removeScreen(this.gameScreen);
+        ScreenManager.addScreen(new LoadingScreen(this.levelId, this.difficulty));
     }
 
     @Override
     public void show()
     {
-
+        Gdx.input.setInputProcessor(this.stage);
     }
 
     @Override
@@ -210,7 +199,8 @@ public class WinScreen implements Screen
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
             || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
         {
-            SpaceTravels3.getGame().setScreen(new MenuScreen());
+            ScreenManager.removeScreen(WinScreen.this);
+            ScreenManager.removeScreen(WinScreen.this.gameScreen);
             return;
         }
 
@@ -219,6 +209,8 @@ public class WinScreen implements Screen
             Retry();
             return;
         }
+
+        this.stage.getViewport().apply();
 
         this.stage.act(delta);
         this.stage.draw();
@@ -234,7 +226,6 @@ public class WinScreen implements Screen
     public void pause()
     {
 
-
     }
 
     @Override
@@ -246,7 +237,7 @@ public class WinScreen implements Screen
     @Override
     public void hide()
     {
-        this.dispose();
+
     }
 
     @Override

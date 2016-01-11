@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.MathUtils;
-import com.draga.ExceptionHandlerProvider;
+import com.draga.ErrorHandlerProvider;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public abstract class MusicManager
         // the last one played.
         if (musicPaths.size() < 2)
         {
-            ExceptionHandlerProvider.handle(LOGGING_TAG, "Less than 2 music files!");
+            ErrorHandlerProvider.handle(LOGGING_TAG, "Less than 2 music files!");
         }
 
         musicFileHandles = new ArrayList<>(musicPaths.size());

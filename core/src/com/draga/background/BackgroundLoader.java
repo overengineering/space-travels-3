@@ -5,7 +5,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.AsynchronousAssetLoader;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
-import com.draga.ExceptionHandlerProvider;
+import com.draga.ErrorHandlerProvider;
 import com.draga.NullFileHandleResolver;
 
 public class BackgroundLoader
@@ -30,7 +30,7 @@ public class BackgroundLoader
     {
         if (backgroundParameters == null)
         {
-            ExceptionHandlerProvider.handle(LOGGING_TAG, "BackgroundParameters can't be null");
+            ErrorHandlerProvider.handle(LOGGING_TAG, "BackgroundParameters can't be null");
         }
 
         this.background = new Background();

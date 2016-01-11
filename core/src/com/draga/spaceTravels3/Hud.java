@@ -3,7 +3,6 @@ package com.draga.spaceTravels3;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -32,7 +31,6 @@ import java.util.Stack;
 public class Hud implements Screen
 {
     private final Label                 scoreLabel;
-    private final Camera                worldCamera;
     private final Level                 level;
     private       Stage                 stage;
     private       Stack<Image>          grayPickups;
@@ -41,11 +39,10 @@ public class Hud implements Screen
     private       MiniMap               miniMap;
     private       TextureRegionDrawable collectedPickupDrawable;
 
-    public Hud(Camera worldCamera, Level level)
+    public Hud(Level level)
     {
         this.level = level;
         this.ship = level.getShip();
-        this.worldCamera = worldCamera;
 
         Constants.General.EVENT_BUS.register(this);
 
@@ -195,7 +192,7 @@ public class Hud implements Screen
 
         if (GameEntityManager.getGameEntities().contains(this.ship))
         {
-            SpaceTravels3.shapeRenderer.setProjectionMatrix(this.worldCamera.combined);
+            SpaceTravels3.shapeRenderer.setProjectionMatrix(SpaceTravels3.gameViewport.getCamera().combined);
             if (SettingsManager.getSettings().hudForceIndicators)
             {
                 drawGravityIndicator();

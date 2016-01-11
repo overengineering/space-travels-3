@@ -13,9 +13,6 @@ import com.draga.spaceTravels3.gameEntity.GameEntity;
 import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.utils.FileUtils;
 import com.google.common.base.Stopwatch;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -29,29 +26,16 @@ public class GravityCache
 
     private final GravityCacheNode rootNode;
     
-    private Rectangle                                        bounds;
-    private LoadingCache<PhysicsComponent, GravityCacheNode> lastUsedCacheNode;
+    private Rectangle bounds;
+
+    private PhysicsComponent lastUsedPhysicsComponent;
+    private GravityCacheNode lastUsedCacheNode;
     
     public GravityCache()
     {
         Stopwatch stopwatch = Stopwatch.createStarted();
         
         ArrayList<PhysicsComponent> staticPhysicsComponentsWithMass = new ArrayList<>();
-
-        this.lastUsedCacheNode = CacheBuilder.newBuilder()
-            .maximumSize(MAX_CACHE_SIZE)
-            .build(new CacheLoader<PhysicsComponent, GravityCacheNode>()
-            {
-                @Override
-                public GravityCacheNode load(PhysicsComponent key) throws Exception
-                {
-                    if (!GravityCache.this.rootNode.contains(key.getPosition()))
-                    {
-                        return GravityCacheNode.NULL_GRAVITY_CACHE_NODE;
-                    }
-                    return getLeafContaining(key, GravityCache.this.rootNode);
-                }
-            });
         
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
@@ -67,38 +51,6 @@ public class GravityCache
 
         float elapsed = stopwatch.elapsed(TimeUnit.NANOSECONDS) * MathUtils.nanoToSec;
         Gdx.app.debug(LOGGING_TAG, "Caching gravity took " + elapsed + "s");
-    }
-    
-    private GravityCacheNode getLeafContaining(
-        PhysicsComponent physicsComponent,
-        GravityCacheNode gravityCacheNode)
-    {
-        while (gravityCacheNode.hasChildren())
-        {
-            if (physicsComponent.getPosition().x < gravityCacheNode.getCentre().x)
-            {
-                if (physicsComponent.getPosition().y < gravityCacheNode.getCentre().y)
-                {
-                    gravityCacheNode = gravityCacheNode.getBottomLeftNode();
-                }
-                else
-                {
-                    gravityCacheNode = gravityCacheNode.getTopLeftNode();
-                }
-            }
-            else
-            {
-                if (physicsComponent.getPosition().y < gravityCacheNode.getCentre().y)
-                {
-                    gravityCacheNode = gravityCacheNode.getBottomRightNode();
-                }
-                else
-                {
-                    gravityCacheNode = gravityCacheNode.getTopRightNode();
-                }
-            }
-        }
-        return gravityCacheNode;
     }
     
     private void calculateBounds(ArrayList<PhysicsComponent> staticPhysicsComponentsWithMass)
@@ -137,7 +89,8 @@ public class GravityCache
         // Move to the leaf node containing the physicsComponent
         gravityCacheNode = getLeafContaining(physicsComponent, gravityCacheNode);
 
-        this.lastUsedCacheNode.put(physicsComponent, gravityCacheNode);
+        this.lastUsedCacheNode = gravityCacheNode;
+        this.lastUsedPhysicsComponent = physicsComponent;
 
         PooledVector2 gravity = gravityCacheNode.getGravity(physicsComponent.getPosition());
         gravity.scl(physicsComponent.getMass());
@@ -147,12 +100,61 @@ public class GravityCache
     
     private GravityCacheNode getStartingNode(PhysicsComponent physicsComponent)
     {
-        GravityCacheNode gravityCacheNode = this.lastUsedCacheNode.getUnchecked(physicsComponent);
+        GravityCacheNode gravityCacheNode;
+
+        if (this.lastUsedPhysicsComponent != null
+            && this.lastUsedPhysicsComponent.equals(physicsComponent))
+        {
+            gravityCacheNode = this.lastUsedCacheNode;
+        }
+        else
+        {
+            if (!GravityCache.this.rootNode.contains(physicsComponent.getPosition()))
+            {
+                gravityCacheNode = GravityCacheNode.NULL_GRAVITY_CACHE_NODE;
+            }
+            else
+            {
+                gravityCacheNode = GravityCache.this.rootNode;
+            }
+        }
 
         // Go up until the physicsComponent is in the boundaries
         while (!gravityCacheNode.contains(physicsComponent.getPosition()))
         {
             gravityCacheNode = gravityCacheNode.getParentNode();
+        }
+        return gravityCacheNode;
+    }
+    
+    private GravityCacheNode getLeafContaining(
+        PhysicsComponent physicsComponent,
+        GravityCacheNode gravityCacheNode)
+    {
+        while (gravityCacheNode.hasChildren())
+        {
+            if (physicsComponent.getPosition().x < gravityCacheNode.getCentre().x)
+            {
+                if (physicsComponent.getPosition().y < gravityCacheNode.getCentre().y)
+                {
+                    gravityCacheNode = gravityCacheNode.getBottomLeftNode();
+                }
+                else
+                {
+                    gravityCacheNode = gravityCacheNode.getTopLeftNode();
+                }
+            }
+            else
+            {
+                if (physicsComponent.getPosition().y < gravityCacheNode.getCentre().y)
+                {
+                    gravityCacheNode = gravityCacheNode.getBottomRightNode();
+                }
+                else
+                {
+                    gravityCacheNode = gravityCacheNode.getTopRightNode();
+                }
+            }
         }
         return gravityCacheNode;
     }

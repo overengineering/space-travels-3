@@ -2,7 +2,7 @@ package com.draga;
 
 import com.badlogic.gdx.Gdx;
 
-public class GdxErrorExceptionHandler implements ExceptionHandler
+public class GdxErrorHandler implements ErrorHandler
 {
     @Override
     public void handle(String tag, Exception exception, String message)

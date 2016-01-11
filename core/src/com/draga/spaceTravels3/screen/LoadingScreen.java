@@ -1,7 +1,6 @@
 package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -15,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.Level;
 import com.draga.spaceTravels3.SpaceTravels3;
+import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
@@ -26,7 +26,7 @@ import com.google.common.base.Stopwatch;
 
 import java.util.concurrent.TimeUnit;
 
-public class LoadingScreen implements Screen
+public class LoadingScreen extends com.draga.spaceTravels3.ui.Screen
 {
     private static final String LOGGING_TAG = LoadingScreen.class.getSimpleName();
     private final SerialisableLevel serialisableLevel;
@@ -39,25 +39,18 @@ public class LoadingScreen implements Screen
 
     public LoadingScreen(String levelId, String difficulty)
     {
-        this.difficulty = difficulty;
-        this.serialisableLevel = LevelManager.getSerialisableLevel(levelId);
+        this(LevelManager.getSerialisableLevel(levelId), difficulty);
     }
 
     public LoadingScreen(SerialisableLevel serialisableLevel, String difficulty)
     {
+        super(true, true);
+
         this.difficulty = difficulty;
         this.serialisableLevel = serialisableLevel;
-    }
-
-    @Override
-    public void show()
-    {
         this.stopwatch = Stopwatch.createStarted();
 
-        loadAssets(this.serialisableLevel);
-
-        this.stage = new Stage();
-        Gdx.input.setInputProcessor(this.stage);
+        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
 
         Actor headerLabel = getHeaderLabel();
 
@@ -72,36 +65,6 @@ public class LoadingScreen implements Screen
             .width(this.stage.getWidth() * 0.75f);
 
         this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
-    }
-
-    private void loadAssets(SerialisableLevel serialisableLevel)
-    {
-        AssetManager assMan = AssMan.getAssMan();
-
-        // Loads sounds first 'cause of weird quirk of Android not loading them in time.
-        assMan.load(AssMan.getAssList().thrusterSound, Sound.class);
-        assMan.load(AssMan.getAssList().explosionSound, Sound.class);
-        assMan.load(AssMan.getAssList().pickupCollectSound, Sound.class);
-        assMan.load(AssMan.getAssList().loseSound, Sound.class);
-        assMan.load(AssMan.getAssList().winSound, Sound.class);
-
-        assMan.load(AssMan.getAssList().pickupGreyTexture, Texture.class);
-        assMan.load(
-            AssMan.getAssList().shipTexture, Texture.class);
-        assMan.load(
-            AssMan.getAssList().thrusterTextureAtlas, TextureAtlas.class);
-        for (SerialisablePlanet serialisablePlanet : serialisableLevel.serialisedPlanets)
-        {
-            assMan.load(serialisablePlanet.texturePath, Texture.class);
-        }
-        assMan.load(AssMan.getAssList().explosionTextureAtlas, TextureAtlas.class);
-        assMan.load(AssMan.getAssList().pickupTexture, Texture.class);
-
-        assMan.load(Constants.Visual.Background.BACKGROUND_ASSET_DESCRIPTOR);
-
-        assMan.load(Constants.Visual.HUD.JOYSTICK_ASSET_DESCRIPTOR);
-
-        assMan.update();
     }
 
     public Label getHeaderLabel()
@@ -132,6 +95,41 @@ public class LoadingScreen implements Screen
     }
 
     @Override
+    public void show()
+    {
+        loadAssets(this.serialisableLevel);
+        Gdx.input.setInputProcessor(this.stage);
+    }
+
+    private void loadAssets(SerialisableLevel serialisableLevel)
+    {
+        AssetManager assMan = AssMan.getAssMan();
+
+        // Loads sounds first 'cause of weird quirk of Android not loading them in time.
+        assMan.load(AssMan.getAssList().thrusterSound, Sound.class);
+        assMan.load(AssMan.getAssList().explosionSound, Sound.class);
+        assMan.load(AssMan.getAssList().pickupCollectSound, Sound.class);
+        assMan.load(AssMan.getAssList().loseSound, Sound.class);
+        assMan.load(AssMan.getAssList().winSound, Sound.class);
+
+        assMan.load(AssMan.getAssList().pickupGreyTexture, Texture.class);
+        assMan.load(
+            AssMan.getAssList().shipTexture, Texture.class);
+        assMan.load(
+            AssMan.getAssList().thrusterTextureAtlas, TextureAtlas.class);
+        for (SerialisablePlanet serialisablePlanet : serialisableLevel.serialisedPlanets)
+        {
+            assMan.load(serialisablePlanet.texturePath, Texture.class);
+        }
+        assMan.load(AssMan.getAssList().explosionTextureAtlas, TextureAtlas.class);
+        assMan.load(AssMan.getAssList().pickupTexture, Texture.class);
+
+        assMan.load(Constants.Visual.HUD.JOYSTICK_ASSET_DESCRIPTOR);
+
+        assMan.update();
+    }
+
+    @Override
     public void render(float deltaTime)
     {
         if (AssMan.getAssMan().update())
@@ -150,10 +148,13 @@ public class LoadingScreen implements Screen
             Level level =
                 LevelManager.getLevel(this.serialisableLevel, this.difficulty);
             GameScreen gameScreen = new GameScreen(level);
-            SpaceTravels3.getGame().setScreen(gameScreen);
+            ScreenManager.addScreen(gameScreen);
+            ScreenManager.removeScreen(this);
             return;
         }
         updateProgressBar();
+
+        this.stage.getViewport().apply();
 
         this.stage.act(deltaTime);
         this.stage.draw();
@@ -190,7 +191,7 @@ public class LoadingScreen implements Screen
     @Override
     public void hide()
     {
-        this.dispose();
+
     }
 
     @Override

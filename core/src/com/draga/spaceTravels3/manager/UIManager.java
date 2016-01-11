@@ -15,11 +15,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 
-public class UIManager
+public abstract class UIManager
 {
     private static final String LOGGING_TAG = UIManager.class.getSimpleName();
-
     public static Skin skin;
+
+    private UIManager()
+    {
+    }
 
     public static Table addDefaultTableToStage(Stage stage)
     {
@@ -79,6 +82,10 @@ public class UIManager
         TextButton.TextButtonStyle textButtonStyle = getTextButtonStyle(skin);
         skin.add("default", textButtonStyle);
 
+        // Create a text button style
+        TextButton.TextButtonStyle checkableTextButtonStyle = getCheckableTextButtonStyle(skin);
+        skin.add("checkable", checkableTextButtonStyle);
+
         // Label style
         Label.LabelStyle labelStyle = getLabelStyle(skin);
         skin.add("default", labelStyle, Label.LabelStyle.class);
@@ -117,18 +124,31 @@ public class UIManager
     private static TextButton.TextButtonStyle getTextButtonStyle(Skin skin)
     {
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        textButtonStyle.checkedFontColor = Color.GREEN;
         textButtonStyle.fontColor = Color.BLACK;
         textButtonStyle.font = skin.getFont("default");
         textButtonStyle.down = skin.getDrawable("button");
         textButtonStyle.up = skin.getDrawable("button");
+
         return textButtonStyle;
+    }
+
+    private static TextButton.TextButtonStyle getCheckableTextButtonStyle(Skin skin)
+    {
+        TextButton.TextButtonStyle checkableTextButtonStyle = new TextButton.TextButtonStyle();
+        checkableTextButtonStyle.checkedFontColor = Color.GREEN;
+        checkableTextButtonStyle.fontColor = Color.BLACK;
+        checkableTextButtonStyle.font = skin.getFont("default");
+        checkableTextButtonStyle.down = skin.getDrawable("button");
+        checkableTextButtonStyle.up = skin.getDrawable("button");
+
+        return checkableTextButtonStyle;
     }
 
     private static Label.LabelStyle getLabelStyle(Skin skin)
     {
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = skin.getFont("default");
+
         return labelStyle;
     }
 

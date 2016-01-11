@@ -1,7 +1,7 @@
 package com.draga.spaceTravels3.input.inputProvider;
 
 import com.badlogic.gdx.Gdx;
-import com.draga.ExceptionHandlerProvider;
+import com.draga.ErrorHandlerProvider;
 import com.draga.PooledVector2;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.input.inputModifier.DeadZoneInputModifier;
@@ -50,7 +50,7 @@ public class AccelerometerInputProvider extends InputProvider
                     Gdx.input.getAccelerometerX());
                 break;
             default:
-                ExceptionHandlerProvider.handle(
+                ErrorHandlerProvider.handle(
                     LOGGING_TAG,
                     "Orientation " + Gdx.input.getRotation() + " not implemented.");
                 input = PooledVector2.newVector2(0f, 0f);

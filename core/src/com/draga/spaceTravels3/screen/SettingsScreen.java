@@ -3,7 +3,6 @@ package com.draga.spaceTravels3.screen;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -14,23 +13,20 @@ import com.draga.SliderFixInputListener;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.InputType;
 import com.draga.spaceTravels3.SpaceTravels3;
+import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.ui.BeepingTextButton;
 
-public class SettingsMenuScreen implements Screen
+public class SettingsScreen extends com.draga.spaceTravels3.ui.Screen
 {
     private Stage stage;
 
-    public SettingsMenuScreen()
+    public SettingsScreen()
     {
-    }
+        super(true, true);
 
-    @Override
-    public void show()
-    {
-        this.stage = new Stage();
-        Gdx.input.setInputProcessor(this.stage);
+        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
@@ -106,7 +102,7 @@ public class SettingsMenuScreen implements Screen
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                SpaceTravels3.getGame().setScreen(new MenuScreen());
+                ScreenManager.removeScreen(SettingsScreen.this);
             }
         });
 
@@ -167,7 +163,7 @@ public class SettingsMenuScreen implements Screen
         table.add(hudLabel);
 
         TextButton hudForceIndicatorsTextButton =
-            new BeepingTextButton("Force indicators", UIManager.skin);
+            new BeepingTextButton("Force indicators", UIManager.skin, "checkable");
         hudForceIndicatorsTextButton.setChecked(
             SettingsManager.getSettings().hudForceIndicators);
         hudForceIndicatorsTextButton.addListener(new ClickListener()
@@ -190,7 +186,7 @@ public class SettingsMenuScreen implements Screen
         ButtonGroup<TextButton> buttonGroup = new ButtonGroup<>();
         buttonGroup.setMaxCheckCount(1);
 
-        TextButton touchButton = new BeepingTextButton("Touch", UIManager.skin);
+        TextButton touchButton = new BeepingTextButton("Touch", UIManager.skin, "checkable");
         touchButton.setChecked(SettingsManager.getSettings().inputType == InputType.TOUCH);
         touchButton.addListener(new ClickListener()
         {
@@ -204,7 +200,8 @@ public class SettingsMenuScreen implements Screen
         buttonGroup.add(touchButton);
         table.add(touchButton);
 
-        TextButton accelerometerButton = new BeepingTextButton("Accelerometer", UIManager.skin);
+        TextButton accelerometerButton =
+            new BeepingTextButton("Accelerometer", UIManager.skin, "checkable");
         accelerometerButton.setChecked(
             SettingsManager.getSettings().inputType == InputType.ACCELEROMETER);
         accelerometerButton.addListener(new ClickListener()
@@ -223,13 +220,21 @@ public class SettingsMenuScreen implements Screen
     }
 
     @Override
+    public void show()
+    {
+        Gdx.input.setInputProcessor(this.stage);
+    }
+
+    @Override
     public void render(float delta)
     {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
             || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
         {
-            SpaceTravels3.getGame().setScreen(new MenuScreen());
+            ScreenManager.removeScreen(SettingsScreen.this);
         }
+
+        this.stage.getViewport().apply();
 
         this.stage.act(delta);
         this.stage.draw();
@@ -254,7 +259,7 @@ public class SettingsMenuScreen implements Screen
     @Override
     public void hide()
     {
-        dispose();
+
     }
 
     @Override

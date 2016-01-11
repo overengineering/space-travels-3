@@ -2,7 +2,6 @@ package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -10,26 +9,23 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.draga.ExceptionHandlerProvider;
+import com.draga.ErrorHandlerProvider;
 import com.draga.spaceTravels3.SpaceTravels3;
+import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.ui.BeepingTextButton;
 
-public class DebugMenuScreen implements Screen
+public class DebugScreen extends com.draga.spaceTravels3.ui.Screen
 {
-    private static final String LOGGING_TAG = DebugMenuScreen.class.getSimpleName();
+    private static final String LOGGING_TAG = DebugScreen.class.getSimpleName();
     private Stage stage;
 
-    public DebugMenuScreen()
+    public DebugScreen()
     {
-    }
+        super(true, true);
 
-    @Override
-    public void show()
-    {
-        this.stage = new Stage();
-        Gdx.input.setInputProcessor(this.stage);
+        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
@@ -41,10 +37,6 @@ public class DebugMenuScreen implements Screen
 
         table.row();
         table.add(getButtonScrollPane());
-        table.row();
-        table.add(getForceCrashButton());
-        table.row();
-        table.add(getErrorButton());
 
         // Empty expanded bottom cell to keep the menu centered
         table.row();
@@ -71,40 +63,14 @@ public class DebugMenuScreen implements Screen
         table.add(getNoGravityTextButton());
         table.row();
         table.add(getInfiniteFuelTextButton());
+        table.row();
+        table.add(getForceCrashButton());
+        table.row();
+        table.add(getErrorButton());
 
         ScrollPane scrollPane = new ScrollPane(table);
 
         return scrollPane;
-    }
-
-    private TextButton getForceCrashButton()
-    {
-        TextButton forceCrashTextButton = new BeepingTextButton("Force crash", UIManager.skin);
-        forceCrashTextButton.addListener(new ClickListener()
-        {
-            @Override
-            public void clicked(InputEvent event, float x, float y)
-            {
-                throw new RuntimeException("This is a crash");
-            }
-        });
-
-        return forceCrashTextButton;
-    }
-
-    private Actor getErrorButton()
-    {
-        TextButton errorTextButton = new BeepingTextButton("Force error", UIManager.skin);
-        errorTextButton.addListener(new ClickListener()
-        {
-            @Override
-            public void clicked(InputEvent event, float x, float y)
-            {
-                ExceptionHandlerProvider.handle(LOGGING_TAG, "test");
-            }
-        });
-
-        return errorTextButton;
     }
 
     private TextButton getBackTextButton()
@@ -115,7 +81,7 @@ public class DebugMenuScreen implements Screen
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                SpaceTravels3.getGame().setScreen(new MenuScreen());
+                ScreenManager.removeScreen(DebugScreen.this);
             }
         });
 
@@ -126,7 +92,8 @@ public class DebugMenuScreen implements Screen
     {
         final TextButton debugDrawTextButton = new BeepingTextButton(
             "Debug draw",
-            UIManager.skin.get(TextButton.TextButtonStyle.class));
+            UIManager.skin,
+            "checkable");
         debugDrawTextButton.setChecked(SettingsManager.getDebugSettings().debugDraw);
 
         debugDrawTextButton.addListener(
@@ -149,7 +116,8 @@ public class DebugMenuScreen implements Screen
     {
         final TextButton infiniteFuelTextButton = new BeepingTextButton(
             "No gravity",
-            UIManager.skin.get(TextButton.TextButtonStyle.class));
+            UIManager.skin,
+            "checkable");
         infiniteFuelTextButton.setChecked(SettingsManager.getDebugSettings().noGravity);
 
         infiniteFuelTextButton.addListener(
@@ -172,7 +140,8 @@ public class DebugMenuScreen implements Screen
     {
         final TextButton infiniteFuelTextButton = new BeepingTextButton(
             "Infinite fuel",
-            UIManager.skin.get(TextButton.TextButtonStyle.class));
+            UIManager.skin,
+            "checkable");
         infiniteFuelTextButton.setChecked(SettingsManager.getDebugSettings().infiniteFuel);
 
         infiniteFuelTextButton.addListener(
@@ -191,15 +160,53 @@ public class DebugMenuScreen implements Screen
         return infiniteFuelTextButton;
     }
 
+    private TextButton getForceCrashButton()
+    {
+        TextButton forceCrashTextButton =
+            new BeepingTextButton("Force crash", UIManager.skin, "checkable");
+        forceCrashTextButton.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                throw new RuntimeException("This is a crash");
+            }
+        });
+
+        return forceCrashTextButton;
+    }
+
+    private Actor getErrorButton()
+    {
+        TextButton errorTextButton = new BeepingTextButton("Force error", UIManager.skin);
+        errorTextButton.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                ErrorHandlerProvider.handle(LOGGING_TAG, "test");
+            }
+        });
+
+        return errorTextButton;
+    }
+
+    @Override
+    public void show()
+    {
+        Gdx.input.setInputProcessor(this.stage);
+    }
+
     @Override
     public void render(float delta)
     {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
             || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
         {
-            SpaceTravels3.getGame().setScreen(new MenuScreen());
+            ScreenManager.removeScreen(DebugScreen.this);
         }
 
+        this.stage.getViewport().apply();
         this.stage.act(delta);
         this.stage.draw();
     }
