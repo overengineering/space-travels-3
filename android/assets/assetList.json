@@ -2,8 +2,7 @@
   "shipTexture": "spaceship/destroyer128.png",
   "pickupTexture": "pickup/star64.png",
   "pickupGreyTexture": "pickup/starGray64.png",
-
-  "thrusterTextureAtlas": "thruster/thrusterSize256Frames75.txt",
+  "thrusterTextureAtlas": "thruster/thruster.txt",
   "explosionTextureAtlas": "explosion/explosion.txt",
   "explosionSound": "sound/explosion/DeathFlash.ogg",
   "thrusterSound": "sound/thruster/qubodupFireLoop.ogg",
