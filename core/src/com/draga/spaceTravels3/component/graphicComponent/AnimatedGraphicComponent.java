@@ -50,15 +50,15 @@ public class AnimatedGraphicComponent extends GraphicComponent
             getHalfHeight(),
             getWidth(),
             getHeight(),
-            1,
-            1,
+            1f,
+            1f,
             this.physicsComponent.getAngle());
     }
 
     @Override
     public void dispose()
     {
-        // Doesn't dispose texture atlas.
+        this.animationTime.stop();
     }
 
     public boolean isFinished()
