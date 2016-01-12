@@ -3,7 +3,6 @@ package com.draga.spaceTravels3.screen;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.Pools;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.event.CountdownFinishedEvent;
@@ -68,10 +67,7 @@ public class CountdownScreen extends com.draga.spaceTravels3.ui.Screen
         {
             this.secondsRemaining = 0;
             this.countdownFinished = true;
-            CountdownFinishedEvent countdownFinishedEvent =
-                Pools.obtain(CountdownFinishedEvent.class);
-            Constants.General.EVENT_BUS.post(countdownFinishedEvent);
-            Pools.free(countdownFinishedEvent);
+            Constants.General.EVENT_BUS.post(new CountdownFinishedEvent());
             ScreenManager.removeScreen(this);
             return;
         }

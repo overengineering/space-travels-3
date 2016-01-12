@@ -2,7 +2,6 @@ package com.draga.spaceTravels3.manager;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.Pools;
 import com.draga.ErrorHandlerProvider;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.event.ScoreUpdatedEvent;
@@ -45,12 +44,8 @@ public abstract class ScoreManager
         {
             difficultyScores.put(difficulty, score);
             saveLevelScores();
-            ScoreUpdatedEvent scoreUpdatedEvent = Pools.obtain(ScoreUpdatedEvent.class);
-            scoreUpdatedEvent.set(levelId, difficulty, score);
-            Constants.General.EVENT_BUS.post(scoreUpdatedEvent);
-            Pools.free(scoreUpdatedEvent);
+            Constants.General.EVENT_BUS.post(new ScoreUpdatedEvent(levelId, difficulty, score));
         }
-
     }
 
     private static void saveLevelScores()

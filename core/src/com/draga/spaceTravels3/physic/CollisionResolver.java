@@ -1,6 +1,5 @@
 package com.draga.spaceTravels3.physic;
 
-import com.badlogic.gdx.utils.Pools;
 import com.draga.ErrorHandlerProvider;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.event.PickupCollectedEvent;
@@ -62,21 +61,12 @@ public abstract class CollisionResolver
     {
         public static void resolveShipPlanetCollision(Ship ship, Planet planet)
         {
-            ShipPlanetCollisionEvent shipPlanetCollisionEvent =
-                Pools.obtain(ShipPlanetCollisionEvent.class);
-            shipPlanetCollisionEvent.ship = ship;
-            shipPlanetCollisionEvent.planet = planet;
-
-            Constants.General.EVENT_BUS.post(shipPlanetCollisionEvent);
-            Pools.free(shipPlanetCollisionEvent);
+            Constants.General.EVENT_BUS.post(new ShipPlanetCollisionEvent(ship, planet));
         }
 
         public static void resolveShipPickupCollision(Ship ship, Pickup pickup)
         {
-            PickupCollectedEvent pickupCollectedEvent = Pools.obtain(PickupCollectedEvent.class);
-            pickupCollectedEvent.set(pickup);
-            Constants.General.EVENT_BUS.post(pickupCollectedEvent);
-            Pools.free(pickupCollectedEvent);
+            Constants.General.EVENT_BUS.post(new PickupCollectedEvent(pickup));
         }
     }
 }

@@ -1,12 +1,5 @@
 package com.draga.spaceTravels3.event;
 
-import com.badlogic.gdx.utils.Pool;
-
-public class LoseEvent implements Pool.Poolable
+public class LoseEvent
 {
-    @Override
-    public void reset()
-    {
-
-    }
 }

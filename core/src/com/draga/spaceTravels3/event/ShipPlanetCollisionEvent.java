@@ -1,18 +1,16 @@
 package com.draga.spaceTravels3.event;
 
-import com.badlogic.gdx.utils.Pool;
 import com.draga.spaceTravels3.gameEntity.Planet;
 import com.draga.spaceTravels3.gameEntity.Ship;
 
-public class ShipPlanetCollisionEvent implements Pool.Poolable
+public class ShipPlanetCollisionEvent
 {
     public Ship   ship;
     public Planet planet;
 
-    @Override
-    public void reset()
+    public ShipPlanetCollisionEvent(Ship ship, Planet planet)
     {
-        ship = null;
-        planet = null;
+        this.ship = ship;
+        this.planet = planet;
     }
 }

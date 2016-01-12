@@ -1,12 +1,5 @@
 package com.draga.spaceTravels3.event;
 
-import com.badlogic.gdx.utils.Pool;
-
-public class CountdownFinishedEvent implements Pool.Poolable
+public class CountdownFinishedEvent
 {
-    @Override
-    public void reset()
-    {
-
-    }
 }

@@ -15,6 +15,5 @@ public class GuavaSubscriberExceptionHandler implements SubscriberExceptionHandl
             + "\r\nSubscriber method:"
             + context.getSubscriberMethod();
         ErrorHandlerProvider.handle(context.getEventBus().toString(), message, exception);
-
     }
 }

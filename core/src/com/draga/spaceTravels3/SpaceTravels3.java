@@ -34,7 +34,7 @@ public class SpaceTravels3 implements ApplicationListener
     public void create()
     {
         MathUtils.random.setSeed(System.currentTimeMillis());
-        ErrorHandlerProvider.addCustomExceptionHandler(new GdxErrorHandler());
+        ErrorHandlerProvider.addErrorHandler(new GdxErrorHandler());
 
         spriteBatch = new SpriteBatch();
         overlaySpriteBath = new SpriteBatch();

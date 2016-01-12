@@ -18,7 +18,7 @@ public class AndroidLauncher extends AndroidApplication
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics(), new Answers());
 
-        ErrorHandlerProvider.addCustomExceptionHandler(new FabricErrorHandler());
+        ErrorHandlerProvider.addErrorHandler(new FabricErrorHandler());
 
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
         config.useCompass = false;

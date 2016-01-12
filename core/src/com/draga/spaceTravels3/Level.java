@@ -161,17 +161,13 @@ public class Level
             );
             GameEntityManager.addGameEntity(explosion);
 
-            LoseEvent loseEvent = Pools.obtain(LoseEvent.class);
-            Constants.General.EVENT_BUS.post(loseEvent);
-            Pools.free(loseEvent);
+            Constants.General.EVENT_BUS.post(new LoseEvent());
         }
         else
         {
             this.gameState = GameState.WIN;
 
-            WinEvent winEvent = Pools.obtain(WinEvent.class);
-            Constants.General.EVENT_BUS.post(winEvent);
-            Pools.free(winEvent);
+            Constants.General.EVENT_BUS.post(new WinEvent());
         }
     }
 
