@@ -46,10 +46,10 @@ public class BackgroundScreen extends Screen
         {
             BackgroundPositionManager.update(deltaTime);
 
-            SpaceTravels3.menuViewport.apply();
-            SpaceTravels3.spriteBatch.setProjectionMatrix(SpaceTravels3.menuViewport.getCamera().combined);
+            SpaceTravels3.gameViewport.apply();
+            SpaceTravels3.spriteBatch.setProjectionMatrix(SpaceTravels3.gameViewport.getCamera().combined);
             SpaceTravels3.spriteBatch.begin();
-            this.background.draw(SpaceTravels3.menuViewport.getCamera(), SpaceTravels3.spriteBatch);
+            this.background.draw(SpaceTravels3.gameViewport.getCamera(), SpaceTravels3.spriteBatch);
             SpaceTravels3.spriteBatch.end();
         }
     }

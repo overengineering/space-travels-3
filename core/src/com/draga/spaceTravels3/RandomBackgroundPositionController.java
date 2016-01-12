@@ -6,7 +6,8 @@ import com.draga.PooledVector2;
 
 public class RandomBackgroundPositionController extends BackgroundPositionController
 {
-    private static final float MAX_SPEED = 100f;
+    private static final float MAX_SPEED        = 100f;
+    private static final float MAX_ACCELERATION = 100f;
 
     private Vector2 velocity;
     private Vector2 acceleration;
@@ -21,13 +22,10 @@ public class RandomBackgroundPositionController extends BackgroundPositionContro
     @Override
     public PooledVector2 getMovement(float deltaTime)
     {
-        try (PooledVector2 newFrameAcceleration = PooledVector2.newVector2(
-            MathUtils.random(-100f, 100f),
-            MathUtils.random(-100f, 100f)))
-        {
-            newFrameAcceleration.scl(deltaTime);
-            this.acceleration.add(newFrameAcceleration);
-        }
+        float newAccelerationX = MathUtils.random(-100f, 100f) * deltaTime;
+        float newAccelerationY = MathUtils.random(-100f, 100f) * deltaTime;
+        this.acceleration.add(newAccelerationX, newAccelerationY);
+        this.acceleration.limit(MAX_ACCELERATION);
 
         try (PooledVector2 frameAcceleration = PooledVector2.newVector2(this.acceleration))
         {
