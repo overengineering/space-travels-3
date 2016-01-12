@@ -9,8 +9,9 @@ import com.draga.spaceTravels3.event.CountdownFinishedEvent;
 import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
+import com.draga.spaceTravels3.ui.Screen;
 
-public class CountdownScreen extends com.draga.spaceTravels3.ui.Screen
+public class CountdownScreen extends Screen
 {
     private Stage stage;
     private Label timerLabel;

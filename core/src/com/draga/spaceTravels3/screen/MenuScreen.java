@@ -19,8 +19,9 @@ import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.level.LevelManager;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.spaceTravels3.ui.BeepingTextButton;
+import com.draga.spaceTravels3.ui.Screen;
 
-public class MenuScreen extends com.draga.spaceTravels3.ui.Screen
+public class MenuScreen extends Screen
 {
     private Stage stage;
 

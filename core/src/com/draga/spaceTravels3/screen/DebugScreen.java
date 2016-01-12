@@ -15,8 +15,9 @@ import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.ui.BeepingTextButton;
+import com.draga.spaceTravels3.ui.Screen;
 
-public class DebugScreen extends com.draga.spaceTravels3.ui.Screen
+public class DebugScreen extends Screen
 {
     private static final String LOGGING_TAG = DebugScreen.class.getSimpleName();
     private Stage stage;

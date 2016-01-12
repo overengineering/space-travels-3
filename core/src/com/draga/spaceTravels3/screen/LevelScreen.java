@@ -20,12 +20,13 @@ import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableDifficulty;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.spaceTravels3.ui.BeepingTextButton;
+import com.draga.spaceTravels3.ui.Screen;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-public class LevelScreen extends com.draga.spaceTravels3.ui.Screen
+public class LevelScreen extends Screen
 {
     private final SerialisableLevel      serialisableLevel;
     private       Actor                  difficultiesList;

@@ -21,12 +21,13 @@ import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.manager.level.LevelManager;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisablePlanet;
+import com.draga.spaceTravels3.ui.Screen;
 import com.google.common.base.Joiner;
 import com.google.common.base.Stopwatch;
 
 import java.util.concurrent.TimeUnit;
 
-public class LoadingScreen extends com.draga.spaceTravels3.ui.Screen
+public class LoadingScreen extends Screen
 {
     private static final String LOGGING_TAG = LoadingScreen.class.getSimpleName();
     private final SerialisableLevel serialisableLevel;

@@ -17,8 +17,9 @@ import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.ui.BeepingTextButton;
+import com.draga.spaceTravels3.ui.Screen;
 
-public class SettingsScreen extends com.draga.spaceTravels3.ui.Screen
+public class SettingsScreen extends Screen
 {
     private Stage stage;
 

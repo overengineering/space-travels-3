@@ -15,11 +15,12 @@ import com.draga.spaceTravels3.physic.PhysicDebugDrawer;
 import com.draga.spaceTravels3.physic.PhysicsEngine;
 import com.draga.spaceTravels3.physic.Projection;
 import com.draga.spaceTravels3.physic.ProjectionPoint;
+import com.draga.spaceTravels3.ui.Screen;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
-public class GameScreen extends com.draga.spaceTravels3.ui.Screen
+public class GameScreen extends Screen
 {
     private static final String LOGGING_TAG = GameScreen.class.getSimpleName();
     private final PhysicsComponentBackgroundPositionController shipBackgroundPositionController;

@@ -17,8 +17,9 @@ import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.ui.BeepingTextButton;
+import com.draga.spaceTravels3.ui.Screen;
 
-public class LoseScreen extends com.draga.spaceTravels3.ui.Screen
+public class LoseScreen extends Screen
 {
     private final Stage      stage;
     private final Sound      sound;
