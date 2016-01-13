@@ -1,5 +1,5 @@
 {
-  "shipTexture": "spaceship/Сricket128.png",
+  "shipTexture": "spaceship/cricket128.png",
   "pickupTexture": "pickup/star64.png",
   "pickupGreyTexture": "pickup/starGray64.png",
   "thrusterTextureAtlas": "thruster/thruster.txt",
