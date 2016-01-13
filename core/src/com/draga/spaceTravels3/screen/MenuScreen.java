@@ -19,6 +19,7 @@ import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.manager.level.LevelManager;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
+import com.draga.spaceTravels3.ui.BeepingClickListener;
 import com.draga.spaceTravels3.ui.BeepingTextButton;
 import com.draga.spaceTravels3.ui.Screen;
 
@@ -102,9 +103,11 @@ public class MenuScreen extends Screen
                 .size(this.stage.getWidth() / 10f);
             innerTable.row();
 
-            BeepingTextButton levelButton =
-                new BeepingTextButton(serialisableLevel.name, UIManager.skin);
-            levelButton.addListener(new ClickListener()
+            innerTable.add(serialisableLevel.name);
+            innerTable.row();
+
+            innerTable.addListener(BeepingClickListener.BEEPING_CLICK_LISTENER);
+            innerTable.addListener(new ClickListener()
             {
                 @Override
                 public void clicked(InputEvent event, float x, float y)
@@ -114,8 +117,6 @@ public class MenuScreen extends Screen
                     super.clicked(event, x, y);
                 }
             });
-
-            innerTable.add(levelButton);
 
             outerTable.add(innerTable);
         }
