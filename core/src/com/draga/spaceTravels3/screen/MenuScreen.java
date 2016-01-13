@@ -96,8 +96,19 @@ public class MenuScreen extends Screen
         {
             Table innerTable = UIManager.getDefaultTable();
 
-            Image image = new Image();
-            this.asyncLevelIcons.put(serialisableLevel, image);
+            // If the level icon is not loaded in the ass man then add to an map to load them async.
+            Image image;
+            if (AssMan.getMenuAssMan().isLoaded(serialisableLevel.iconPath))
+            {
+                Texture texture = AssMan.getMenuAssMan().get(serialisableLevel.iconPath);
+                image = new Image(new TextureRegionDrawable(new TextureRegion(texture)));
+            }
+            else
+            {
+                image = new Image();
+                this.asyncLevelIcons.put(serialisableLevel, image);
+            }
+
             innerTable
                 .add(image)
                 .size(this.stage.getWidth() / 10f);
@@ -171,6 +182,7 @@ public class MenuScreen extends Screen
     @Override
     public void render(float deltaTime)
     {
+        // Check if we need to load level icons and if they are loaded show them.
         ArrayList<SerialisableLevel> serialisableLevels =
             new ArrayList<>(this.asyncLevelIcons.keySet());
         for (SerialisableLevel serialisableLevel : serialisableLevels)
