@@ -11,13 +11,13 @@
     "medium": {
       "trajectorySeconds": 3,
       "maxLandingSpeed": 70,
-      "fuel": 4,
+      "fuel": 10,
       "infiniteFuel": false
     },
     "hard": {
       "trajectorySeconds": 0,
       "maxLandingSpeed": 60,
-      "fuel": 2,
+      "fuel": 5,
       "infiniteFuel": false
     }
   },
