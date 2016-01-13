@@ -3,18 +3,29 @@ package com.draga.spaceTravels3.manager.asset;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.utils.Json;
+import com.draga.background.Background;
+import com.draga.background.BackgroundLoader;
 import com.draga.joystick.Joystick;
 import com.draga.joystick.JoystickLoader;
 
-public class AssMan
+public abstract class AssMan
 {
-    private static AssetManager ASSET_MANAGER;
-    private static AssList      ASSET_LIST;
+    private static AssetManager GAME_ASSET_MANAGER;
+    private static AssetManager MENU_ASSET_MANAGER;
+
+    private static AssList ASSET_LIST;
+
+    private AssMan()
+    {
+    }
 
     public static void create()
     {
-        ASSET_MANAGER = new AssetManager();
-        ASSET_MANAGER.setLoader(Joystick.class, new JoystickLoader());
+        GAME_ASSET_MANAGER = new AssetManager();
+        GAME_ASSET_MANAGER.setLoader(Joystick.class, new JoystickLoader());
+
+        MENU_ASSET_MANAGER = new AssetManager();
+        MENU_ASSET_MANAGER.setLoader(Background.class, new BackgroundLoader());
 
         ASSET_LIST = new Json().fromJson(
             AssList.class,
@@ -23,12 +34,18 @@ public class AssMan
 
     public static void dispose()
     {
-        ASSET_MANAGER.dispose();
+        GAME_ASSET_MANAGER.dispose();
+        MENU_ASSET_MANAGER.dispose();
     }
 
-    public static AssetManager getAssMan()
+    public static AssetManager getGameAssMan()
     {
-        return ASSET_MANAGER;
+        return GAME_ASSET_MANAGER;
+    }
+
+    public static AssetManager getMenuAssMan()
+    {
+        return MENU_ASSET_MANAGER;
     }
 
     public static AssList getAssList()

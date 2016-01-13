@@ -233,7 +233,7 @@ public class GameScreen extends Screen
 
         this.level.dispose();
 
-        AssMan.getAssMan().clear();
+        AssMan.getGameAssMan().clear();
 
         PhysicsEngine.dispose();
 

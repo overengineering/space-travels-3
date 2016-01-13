@@ -30,6 +30,7 @@ import java.util.concurrent.TimeUnit;
 public class LoadingScreen extends Screen
 {
     private static final String LOGGING_TAG = LoadingScreen.class.getSimpleName();
+
     private final SerialisableLevel serialisableLevel;
     private final String            difficulty;
 
@@ -91,8 +92,8 @@ public class LoadingScreen extends Screen
 
     private float getTotalAssetsCount()
     {
-        return AssMan.getAssMan().getQueuedAssets()
-            + AssMan.getAssMan().getLoadedAssets();
+        return AssMan.getGameAssMan().getQueuedAssets()
+            + AssMan.getGameAssMan().getLoadedAssets();
     }
 
     @Override
@@ -104,7 +105,7 @@ public class LoadingScreen extends Screen
 
     private void loadAssets(SerialisableLevel serialisableLevel)
     {
-        AssetManager assMan = AssMan.getAssMan();
+        AssetManager assMan = AssMan.getGameAssMan();
 
         // Loads sounds first 'cause of weird quirk of Android not loading them in time.
         assMan.load(AssMan.getAssList().thrusterSound, Sound.class);
@@ -133,13 +134,14 @@ public class LoadingScreen extends Screen
     @Override
     public void render(float deltaTime)
     {
-        if (AssMan.getAssMan().update())
+        if (AssMan.getGameAssMan().update())
         {
             if (Constants.General.IS_DEBUGGING)
             {
                 Gdx.app.debug(
                     LOGGING_TAG,
-                    "Assets loaded: " + Joiner.on(", ").join(AssMan.getAssMan().getAssetNames()));
+                    "Assets loaded: " + Joiner.on(", ")
+                        .join(AssMan.getGameAssMan().getAssetNames()));
                 Gdx.app.debug(
                     LOGGING_TAG,
                     String.format(
@@ -169,7 +171,7 @@ public class LoadingScreen extends Screen
 
     private int getLoadedAssetsCount()
     {
-        return AssMan.getAssMan().getLoadedAssets();
+        return AssMan.getGameAssMan().getLoadedAssets();
     }
 
     @Override

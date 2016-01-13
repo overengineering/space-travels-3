@@ -28,7 +28,7 @@ public class AnimatedGraphicComponent extends GraphicComponent
         super(physicsComponent, width, height);
 
         this.animationTime = Stopwatch.createStarted();
-        this.textureAtlas = AssMan.getAssMan().get(textureAtlasPath);
+        this.textureAtlas = AssMan.getGameAssMan().get(textureAtlasPath);
         this.animation = new Animation(
             animationTotalTime / this.textureAtlas.getRegions().size,
             this.textureAtlas.getRegions(),

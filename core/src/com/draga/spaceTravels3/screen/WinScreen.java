@@ -38,7 +38,7 @@ public class WinScreen extends Screen
 
         this.gameScreen = gameScreen;
 
-        this.sound = AssMan.getAssMan().get(AssMan.getAssList().winSound);
+        this.sound = AssMan.getGameAssMan().get(AssMan.getAssList().winSound);
         this.sound.play(SettingsManager.getSettings().volumeFX);
 
         this.levelId = levelId;

@@ -16,14 +16,14 @@ public class StaticGraphicComponent extends GraphicComponent
         PhysicsComponent physicsComponent)
     {
         super(physicsComponent, height, width);
-        this.texture = AssMan.getAssMan().get(texturePath);
+        this.texture = AssMan.getGameAssMan().get(texturePath);
     }
 
     @Override
     public void draw()
     {
         SpaceTravels3.spriteBatch.draw(
-            texture,
+            this.texture,
             this.physicsComponent.getPosition().x - getHalfWidth(),
             this.physicsComponent.getPosition().y - getHalfHeight(),
             getHalfWidth(),
@@ -35,8 +35,8 @@ public class StaticGraphicComponent extends GraphicComponent
             this.physicsComponent.getAngle(),
             0,
             0,
-            texture.getWidth(),
-            texture.getHeight(),
+            this.texture.getWidth(),
+            this.texture.getHeight(),
             false,
             false);
     }

@@ -47,7 +47,7 @@ public class Hud implements Screen
         Constants.General.EVENT_BUS.register(this);
 
         this.grayPickups = new Stack<>();
-        Texture pickupTexture = AssMan.getAssMan().get(AssMan.getAssList().pickupTexture);
+        Texture pickupTexture = AssMan.getGameAssMan().get(AssMan.getAssList().pickupTexture);
         this.collectedPickupDrawable = new TextureRegionDrawable(new TextureRegion(pickupTexture));
 
         this.miniMap = new MiniMap(level);
@@ -91,7 +91,7 @@ public class Hud implements Screen
             || Gdx.app.getType() == Application.ApplicationType.Desktop)
         {
             Joystick joystickTexture =
-                AssMan.getAssMan().get(Constants.Visual.HUD.JOYSTICK_ASSET_DESCRIPTOR);
+                AssMan.getGameAssMan().get(Constants.Visual.HUD.JOYSTICK_ASSET_DESCRIPTOR);
             Image joystickOverlayImage = new Image(joystickTexture);
             joystickOverlayImage.setScaling(Scaling.fit);
 
@@ -144,7 +144,7 @@ public class Hud implements Screen
             .defaults()
             .height(this.stage.getViewport().getScreenWidth() / 30f);
 
-        Texture pickupTexture = AssMan.getAssMan().get(AssMan.getAssList().pickupGreyTexture);
+        Texture pickupTexture = AssMan.getGameAssMan().get(AssMan.getAssList().pickupGreyTexture);
 
         for (int i = 0; i < this.level.getPickups().size(); i++)
         {

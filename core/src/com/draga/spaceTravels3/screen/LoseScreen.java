@@ -33,7 +33,7 @@ public class LoseScreen extends Screen
 
         this.difficulty = difficulty;
         this.gameScreen = gameScreen;
-        this.sound = AssMan.getAssMan().get(AssMan.getAssList().loseSound);
+        this.sound = AssMan.getGameAssMan().get(AssMan.getAssList().loseSound);
         this.sound.play(SettingsManager.getSettings().volumeFX);
 
         this.levelId = levelId;

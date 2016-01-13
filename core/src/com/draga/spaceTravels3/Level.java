@@ -68,7 +68,8 @@ public class Level
 
         this.gameState = GameState.COUNTDOWN;
 
-        this.pickupCollectedSound = AssMan.getAssMan().get(AssMan.getAssList().pickupCollectSound);
+        this.pickupCollectedSound =
+            AssMan.getGameAssMan().get(AssMan.getAssList().pickupCollectSound);
 
         GameEntityManager.addGameEntity(thruster);
         GameEntityManager.addGameEntity(ship);
