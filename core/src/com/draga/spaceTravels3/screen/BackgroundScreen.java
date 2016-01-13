@@ -36,9 +36,6 @@ public class BackgroundScreen extends Screen
                     Constants.Visual.Background.BACKGROUND_ASSET_DESCRIPTOR.fileName,
                     Constants.Visual.Background.BACKGROUND_ASSET_DESCRIPTOR.type))
             {
-                ;
-            }
-            {
                 this.background =
                     AssMan.getMenuAssMan()
                         .get(Constants.Visual.Background.BACKGROUND_ASSET_DESCRIPTOR);

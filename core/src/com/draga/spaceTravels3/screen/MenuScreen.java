@@ -4,28 +4,37 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
+import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.manager.level.LevelManager;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.spaceTravels3.ui.BeepingTextButton;
 import com.draga.spaceTravels3.ui.Screen;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class MenuScreen extends Screen
 {
-    private Stage stage;
+    private Stage                             stage;
+    private HashMap<SerialisableLevel, Image> asyncLevelIcons;
 
     public MenuScreen()
     {
         super(true, true);
+
+        this.asyncLevelIcons = new HashMap<>();
 
         this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
 
@@ -86,8 +95,8 @@ public class MenuScreen extends Screen
         {
             Table innerTable = UIManager.getDefaultTable();
 
-            Texture texture = new Texture(serialisableLevel.iconPath);
-            Image image = new Image(texture);
+            Image image = new Image();
+            this.asyncLevelIcons.put(serialisableLevel, image);
             innerTable
                 .add(image)
                 .size(this.stage.getWidth() / 10f);
@@ -161,6 +170,22 @@ public class MenuScreen extends Screen
     @Override
     public void render(float deltaTime)
     {
+        ArrayList<SerialisableLevel> serialisableLevels =
+            new ArrayList<>(this.asyncLevelIcons.keySet());
+        for (SerialisableLevel serialisableLevel : serialisableLevels)
+        {
+            if (AssMan.getMenuAssMan().update()
+                || AssMan.getMenuAssMan().isLoaded(serialisableLevel.iconPath))
+            {
+                Texture texture = AssMan.getMenuAssMan().get(serialisableLevel.iconPath);
+                this.asyncLevelIcons.get(serialisableLevel)
+                    .setDrawable(new TextureRegionDrawable(new TextureRegion(texture)));
+
+                this.asyncLevelIcons.remove(serialisableLevel);
+            }
+        }
+
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
             || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
         {
