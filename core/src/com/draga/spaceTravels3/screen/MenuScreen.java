@@ -3,13 +3,11 @@ package com.draga.spaceTravels3.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.SpaceTravels3;
@@ -82,10 +80,19 @@ public class MenuScreen extends Screen
     {
         java.util.List<SerialisableLevel> serialisableLevels = LevelManager.getSerialisableLevels();
 
-        final Table table = UIManager.getDefaultTable();
+        final Table outerTable = UIManager.getDefaultTable();
 
         for (final SerialisableLevel serialisableLevel : serialisableLevels)
         {
+            Table innerTable = UIManager.getDefaultTable();
+
+            Texture texture = new Texture(serialisableLevel.iconPath);
+            Image image = new Image(texture);
+            innerTable
+                .add(image)
+                .size(this.stage.getWidth() / 10f);
+            innerTable.row();
+
             BeepingTextButton levelButton =
                 new BeepingTextButton(serialisableLevel.name, UIManager.skin);
             levelButton.addListener(new ClickListener()
@@ -98,11 +105,15 @@ public class MenuScreen extends Screen
                     super.clicked(event, x, y);
                 }
             });
-            table.add(levelButton);
-            table.row();
+
+            innerTable.add(levelButton);
+
+            outerTable.add(innerTable);
         }
 
-        ScrollPane scrollPane = new ScrollPane(table, UIManager.skin);
+        ScrollPane scrollPane = new ScrollPane(outerTable, UIManager.skin);
+        scrollPane.setFadeScrollBars(false);
+        scrollPane.setScrollingDisabled(false, true);
 
         return scrollPane;
     }
