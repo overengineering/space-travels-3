@@ -2,6 +2,7 @@ package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -83,7 +84,8 @@ public class LevelScreen extends Screen
     {
         Table table = new Table();
 
-        Label label = new Label(this.serialisableLevel.name + " ", UIManager.skin);
+        Label label =
+            new Label(this.serialisableLevel.name + " ", UIManager.skin, "large", Color.WHITE);
         table.add(label);
 
         if (AssMan.getMenuAssMan().update()

@@ -246,28 +246,19 @@ public class GameScreen extends Screen
     @Subscribe
     public void Lose(LoseEvent loseEvent)
     {
-        ScreenManager.addScreen(new LoseScreen(
-            this.level.getId(),
-            this.level.getDifficulty(),
-            this));
+        ScreenManager.addScreen(new LoseScreen(this.level, this));
     }
 
     @Subscribe
     public void Win(WinEvent winEvent)
     {
+        ScreenManager.addScreen(new WinScreen(this.level, this));
+
         Score score = this.level.getScore();
-
-        ScreenManager.addScreen(new WinScreen(
-            this.level.getId(),
-            this.level.getDifficulty(),
-            score,
-            this));
-
         ScoreManager.saveHighScore(
             this.level.getId(),
             this.level.getDifficulty(),
             score.getTotalScore());
-
         Pools.free(score);
     }
 }

@@ -76,6 +76,7 @@ public abstract class LevelManager
             serialisableLevel.id,
             serialisableLevel.name,
             difficulty,
+            serialisableLevel.iconPath,
             ship,
             thruster,
             planets,

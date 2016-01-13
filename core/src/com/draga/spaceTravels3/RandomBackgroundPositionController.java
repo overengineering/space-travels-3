@@ -14,7 +14,7 @@ public class RandomBackgroundPositionController extends BackgroundPositionContro
 
     public RandomBackgroundPositionController()
     {
-        this.velocity = new Vector2(MathUtils.random(-100f, 100f), MathUtils.random(-100f, 100f));
+        this.velocity = new Vector2(0f, 0f);
         this.acceleration =
             new Vector2(MathUtils.random(-100f, 100f), MathUtils.random(-100f, 100f));
     }
