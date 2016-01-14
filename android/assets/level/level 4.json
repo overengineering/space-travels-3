@@ -5,20 +5,20 @@
   "serialisedDifficulties": {
     "Easy": {
       "trajectorySeconds": 5,
-      "maxLandingSpeed": 200,
+      "maxLandingSpeed": 120,
       "fuel": 0,
       "infiniteFuel": true
     },
     "Medium": {
       "trajectorySeconds": 3,
-      "maxLandingSpeed": 150,
-      "fuel": 20,
+      "maxLandingSpeed": 90,
+      "fuel": 12,
       "infiniteFuel": false
     },
     "Hard": {
       "trajectorySeconds": 0,
-      "maxLandingSpeed": 100,
-      "fuel": 10,
+      "maxLandingSpeed": 70,
+      "fuel": 8,
       "infiniteFuel": false
     }
   },
@@ -29,87 +29,87 @@
   },
   "serialisedPlanets": [
     {
-      "texturePath": "planet/nuEarth1-512.png",
-      "x": 375,
-      "y": 355,
-      "radius": 25,
-      "mass": 300000,
+      "texturePath": "planet/nuEarth1-256.png",
+      "x": 103,
+      "y": 125,
+      "radius": 10,
+      "mass": 30000,
       "destination": true
     },
     {
-      "texturePath": "planet/pyrobora6-256.png",
-      "x": 355,
-      "y": 255,
-      "radius": 15,
-      "mass": 200000
+      "texturePath": "planet/arid3-128.png",
+      "x": 97,
+      "y": 85,
+      "radius": 6,
+      "mass": 20000
     },
     {
-      "texturePath": "planet/pyrobora7-256.png",
-      "x": 205,
-      "y": 300,
-      "radius": 15,
-      "mass": 200000
+      "texturePath": "planet/gas1-256.png",
+      "x": 36,
+      "y": 104,
+      "radius": 9,
+      "mass": 30000
     },
     {
-      "texturePath": "planet/pyrobora4-512.png",
-      "x": 283,
-      "y": 528,
-      "radius": 23,
-      "mass": 300000
+      "texturePath": "planet/wind3-256.png",
+      "x": 68,
+      "y": 194,
+      "radius": 9,
+      "mass": 30000
     },
     {
       "texturePath": "planet/dead-64.png",
-      "x": 255,
-      "y": 580,
-      "radius": 5,
-      "mass": 100000
+      "x": 55,
+      "y": 213,
+      "radius": 1,
+      "mass": 5000
     },
     {
-      "texturePath": "planet/pyrobora3-256.png",
-      "x": 565,
-      "y": 455,
-      "radius": 15,
-      "mass": 200000
+      "texturePath": "planet/harmless2-128.png",
+      "x": 179,
+      "y": 166,
+      "radius": 6,
+      "mass": 20000
     },
     {
-      "texturePath": "planet/pyrobora5-256.png",
-      "x": 565,
-      "y": 235,
-      "radius": 15,
-      "mass": 200000
+      "texturePath": "planet/ice3-128.png",
+      "x": 179,
+      "y": 78,
+      "radius": 6,
+      "mass": 20000
     },
     {
-      "texturePath": "planet/pyrobora1-256.png",
-      "x": 375,
-      "y": 90,
-      "radius": 15,
-      "mass": 200000
+      "texturePath": "planet/waterless4-128.png",
+      "x": 104,
+      "y": 20,
+      "radius": 6,
+      "mass": 20000
     }
   ],
   "serialisedPickups": [
     {
-      "x": 375,
-      "y": 235
+      "x": 104,
+      "y": 78
     },
     {
-      "x": 175,
-      "y": 280
+      "x": 25,
+      "y": 95
     },
     {
-      "x": 255,
-      "y": 560
+      "x": 56,
+      "y": 207
     },
     {
-      "x": 585,
-      "y": 475
+      "x": 188,
+      "y": 173
     },
     {
-      "x": 585,
-      "y": 225
+      "x": 188,
+      "y": 73
     },
     {
-      "x": 385,
-      "y": 65
+      "x": 108,
+      "y": 10
     }
   ]
 }
