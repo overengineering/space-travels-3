@@ -144,7 +144,7 @@ public class LevelScreen extends Screen
                 .add("Projection line: ")
                 .right();
             innerDifficultyTable
-                .add(String.valueOf(serialisableDifficulty.trajectorySeconds))
+                .add(String.valueOf(serialisableDifficulty.trajectorySeconds) + " sec")
                 .right();
             innerDifficultyTable.row();
 
