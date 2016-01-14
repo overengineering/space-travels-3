@@ -27,25 +27,20 @@ import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.ui.BeepingTextButton;
 import com.draga.spaceTravels3.ui.Screen;
 
-public class LoseScreen extends Screen
+public class LoseScreen extends IngameMenuScreen
 {
-    private final Stage      stage;
     private final Sound      sound;
-    private final GameScreen gameScreen;
     private final Level      level;
     private       Image      headerImage;
 
-    public LoseScreen(Level level, GameScreen gameScreen)
+    public LoseScreen(Level level, Screen gameScreen)
     {
-        super(true, false);
+        super(true, false, gameScreen, level);
 
         this.level = level;
 
-        this.gameScreen = gameScreen;
         this.sound = AssMan.getGameAssMan().get(AssMan.getAssList().loseSound);
         this.sound.play(SettingsManager.getSettings().volumeFX);
-
-        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.overlaySpriteBath);
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
@@ -66,7 +61,7 @@ public class LoseScreen extends Screen
         table.row();
 
         // Retry button.
-        TextButton retryButton = getRetryTextButton();
+        TextButton retryButton = getRetryButton();
         table
             .add(retryButton);
         table.row();
@@ -82,143 +77,11 @@ public class LoseScreen extends Screen
 
         this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
-
-    public Actor getHeaderLabel()
-    {
-        Table table = new Table();
-
-        Label label = new Label(this.level.getName() + " ", UIManager.skin, "large", Color.WHITE);
-        table.add(label);
-
-        if (AssMan.getMenuAssMan().update()
-            || AssMan.getMenuAssMan().isLoaded(this.level.getIconPath()))
-        {
-            Texture texture =
-                AssMan.getMenuAssMan().get(this.level.getIconPath(), Texture.class);
-            this.headerImage = new Image(texture);
-        }
-        else
-        {
-            this.headerImage = new Image();
-        }
-
-        table
-            .add(this.headerImage)
-            .size(label.getHeight());
-
-        table.add(new Label(" " + this.level.getDifficulty(), UIManager.skin));
-
-        return table;
-    }
-
-    public TextButton getRetryTextButton()
-    {
-        TextButton retryButton = new BeepingTextButton("Try Again?", UIManager.skin);
-
-        retryButton.addListener(
-            new ClickListener()
-            {
-                @Override
-                public void clicked(InputEvent event, float x, float y)
-                {
-                    Retry();
-                }
-            });
-
-        return retryButton;
-    }
-
-    private TextButton getMainMenuTextButton()
-    {
-        TextButton mainMenuTextButton = new BeepingTextButton("Main menu", UIManager.skin);
-        mainMenuTextButton.addListener(new ClickListener()
-        {
-            @Override
-            public void clicked(InputEvent event, float x, float y)
-            {
-                ScreenManager.removeScreen(LoseScreen.this);
-                ScreenManager.removeScreen(LoseScreen.this.gameScreen);
-            }
-        });
-
-        return mainMenuTextButton;
-    }
-
-    private void Retry()
-    {
-        ScreenManager.removeScreen(this);
-        ScreenManager.removeScreen(this.gameScreen);
-        ScreenManager.addScreen(new LoadingScreen(this.level.getId(), this.level.getDifficulty()));
-    }
-
-    @Override
-    public void show()
-    {
-        Gdx.input.setInputProcessor(this.stage);
-    }
-
-    @Override
-    public void render(float delta)
-    {
-        // If the image still needs showing.
-        if (this.headerImage.getDrawable() == null
-            && (
-            AssMan.getMenuAssMan().update()
-                || AssMan.getMenuAssMan().isLoaded(this.level.getIconPath())))
-        {
-            Texture texture = AssMan.getMenuAssMan().get(this.level.getIconPath());
-            this.headerImage.setDrawable(new TextureRegionDrawable(new TextureRegion(texture)));
-        }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
-            || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
-        {
-            ScreenManager.removeScreen(this);
-            ScreenManager.removeScreen(this.gameScreen);
-            return;
-        }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER))
-        {
-            Retry();
-            return;
-        }
-
-        this.stage.getViewport().apply();
-
-        this.stage.act(delta);
-        this.stage.draw();
-    }
-
-    @Override
-    public void resize(int width, int height)
-    {
-        this.stage.getViewport().update(width, height);
-    }
-
-    @Override
-    public void pause()
-    {
-
-    }
-
-    @Override
-    public void resume()
-    {
-
-    }
-
-    @Override
-    public void hide()
-    {
-
-    }
-
     @Override
     public void dispose()
     {
         this.sound.stop();
         this.sound.dispose();
-        this.stage.dispose();
+        super.dispose();
     }
 }

@@ -40,7 +40,7 @@ public class BackgroundScreen extends Screen
                     AssMan.getMenuAssMan()
                         .get(Constants.Visual.Background.BACKGROUND_ASSET_DESCRIPTOR);
                 BackgroundPositionManager.create(this.background);
-                BackgroundPositionManager.addBackgroundPositionController(new RandomBackgroundPositionController());
+                BackgroundPositionManager.setBackgroundPositionController(new RandomBackgroundPositionController());
             }
         }
         else

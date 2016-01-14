@@ -4,12 +4,10 @@ import com.draga.PooledVector2;
 import com.draga.background.Background;
 import com.draga.spaceTravels3.BackgroundPositionController;
 
-import java.util.Stack;
-
 public abstract class BackgroundPositionManager
 {
-    private static Stack<BackgroundPositionController> backgroundPositionControllers;
-    private static Background                          background;
+    private static BackgroundPositionController backgroundPositionController;
+    private static Background                   background;
 
     private BackgroundPositionManager()
     {
@@ -18,12 +16,11 @@ public abstract class BackgroundPositionManager
     public static void create(Background background)
     {
         BackgroundPositionManager.background = background;
-        BackgroundPositionManager.backgroundPositionControllers = new Stack<>();
     }
 
     public static void update(float deltaTime)
     {
-        try (PooledVector2 movement = backgroundPositionControllers.peek().getMovement(deltaTime))
+        try (PooledVector2 movement = backgroundPositionController.getMovement(deltaTime))
         {
             background.move(movement);
         }
@@ -31,16 +28,11 @@ public abstract class BackgroundPositionManager
 
     public static void dispose()
     {
-        backgroundPositionControllers.clear();
+
     }
 
-    public static void addBackgroundPositionController(BackgroundPositionController backgroundPositionController)
+    public static void setBackgroundPositionController(BackgroundPositionController backgroundPositionController)
     {
-        BackgroundPositionManager.backgroundPositionControllers.push(backgroundPositionController);
-    }
-
-    public static void removeBackgroundPositionController(BackgroundPositionController backgroundPositionController)
-    {
-        BackgroundPositionManager.backgroundPositionControllers.remove(backgroundPositionController);
+        BackgroundPositionManager.backgroundPositionController = backgroundPositionController;
     }
 }
