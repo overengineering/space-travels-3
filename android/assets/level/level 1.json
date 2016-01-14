@@ -1,7 +1,7 @@
 {
   "class": "SerialisableLevel",
   "name": "Aries",
-  "iconPath": "map/aries128.png",
+  "iconPath": "level/aries128.png",
   "serialisedDifficulties": {
     "Easy": {
       "trajectorySeconds": 5,

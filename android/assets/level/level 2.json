@@ -1,7 +1,7 @@
 {
   "class": "SerialisableLevel",
   "name": "Taurus",
-  "iconPath": "map/taurus128.png",
+  "iconPath": "level/taurus128.png",
   "serialisedDifficulties": {
     "Easy": {
       "trajectorySeconds": 5,
