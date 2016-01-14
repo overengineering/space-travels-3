@@ -34,7 +34,7 @@ public class Explosion extends GameEntity
             this.physicsComponent,
             Animation.PlayMode.NORMAL);
 
-        this.sound = AssMan.getAssMan().get(AssMan.getAssList().explosionSound);
+        this.sound = AssMan.getGameAssMan().get(AssMan.getAssList().explosionSound);
         this.sound.play(SettingsManager.getSettings().volumeFX);
     }
 

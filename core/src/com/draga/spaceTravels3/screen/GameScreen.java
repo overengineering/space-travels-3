@@ -23,6 +23,7 @@ import java.util.ArrayList;
 public class GameScreen extends Screen
 {
     private static final String LOGGING_TAG = GameScreen.class.getSimpleName();
+
     private final PhysicsComponentBackgroundPositionController shipBackgroundPositionController;
 
     private Hud hud;
@@ -95,7 +96,7 @@ public class GameScreen extends Screen
     @Override
     public void show()
     {
-        BackgroundPositionManager.addBackgroundPositionController(this.shipBackgroundPositionController);
+        BackgroundPositionManager.setBackgroundPositionController(this.shipBackgroundPositionController);
         ScreenManager.addScreen(new CountdownScreen());
 
         Gdx.input.setInputProcessor(new InputAdapter()
@@ -221,19 +222,19 @@ public class GameScreen extends Screen
     @Override
     public void hide()
     {
-        BackgroundPositionManager.removeBackgroundPositionController(this.shipBackgroundPositionController);
     }
 
     @Override
     public void dispose()
     {
+        BackgroundPositionManager.setBackgroundPositionController(new RandomBackgroundPositionController());
         GameEntityManager.dispose();
         Constants.General.EVENT_BUS.unregister(this);
         this.hud.dispose();
 
         this.level.dispose();
 
-        AssMan.getAssMan().clear();
+        AssMan.getGameAssMan().clear();
 
         PhysicsEngine.dispose();
 
@@ -246,28 +247,19 @@ public class GameScreen extends Screen
     @Subscribe
     public void Lose(LoseEvent loseEvent)
     {
-        ScreenManager.addScreen(new LoseScreen(
-            this.level.getId(),
-            this.level.getDifficulty(),
-            this));
+        ScreenManager.addScreen(new LoseScreen(this.level, this));
     }
 
     @Subscribe
     public void Win(WinEvent winEvent)
     {
+        ScreenManager.addScreen(new WinScreen(this.level, this));
+
         Score score = this.level.getScore();
-
-        ScreenManager.addScreen(new WinScreen(
-            this.level.getId(),
-            this.level.getDifficulty(),
-            score,
-            this));
-
         ScoreManager.saveHighScore(
             this.level.getId(),
             this.level.getDifficulty(),
             score.getTotalScore());
-
         Pools.free(score);
     }
 }

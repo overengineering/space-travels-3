@@ -5,6 +5,7 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
@@ -15,6 +16,8 @@ import com.draga.ErrorHandlerProvider;
 import com.draga.GdxErrorHandler;
 import com.draga.spaceTravels3.manager.*;
 import com.draga.spaceTravels3.manager.asset.AssMan;
+import com.draga.spaceTravels3.manager.level.LevelManager;
+import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.spaceTravels3.screen.BackgroundScreen;
 import com.draga.spaceTravels3.screen.MenuScreen;
 
@@ -52,6 +55,13 @@ public class SpaceTravels3 implements ApplicationListener
         Gdx.input.setCatchBackKey(true);
 
         AssMan.create();
+        for (SerialisableLevel serialisableLevel : LevelManager.getSerialisableLevels())
+        {
+            AssMan.getMenuAssMan().load(serialisableLevel.iconPath, Texture.class);
+        }
+        AssMan.getMenuAssMan().update();
+
+
         ScreenManager.create();
         UIManager.create();
         SoundManager.create();

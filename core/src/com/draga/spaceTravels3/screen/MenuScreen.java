@@ -3,31 +3,39 @@ package com.draga.spaceTravels3.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
+import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.manager.level.LevelManager;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
+import com.draga.spaceTravels3.ui.BeepingClickListener;
 import com.draga.spaceTravels3.ui.BeepingTextButton;
 import com.draga.spaceTravels3.ui.Screen;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class MenuScreen extends Screen
 {
-    private Stage stage;
+    private Stage                             stage;
+    private HashMap<SerialisableLevel, Image> asyncLevelIcons;
 
     public MenuScreen()
     {
         super(true, true);
+
+        this.asyncLevelIcons = new HashMap<>();
 
         this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
 
@@ -82,13 +90,35 @@ public class MenuScreen extends Screen
     {
         java.util.List<SerialisableLevel> serialisableLevels = LevelManager.getSerialisableLevels();
 
-        final Table table = UIManager.getDefaultTable();
+        final Table outerTable = UIManager.getDefaultTable();
 
         for (final SerialisableLevel serialisableLevel : serialisableLevels)
         {
-            BeepingTextButton levelButton =
-                new BeepingTextButton(serialisableLevel.name, UIManager.skin);
-            levelButton.addListener(new ClickListener()
+            Table innerTable = UIManager.getDefaultTable();
+
+            // If the level icon is not loaded in the ass man then add to an map to load them async.
+            Image image;
+            if (AssMan.getMenuAssMan().isLoaded(serialisableLevel.iconPath))
+            {
+                Texture texture = AssMan.getMenuAssMan().get(serialisableLevel.iconPath);
+                image = new Image(new TextureRegionDrawable(new TextureRegion(texture)));
+            }
+            else
+            {
+                image = new Image();
+                this.asyncLevelIcons.put(serialisableLevel, image);
+            }
+
+            innerTable
+                .add(image)
+                .size(this.stage.getWidth() / 10f);
+            innerTable.row();
+
+            innerTable.add(serialisableLevel.name);
+            innerTable.row();
+
+            innerTable.addListener(BeepingClickListener.BEEPING_CLICK_LISTENER);
+            innerTable.addListener(new ClickListener()
             {
                 @Override
                 public void clicked(InputEvent event, float x, float y)
@@ -98,11 +128,13 @@ public class MenuScreen extends Screen
                     super.clicked(event, x, y);
                 }
             });
-            table.add(levelButton);
-            table.row();
+
+            outerTable.add(innerTable);
         }
 
-        ScrollPane scrollPane = new ScrollPane(table, UIManager.skin);
+        ScrollPane scrollPane = new ScrollPane(outerTable, UIManager.skin);
+        scrollPane.setFadeScrollBars(false);
+        scrollPane.setScrollingDisabled(false, true);
 
         return scrollPane;
     }
@@ -150,6 +182,23 @@ public class MenuScreen extends Screen
     @Override
     public void render(float deltaTime)
     {
+        // Check if we need to load level icons and if they are loaded show them.
+        ArrayList<SerialisableLevel> serialisableLevels =
+            new ArrayList<>(this.asyncLevelIcons.keySet());
+        for (SerialisableLevel serialisableLevel : serialisableLevels)
+        {
+            if (AssMan.getMenuAssMan().update()
+                || AssMan.getMenuAssMan().isLoaded(serialisableLevel.iconPath))
+            {
+                Texture texture = AssMan.getMenuAssMan().get(serialisableLevel.iconPath);
+                this.asyncLevelIcons.get(serialisableLevel)
+                    .setDrawable(new TextureRegionDrawable(new TextureRegion(texture)));
+
+                this.asyncLevelIcons.remove(serialisableLevel);
+            }
+        }
+
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
             || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
         {

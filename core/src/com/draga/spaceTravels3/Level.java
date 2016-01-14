@@ -28,7 +28,8 @@ public class Level
     private final float maxLandingSpeed;
 
     private final ArrayList<Pickup> pickups;
-    private final Ship              ship;
+    private final String            iconPath;
+    private final Ship ship;
     private final Thruster          thruster;
     private final Planet            destinationPlanet;
 
@@ -43,10 +44,12 @@ public class Level
 
     private String id;
     private String name;
+
     public Level(
         String id,
         String name,
         String difficulty,
+        String iconPath,
         Ship ship,
         Thruster thruster,
         ArrayList<Planet> planets,
@@ -58,6 +61,7 @@ public class Level
         this.id = id;
         this.name = name;
         this.difficulty = difficulty;
+        this.iconPath = iconPath;
 
         this.ship = ship;
         this.thruster = thruster;
@@ -68,7 +72,8 @@ public class Level
 
         this.gameState = GameState.COUNTDOWN;
 
-        this.pickupCollectedSound = AssMan.getAssMan().get(AssMan.getAssList().pickupCollectSound);
+        this.pickupCollectedSound =
+            AssMan.getGameAssMan().get(AssMan.getAssList().pickupCollectSound);
 
         GameEntityManager.addGameEntity(thruster);
         GameEntityManager.addGameEntity(ship);
@@ -360,5 +365,15 @@ public class Level
     public Rectangle getBounds()
     {
         return this.bounds;
+    }
+
+    public String getName()
+    {
+        return this.name;
+    }
+
+    public String getIconPath()
+    {
+        return this.iconPath;
     }
 }

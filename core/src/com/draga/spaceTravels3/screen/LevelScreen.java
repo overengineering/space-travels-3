@@ -2,14 +2,15 @@ package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.event.ScoreUpdatedEvent;
@@ -17,6 +18,7 @@ import com.draga.spaceTravels3.manager.ScoreManager;
 import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
+import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableDifficulty;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.spaceTravels3.ui.BeepingTextButton;
@@ -32,6 +34,7 @@ public class LevelScreen extends Screen
     private       Actor                  difficultiesList;
     private       Stage                  stage;
     private       HashMap<String, Label> difficultyHighScoreLabels;
+    private       Image                  headerImage;
 
     public LevelScreen(SerialisableLevel serialisableLevel)
     {
@@ -46,7 +49,7 @@ public class LevelScreen extends Screen
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
         // Header label.
-        table.add(new Label(this.serialisableLevel.name, UIManager.skin));
+        table.add(getHeader());
 
         // Add a row with an expanded cell to fill the gap.
         table.row();
@@ -75,6 +78,33 @@ public class LevelScreen extends Screen
         this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
 
         Constants.General.EVENT_BUS.register(this);
+    }
+
+    private Actor getHeader()
+    {
+        Table table = new Table();
+
+        Label label =
+            new Label(this.serialisableLevel.name + " ", UIManager.skin, "large", Color.WHITE);
+        table.add(label);
+
+        if (AssMan.getMenuAssMan().update()
+            || AssMan.getMenuAssMan().isLoaded(this.serialisableLevel.iconPath))
+        {
+            Texture texture =
+                AssMan.getMenuAssMan().get(this.serialisableLevel.iconPath, Texture.class);
+            this.headerImage = new Image(texture);
+        }
+        else
+        {
+            this.headerImage = new Image();
+        }
+
+        table
+            .add(this.headerImage)
+            .size(label.getHeight());
+
+        return table;
     }
 
     private Actor getDifficultiesList(final SerialisableLevel serialisableLevel)
@@ -200,10 +230,22 @@ public class LevelScreen extends Screen
     @Override
     public void render(float delta)
     {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
-            || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
+        // If the image still needs showing.
+        if (this.headerImage.getDrawable() == null
+            && (
+            AssMan.getMenuAssMan().update()
+                || AssMan.getMenuAssMan().isLoaded(this.serialisableLevel.iconPath)))
         {
-            ScreenManager.removeScreen(LevelScreen.this);
+            Texture texture = AssMan.getMenuAssMan().get(this.serialisableLevel.iconPath);
+            this.headerImage.setDrawable(new TextureRegionDrawable(new TextureRegion(texture)));
+        }
+
+        {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
+                || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
+            {
+                ScreenManager.removeScreen(LevelScreen.this);
+            }
         }
 
         this.stage.getViewport().apply();

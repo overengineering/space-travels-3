@@ -3,6 +3,7 @@ package com.draga.spaceTravels3.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
@@ -30,6 +31,7 @@ import java.util.concurrent.TimeUnit;
 public class LoadingScreen extends Screen
 {
     private static final String LOGGING_TAG = LoadingScreen.class.getSimpleName();
+
     private final SerialisableLevel serialisableLevel;
     private final String            difficulty;
 
@@ -51,13 +53,13 @@ public class LoadingScreen extends Screen
         this.serialisableLevel = serialisableLevel;
         this.stopwatch = Stopwatch.createStarted();
 
-        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
+        loadAssets(this.serialisableLevel);
 
-        Actor headerLabel = getHeaderLabel();
+        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
-        table.add(headerLabel);
+        table.add(new Label("Loading", UIManager.skin, "large", Color.WHITE));
         table.row();
 
         this.progressBar = getProgressBar();
@@ -68,43 +70,9 @@ public class LoadingScreen extends Screen
         this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
-    public Label getHeaderLabel()
-    {
-        Label.LabelStyle labelStyle = UIManager.skin.get(Label.LabelStyle.class);
-
-        Label headerLabel = new Label("Loading", labelStyle);
-
-        return headerLabel;
-    }
-
-    private ProgressBar getProgressBar()
-    {
-        ProgressBar progressBar = new ProgressBar(
-            0,
-            getTotalAssetsCount(),
-            1,
-            false,
-            UIManager.skin);
-
-        return progressBar;
-    }
-
-    private float getTotalAssetsCount()
-    {
-        return AssMan.getAssMan().getQueuedAssets()
-            + AssMan.getAssMan().getLoadedAssets();
-    }
-
-    @Override
-    public void show()
-    {
-        loadAssets(this.serialisableLevel);
-        Gdx.input.setInputProcessor(this.stage);
-    }
-
     private void loadAssets(SerialisableLevel serialisableLevel)
     {
-        AssetManager assMan = AssMan.getAssMan();
+        AssetManager assMan = AssMan.getGameAssMan();
 
         // Loads sounds first 'cause of weird quirk of Android not loading them in time.
         assMan.load(AssMan.getAssList().thrusterSound, Sound.class);
@@ -130,16 +98,35 @@ public class LoadingScreen extends Screen
         assMan.update();
     }
 
+    private ProgressBar getProgressBar()
+    {
+        ProgressBar progressBar = new ProgressBar(
+            0,
+            1,
+            0.01f,
+            false,
+            UIManager.skin);
+
+        return progressBar;
+    }
+
+    @Override
+    public void show()
+    {
+        Gdx.input.setInputProcessor(this.stage);
+    }
+
     @Override
     public void render(float deltaTime)
     {
-        if (AssMan.getAssMan().update())
+        if (AssMan.getGameAssMan().update())
         {
             if (Constants.General.IS_DEBUGGING)
             {
                 Gdx.app.debug(
                     LOGGING_TAG,
-                    "Assets loaded: " + Joiner.on(", ").join(AssMan.getAssMan().getAssetNames()));
+                    "Assets loaded: " + Joiner.on(", ")
+                        .join(AssMan.getGameAssMan().getAssetNames()));
                 Gdx.app.debug(
                     LOGGING_TAG,
                     String.format(
@@ -163,13 +150,7 @@ public class LoadingScreen extends Screen
 
     private void updateProgressBar()
     {
-        this.progressBar.setRange(0, getTotalAssetsCount());
-        this.progressBar.setValue(getLoadedAssetsCount());
-    }
-
-    private int getLoadedAssetsCount()
-    {
-        return AssMan.getAssMan().getLoadedAssets();
+        this.progressBar.setValue(AssMan.getGameAssMan().getProgress());
     }
 
     @Override

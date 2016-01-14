@@ -1,6 +1,7 @@
 {
   "class": "SerialisableLevel",
-  "name": "Level 4",
+  "name": "Cancer",
+  "iconPath": "map/cancer128.png",
   "serialisedDifficulties": {
     "easy": {
       "trajectorySeconds": 5,

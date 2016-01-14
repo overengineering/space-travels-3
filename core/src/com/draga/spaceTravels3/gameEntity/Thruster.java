@@ -41,7 +41,7 @@ public class Thruster extends GameEntity
             this.physicsComponent,
             Animation.PlayMode.LOOP);
 
-        this.sound = AssMan.getAssMan().get(AssMan.getAssList().thrusterSound);
+        this.sound = AssMan.getGameAssMan().get(AssMan.getAssList().thrusterSound);
 
         // Sound must be loopable.
         this.soundInstance = this.sound.loop(0);

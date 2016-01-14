@@ -1,26 +1,22 @@
 package com.draga.spaceTravels3.screen;
 
-import com.badlogic.gdx.assets.AssetManager;
 import com.draga.background.Background;
-import com.draga.background.BackgroundLoader;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.RandomBackgroundPositionController;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.manager.BackgroundPositionManager;
+import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.ui.Screen;
 
 public class BackgroundScreen extends Screen
 {
-    private final AssetManager assetManager;
-    private       Background   background;
+    private Background background;
 
     public BackgroundScreen()
     {
         super(false, false);
-        this.assetManager = new AssetManager();
-        this.assetManager.setLoader(Background.class, new BackgroundLoader());
-        this.assetManager.load(Constants.Visual.Background.BACKGROUND_ASSET_DESCRIPTOR);
-        this.assetManager.update();
+        AssMan.getMenuAssMan().load(Constants.Visual.Background.BACKGROUND_ASSET_DESCRIPTOR);
+        AssMan.getMenuAssMan().update();
     }
 
     @Override
@@ -34,12 +30,17 @@ public class BackgroundScreen extends Screen
     {
         if (this.background == null)
         {
-            if (this.assetManager.update())
+            if (AssMan.getMenuAssMan().update()
+                || AssMan.getMenuAssMan()
+                .isLoaded(
+                    Constants.Visual.Background.BACKGROUND_ASSET_DESCRIPTOR.fileName,
+                    Constants.Visual.Background.BACKGROUND_ASSET_DESCRIPTOR.type))
             {
                 this.background =
-                    this.assetManager.get(Constants.Visual.Background.BACKGROUND_ASSET_DESCRIPTOR);
+                    AssMan.getMenuAssMan()
+                        .get(Constants.Visual.Background.BACKGROUND_ASSET_DESCRIPTOR);
                 BackgroundPositionManager.create(this.background);
-                BackgroundPositionManager.addBackgroundPositionController(new RandomBackgroundPositionController());
+                BackgroundPositionManager.setBackgroundPositionController(new RandomBackgroundPositionController());
             }
         }
         else
@@ -81,6 +82,6 @@ public class BackgroundScreen extends Screen
     @Override
     public void dispose()
     {
-        this.assetManager.dispose();
+
     }
 }
