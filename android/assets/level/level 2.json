@@ -3,19 +3,19 @@
   "name": "Taurus",
   "iconPath": "map/taurus128.png",
   "serialisedDifficulties": {
-    "easy": {
+    "Easy": {
       "trajectorySeconds": 5,
       "maxLandingSpeed": 70,
       "fuel": 0,
       "infiniteFuel": true
     },
-    "medium": {
+    "Medium": {
       "trajectorySeconds": 3,
       "maxLandingSpeed": 70,
       "fuel": 4,
       "infiniteFuel": false
     },
-    "hard": {
+    "Hard": {
       "trajectorySeconds": 0,
       "maxLandingSpeed": 60,
       "fuel": 2,

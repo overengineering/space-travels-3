@@ -3,19 +3,19 @@
   "name": "Cancer",
   "iconPath": "map/cancer128.png",
   "serialisedDifficulties": {
-    "easy": {
+    "Easy": {
       "trajectorySeconds": 5,
       "maxLandingSpeed": 70,
       "fuel": 0,
       "infiniteFuel": true
     },
-    "medium": {
+    "Medium": {
       "trajectorySeconds": 3,
       "maxLandingSpeed": 70,
       "fuel": 10,
       "infiniteFuel": false
     },
-    "hard": {
+    "Hard": {
       "trajectorySeconds": 0,
       "maxLandingSpeed": 60,
       "fuel": 5,
@@ -23,93 +23,93 @@
     }
   },
   "serialisedShip": {
-    "x": 10,
-    "y": 75,
+    "x": 5,
+    "y": 5,
     "mass": 1
   },
   "serialisedPlanets": [
     {
       "texturePath": "planet/earth256.png",
-      "x": 220,
-      "y": 150,
-      "radius": 5.5,
-      "mass": 20000,
+      "x": 375,
+      "y": 355,
+      "radius": 25,
+      "mass": 300000,
       "destination": true
     },
     {
       "texturePath": "planet/mars256.png",
-      "x": 230,
-      "y": 120,
-      "radius": 4,
-      "mass": 20000
+      "x": 355,
+      "y": 255,
+      "radius": 15,
+      "mass": 200000
     },
     {
       "texturePath": "planet/jupiter256.png",
-      "x": 170,
-      "y": 120,
-      "radius": 7,
-      "mass": 20000
+      "x": 205,
+      "y": 300,
+      "radius": 15,
+      "mass": 200000
     },
     {
       "texturePath": "planet/mars256.png",
-      "x": 160,
-      "y": 170,
-      "radius": 6,
-      "mass": 20000
+      "x": 283,
+      "y": 528,
+      "radius": 23,
+      "mass": 300000
     },
     {
       "texturePath": "planet/mars256.png",
-      "x": 250,
-      "y": 250,
-      "radius": 12,
-      "mass": 50000
+      "x": 255,
+      "y": 580,
+      "radius": 5,
+      "mass": 100000
     },
     {
       "texturePath": "planet/mars256.png",
-      "x": 310,
-      "y": 145,
-      "radius": 6,
-      "mass": 20000
+      "x": 565,
+      "y": 455,
+      "radius": 15,
+      "mass": 200000
     },
     {
       "texturePath": "planet/mars256.png",
-      "x": 250,
-      "y": 50,
-      "radius": 6,
-      "mass": 20000
+      "x": 565,
+      "y": 235,
+      "radius": 15,
+      "mass": 200000
     },
     {
       "texturePath": "planet/mars256.png",
-      "x": 115,
-      "y": 55,
-      "radius": 6,
-      "mass": 20000
+      "x": 375,
+      "y": 90,
+      "radius": 15,
+      "mass": 200000
     }
   ],
   "serialisedPickups": [
     {
-      "x": 230,
-      "y": 105
+      "x": 375,
+      "y": 235
     },
     {
-      "x": 160,
-      "y": 110
-    },
-    {
-      "x": 145,
-      "y": 170
-    },
-    {
-      "x": 250,
+      "x": 175,
       "y": 280
     },
     {
-      "x": 330,
-      "y": 145
+      "x": 255,
+      "y": 560
     },
     {
-      "x": 250,
-      "y": 40
+      "x": 585,
+      "y": 475
+    },
+    {
+      "x": 585,
+      "y": 225
+    },
+    {
+      "x": 385,
+      "y": 65
     }
   ]
 }

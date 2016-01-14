@@ -3,19 +3,19 @@
   "name": "Aries",
   "iconPath": "map/aries128.png",
   "serialisedDifficulties": {
-    "easy": {
+    "Easy": {
       "trajectorySeconds": 5,
       "maxLandingSpeed": 100,
       "fuel": 0,
       "infiniteFuel": true
     },
-    "medium": {
+    "Medium": {
       "trajectorySeconds": 2,
       "maxLandingSpeed": 80,
       "fuel": 2,
       "infiniteFuel": false
     },
-    "hard": {
+    "Hard": {
       "trajectorySeconds": 0,
       "maxLandingSpeed": 40,
       "fuel": 1,
