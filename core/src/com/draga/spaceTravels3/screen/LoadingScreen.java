@@ -53,8 +53,6 @@ public class LoadingScreen extends Screen
         this.serialisableLevel = serialisableLevel;
         this.stopwatch = Stopwatch.createStarted();
 
-        loadAssets(this.serialisableLevel);
-
         this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
@@ -68,6 +66,26 @@ public class LoadingScreen extends Screen
             .width(this.stage.getWidth() * 0.75f);
 
         this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
+    }
+
+    private ProgressBar getProgressBar()
+    {
+        ProgressBar progressBar = new ProgressBar(
+            0,
+            1,
+            0.01f,
+            false,
+            UIManager.skin);
+
+        return progressBar;
+    }
+
+    @Override
+    public void show()
+    {
+        loadAssets(this.serialisableLevel);
+
+        Gdx.input.setInputProcessor(this.stage);
     }
 
     private void loadAssets(SerialisableLevel serialisableLevel)
@@ -96,24 +114,6 @@ public class LoadingScreen extends Screen
         assMan.load(Constants.Visual.HUD.JOYSTICK_ASSET_DESCRIPTOR);
 
         assMan.update();
-    }
-
-    private ProgressBar getProgressBar()
-    {
-        ProgressBar progressBar = new ProgressBar(
-            0,
-            1,
-            0.01f,
-            false,
-            UIManager.skin);
-
-        return progressBar;
-    }
-
-    @Override
-    public void show()
-    {
-        Gdx.input.setInputProcessor(this.stage);
     }
 
     @Override
