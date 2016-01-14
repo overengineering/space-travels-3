@@ -3,6 +3,7 @@ package com.draga.spaceTravels3.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
@@ -56,11 +57,9 @@ public class LoadingScreen extends Screen
 
         this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
 
-        Actor headerLabel = getHeaderLabel();
-
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
-        table.add(headerLabel);
+        table.add(new Label("Loading", UIManager.skin, "large", Color.WHITE));
         table.row();
 
         this.progressBar = getProgressBar();
@@ -97,15 +96,6 @@ public class LoadingScreen extends Screen
         assMan.load(Constants.Visual.HUD.JOYSTICK_ASSET_DESCRIPTOR);
 
         assMan.update();
-    }
-
-    public Label getHeaderLabel()
-    {
-        Label.LabelStyle labelStyle = UIManager.skin.get(Label.LabelStyle.class);
-
-        Label headerLabel = new Label("Loading", labelStyle);
-
-        return headerLabel;
     }
 
     private ProgressBar getProgressBar()
