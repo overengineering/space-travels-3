@@ -65,7 +65,8 @@ public class Thruster extends GameEntity
             thrusterOffsetPosition.sub(this.graphicComponent.getHalfWidth(), 0)
                 .rotate(this.ship.physicsComponent.getAngle());
 
-            try (PooledVector2 shipPosition = this.ship.physicsComponent.getPosition().cpy())
+            try (PooledVector2 shipPosition = PooledVector2.newVector2(this.ship.physicsComponent.getPosition()
+                .cpy()))
             {
                 this.physicsComponent.getPosition()
                     .set(shipPosition

@@ -1,7 +1,6 @@
 package com.draga.spaceTravels3.component.physicsComponent;
 
-import com.badlogic.gdx.utils.Pools;
-import com.draga.PooledVector2;
+import com.badlogic.gdx.math.Vector2;
 import com.draga.shape.Circle;
 import com.draga.spaceTravels3.gameEntity.GameEntity;
 import com.draga.spaceTravels3.gameEntity.GameEntityGroup;
@@ -14,8 +13,8 @@ public class PhysicsComponent implements Serializable
 
     private final PhysicsComponentType physicsComponentType;
 
-    private final PooledVector2 position;
-    private final PooledVector2 velocity;
+    private final Vector2 position;
+    private final Vector2 velocity;
 
     private final Circle boundsCircle;
 
@@ -39,8 +38,8 @@ public class PhysicsComponent implements Serializable
     {
         this.ownerClass = ownerClass;
         this.physicsComponentType = physicsComponentType;
-        this.position = PooledVector2.newVector2(x, y);
-        this.velocity = PooledVector2.newVector2(0f, 0f);
+        this.position = new Vector2(x, y);
+        this.velocity = new Vector2(0f, 0f);
         this.mass = mass;
         this.boundsCircle = new Circle(boundsRadius);
         this.collidesWith = collidesWith;
@@ -59,19 +58,24 @@ public class PhysicsComponent implements Serializable
         this.physicsComponentType = originalPhysicsComponent.physicsComponentType;
     }
 
+    public Circle getBoundsCircle()
+    {
+        return this.boundsCircle;
+    }
+
     public Class<? extends GameEntity> getOwnerClass()
     {
-        return ownerClass;
+        return this.ownerClass;
     }
 
     public boolean isAffectedByGravity()
     {
-        return affectedByGravity;
+        return this.affectedByGravity;
     }
 
     public float getAngularVelocity()
     {
-        return angularVelocity;
+        return this.angularVelocity;
     }
 
     public void setAngularVelocity(float angularVelocity)
@@ -79,19 +83,19 @@ public class PhysicsComponent implements Serializable
         this.angularVelocity = angularVelocity;
     }
 
-    public PooledVector2 getPosition()
+    public Vector2 getPosition()
     {
-        return position;
+        return this.position;
     }
 
-    public PooledVector2 getVelocity()
+    public Vector2 getVelocity()
     {
-        return velocity;
+        return this.velocity;
     }
 
     public float getAngle()
     {
-        return angle;
+        return this.angle;
     }
 
     public void setAngle(float angle)
@@ -99,29 +103,22 @@ public class PhysicsComponent implements Serializable
         this.angle = angle;
     }
 
-    public Circle getBoundsCircle()
-    {
-        return boundsCircle;
-    }
-
     public void dispose()
     {
-        this.position.close();
-        this.velocity.close();
     }
 
     public float getMass()
     {
-        return mass;
+        return this.mass;
     }
 
     public GameEntityGroup getCollidesWith()
     {
-        return collidesWith;
+        return this.collidesWith;
     }
 
     public PhysicsComponentType getPhysicsComponentType()
     {
-        return physicsComponentType;
+        return this.physicsComponentType;
     }
 }

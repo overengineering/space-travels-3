@@ -13,9 +13,12 @@ public abstract class BackgroundPositionManager
     {
     }
 
-    public static void create(Background background)
+    public static void create(
+        Background background,
+        BackgroundPositionController backgroundPositionController)
     {
         BackgroundPositionManager.background = background;
+        BackgroundPositionManager.backgroundPositionController = backgroundPositionController;
     }
 
     public static void update(float deltaTime)
