@@ -86,9 +86,7 @@ public abstract class Constants
 
         public abstract static class HUD
         {
-
             // HUD
-            public static final  float FORCE_INDICATOR_SCALE                  = 0.25f;
             public static final  Color DESTINATION_PLANET_OVERLAY_LOSE_BORDER = Color.RED;
             public static final  Color DESTINATION_PLANET_OVERLAY_LOSE_FILL   =
                 new Color(1f, 0f, 0f, 0.2f);

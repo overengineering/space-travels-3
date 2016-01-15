@@ -6,7 +6,6 @@ public class Settings
 {
     public  InputType inputType          = InputType.ACCELEROMETER;
     public  float     volumeFX           = 1f;
-    public  boolean   hudForceIndicators = true;
     private float     volumeMusic        = 1f;
 
     public float getVolumeMusic()

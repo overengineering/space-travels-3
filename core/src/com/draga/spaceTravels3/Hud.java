@@ -193,66 +193,13 @@ public class Hud implements Screen
         if (GameEntityManager.getGameEntities().contains(this.ship))
         {
             SpaceTravels3.shapeRenderer.setProjectionMatrix(SpaceTravels3.gameViewport.getCamera().combined);
-            if (SettingsManager.getSettings().hudForceIndicators)
-            {
-                drawGravityIndicator();
-                drawVelocityIndicator();
-            }
             drawApproachSpeedIndicator();
         }
-
 
         this.miniMap.update();
         this.miniMap.draw();
         SpaceTravels3.shapeRenderer.end();
         GraphicsUtils.disableBlending();
-    }
-
-    private void drawGravityIndicator()
-    {
-        try (PooledVector2 gravityVector = PhysicsEngine.calculateGravityForce(this.ship.physicsComponent))
-        {
-
-            SpaceTravels3.shapeRenderer.setColor(Color.BLUE);
-            SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
-            SpaceTravels3.shapeRenderer.circle(
-                this.ship.physicsComponent.getPosition().x
-                    + gravityVector.x * Constants.Visual.HUD.FORCE_INDICATOR_SCALE,
-                this.ship.physicsComponent.getPosition().y
-                    + gravityVector.y * Constants.Visual.HUD.FORCE_INDICATOR_SCALE,
-                0.5f);
-
-            SpaceTravels3.shapeRenderer.setColor(new Color(0, 0, 1f, 0.4f));
-            SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Line);
-            SpaceTravels3.shapeRenderer.circle(
-                this.ship.physicsComponent.getPosition().x,
-                this.ship.physicsComponent.getPosition().y,
-                gravityVector.len() * Constants.Visual.HUD.FORCE_INDICATOR_SCALE,
-                24);
-        }
-    }
-
-    private void drawVelocityIndicator()
-    {
-        SpaceTravels3.shapeRenderer.setColor(Color.WHITE);
-        SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
-        SpaceTravels3.shapeRenderer.circle(
-            this.ship.physicsComponent.getPosition().x
-                + this.ship.physicsComponent.getVelocity().x
-                * Constants.Visual.HUD.FORCE_INDICATOR_SCALE,
-            this.ship.physicsComponent.getPosition().y
-                + this.ship.physicsComponent.getVelocity().y
-                * Constants.Visual.HUD.FORCE_INDICATOR_SCALE,
-            0.5f);
-
-        SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Line);
-        SpaceTravels3.shapeRenderer.setColor(new Color(1, 1, 1, 0.4f));
-        SpaceTravels3.shapeRenderer.circle(
-            this.ship.physicsComponent.getPosition().x,
-            this.ship.physicsComponent.getPosition().y,
-            this.ship.physicsComponent.getVelocity().len()
-                * Constants.Visual.HUD.FORCE_INDICATOR_SCALE,
-            24);
     }
 
     private void drawApproachSpeedIndicator()

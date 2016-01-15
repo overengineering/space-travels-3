@@ -88,10 +88,6 @@ public class SettingsScreen extends Screen
 
         addVolumeMusic(table);
 
-        table.row();
-
-        addHudSettings(table);
-
         return scrollPane;
     }
 
@@ -155,29 +151,6 @@ public class SettingsScreen extends Screen
         table
             .add(volumeSlider)
             .width(this.stage.getWidth() / 2f);
-    }
-
-    private void addHudSettings(Table table)
-    {
-        Label hudLabel =
-            new Label("Hud", UIManager.skin);
-        table.add(hudLabel);
-
-        TextButton hudForceIndicatorsTextButton =
-            new BeepingTextButton("Force indicators", UIManager.skin, "checkable");
-        hudForceIndicatorsTextButton.setChecked(
-            SettingsManager.getSettings().hudForceIndicators);
-        hudForceIndicatorsTextButton.addListener(new ClickListener()
-        {
-            @Override
-            public void clicked(InputEvent event, float x, float y)
-            {
-                SettingsManager.getSettings().hudForceIndicators
-                    = !SettingsManager.getSettings().hudForceIndicators;
-            }
-        });
-
-        table.add(hudForceIndicatorsTextButton);
     }
 
     private Table getInputTypeSelector()
