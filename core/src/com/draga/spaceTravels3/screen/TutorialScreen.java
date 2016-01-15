@@ -39,7 +39,7 @@ public class TutorialScreen extends Screen
 
         // Tutorial slides.
         table
-            .add(getTutorialSlides())
+            .add(getTutorial())
             .expand()
             .center();
         table.row();
@@ -51,13 +51,13 @@ public class TutorialScreen extends Screen
         this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
-    private Actor getTutorialSlides()
+    private Actor getTutorial()
     {
         Table table = UIManager.getDefaultTable();
 
-        table.add(getSlide1());
+        table.add(getElemetsTutorial());
         table.row();
-        table.add(getSlide2());
+        table.add(getGoalTutorial());
 
         ScrollPane scrollPane = new ScrollPane(table, UIManager.skin);
         scrollPane.setFadeScrollBars(false);
@@ -81,133 +81,34 @@ public class TutorialScreen extends Screen
         return backTextButton;
     }
 
-    private Actor getSlide1()
+    private Actor getElemetsTutorial()
     {
         Table table = new Table();
 
         table.add(new Label("Elements", UIManager.skin, "large", Color.WHITE));
         table.row();
 
-        // Ship.
-        {
-            Table shipTable = UIManager.getDefaultTable();
-
-            shipTable.add("Your ship");
-            shipTable.row();
-
-            shipTable.add(new Image(new Texture(AssMan.getAssList().shipTexture)));
-
-            table.add(shipTable);
+        table.add(getShipTutorial());
             table.row();
-        }
 
-        // Trajectory line.
-        {
-            Table trajectoryLineTable = UIManager.getDefaultTable();
-            trajectoryLineTable.add("Trajectory line");
-            trajectoryLineTable.row();
-
-            trajectoryLineTable.add(new Image(new Texture(AssMan.getAssList().shipTexture)));
-            trajectoryLineTable.row();
-
-            String trajectoryLineText =
-                "Shows where you are going accounting for the planets gravity. Turns red if you are going to collide with a planet, blue if the planet is your destination, and green if you are going to collect a pickup.";
-            Label trajectoryLineLabel = new Label(trajectoryLineText, UIManager.skin);
-            trajectoryLineTable
-                .add(trajectoryLineLabel)
-                .width(this.labelsWidth);
-            trajectoryLineLabel.setWrap(true);
-
-            table.add(trajectoryLineTable);
+        table.add(getTrajectoryLineTutorial());
             table.row();
-        }
 
-        // Landing speed indicator
-        {
-            Table landingSpeedIndicatorTable = UIManager.getDefaultTable();
-            landingSpeedIndicatorTable.add("Landing speed indicator");
-            landingSpeedIndicatorTable.row();
-
-            landingSpeedIndicatorTable.add(new Image(new Texture(AssMan.getAssList().shipTexture)));
-            landingSpeedIndicatorTable.row();
-
-            String landingSpeedIndicatorText =
-                "Grows from the center of the planet in color green when your ship speed is within the speed that you can approach the destination planet. Above that speed starts shrinking and becomes red.";
-            Label landingSpeedIndicatorLabel = new Label(landingSpeedIndicatorText, UIManager.skin);
-            landingSpeedIndicatorTable
-                .add(landingSpeedIndicatorLabel)
-                .width(this.labelsWidth);
-            landingSpeedIndicatorLabel.setWrap(true);
-
-            table.add(landingSpeedIndicatorTable);
+        table.add(getLandingSpeedIndicatorTutorial());
             table.row();
-        }
 
-        // Pickup
-        {
-            Table pickupTable = UIManager.getDefaultTable();
-            pickupTable.add("Pickup");
-            pickupTable.row();
-
-            pickupTable.add(new Image(new Texture(AssMan.getAssList().pickupTexture)));
-            pickupTable.row();
-
-            String pickupText = "Provides "
-                + Constants.Game.PICKUP_POINTS
-                + " points. Refer to the minimap and the hud to see how many have you collected and how many are in the map.";
-            Label pickupLabel = new Label(pickupText, UIManager.skin);
-            pickupTable
-                .add(pickupLabel)
-                .width(this.labelsWidth);
-            pickupLabel.setWrap(true);
-
-            table.add(pickupTable);
+        table.add(getPickupTutorial());
             table.row();
-        }
-        // Fuel.
-        {
-            Table fuelTable = UIManager.getDefaultTable();
-            fuelTable.add("Fuel");
-            fuelTable.row();
 
-            fuelTable.add(new Image(new Texture(AssMan.getAssList().shipTexture)));
-            fuelTable.row();
-
-            String fuelText =
-                "Exhaust it and you will be adrift. Each notch represent a unit of fuel. Some maps have infinite fuel.";
-            Label fuelLabel = new Label(fuelText, UIManager.skin);
-            fuelTable
-                .add(fuelLabel)
-                .width(this.labelsWidth);
-            fuelLabel.setWrap(true);
-
-            table.add(fuelTable);
+        table.add(getFuelTutorial());
             table.row();
-        }
-        // Minimap
-        {
-            Table minimapTable = UIManager.getDefaultTable();
-            minimapTable.add("Minimap");
-            minimapTable.row();
 
-            minimapTable.add(new Image(new Texture(AssMan.getAssList().shipTexture)));
-            minimapTable.row();
-
-            String minimapText =
-                "The minimap. The ship is represented by a triangle. Planets with circles in red or blue if it's your destination. Pickups with stars.";
-            Label minimapLabel = new Label(minimapText, UIManager.skin);
-            minimapTable
-                .add(minimapLabel)
-                .width(this.labelsWidth);
-            minimapLabel.setWrap(true);
-
-            table.add(minimapTable);
-        }
+        table.add(getMinimapTutorial());
 
         return table;
     }
 
-    private Actor getSlide2()
+    private Actor getGoalTutorial()
     {
         Table table = new Table(UIManager.skin);
 
@@ -223,6 +124,113 @@ public class TutorialScreen extends Screen
             .width(this.labelsWidth);
 
         return table;
+    }
+
+    private Table getShipTutorial()
+    {
+        Table shipTable = UIManager.getDefaultTable();
+
+        shipTable.add("Your ship");
+        shipTable.row();
+
+        shipTable.add(new Image(new Texture(AssMan.getAssList().shipTexture)));
+        return shipTable;
+    }
+
+    private Table getTrajectoryLineTutorial()
+    {
+        Table trajectoryLineTable = UIManager.getDefaultTable();
+        trajectoryLineTable.add("Trajectory line");
+        trajectoryLineTable.row();
+
+        trajectoryLineTable.add(new Image(new Texture(AssMan.getAssList().shipTexture)));
+        trajectoryLineTable.row();
+
+        String trajectoryLineText =
+            "Shows where you are going accounting for the planets gravity. Turns red if you are going to collide with a planet, blue if the planet is your destination, and green if you are going to collect a pickup.";
+        Label trajectoryLineLabel = new Label(trajectoryLineText, UIManager.skin);
+        trajectoryLineTable
+            .add(trajectoryLineLabel)
+            .width(this.labelsWidth);
+        trajectoryLineLabel.setWrap(true);
+        return trajectoryLineTable;
+    }
+
+    private Table getLandingSpeedIndicatorTutorial()
+    {
+        Table landingSpeedIndicatorTable = UIManager.getDefaultTable();
+        landingSpeedIndicatorTable.add("Landing speed indicator");
+        landingSpeedIndicatorTable.row();
+
+        landingSpeedIndicatorTable.add(new Image(new Texture(AssMan.getAssList().shipTexture)));
+        landingSpeedIndicatorTable.row();
+
+        String landingSpeedIndicatorText =
+            "Grows from the center of the planet in color green when your ship speed is within the speed that you can approach the destination planet. Above that speed starts shrinking and becomes red.";
+        Label landingSpeedIndicatorLabel = new Label(landingSpeedIndicatorText, UIManager.skin);
+        landingSpeedIndicatorTable
+            .add(landingSpeedIndicatorLabel)
+            .width(this.labelsWidth);
+        landingSpeedIndicatorLabel.setWrap(true);
+        return landingSpeedIndicatorTable;
+    }
+
+    private Table getPickupTutorial()
+    {
+        Table pickupTable = UIManager.getDefaultTable();
+        pickupTable.add("Pickup");
+        pickupTable.row();
+
+        pickupTable.add(new Image(new Texture(AssMan.getAssList().pickupTexture)));
+        pickupTable.row();
+
+        String pickupText = "Provides "
+            + Constants.Game.PICKUP_POINTS
+            + " points. Refer to the minimap and the hud to see how many have you collected and how many are in the map.";
+        Label pickupLabel = new Label(pickupText, UIManager.skin);
+        pickupTable
+            .add(pickupLabel)
+            .width(this.labelsWidth);
+        pickupLabel.setWrap(true);
+        return pickupTable;
+    }
+
+    private Table getFuelTutorial()
+    {
+        Table fuelTable = UIManager.getDefaultTable();
+        fuelTable.add("Fuel");
+        fuelTable.row();
+
+        fuelTable.add(new Image(new Texture(AssMan.getAssList().shipTexture)));
+        fuelTable.row();
+
+        String fuelText =
+            "Exhaust it and you will be adrift. Each notch represent a unit of fuel. Some maps have infinite fuel.";
+        Label fuelLabel = new Label(fuelText, UIManager.skin);
+        fuelTable
+            .add(fuelLabel)
+            .width(this.labelsWidth);
+        fuelLabel.setWrap(true);
+        return fuelTable;
+    }
+
+    private Table getMinimapTutorial()
+    {
+        Table minimapTable = UIManager.getDefaultTable();
+        minimapTable.add("Minimap");
+        minimapTable.row();
+
+        minimapTable.add(new Image(new Texture(AssMan.getAssList().shipTexture)));
+        minimapTable.row();
+
+        String minimapText =
+            "The minimap. The ship is represented by a triangle. Planets with circles in red or blue if it's your destination. Pickups with stars.";
+        Label minimapLabel = new Label(minimapText, UIManager.skin);
+        minimapTable
+            .add(minimapLabel)
+            .width(this.labelsWidth);
+        minimapLabel.setWrap(true);
+        return minimapTable;
     }
 
     @Override
