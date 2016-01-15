@@ -177,6 +177,9 @@ public abstract class UIManager
         sliderStyle.background.setMinHeight(height);
         sliderStyle.knobBefore.setMinHeight(height);
 
+        sliderStyle.background.setMinWidth(0f);
+        sliderStyle.knobBefore.setMinWidth(0f);
+
         return sliderStyle;
     }
 
@@ -184,17 +187,17 @@ public abstract class UIManager
     {
         ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle();
 
-        scrollPaneStyle.hScrollKnob = getTiledDrawable(Color.WHITE);
-        scrollPaneStyle.vScrollKnob = getTiledDrawable(Color.WHITE);
-        scrollPaneStyle.hScroll = getTiledDrawable(Color.DARK_GRAY);
-        scrollPaneStyle.vScroll = getTiledDrawable(Color.DARK_GRAY);
+        TiledDrawable scrollKnob = getTiledDrawable(Color.WHITE);
+        TiledDrawable scrollBackground = getTiledDrawable(Color.DARK_GRAY);
 
         float size = Constants.Visual.UI.SQRT_PIXELS * 0.01f;
+        scrollKnob.setMinWidth(size);
+        scrollBackground.setMinWidth(size);
 
-        scrollPaneStyle.vScrollKnob.setMinWidth(size);
-        scrollPaneStyle.vScroll.setMinWidth(size);
-        scrollPaneStyle.hScrollKnob.setMinHeight(size);
-        scrollPaneStyle.hScroll.setMinHeight(size);
+        scrollPaneStyle.hScrollKnob = scrollKnob;
+        scrollPaneStyle.vScrollKnob = scrollKnob;
+        scrollPaneStyle.hScroll = scrollBackground;
+        scrollPaneStyle.vScroll = scrollBackground;
 
         return scrollPaneStyle;
     }
