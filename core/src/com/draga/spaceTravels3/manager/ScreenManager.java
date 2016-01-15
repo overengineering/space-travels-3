@@ -86,6 +86,8 @@ public abstract class ScreenManager
                 }
             }
             screensToRemove.clear();
+
+            screens.peek().show();
         }
 
         while (!screensToAdd.isEmpty())

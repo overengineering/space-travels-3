@@ -40,6 +40,7 @@ public class GameScreen extends Screen
 
         this.shipBackgroundPositionController =
             new PhysicsComponentBackgroundPositionController(level.getShip().physicsComponent);
+        BackgroundPositionManager.setBackgroundPositionController(this.shipBackgroundPositionController);
 
         PhysicsEngine.create();
         PhysicsEngine.cachePhysicsComponentCollisions(level.getShip().physicsComponent);
@@ -96,8 +97,7 @@ public class GameScreen extends Screen
     @Override
     public void show()
     {
-        BackgroundPositionManager.setBackgroundPositionController(this.shipBackgroundPositionController);
-        ScreenManager.addScreen(new CountdownScreen());
+        this.level.resume();
 
         Gdx.input.setInputProcessor(new InputAdapter()
         {
@@ -105,9 +105,13 @@ public class GameScreen extends Screen
             public boolean keyUp(int keycode)
             {
                 if (keycode == Input.Keys.BACK
+                    || keycode == Input.Keys.MENU
                     || keycode == Input.Keys.ESCAPE)
                 {
-                    ScreenManager.removeScreen(GameScreen.this);
+                    GameScreen.this.level.pause();
+                    ScreenManager.addScreen(new GamePauseMenuScreen(
+                        GameScreen.this.level,
+                        GameScreen.this));
                     return true;
                 }
 
@@ -222,6 +226,7 @@ public class GameScreen extends Screen
     @Override
     public void hide()
     {
+        this.level.pause();
     }
 
     @Override

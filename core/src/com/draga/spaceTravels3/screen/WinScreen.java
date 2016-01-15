@@ -1,14 +1,9 @@
 package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Pools;
-import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.Level;
 import com.draga.spaceTravels3.Score;
 import com.draga.spaceTravels3.manager.ScoreManager;
@@ -23,30 +18,14 @@ public class WinScreen extends IngameMenuScreen
 
     public WinScreen(Level level, Screen gameScreen)
     {
-        super(true, false, gameScreen, level);
+        super(gameScreen, level);
 
         Score score = level.getScore();
 
         this.sound = AssMan.getGameAssMan().get(AssMan.getAssList().winSound);
         this.sound.play(SettingsManager.getSettings().volumeFX);
 
-        Table table = UIManager.addDefaultTableToStage(this.stage);
-
-        table.setBackground(UIManager.getTiledDrawable(Constants.Visual.SCREEN_FADE_COLOUR));
-        table.addAction(Actions.sequence(
-            Actions.fadeOut(0),
-            Actions.fadeIn(Constants.Visual.SCREEN_FADE_DURATION, Interpolation.pow2In)));
-
-        // Header label.
-        Actor headerLabel = getHeaderLabel();
-        table.add(headerLabel);
-        table.row();
-
-        // Gap between header and rest.
-        table
-            .add()
-            .expand();
-        table.row();
+        Table table = new Table(UIManager.skin);
 
         table.add("You won!");
         table.row();
@@ -61,23 +40,7 @@ public class WinScreen extends IngameMenuScreen
         table.row();
         table.add(reportTable);
 
-        // Retry button.
-        table.row();
-        TextButton retryButton = getRetryButton();
-        table.add(retryButton);
-
-        // Main menu button.
-        TextButton mainMenuTextButton = getMainMenuTextButton();
-        table.row();
-        table.add(mainMenuTextButton);
-        table.row();
-
-        // Gap between the centre and the end of the screen.
-        table
-            .add()
-            .expand();
-
-        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
+        this.centreCell.setActor(table);
 
         Pools.free(score);
     }

@@ -10,10 +10,12 @@ import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 import com.draga.spaceTravels3.event.*;
 import com.draga.spaceTravels3.gameEntity.*;
 import com.draga.spaceTravels3.manager.GameEntityManager;
+import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.physic.Projection;
 import com.draga.spaceTravels3.physic.ProjectionPoint;
+import com.draga.spaceTravels3.screen.CountdownScreen;
 import com.google.common.base.Stopwatch;
 import com.google.common.eventbus.Subscribe;
 
@@ -70,7 +72,7 @@ public class Level
         this.trajectorySeconds = trajectorySeconds;
         this.maxLandingSpeed = maxLandingSpeed;
 
-        this.gameState = GameState.COUNTDOWN;
+        this.gameState = GameState.PAUSE;
 
         this.pickupCollectedSound =
             AssMan.getGameAssMan().get(AssMan.getAssList().pickupCollectSound);
@@ -259,6 +261,7 @@ public class Level
     {
         if (this.gameState == GameState.PAUSE)
         {
+            ScreenManager.addScreen(new CountdownScreen());
             this.gameState = GameState.COUNTDOWN;
         }
     }

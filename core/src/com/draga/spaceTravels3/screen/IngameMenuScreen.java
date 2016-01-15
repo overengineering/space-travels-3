@@ -2,43 +2,80 @@ package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.Level;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.manager.ScreenManager;
+import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.ui.BeepingTextButton;
 import com.draga.spaceTravels3.ui.Screen;
 
-public class IngameMenuScreen extends Screen
+public abstract class IngameMenuScreen extends Screen
 {
-    protected final Stage  stage;
     protected final Level  level;
+    protected final Cell   centreCell;
+    private final   Stage  stage;
     protected       Screen gameScreen;
     private         Image  headerImage;
 
-    public IngameMenuScreen(
-        boolean blockable,
-        boolean blockParents,
-        Screen gameScreen, Level level)
+    public IngameMenuScreen(Screen gameScreen, Level level)
     {
-        super(blockable, blockParents);
+        super(true, false);
         this.gameScreen = gameScreen;
         this.level = level;
         this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.overlaySpriteBath);
+
+        Table table = UIManager.addDefaultTableToStage(this.stage);
+
+        table.setBackground(UIManager.getTiledDrawable(Constants.Visual.SCREEN_FADE_COLOUR));
+        table.addAction(Actions.sequence(
+            Actions.fadeOut(0),
+            Actions.fadeIn(Constants.Visual.SCREEN_FADE_DURATION, Interpolation.pow2In)));
+
+        // Header label.
+        Actor headerLabel = getHeaderLabel();
+        table.add(headerLabel);
+        table.row();
+
+        // Gap between header and rest.
+        table
+            .add()
+            .expand();
+        table.row();
+
+        this.centreCell = table.add();
+        table.row();
+
+        // Retry button.
+        TextButton retryButton = getRetryButton();
+        table.add(retryButton);
+        table.row();
+
+        // Main menu button.
+        TextButton mainMenuTextButton = getMainMenuTextButton();
+        table.add(mainMenuTextButton);
+        table.row();
+
+        // Gap between the centre and the end of the screen.
+        table
+            .add()
+            .expand();
+
+        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
+
     }
 
     public Actor getHeaderLabel()
@@ -86,13 +123,6 @@ public class IngameMenuScreen extends Screen
         return retryButton;
     }
 
-    private void Retry()
-    {
-        ScreenManager.removeScreen(this);
-        ScreenManager.removeScreen(this.gameScreen);
-        ScreenManager.addScreen(new LoadingScreen(this.level.getId(), this.level.getDifficulty()));
-    }
-
     protected TextButton getMainMenuTextButton()
     {
         TextButton mainMenuTextButton = new BeepingTextButton("Main menu", UIManager.skin);
@@ -107,6 +137,13 @@ public class IngameMenuScreen extends Screen
         });
 
         return mainMenuTextButton;
+    }
+
+    private void Retry()
+    {
+        ScreenManager.removeScreen(this);
+        ScreenManager.removeScreen(this.gameScreen);
+        ScreenManager.addScreen(new LoadingScreen(this.level.getId(), this.level.getDifficulty()));
     }
 
     @Override

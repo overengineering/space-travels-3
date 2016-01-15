@@ -39,7 +39,7 @@ public abstract class Constants
             PooledVector2.newVector2(-SHIP_WIDTH / 3f, 0);
 
         // Screen.
-        public static final float SCREEN_FADE_DURATION = 3f;
+        public static final float SCREEN_FADE_DURATION = 1f;
         public static final Color SCREEN_FADE_COLOUR   = new Color(0, 0, 0, 0.7f);
 
         // Delimited progress bar.
