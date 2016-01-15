@@ -15,6 +15,7 @@ import com.draga.spaceTravels3.InputType;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
+import com.draga.spaceTravels3.manager.SoundManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.ui.BeepingTextButton;
 import com.draga.spaceTravels3.ui.Screen;
@@ -124,6 +125,14 @@ public class SettingsScreen extends Screen
             public void changed(ChangeEvent event, Actor actor)
             {
                 SettingsManager.getSettings().volumeFX = volumeSlider.getValue();
+            }
+        });
+        volumeSlider.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                SoundManager.buttonSound.play(SettingsManager.getSettings().volumeFX);
             }
         });
 
