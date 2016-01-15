@@ -47,21 +47,24 @@ public class MenuScreen extends Screen
             .add(headerLabel)
             .top();
 
-        // Add a row with an expanded cell to fill the gap.
-        table.row();
-        table
-            .add()
-            .expand();
-
         // Level list.
         table.row();
-        table.add(getLevelList());
+        table
+            .add(getLevelList())
+            .expand()
+            .center();
 
-        // Add a row with an expanded cell to fill the gap.
+        // Setting button.
         table.row();
         table
-            .add()
-            .expand();
+            .add(getSettingsTextButton())
+            .bottom();
+
+        // Setting button.
+        table.row();
+        table
+            .add(getTutorialButton())
+            .bottom();
 
         // Debug button.
         if (Constants.General.IS_DEBUGGING)
@@ -69,16 +72,9 @@ public class MenuScreen extends Screen
             this.stage.addActor(getDebugButton());
         }
 
-        // Setting button.
-        table.row();
-        TextButton settingsTextButton = getSettingsTextButton();
-        table
-            .add(settingsTextButton)
-            .bottom();
-
         this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
-    
+
     public Label getHeaderLabel()
     {
         Label headerLabel = new Label("Space Travels 3", UIManager.skin, "large", Color.WHITE);
@@ -125,7 +121,6 @@ public class MenuScreen extends Screen
                 {
                     LevelScreen levelScreen = new LevelScreen(serialisableLevel);
                     ScreenManager.addScreen(levelScreen);
-                    super.clicked(event, x, y);
                 }
             });
 
@@ -137,6 +132,40 @@ public class MenuScreen extends Screen
         scrollPane.setScrollingDisabled(false, true);
 
         return scrollPane;
+    }
+    
+    private TextButton getSettingsTextButton()
+    {
+        TextButton settingsTextButton = new BeepingTextButton("Settings", UIManager.skin);
+
+        settingsTextButton.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    ScreenManager.addScreen(new SettingsScreen());
+                }
+            });
+
+        return settingsTextButton;
+    }
+
+    private Actor getTutorialButton()
+    {
+        TextButton tutorialTextButton = new BeepingTextButton("Tutorial", UIManager.skin);
+
+        tutorialTextButton.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    ScreenManager.addScreen(new TutorialScreen());
+                }
+            });
+
+        return tutorialTextButton;
     }
 
     public Actor getDebugButton()
@@ -153,24 +182,6 @@ public class MenuScreen extends Screen
                 }
             });
         return debugButton;
-    }
-
-    private TextButton getSettingsTextButton()
-    {
-        TextButton settingsTextButton = new BeepingTextButton("Settings", UIManager.skin);
-
-        settingsTextButton.addListener(
-            new ClickListener()
-            {
-                @Override
-                public void clicked(InputEvent event, float x, float y)
-                {
-                    super.clicked(event, x, y);
-                    ScreenManager.addScreen(new SettingsScreen());
-                }
-            });
-
-        return settingsTextButton;
     }
 
     @Override
