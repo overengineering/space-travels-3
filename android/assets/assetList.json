@@ -13,9 +13,11 @@
 
   "font": "font/Akashi.ttf",
   "debugFont": "font/DroidSansMono.ttf",
+
   "musics": [
     "music/mars.ogg",
     "music/venus.ogg",
     "music/jupiter.ogg"
-  ]
+  ],
+  "tutorialMinimap": "tutorial/minimap.png"
 }

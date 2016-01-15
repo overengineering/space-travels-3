@@ -23,6 +23,8 @@ public class AssList
 
     public ArrayList<String> musics;
 
+    public String tutorialMinimap;
+
     public AssList()
     {
     }

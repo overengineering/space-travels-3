@@ -55,9 +55,9 @@ public class TutorialScreen extends Screen
     {
         Table table = UIManager.getDefaultTable();
 
-        table.add(getElemetsTutorial());
-        table.row();
         table.add(getGoalTutorial());
+        table.row();
+        table.add(getElementsTutorial());
 
         ScrollPane scrollPane = new ScrollPane(table, UIManager.skin);
         scrollPane.setFadeScrollBars(false);
@@ -81,33 +81,6 @@ public class TutorialScreen extends Screen
         return backTextButton;
     }
 
-    private Actor getElemetsTutorial()
-    {
-        Table table = new Table();
-
-        table.add(new Label("Elements", UIManager.skin, "large", Color.WHITE));
-        table.row();
-
-        table.add(getShipTutorial());
-            table.row();
-
-        table.add(getTrajectoryLineTutorial());
-            table.row();
-
-        table.add(getLandingSpeedIndicatorTutorial());
-            table.row();
-
-        table.add(getPickupTutorial());
-            table.row();
-
-        table.add(getFuelTutorial());
-            table.row();
-
-        table.add(getMinimapTutorial());
-
-        return table;
-    }
-
     private Actor getGoalTutorial()
     {
         Table table = new Table(UIManager.skin);
@@ -122,6 +95,33 @@ public class TutorialScreen extends Screen
         table
             .add(goalLabel)
             .width(this.labelsWidth);
+
+        return table;
+    }
+
+    private Actor getElementsTutorial()
+    {
+        Table table = new Table();
+
+        table.add(new Label("Elements", UIManager.skin, "large", Color.WHITE));
+        table.row();
+
+        table.add(getShipTutorial());
+        table.row();
+
+        table.add(getTrajectoryLineTutorial());
+        table.row();
+
+        table.add(getLandingSpeedIndicatorTutorial());
+        table.row();
+
+        table.add(getPickupTutorial());
+        table.row();
+
+        table.add(getFuelTutorial());
+        table.row();
+
+        table.add(getMinimapTutorial());
 
         return table;
     }
@@ -201,7 +201,12 @@ public class TutorialScreen extends Screen
         fuelTable.add("Fuel");
         fuelTable.row();
 
-        fuelTable.add(new Image(new Texture(AssMan.getAssList().shipTexture)));
+        ProgressBar delimitedProgressBar =
+            UIManager.getDelimitedProgressBar(3f, this.stage.getWidth() * 0.25f);
+
+        fuelTable
+            .add(delimitedProgressBar)
+            .width(this.stage.getWidth() * 0.25f);
         fuelTable.row();
 
         String fuelText =
@@ -220,7 +225,7 @@ public class TutorialScreen extends Screen
         minimapTable.add("Minimap");
         minimapTable.row();
 
-        minimapTable.add(new Image(new Texture(AssMan.getAssList().shipTexture)));
+        minimapTable.add(new Image(new Texture(AssMan.getAssList().tutorialMinimap)));
         minimapTable.row();
 
         String minimapText =
