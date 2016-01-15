@@ -30,20 +30,11 @@ public class DebugScreen extends Screen
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
-        // Empty expanded top cell to keep the menu centered
         table.row();
         table
-            .add()
-            .expand();
-
-        table.row();
-        table.add(getButtonScrollPane());
-
-        // Empty expanded bottom cell to keep the menu centered
-        table.row();
-        table
-            .add()
-            .expand();
+            .add(getButtonScrollPane())
+            .expand()
+            .center();
 
         // Back button
         TextButton backTextButton = getBackTextButton();
