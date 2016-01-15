@@ -119,12 +119,14 @@ public class SpaceTravels3 implements ApplicationListener
     {
         Gdx.app.debug(LOGGING_TAG, "Pause");
         SettingsManager.saveSettings();
+        ScreenManager.pause();
     }
 
     @Override
     public void resume()
     {
         Gdx.app.debug(LOGGING_TAG, "Resume");
+        ScreenManager.resume();
     }
 
     @Override

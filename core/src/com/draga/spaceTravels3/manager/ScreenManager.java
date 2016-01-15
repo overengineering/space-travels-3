@@ -128,4 +128,20 @@ public abstract class ScreenManager
             screen.dispose();
         }
     }
+
+    public static void resume()
+    {
+        for (Screen screen : screens)
+        {
+            screen.resume();
+        }
+    }
+
+    public static void pause()
+    {
+        for (Screen screen : screens)
+        {
+            screen.pause();
+        }
+    }
 }
