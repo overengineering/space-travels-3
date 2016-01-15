@@ -139,103 +139,113 @@ public class TutorialScreen extends Screen
 
     private Table getTrajectoryLineTutorial()
     {
-        Table trajectoryLineTable = UIManager.getDefaultTable();
-        trajectoryLineTable.add("Trajectory line");
-        trajectoryLineTable.row();
-
-        trajectoryLineTable.add(new Image(new Texture(AssMan.getAssList().shipTexture)));
-        trajectoryLineTable.row();
+        Table table = UIManager.getDefaultTable();
+        table.add("Trajectory line");
+        table.row();
 
         String trajectoryLineText =
-            "Shows where you are going accounting for the planets gravity. Turns red if you are going to collide with a planet, blue if the planet is your destination, and green if you are going to collect a pickup.";
+            "Shows where the ship is heading accounting for the planets gravity. Changes color depending on what it's going to collide with:";
         Label trajectoryLineLabel = new Label(trajectoryLineText, UIManager.skin);
-        trajectoryLineTable
+        table
             .add(trajectoryLineLabel)
             .width(this.labelsWidth);
         trajectoryLineLabel.setWrap(true);
-        return trajectoryLineTable;
+        table.row();
+
+        table.add("No collisions", "default", Constants.Visual.HUD.TrajectoryLine.COLOR_NEUTRAL);
+        table.row();
+        table.add(
+            "Destination planet",
+            "default",
+            Constants.Visual.HUD.TrajectoryLine.COLOR_PLANET_DESTINATION);
+        table.row();
+        table.add("Wrong planet", "default", Constants.Visual.HUD.TrajectoryLine.COLOR_PLANET_LOSE);
+        table.row();
+        table.add("Pickup", "default", Constants.Visual.HUD.TrajectoryLine.COLOR_PICKUP);
+
+        return table;
     }
 
     private Table getLandingSpeedIndicatorTutorial()
     {
-        Table landingSpeedIndicatorTable = UIManager.getDefaultTable();
-        landingSpeedIndicatorTable.add("Landing speed indicator");
-        landingSpeedIndicatorTable.row();
+        Table table = UIManager.getDefaultTable();
+        table.add("Landing speed indicator");
+        table.row();
 
-        landingSpeedIndicatorTable.add(new Image(new Texture(AssMan.getAssList().shipTexture)));
-        landingSpeedIndicatorTable.row();
+        table.add(new Image(new Texture(AssMan.getAssList().shipTexture)));
+        table.row();
 
         String landingSpeedIndicatorText =
             "Grows from the center of the planet in color green when your ship speed is within the speed that you can approach the destination planet. Above that speed starts shrinking and becomes red.";
         Label landingSpeedIndicatorLabel = new Label(landingSpeedIndicatorText, UIManager.skin);
-        landingSpeedIndicatorTable
+        table
             .add(landingSpeedIndicatorLabel)
             .width(this.labelsWidth);
         landingSpeedIndicatorLabel.setWrap(true);
-        return landingSpeedIndicatorTable;
+        return table;
     }
 
     private Table getPickupTutorial()
     {
-        Table pickupTable = UIManager.getDefaultTable();
-        pickupTable.add("Pickup");
-        pickupTable.row();
+        Table table = UIManager.getDefaultTable();
+        table.add("Pickup");
+        table.row();
 
-        pickupTable.add(new Image(new Texture(AssMan.getAssList().pickupTexture)));
-        pickupTable.row();
+        table.add(new Image(new Texture(AssMan.getAssList().pickupTexture)));
+        table.row();
 
         String pickupText = "Provides "
             + Constants.Game.PICKUP_POINTS
             + " points. Refer to the minimap and the hud to see how many have you collected and how many are in the map.";
         Label pickupLabel = new Label(pickupText, UIManager.skin);
-        pickupTable
+        table
             .add(pickupLabel)
             .width(this.labelsWidth);
         pickupLabel.setWrap(true);
-        return pickupTable;
+        return table;
     }
 
     private Table getFuelTutorial()
     {
-        Table fuelTable = UIManager.getDefaultTable();
-        fuelTable.add("Fuel");
-        fuelTable.row();
+        Table table = UIManager.getDefaultTable();
+        table.add("Fuel");
+        table.row();
 
         ProgressBar delimitedProgressBar =
             UIManager.getDelimitedProgressBar(3f, this.stage.getWidth() * 0.25f);
 
-        fuelTable
+        table
             .add(delimitedProgressBar)
             .width(this.stage.getWidth() * 0.25f);
-        fuelTable.row();
+        table.row();
 
         String fuelText =
             "Exhaust it and you will be adrift. Each notch represent a unit of fuel. Some maps have infinite fuel.";
         Label fuelLabel = new Label(fuelText, UIManager.skin);
-        fuelTable
+        table
             .add(fuelLabel)
             .width(this.labelsWidth);
         fuelLabel.setWrap(true);
-        return fuelTable;
+        return table;
     }
 
     private Table getMinimapTutorial()
     {
-        Table minimapTable = UIManager.getDefaultTable();
-        minimapTable.add("Minimap");
-        minimapTable.row();
+        Table table = UIManager.getDefaultTable();
+        table.add("Minimap");
+        table.row();
 
-        minimapTable.add(new Image(new Texture(AssMan.getAssList().tutorialMinimap)));
-        minimapTable.row();
+        table.add(new Image(new Texture(AssMan.getAssList().tutorialMinimap)));
+        table.row();
 
         String minimapText =
             "The minimap. The ship is represented by a triangle. Planets with circles in red or blue if it's your destination. Pickups with stars.";
         Label minimapLabel = new Label(minimapText, UIManager.skin);
-        minimapTable
+        table
             .add(minimapLabel)
             .width(this.labelsWidth);
         minimapLabel.setWrap(true);
-        return minimapTable;
+        return table;
     }
 
     @Override
@@ -247,12 +257,10 @@ public class TutorialScreen extends Screen
     @Override
     public void render(float delta)
     {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
+            || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
         {
-            if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
-                || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
-            {
-                ScreenManager.removeScreen(TutorialScreen.this);
-            }
+            ScreenManager.removeScreen(TutorialScreen.this);
         }
 
         this.stage.getViewport().apply();
