@@ -5,7 +5,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.AsynchronousAssetLoader;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
-import com.draga.ErrorHandlerProvider;
+import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.NullFileHandleResolver;
 
 public class BackgroundLoader

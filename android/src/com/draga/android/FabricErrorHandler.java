@@ -1,7 +1,7 @@
 package com.draga.android;
 
 import com.crashlytics.android.Crashlytics;
-import com.draga.ErrorHandler;
+import com.draga.errorHandler.ErrorHandler;
 
 public class FabricErrorHandler implements ErrorHandler
 {

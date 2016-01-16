@@ -19,5 +19,8 @@
     "music/venus.ogg",
     "music/jupiter.ogg"
   ],
-  "tutorialMinimap": "tutorial/minimap.png"
+  "tutorialMinimapTexture": "tutorial/minimap.png",
+  "tutorialBelowLandingSpeedTexture": "tutorial/belowLandingSpeed.png",
+  "tutorialAboveLandingSpeedTexture": "tutorial/aboveLandingSpeed.png",
+  "tutorialPickupTexture": "tutorial/star128.png"
 }

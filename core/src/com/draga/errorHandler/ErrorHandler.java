@@ -1,4 +1,4 @@
-package com.draga;
+package com.draga.errorHandler;
 
 public interface ErrorHandler
 {

@@ -3,7 +3,7 @@ package com.draga.spaceTravels3;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.Color;
-import com.draga.ErrorHandlerProvider;
+import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.PooledVector2;
 import com.draga.background.BackgroundParameters;
 import com.draga.joystick.Joystick;

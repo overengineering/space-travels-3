@@ -21,6 +21,7 @@ import com.draga.spaceTravels3.ui.Screen;
 public class TutorialScreen extends Screen
 {
     private final float labelsWidth;
+    private final float imageSize;
     private       Stage stage;
 
     public TutorialScreen()
@@ -30,6 +31,7 @@ public class TutorialScreen extends Screen
         this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
 
         this.labelsWidth = this.stage.getWidth() * 0.8f;
+        this.imageSize = this.stage.getWidth() * 0.1f;
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
@@ -55,6 +57,8 @@ public class TutorialScreen extends Screen
     {
         Table table = UIManager.getDefaultTable();
 
+        table.add(getMovementTutorial());
+        table.row();
         table.add(getGoalTutorial());
         table.row();
         table.add(getElementsTutorial());
@@ -79,6 +83,28 @@ public class TutorialScreen extends Screen
         });
 
         return backTextButton;
+    }
+
+    private Actor getMovementTutorial()
+    {
+        Table table = new Table(UIManager.skin);
+
+        table.add("Movement", "large", Color.WHITE);
+        table.row();
+
+        String movementText =
+            "There are 2 ways of moving you ship, this can be changed in the settings.\r\n"
+                + "Using the accelerometer you should keep your device face up and moving it towards where you want the ship to go.\r\n"
+                + "When using the touch screen 2 dashed circles will appear on the screen, touch within them to move the ship in that direction. The further away you touch the greater thrust you will give the ship.\r\n"
+                + "Being in space nothing but the planets gravity will slow you down! Use the inertia of the ship and the gravity of the planets in your favor.";
+
+        Label movementLabel = new Label(movementText, UIManager.skin);
+        table
+            .add(movementLabel)
+            .width(this.labelsWidth);
+        movementLabel.setWrap(true);
+
+        return table;
     }
 
     private Actor getGoalTutorial()
@@ -128,13 +154,16 @@ public class TutorialScreen extends Screen
 
     private Table getShipTutorial()
     {
-        Table shipTable = UIManager.getDefaultTable();
+        Table table = UIManager.getDefaultTable();
 
-        shipTable.add("Your ship");
-        shipTable.row();
+        table.add("Your ship");
+        table.row();
 
-        shipTable.add(new Image(new Texture(AssMan.getAssList().shipTexture)));
-        return shipTable;
+        table
+            .add(new Image(new Texture(AssMan.getAssList().shipTexture)))
+            .size(this.imageSize);
+
+        return table;
     }
 
     private Table getTrajectoryLineTutorial()
@@ -172,7 +201,22 @@ public class TutorialScreen extends Screen
         table.add("Landing speed indicator");
         table.row();
 
-        table.add(new Image(new Texture(AssMan.getAssList().shipTexture)));
+        Image aboveLandingSpeedImage =
+            new Image(new Texture(AssMan.getAssList().tutorialAboveLandingSpeedTexture));
+        Image belowLandingSpeedImage =
+            new Image(new Texture(AssMan.getAssList().tutorialBelowLandingSpeedTexture));
+
+        Table imageTable = new Table();
+        imageTable
+            .add(belowLandingSpeedImage)
+            .size(this.imageSize);
+        imageTable
+            .add()
+            .size(this.imageSize);
+        imageTable
+            .add(aboveLandingSpeedImage)
+            .size(this.imageSize);
+        table.add(imageTable);
         table.row();
 
         String landingSpeedIndicatorText =
@@ -182,6 +226,7 @@ public class TutorialScreen extends Screen
             .add(landingSpeedIndicatorLabel)
             .width(this.labelsWidth);
         landingSpeedIndicatorLabel.setWrap(true);
+
         return table;
     }
 
@@ -191,7 +236,9 @@ public class TutorialScreen extends Screen
         table.add("Pickup");
         table.row();
 
-        table.add(new Image(new Texture(AssMan.getAssList().pickupTexture)));
+        table
+            .add(new Image(new Texture(AssMan.getAssList().tutorialPickupTexture)))
+            .size(this.imageSize);
         table.row();
 
         String pickupText = "Provides "
@@ -202,6 +249,7 @@ public class TutorialScreen extends Screen
             .add(pickupLabel)
             .width(this.labelsWidth);
         pickupLabel.setWrap(true);
+
         return table;
     }
 
@@ -226,6 +274,7 @@ public class TutorialScreen extends Screen
             .add(fuelLabel)
             .width(this.labelsWidth);
         fuelLabel.setWrap(true);
+
         return table;
     }
 
@@ -235,7 +284,9 @@ public class TutorialScreen extends Screen
         table.add("Minimap");
         table.row();
 
-        table.add(new Image(new Texture(AssMan.getAssList().tutorialMinimap)));
+        table
+            .add(new Image(new Texture(AssMan.getAssList().tutorialMinimapTexture)))
+            .height(this.imageSize);
         table.row();
 
         String minimapText =
@@ -245,6 +296,7 @@ public class TutorialScreen extends Screen
             .add(minimapLabel)
             .width(this.labelsWidth);
         minimapLabel.setWrap(true);
+
         return table;
     }
 

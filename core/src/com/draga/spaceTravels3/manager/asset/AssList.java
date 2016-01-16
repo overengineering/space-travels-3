@@ -23,8 +23,11 @@ public class AssList
 
     public ArrayList<String> musics;
 
-    public String tutorialMinimap;
-
+    public String tutorialMinimapTexture;
+    public String tutorialBelowLandingSpeedTexture;
+    public String tutorialAboveLandingSpeedTexture;
+    public String tutorialPickupTexture;
+    
     public AssList()
     {
     }
