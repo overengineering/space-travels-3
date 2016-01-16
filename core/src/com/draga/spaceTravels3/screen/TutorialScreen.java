@@ -2,13 +2,16 @@ package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.manager.ScreenManager;
@@ -18,11 +21,17 @@ import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.ui.BeepingTextButton;
 import com.draga.spaceTravels3.ui.Screen;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
+
 public class TutorialScreen extends Screen
 {
-    private final float labelsWidth;
-    private final float imageSize;
-    private       Stage stage;
+    private final float                  labelsWidth;
+    private final float                  imageSize;
+    private final AssetManager           assMan;
+    private       Stage                  stage;
+    private       HashMap<String, Image> asyncImages;
 
     public TutorialScreen()
     {
@@ -32,6 +41,9 @@ public class TutorialScreen extends Screen
 
         this.labelsWidth = this.stage.getWidth() * 0.8f;
         this.imageSize = this.stage.getWidth() * 0.1f;
+
+        this.assMan = new AssetManager();
+        this.asyncImages = new HashMap<>();
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
@@ -159,8 +171,10 @@ public class TutorialScreen extends Screen
         table.add("Your ship");
         table.row();
 
+        Image shipImage = new Image();
+        loadTextureAsync(shipImage, AssMan.getAssList().shipTexture);
         table
-            .add(new Image(new Texture(AssMan.getAssList().shipTexture)))
+            .add(shipImage)
             .size(this.imageSize);
 
         return table;
@@ -201,10 +215,14 @@ public class TutorialScreen extends Screen
         table.add("Landing speed indicator");
         table.row();
 
-        Image aboveLandingSpeedImage =
-            new Image(new Texture(AssMan.getAssList().tutorialAboveLandingSpeedTexture));
-        Image belowLandingSpeedImage =
-            new Image(new Texture(AssMan.getAssList().tutorialBelowLandingSpeedTexture));
+        Image aboveLandingSpeedImage = new Image();
+        loadTextureAsync(
+            aboveLandingSpeedImage,
+            AssMan.getAssList().tutorialAboveLandingSpeedTexture);
+        Image belowLandingSpeedImage = new Image();
+        loadTextureAsync(
+            belowLandingSpeedImage,
+            AssMan.getAssList().tutorialBelowLandingSpeedTexture);
 
         Table imageTable = new Table();
         imageTable
@@ -236,8 +254,10 @@ public class TutorialScreen extends Screen
         table.add("Pickup");
         table.row();
 
+        Image pickupImage = new Image();
+        loadTextureAsync(pickupImage, AssMan.getAssList().tutorialPickupTexture);
         table
-            .add(new Image(new Texture(AssMan.getAssList().tutorialPickupTexture)))
+            .add(pickupImage)
             .size(this.imageSize);
         table.row();
 
@@ -284,8 +304,10 @@ public class TutorialScreen extends Screen
         table.add("Minimap");
         table.row();
 
+        Image minimapImage = new Image();
+        loadTextureAsync(minimapImage, AssMan.getAssList().tutorialMinimapTexture);
         table
-            .add(new Image(new Texture(AssMan.getAssList().tutorialMinimapTexture)))
+            .add(minimapImage)
             .height(this.imageSize);
         table.row();
 
@@ -300,6 +322,13 @@ public class TutorialScreen extends Screen
         return table;
     }
 
+    private void loadTextureAsync(Image image, String filePath)
+    {
+        this.assMan.load(filePath, Texture.class);
+        this.asyncImages.put(filePath, image);
+        this.assMan.update();
+    }
+
     @Override
     public void show()
     {
@@ -309,6 +338,24 @@ public class TutorialScreen extends Screen
     @Override
     public void render(float delta)
     {
+        // Check if we need to load images and if they are loaded show them.
+        if (!this.asyncImages.isEmpty())
+        {
+            ArrayList<String> filePaths = new ArrayList<>(this.asyncImages.keySet());
+            for (String filePath : filePaths)
+            {
+                if (this.assMan.update()
+                    || this.assMan.isLoaded(filePath))
+                {
+                    Texture texture = this.assMan.get(filePath);
+                    this.asyncImages.get(filePath)
+                        .setDrawable(new TextureRegionDrawable(new TextureRegion(texture)));
+
+                    this.asyncImages.remove(filePath);
+                }
+            }
+        }
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
             || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
         {
@@ -346,5 +393,6 @@ public class TutorialScreen extends Screen
     public void dispose()
     {
         this.stage.dispose();
+        this.assMan.dispose();
     }
 }

@@ -194,18 +194,21 @@ public class MenuScreen extends Screen
     public void render(float deltaTime)
     {
         // Check if we need to load level icons and if they are loaded show them.
-        ArrayList<SerialisableLevel> serialisableLevels =
-            new ArrayList<>(this.asyncLevelIcons.keySet());
-        for (SerialisableLevel serialisableLevel : serialisableLevels)
+        if (!this.asyncLevelIcons.isEmpty())
         {
-            if (AssMan.getMenuAssMan().update()
-                || AssMan.getMenuAssMan().isLoaded(serialisableLevel.iconPath))
+            ArrayList<SerialisableLevel> serialisableLevels =
+                new ArrayList<>(this.asyncLevelIcons.keySet());
+            for (SerialisableLevel serialisableLevel : serialisableLevels)
             {
-                Texture texture = AssMan.getMenuAssMan().get(serialisableLevel.iconPath);
-                this.asyncLevelIcons.get(serialisableLevel)
-                    .setDrawable(new TextureRegionDrawable(new TextureRegion(texture)));
+                if (AssMan.getMenuAssMan().update()
+                    || AssMan.getMenuAssMan().isLoaded(serialisableLevel.iconPath))
+                {
+                    Texture texture = AssMan.getMenuAssMan().get(serialisableLevel.iconPath);
+                    this.asyncLevelIcons.get(serialisableLevel)
+                        .setDrawable(new TextureRegionDrawable(new TextureRegion(texture)));
 
-                this.asyncLevelIcons.remove(serialisableLevel);
+                    this.asyncLevelIcons.remove(serialisableLevel);
+                }
             }
         }
 
