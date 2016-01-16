@@ -106,8 +106,8 @@ public class TutorialScreen extends Screen
 
         String movementText =
             "There are 2 ways of moving you ship, this can be changed in the settings.\r\n"
-                + "Using the accelerometer you should keep your device face up and moving it towards where you want the ship to go.\r\n"
-                + "When using the touch screen 2 dashed circles will appear on the screen, touch within them to move the ship in that direction. The further away you touch the greater thrust you will give the ship.\r\n"
+                + "Using the accelerometer you should keep your device face up and tilt it slightly where you want to go.\r\n"
+                + "When using the touch screen 2 dashed circles will appear on the screen, touch within them to move the ship in that direction. The further away you touch from the ship the greater thrust you will give it.\r\n"
                 + "Being in space nothing but the planets gravity will slow you down! Use the inertia of the ship and the gravity of the planets in your favor.";
 
         Label movementLabel = new Label(movementText, UIManager.skin);
@@ -127,7 +127,7 @@ public class TutorialScreen extends Screen
         table.row();
 
         String goalText =
-            "The goal of the game is to land safely on the destination planet. This will be shown in blue in the minimap, will have an overlay to indicate how fast are you going and the trajectory line will appear blue.";
+            "The goal is to land safely on the destination planet. This will be shown in blue in the minimap, will have an overlay to indicate how fast are you going and the trajectory line will appear blue.";
         Label goalLabel = new Label(goalText, UIManager.skin);
         goalLabel.setWrap(true);
         table
@@ -312,7 +312,7 @@ public class TutorialScreen extends Screen
         table.row();
 
         String minimapText =
-            "The minimap. The ship is represented by a triangle. Planets with circles in red or blue if it's your destination. Pickups with stars.";
+            "The ship is represented by a triangle. Planets with circles in red or blue if it's your destination. Pickups with stars.";
         Label minimapLabel = new Label(minimapText, UIManager.skin);
         table
             .add(minimapLabel)
