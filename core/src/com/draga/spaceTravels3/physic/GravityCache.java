@@ -22,7 +22,6 @@ public class GravityCache
     private static final String LOGGING_TAG = GravityCache.class.getSimpleName();
     
     private static final float MIN_GRAVITY    = 1f;
-    private static final int   MAX_CACHE_SIZE = 2;
 
     private final GravityCacheNode rootNode;
     
