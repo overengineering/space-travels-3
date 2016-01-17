@@ -1,7 +1,7 @@
 {
   "class": "SerialisableLevel",
-  "name": "Taurus",
-  "iconPath": "level/taurus128.png",
+  "name": "Leo",
+  "iconPath": "level/leo128.png",
   "serialisedDifficulties": {
     "Easy": {
       "trajectorySeconds": 5,
@@ -23,80 +23,64 @@
     }
   },
   "serialisedShip": {
-    "x": 5,
-    "y": 150,
+    "x": 10,
+    "y": 75,
     "mass": 1
   },
   "serialisedPlanets": [
     {
       "texturePath": "planet/earth256.png",
-      "x": 300,
-      "y": 150,
-      "radius": 10,
+      "x": 280,
+      "y": 75,
+      "radius": 6.378,
       "mass": 20000,
       "destination": true
     },
     {
       "texturePath": "planet/mars256.png",
-      "x": 85,
-      "y": 120,
-      "radius": 5,
-      "mass": 10000
+      "x": 260,
+      "y": 60,
+      "radius": 1,
+      "mass": 300
     },
     {
       "texturePath": "planet/jupiter256.png",
       "x": 150,
-      "y": 60,
-      "radius": 15,
-      "mass": 30000
+      "y": 75,
+      "radius": 25,
+      "mass": 100000
     },
     {
       "texturePath": "planet/mars256.png",
-      "x": 150,
-      "y": 105,
-      "radius": 5,
-      "mass": 10000
+      "x": 70,
+      "y": 40,
+      "radius": 3.397,
+      "mass": 3000
     },
     {
       "texturePath": "planet/venus256.png",
-      "x": 215,
-      "y": 120,
-      "radius": 5,
+      "x": 80,
+      "y": 90,
+      "radius": 6.052,
       "mass": 10000
     }
   ],
   "serialisedPickups": [
     {
-      "x": 85,
-      "y": 140
+      "x": 125,
+      "y": 50
     },
     {
-      "x": 130,
-      "y": 105
+      "x": 175,
+      "y": 50
     },
     {
-      "x": 170,
-      "y": 80
+      "x": 125,
+      "y": 100
     },
     {
-      "x": 170,
-      "y": 40
-    },
-    {
-      "x": 130,
-      "y": 40
-    },
-    {
-      "x": 130,
-      "y": 80
-    },
-    {
-      "x": 170,
-      "y": 105
-    },
-    {
-      "x": 215,
-      "y": 140
+      "x": 175,
+      "y": 100
     }
   ]
 }
