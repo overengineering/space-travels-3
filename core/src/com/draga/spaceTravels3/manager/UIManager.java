@@ -193,6 +193,8 @@ public abstract class UIManager
         float size = Constants.Visual.UI.SQRT_PIXELS * 0.01f;
         scrollKnob.setMinWidth(size);
         scrollBackground.setMinWidth(size);
+        scrollKnob.setMinHeight(size);
+        scrollBackground.setMinHeight(size);
 
         scrollPaneStyle.hScrollKnob = scrollKnob;
         scrollPaneStyle.vScrollKnob = scrollKnob;

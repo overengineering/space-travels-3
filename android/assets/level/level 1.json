@@ -11,45 +11,50 @@
     },
     "Medium": {
       "trajectorySeconds": 2,
-      "maxLandingSpeed": 80,
+      "maxLandingSpeed": 45,
       "fuel": 2,
       "infiniteFuel": false
     },
     "Hard": {
       "trajectorySeconds": 0,
-      "maxLandingSpeed": 40,
+      "maxLandingSpeed": 35,
       "fuel": 1,
       "infiniteFuel": false
     }
   },
   "serialisedShip": {
     "x": 10,
-    "y": 75,
+    "y": 30,
     "mass": 1
   },
   "serialisedPlanets": [
     {
-      "texturePath": "planet/earth256.png",
-      "x": 287,
-      "y": 75,
-      "radius": 13.378,
+      "texturePath": "planet/earth128.png",
+      "x": 100,
+      "y": 30,
+      "radius": 5,
       "mass": 10000,
       "destination": true
     },
     {
-      "texturePath": "planet/jupiter256.png",
-      "x": 137,
-      "y": 82,
-      "radius": 13,
-      "mass": 20000
+      "texturePath": "planet/venus128.png",
+      "x": 40,
+      "y": 50,
+      "radius": 5,
+      "mass": 10000
     },
     {
-      "texturePath": "planet/mars256.png",
-      "x": 120,
-      "y": 25,
-      "radius": 10.5,
+      "texturePath": "planet/mars128.png",
+      "x": 40,
+      "y": 10,
+      "radius": 5,
       "mass": 10000
     }
   ],
-  "serialisedPickups": []
+  "serialisedPickups": [
+    {
+      "x": 40,
+      "y": 30
+    }
+  ]
 }

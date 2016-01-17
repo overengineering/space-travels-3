@@ -2,7 +2,7 @@ package com.draga.spaceTravels3.manager.level;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Json;
-import com.draga.ErrorHandlerProvider;
+import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.spaceTravels3.Level;
 import com.draga.spaceTravels3.gameEntity.Pickup;
 import com.draga.spaceTravels3.gameEntity.Planet;

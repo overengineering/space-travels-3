@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Pools;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
+import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponentType;
 import com.draga.spaceTravels3.event.*;
 import com.draga.spaceTravels3.gameEntity.*;
 import com.draga.spaceTravels3.manager.GameEntityManager;
@@ -31,7 +32,7 @@ public class Level
 
     private final ArrayList<Pickup> pickups;
     private final String            iconPath;
-    private final Ship ship;
+    private final Ship              ship;
     private final Thruster          thruster;
     private final Planet            destinationPlanet;
 
@@ -89,9 +90,7 @@ public class Level
         }
         GameEntityManager.update();
 
-        this.bounds = getBounds(
-            this.ship.physicsComponent.getPosition().x,
-            this.ship.physicsComponent.getPosition().y);
+        this.bounds = calculateBounds();
 
         Constants.General.EVENT_BUS.register(this);
 
@@ -101,30 +100,42 @@ public class Level
     /**
      * Return a rectangle that includes all the physic components and a little buffer.
      */
-    private Rectangle getBounds(float x, float y)
+    private Rectangle calculateBounds()
     {
-        Rectangle bounds = new Rectangle(
-            x,
-            y,
-            0,
-            0);
+        Rectangle bounds = null;
 
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
             PhysicsComponent physicsComponent = gameEntity.physicsComponent;
-            Rectangle gameEntityBounds = new Rectangle(
-                physicsComponent.getPosition().x - physicsComponent.getBoundsCircle().radius,
-                physicsComponent.getPosition().y - physicsComponent.getBoundsCircle().radius,
-                physicsComponent.getBoundsCircle().radius * 2f,
-                physicsComponent.getBoundsCircle().radius * 2f);
-            bounds.merge(gameEntityBounds);
+            if (physicsComponent.getPhysicsComponentType() == PhysicsComponentType.STATIC)
+            {
+                Rectangle gameEntityBounds = new Rectangle(
+                    physicsComponent.getPosition().x - physicsComponent.getBoundsCircle().radius,
+                    physicsComponent.getPosition().y - physicsComponent.getBoundsCircle().radius,
+                    physicsComponent.getBoundsCircle().radius * 2f,
+                    physicsComponent.getBoundsCircle().radius * 2f);
+                if (bounds == null)
+                {
+                    bounds = gameEntityBounds;
+                }
+                else
+                {
+                    bounds.merge(gameEntityBounds);
+                }
+            }
         }
-        bounds.width += Constants.Game.LEVEL_BOUNDS_BUFFER;
-        bounds.height += Constants.Game.LEVEL_BOUNDS_BUFFER;
+
         bounds.x -= Constants.Game.LEVEL_BOUNDS_BUFFER;
         bounds.y -= Constants.Game.LEVEL_BOUNDS_BUFFER;
+        bounds.height += Constants.Game.LEVEL_BOUNDS_BUFFER * 2f;
+        bounds.width += Constants.Game.LEVEL_BOUNDS_BUFFER * 2f;
 
         return bounds;
+    }
+
+    public Rectangle getBounds()
+    {
+        return this.bounds;
     }
 
     public String getDifficulty()
@@ -363,11 +374,6 @@ public class Level
     public float getTrajectorySeconds()
     {
         return this.trajectorySeconds;
-    }
-
-    public Rectangle getBounds()
-    {
-        return this.bounds;
     }
 
     public String getName()

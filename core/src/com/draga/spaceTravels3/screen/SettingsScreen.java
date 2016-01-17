@@ -36,21 +36,12 @@ public class SettingsScreen extends Screen
         Label headerLabel = getHeaderLabel();
         table.add(headerLabel);
 
-        // Add a row with an expanded cell to fill the gap.
-        table.row();
-        table
-            .add()
-            .expand();
-
         // Setting buttons
         table.row();
-        table.add(GetButtonScrollPane());
-
-        // Add a row with an expanded cell to fill the gap.
-        table.row();
         table
-            .add()
-            .expand();
+            .add(GetButtonScrollPane())
+            .expand()
+            .center();
 
         // Back button.
         TextButton backTextButton = getBackTextButton();

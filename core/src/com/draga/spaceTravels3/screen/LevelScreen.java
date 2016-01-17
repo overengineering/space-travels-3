@@ -51,22 +51,13 @@ public class LevelScreen extends Screen
         // Header label.
         table.add(getHeader());
 
-        // Add a row with an expanded cell to fill the gap.
-        table.row();
-        table
-            .add()
-            .expand();
-
         // Setting buttons
         table.row();
         this.difficultiesList = getDifficultiesList(this.serialisableLevel);
-        table.add(this.difficultiesList);
-
-        // Add a row with an expanded cell to fill the gap.
-        table.row();
         table
-            .add()
-            .expand();
+            .add(this.difficultiesList)
+            .expand()
+            .center();
 
         // Back button.
         TextButton backTextButton = getBackTextButton();

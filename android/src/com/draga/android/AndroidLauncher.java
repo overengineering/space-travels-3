@@ -5,7 +5,7 @@ import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
-import com.draga.ErrorHandlerProvider;
+import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.spaceTravels3.SpaceTravels3;
 import io.fabric.sdk.android.Fabric;
 

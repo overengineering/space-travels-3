@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.draga.ErrorHandlerProvider;
+import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
@@ -30,20 +30,11 @@ public class DebugScreen extends Screen
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
-        // Empty expanded top cell to keep the menu centered
         table.row();
         table
-            .add()
-            .expand();
-
-        table.row();
-        table.add(getButtonScrollPane());
-
-        // Empty expanded bottom cell to keep the menu centered
-        table.row();
-        table
-            .add()
-            .expand();
+            .add(getButtonScrollPane())
+            .expand()
+            .center();
 
         // Back button
         TextButton backTextButton = getBackTextButton();

@@ -36,9 +36,11 @@ public class GravityCacheNode
                 return false;
             }
         };
+
     private static final String           LOGGING_TAG             =
         GravityCacheNode.class.getSimpleName();
-    private static final float            SPLIT_THRESHOLD         = 10f;
+
+    private static final float            SPLIT_THRESHOLD         = 1f;
     private static final float            MIN_AREA                = 1f;
 
     private final Rectangle bounds;

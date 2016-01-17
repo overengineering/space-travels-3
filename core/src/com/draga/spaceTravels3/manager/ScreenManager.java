@@ -1,7 +1,7 @@
 package com.draga.spaceTravels3.manager;
 
 import com.badlogic.gdx.Gdx;
-import com.draga.ErrorHandlerProvider;
+import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.spaceTravels3.ui.Screen;
 import com.google.common.base.Joiner;
 

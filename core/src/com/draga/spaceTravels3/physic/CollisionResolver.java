@@ -1,6 +1,6 @@
 package com.draga.spaceTravels3.physic;
 
-import com.draga.ErrorHandlerProvider;
+import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.event.PickupCollectedEvent;
 import com.draga.spaceTravels3.event.ShipPlanetCollisionEvent;

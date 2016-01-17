@@ -13,9 +13,15 @@
 
   "font": "font/Akashi.ttf",
   "debugFont": "font/DroidSansMono.ttf",
+
   "musics": [
     "music/mars.ogg",
     "music/venus.ogg",
     "music/jupiter.ogg"
-  ]
+  ],
+
+  "tutorialMinimapTexture": "tutorial/minimap.png",
+  "tutorialBelowLandingSpeedTexture": "tutorial/belowLandingSpeed.png",
+  "tutorialAboveLandingSpeedTexture": "tutorial/aboveLandingSpeed.png",
+  "tutorialPickupTexture": "tutorial/star128.png"
 }

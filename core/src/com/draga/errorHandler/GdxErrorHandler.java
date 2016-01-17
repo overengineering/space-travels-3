@@ -1,4 +1,4 @@
-package com.draga;
+package com.draga.errorHandler;
 
 import com.badlogic.gdx.Gdx;
 
