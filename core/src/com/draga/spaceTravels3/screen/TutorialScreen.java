@@ -106,9 +106,13 @@ public class TutorialScreen extends Screen
 
         String movementText =
             "There are 2 ways of moving you ship, this can be changed in the settings.\r\n"
-                + "Using the accelerometer you should keep your device face up and tilt it slightly where you want to go.\r\n"
-                + "When using the touch screen 2 dashed circles will appear on the screen, touch within them to move the ship in that direction. The further away you touch from the ship the greater thrust you will give it.\r\n"
-                + "Being in space nothing but the planets gravity will slow you down! Use the inertia of the ship and the gravity of the planets in your favor.";
+                + "Using the accelerometer you should keep your device face up and tilt it "
+                + "slightly where you want to go.\r\n"
+                + "When using the touch screen 2 dashed circles will appear on the screen, touch "
+                + "within them to move the ship in that direction. The further away you touch from "
+                + "the ship the greater thrust you will give it (and fuel you'll consume).\r\n"
+                + "Being in space nothing but the planets gravity will slow you down! Use the "
+                + "inertia of the ship and the gravity of the planets in your favor.";
 
         Label movementLabel = new Label(movementText, UIManager.skin);
         table
@@ -127,7 +131,9 @@ public class TutorialScreen extends Screen
         table.row();
 
         String goalText =
-            "The goal is to land safely on the destination planet. This will be shown in blue in the minimap, will have an overlay to indicate how fast are you going and the trajectory line will appear blue.";
+            "The goal is to land safely on the destination planet. This will be shown in blue in "
+                + "the minimap, will have an overlay to indicate how fast are you going and the "
+                + "trajectory line will appear blue.";
         Label goalLabel = new Label(goalText, UIManager.skin);
         goalLabel.setWrap(true);
         table
@@ -187,7 +193,8 @@ public class TutorialScreen extends Screen
         table.row();
 
         String trajectoryLineText =
-            "Shows where the ship is heading accounting for the planets gravity. Changes color depending on what it's going to collide with:";
+            "Shows where the ship is heading accounting for the planets gravity. Changes color "
+                + "depending on what it's going to collide with:";
         Label trajectoryLineLabel = new Label(trajectoryLineText, UIManager.skin);
         table
             .add(trajectoryLineLabel)
@@ -238,7 +245,10 @@ public class TutorialScreen extends Screen
         table.row();
 
         String landingSpeedIndicatorText =
-            "Grows from the center of the planet in color green when your ship speed is within the speed that you can approach the destination planet. Above that speed starts shrinking and becomes red.";
+            "Grows from the center of the planet in color green when your ship speed is within the "
+                + "speed that you can approach the destination planet. Above that speed starts "
+                + "shrinking and becomes red. Remember that the destination planet's gravity will "
+                + "pull your ship towards it the closer you are.";
         Label landingSpeedIndicatorLabel = new Label(landingSpeedIndicatorText, UIManager.skin);
         table
             .add(landingSpeedIndicatorLabel)
@@ -263,7 +273,8 @@ public class TutorialScreen extends Screen
 
         String pickupText = "Provides "
             + Constants.Game.PICKUP_POINTS
-            + " points. Refer to the minimap and the hud to see how many have you collected and how many are in the map.";
+            + " points. Refer to the minimap and the hud to see how many have you collected and how"
+            + " many are in the map.";
         Label pickupLabel = new Label(pickupText, UIManager.skin);
         table
             .add(pickupLabel)
@@ -288,7 +299,9 @@ public class TutorialScreen extends Screen
         table.row();
 
         String fuelText =
-            "Exhaust it and you will be adrift. Each notch represent a unit of fuel. Some maps have infinite fuel.";
+            "Each notch represent a unit of fuel, exhaust it and you will be adrift! Fuel is "
+                + "precious so you will be rewarded for how much you can save, up to "
+                + Constants.Game.FUEL_POINTS + " points. Some maps have infinite fuel.";
         Label fuelLabel = new Label(fuelText, UIManager.skin);
         table
             .add(fuelLabel)
@@ -312,7 +325,8 @@ public class TutorialScreen extends Screen
         table.row();
 
         String minimapText =
-            "The ship is represented by a triangle. Planets with circles in red or blue if it's your destination. Pickups with stars.";
+            "The ship is represented by a triangle. Planets with circles in red or blue if it's "
+                + "your destination. Pickups with stars.";
         Label minimapLabel = new Label(minimapText, UIManager.skin);
         table
             .add(minimapLabel)

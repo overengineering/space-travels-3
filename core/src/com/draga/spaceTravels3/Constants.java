@@ -3,9 +3,9 @@ package com.draga.spaceTravels3;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.Color;
-import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.PooledVector2;
 import com.draga.background.BackgroundParameters;
+import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.joystick.Joystick;
 import com.draga.joystick.JoystickParameters;
 import com.google.common.eventbus.EventBus;
@@ -160,7 +160,7 @@ public abstract class Constants
 
         public static final float FUEL_POINTS   = 1000f;
         public static final float TIME_POINTS   = 10f;
-        public static final float PICKUP_POINTS = 1000f;
+        public static final int   PICKUP_POINTS = 1000;
 
         public static final float SHIP_COLLISION_RADIUS =
             (Constants.Visual.SHIP_WIDTH + Constants.Visual.SHIP_HEIGHT) / 2f

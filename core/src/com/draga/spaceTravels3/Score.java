@@ -10,7 +10,7 @@ public class Score implements Pool.Poolable
 
     public void set(int pickupsCollected, float elapsedSeconds, float percentageFuelRemaining)
     {
-        this.pickupPoints = (int) (pickupsCollected * Constants.Game.PICKUP_POINTS);
+        this.pickupPoints = pickupsCollected * Constants.Game.PICKUP_POINTS;
         this.timePoints = -(int) (elapsedSeconds * Constants.Game.TIME_POINTS);
         this.fuelPoints = (int) (percentageFuelRemaining * Constants.Game.FUEL_POINTS);
     }
