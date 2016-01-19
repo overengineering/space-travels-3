@@ -41,9 +41,9 @@ public abstract class ScreenManager
     {
         updateScreens();
 
-        for (int i = 0, screensSize = screens.size(); i < screensSize; i++)
+        for (Screen screen : screens)
         {
-            screens.get(i).render(deltaTime);
+            screen.render(deltaTime);
         }
     }
 
@@ -131,17 +131,11 @@ public abstract class ScreenManager
 
     public static void resume()
     {
-        for (Screen screen : screens)
-        {
-            screen.resume();
-        }
+        screens.peek().resume();
     }
 
     public static void pause()
     {
-        for (Screen screen : screens)
-        {
-            screen.pause();
-        }
+        screens.peek().pause();
     }
 }
