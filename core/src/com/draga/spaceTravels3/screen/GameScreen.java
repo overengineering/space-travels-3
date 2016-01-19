@@ -101,7 +101,7 @@ public class GameScreen extends Screen
 
         if (this.level.isTutorial())
         {
-            ScreenManager.addScreen(new TutorialScreen(this.level));
+            ScreenManager.addScreen(new TutorialScreen(this.level, this));
         }
     }
 

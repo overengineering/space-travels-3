@@ -161,13 +161,13 @@ public class SettingsScreen extends Screen
         buttonGroup.setMaxCheckCount(1);
 
         TextButton touchButton = new BeepingTextButton("Touch", UIManager.skin, "checkable");
-        touchButton.setChecked(SettingsManager.getSettings().inputType == InputType.TOUCH);
+        touchButton.setChecked(SettingsManager.getSettings().getInputType() == InputType.TOUCH);
         touchButton.addListener(new ClickListener()
         {
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                SettingsManager.getSettings().inputType = InputType.TOUCH;
+                SettingsManager.getSettings().setInputType(InputType.TOUCH);
             }
         });
 
@@ -177,13 +177,13 @@ public class SettingsScreen extends Screen
         TextButton accelerometerButton =
             new BeepingTextButton("Accelerometer", UIManager.skin, "checkable");
         accelerometerButton.setChecked(
-            SettingsManager.getSettings().inputType == InputType.ACCELEROMETER);
+            SettingsManager.getSettings().getInputType() == InputType.ACCELEROMETER);
         accelerometerButton.addListener(new ClickListener()
         {
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                SettingsManager.getSettings().inputType = InputType.ACCELEROMETER;
+                SettingsManager.getSettings().setInputType(InputType.ACCELEROMETER);
             }
         });
 

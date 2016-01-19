@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.draga.joystick.Joystick;
 import com.draga.spaceTravels3.*;
+import com.draga.spaceTravels3.event.InputTypeChangedEvent;
 import com.draga.spaceTravels3.event.PickupCollectedEvent;
 import com.draga.spaceTravels3.gameEntity.Ship;
 import com.draga.spaceTravels3.manager.GameEntityManager;
@@ -31,6 +32,7 @@ public class HudScreen extends Screen
     private final Label                 scoreLabel;
     private final Level                 level;
     private final GameScreen            gameScreen;
+    private       Container<Image>      joystickOverlayContainer;
     private       Stage                 stage;
     private       Stack<Image>          grayPickups;
     private       Table                 pickupTable;
@@ -89,19 +91,10 @@ public class HudScreen extends Screen
             .bottom()
             .right();
 
-        if (SettingsManager.getSettings().inputType == InputType.TOUCH
+        if (SettingsManager.getSettings().getInputType() == InputType.TOUCH
             || Gdx.app.getType() == Application.ApplicationType.Desktop)
         {
-            Joystick joystickTexture =
-                AssMan.getGameAssMan().get(Constants.Visual.HUD.JOYSTICK_ASSET_DESCRIPTOR);
-            Image joystickOverlayImage = new Image(joystickTexture);
-            joystickOverlayImage.setScaling(Scaling.fit);
-
-            Container<Image> joystickOverlayContainer = new Container<>(joystickOverlayImage);
-            joystickOverlayContainer.setFillParent(true);
-            joystickOverlayContainer.center();
-
-            this.stage.addActor(joystickOverlayContainer);
+            addJoystickOverlay();
         }
 
         this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
@@ -160,6 +153,23 @@ public class HudScreen extends Screen
         }
 
         return this.pickupTable;
+    }
+
+    private void addJoystickOverlay()
+    {
+        if (this.joystickOverlayContainer == null)
+        {
+            Joystick joystickTexture =
+                AssMan.getGameAssMan().get(Constants.Visual.HUD.JOYSTICK_ASSET_DESCRIPTOR);
+            Image joystickOverlayImage = new Image(joystickTexture);
+            joystickOverlayImage.setScaling(Scaling.fit);
+
+            this.joystickOverlayContainer = new Container<>(joystickOverlayImage);
+            this.joystickOverlayContainer.setFillParent(true);
+            this.joystickOverlayContainer.center();
+        }
+
+        this.stage.addActor(this.joystickOverlayContainer);
     }
 
     private void setScoreLabel(int score)
@@ -285,5 +295,19 @@ public class HudScreen extends Screen
         Image firstPickup = this.grayPickups.pop();
 
         firstPickup.setDrawable(this.collectedPickupDrawable);
+    }
+
+    @Subscribe
+    public void inputTypeChanged(InputTypeChangedEvent inputTypeChangedEvent)
+    {
+        if (SettingsManager.getSettings().getInputType() == InputType.TOUCH
+            || Gdx.app.getType() == Application.ApplicationType.Desktop)
+        {
+            addJoystickOverlay();
+        }
+        else
+        {
+            this.joystickOverlayContainer.remove();
+        }
     }
 }

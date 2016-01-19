@@ -210,8 +210,9 @@ public abstract class UIManager
     private static Window.WindowStyle getWindowStyle(Skin skin)
     {
         Window.WindowStyle windowStyle = new Window.WindowStyle();
-        windowStyle.titleFont = skin.getFont("default");
+        windowStyle.titleFont = skin.getFont("large");
         windowStyle.titleFontColor = Color.WHITE;
+        windowStyle.background = getTiledDrawable(Constants.Visual.SCREEN_FADE_COLOUR);
 
         return windowStyle;
     }

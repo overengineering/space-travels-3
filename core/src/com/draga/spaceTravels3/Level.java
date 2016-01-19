@@ -403,4 +403,10 @@ public class Level
     {
         this.gameState = GameState.TUTORIAL;
     }
+
+    public void endTutorial()
+    {
+        ScreenManager.addScreen(new CountdownScreen());
+        this.gameState = GameState.COUNTDOWN;
+    }
 }
