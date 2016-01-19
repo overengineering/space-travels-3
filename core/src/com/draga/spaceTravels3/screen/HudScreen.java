@@ -1,8 +1,7 @@
-package com.draga.spaceTravels3;
+package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -12,23 +11,22 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.Scaling;
-import com.draga.PooledVector2;
 import com.draga.joystick.Joystick;
+import com.draga.spaceTravels3.*;
 import com.draga.spaceTravels3.event.PickupCollectedEvent;
 import com.draga.spaceTravels3.gameEntity.Ship;
 import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
-import com.draga.spaceTravels3.physic.PhysicsEngine;
+import com.draga.spaceTravels3.ui.Screen;
 import com.draga.utils.GraphicsUtils;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.Stack;
 
-public class Hud implements Screen
+public class HudScreen extends Screen
 {
     private final Label                 scoreLabel;
     private final Level                 level;
@@ -39,8 +37,9 @@ public class Hud implements Screen
     private       MiniMap               miniMap;
     private       TextureRegionDrawable collectedPickupDrawable;
 
-    public Hud(Level level)
+    public HudScreen(Level level)
     {
+        super(true, false);
         this.level = level;
         this.ship = level.getShip();
 
@@ -122,7 +121,7 @@ public class Hud implements Screen
                 @Override
                 public boolean act(float delta)
                 {
-                    fuelProgressBar.setValue(Hud.this.ship.getCurrentFuel());
+                    fuelProgressBar.setValue(HudScreen.this.ship.getCurrentFuel());
                     return false;
                 }
             });
@@ -181,7 +180,6 @@ public class Hud implements Screen
     {
         Score score = this.level.getScore();
         setScoreLabel(score.getTotalScore());
-        Pools.free(score);
 
         this.stage.act(delta);
         this.stage.draw();

@@ -196,8 +196,7 @@ public class Level
 
     public Score getScore()
     {
-        Score score = Pools.obtain(Score.class);
-        score.set(
+        Score score = new Score(
             this.pickupsCollected,
             this.elapsedPlayTime.elapsed(TimeUnit.NANOSECONDS) * MathUtils.nanoToSec,
             this.ship.isInfiniteFuel()

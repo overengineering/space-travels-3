@@ -41,8 +41,6 @@ public class WinScreen extends IngameMenuScreen
         table.add(reportTable);
 
         this.centreCell.setActor(table);
-
-        Pools.free(score);
     }
 
     private Label getBestScoreLabel(int score)
@@ -74,6 +72,7 @@ public class WinScreen extends IngameMenuScreen
 
     private Table getScoreReportTable(Score score)
     {
+        Pools
         Table table = new Table();
 
         table

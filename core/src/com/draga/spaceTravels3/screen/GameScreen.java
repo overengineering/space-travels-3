@@ -26,7 +26,7 @@ public class GameScreen extends Screen
 
     private final PhysicsComponentBackgroundPositionController shipBackgroundPositionController;
 
-    private Hud hud;
+    private HudScreen hudScreen;
 
     private Level level;
 
@@ -48,7 +48,7 @@ public class GameScreen extends Screen
 
         Constants.General.EVENT_BUS.register(this);
 
-        this.hud = new Hud(this.level);
+        this.hudScreen = new HudScreen(this.level);
 
         // Run a frame to do things like generate a Projection.
         update(0);
@@ -66,7 +66,7 @@ public class GameScreen extends Screen
         }
 
         updateShipProjection();
-        this.hud.getMiniMap().setShipProjection(this.shipProjection);
+        this.hudScreen.getMiniMap().setShipProjection(this.shipProjection);
     }
 
     private void updateShipProjection()
@@ -136,7 +136,7 @@ public class GameScreen extends Screen
 
         draw();
 
-        this.hud.render(deltaTime);
+        this.hudScreen.render(deltaTime);
     }
 
     private void checkDebugKeys()
@@ -235,7 +235,7 @@ public class GameScreen extends Screen
         BackgroundPositionManager.setBackgroundPositionController(new RandomBackgroundPositionController());
         GameEntityManager.dispose();
         Constants.General.EVENT_BUS.unregister(this);
-        this.hud.dispose();
+        this.hudScreen.dispose();
 
         this.level.dispose();
 
@@ -265,6 +265,5 @@ public class GameScreen extends Screen
             this.level.getId(),
             this.level.getDifficulty(),
             score.getTotalScore());
-        Pools.free(score);
     }
 }
