@@ -23,7 +23,6 @@ import com.draga.spaceTravels3.ui.Screen;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Set;
 
 public class TutorialScreen extends Screen
 {
@@ -105,14 +104,14 @@ public class TutorialScreen extends Screen
         table.row();
 
         String movementText =
-            "There are 2 ways of moving you ship, this can be changed in the settings.\r\n"
-                + "Using the accelerometer you should keep your device face up and tilt it "
+            "There are 2 ways of moving your spaceship, these can be changed in the settings.\r\n"
+                + "Using the accelerometer you should keep your device facing up and tilt it "
                 + "slightly where you want to go.\r\n"
                 + "When using the touch screen 2 dashed circles will appear on the screen, touch "
-                + "within them to move the ship in that direction. The further away you touch from "
-                + "the ship the greater thrust you will give it (and fuel you'll consume).\r\n"
-                + "Being in space nothing but the planets gravity will slow you down! Use the "
-                + "inertia of the ship and the gravity of the planets in your favor.";
+                + "within them to move the spaceship in that direction. The further away you touch from "
+                + "the Spaceship the greater the thrust produced (and fuel consumed).\r\n"
+                + "Being in space nothing but the planets' gravity will slow you down! Use the "
+                + "inertia of the spaceship and the gravity of the planets in your favor.";
 
         Label movementLabel = new Label(movementText, UIManager.skin);
         table
@@ -132,8 +131,8 @@ public class TutorialScreen extends Screen
 
         String goalText =
             "The goal is to land safely on the destination planet. This will be shown in blue in "
-                + "the minimap, will have an overlay to indicate how fast are you going and the "
-                + "trajectory line will appear blue.";
+                + "the minimap and will have an overlay to indicate how fast are you going .The "
+                + "trajectory line colliding with it will appear blue.";
         Label goalLabel = new Label(goalText, UIManager.skin);
         goalLabel.setWrap(true);
         table

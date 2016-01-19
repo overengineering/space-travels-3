@@ -1,0 +1,79 @@
+{
+  "class": "SerialisableLevel",
+  "name": "Virgo",
+  "iconPath": "level/virgo128.png",
+  "serialisedDifficulties": {
+    "Easy": {
+      "trajectorySeconds": 5,
+      "maxLandingSpeed": 70,
+      "fuel": 0,
+      "infiniteFuel": true
+    },
+    "Medium": {
+      "trajectorySeconds": 3,
+      "maxLandingSpeed": 70,
+      "fuel": 4,
+      "infiniteFuel": false
+    },
+    "Hard": {
+      "trajectorySeconds": 0,
+      "maxLandingSpeed": 60,
+      "fuel": 2,
+      "infiniteFuel": false
+    }
+  },
+  "serialisedShip": {
+    "x": 10,
+    "y": 75,
+    "mass": 1
+  },
+  "serialisedPlanets": [
+    {
+      "texturePath": "planet/earth256.png",
+      "x": 280,
+      "y": 75,
+      "radius": 6.378,
+      "mass": 20000,
+      "destination": true
+    },
+    {
+      "texturePath": "planet/mars256.png",
+      "x": 150,
+      "y": 75,
+      "radius": 8,
+      "mass": 20000
+    },
+    {
+      "texturePath": "planet/jupiter256.png",
+      "x": 100,
+      "y": 90,
+      "radius": 7,
+      "mass": 20000
+    },
+    {
+      "texturePath": "planet/mars256.png",
+      "x": 200,
+      "y": 110,
+      "radius": 6,
+      "mass": 20000
+    }
+  ],
+  "serialisedPickups": [
+    {
+      "x": 140,
+      "y": 60
+    },
+    {
+      "x": 160,
+      "y": 60
+    },
+    {
+      "x": 150,
+      "y": 90
+    },
+    {
+      "x": 200,
+      "y": 100
+    }
+  ]
+}

@@ -249,14 +249,22 @@ public class GravityCacheNode
         Vector2 vector2)
     {
         float len2 = x * x + y * y;
-        double len = Math.sqrt(len2);
+        if (len2 != 0)
+        {
+            double len = Math.sqrt(len2);
 
-        float scale = physicsComponent.getMass() / len2;
+            float scale = physicsComponent.getMass() / len2;
 
-        x *= scale / len;
-        y *= scale / len;
-
+            x *= scale / len;
+            y *= scale / len;
+        }
+        else
+        {
+            x = Float.MAX_VALUE;
+            y = Float.MAX_VALUE;
+        }
         vector2.add(x, y);
+
     }
 
     private void calculateSideAndCentreGravity(
