@@ -48,7 +48,7 @@ public class GameScreen extends Screen
 
         Constants.General.EVENT_BUS.register(this);
 
-        this.hudScreen = new HudScreen(this.level);
+        this.hudScreen = new HudScreen(this.level, this);
 
         // Run a frame to do things like generate a Projection.
         update(0);
@@ -95,6 +95,12 @@ public class GameScreen extends Screen
     }
 
     @Override
+    public void onAdded()
+    {
+        ScreenManager.addScreen(this.hudScreen);
+    }
+
+    @Override
     public void show()
     {
         this.level.resume();
@@ -135,8 +141,6 @@ public class GameScreen extends Screen
         }
 
         draw();
-
-        this.hudScreen.render(deltaTime);
     }
 
     private void checkDebugKeys()
@@ -235,7 +239,7 @@ public class GameScreen extends Screen
         BackgroundPositionManager.setBackgroundPositionController(new RandomBackgroundPositionController());
         GameEntityManager.dispose();
         Constants.General.EVENT_BUS.unregister(this);
-        this.hudScreen.dispose();
+        ScreenManager.removeScreen(this.hudScreen);
 
         this.level.dispose();
 

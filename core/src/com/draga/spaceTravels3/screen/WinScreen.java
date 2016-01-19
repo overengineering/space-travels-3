@@ -3,7 +3,6 @@ package com.draga.spaceTravels3.screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.Pools;
 import com.draga.spaceTravels3.Level;
 import com.draga.spaceTravels3.Score;
 import com.draga.spaceTravels3.manager.ScoreManager;
@@ -72,7 +71,6 @@ public class WinScreen extends IngameMenuScreen
 
     private Table getScoreReportTable(Score score)
     {
-        Pools
         Table table = new Table();
 
         table

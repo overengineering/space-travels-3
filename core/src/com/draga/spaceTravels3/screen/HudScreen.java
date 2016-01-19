@@ -30,6 +30,7 @@ public class HudScreen extends Screen
 {
     private final Label                 scoreLabel;
     private final Level                 level;
+    private final GameScreen            gameScreen;
     private       Stage                 stage;
     private       Stack<Image>          grayPickups;
     private       Table                 pickupTable;
@@ -37,10 +38,12 @@ public class HudScreen extends Screen
     private       MiniMap               miniMap;
     private       TextureRegionDrawable collectedPickupDrawable;
 
-    public HudScreen(Level level)
+    public HudScreen(Level level, GameScreen gameScreen)
     {
         super(true, false);
+
         this.level = level;
+        this.gameScreen = gameScreen;
         this.ship = level.getShip();
 
         Constants.General.EVENT_BUS.register(this);
@@ -51,7 +54,7 @@ public class HudScreen extends Screen
 
         this.miniMap = new MiniMap(level);
 
-        this.stage = new Stage();
+        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
@@ -172,7 +175,7 @@ public class HudScreen extends Screen
     @Override
     public void show()
     {
-
+        this.gameScreen.show();
     }
 
     @Override
@@ -180,6 +183,8 @@ public class HudScreen extends Screen
     {
         Score score = this.level.getScore();
         setScoreLabel(score.getTotalScore());
+
+        this.stage.getViewport().apply();
 
         this.stage.act(delta);
         this.stage.draw();
