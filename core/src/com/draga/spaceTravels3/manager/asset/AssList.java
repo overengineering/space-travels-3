@@ -23,10 +23,10 @@ public class AssList
 
     public ArrayList<String> musics;
 
-    public String tutorialMinimapTexture;
-    public String tutorialBelowLandingSpeedTexture;
-    public String tutorialAboveLandingSpeedTexture;
-    public String tutorialPickupTexture;
+    public String guideMinimapTexture;
+    public String guideBelowLandingSpeedTexture;
+    public String guideAboveLandingSpeedTexture;
+    public String guidePickupTexture;
     
     public AssList()
     {

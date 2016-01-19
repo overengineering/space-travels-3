@@ -60,7 +60,12 @@ public class MenuScreen extends Screen
             .add(getSettingsTextButton())
             .bottom();
 
-        // Setting button.
+        // Guide button.
+        table.row();
+        table
+            .add(getGuideButton());
+
+        // Tutorial button.
         table.row();
         table
             .add(getTutorialButton())
@@ -81,7 +86,7 @@ public class MenuScreen extends Screen
 
         return headerLabel;
     }
-    
+
     private ScrollPane getLevelList()
     {
         java.util.List<SerialisableLevel> serialisableLevels = LevelManager.getSerialisableLevels();
@@ -150,6 +155,23 @@ public class MenuScreen extends Screen
 
         return settingsTextButton;
     }
+    
+    private Actor getGuideButton()
+    {
+        TextButton guideTextButton = new BeepingTextButton("Guide", UIManager.skin);
+
+        guideTextButton.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    ScreenManager.addScreen(new GuideScreen());
+                }
+            });
+
+        return guideTextButton;
+    }
 
     private Actor getTutorialButton()
     {
@@ -161,7 +183,12 @@ public class MenuScreen extends Screen
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    ScreenManager.addScreen(new TutorialScreen());
+                    SerialisableLevel tutorialSerialisableLevel =
+                        LevelManager.getTutorialSerialisableLevel();
+                    ScreenManager.addScreen(new LoadingScreen(
+                        tutorialSerialisableLevel,
+                        "Tutorial",
+                        true));
                 }
             });
 

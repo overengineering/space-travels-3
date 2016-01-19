@@ -48,6 +48,8 @@ public class Level
     private String id;
     private String name;
 
+    private boolean tutorial;
+
     public Level(
         String id,
         String name,
@@ -59,7 +61,8 @@ public class Level
         ArrayList<Pickup> pickups,
         Planet destinationPlanet,
         float trajectorySeconds,
-        float maxLandingSpeed)
+        float maxLandingSpeed,
+        boolean tutorial)
     {
         this.id = id;
         this.name = name;
@@ -72,6 +75,7 @@ public class Level
         this.pickups = pickups;
         this.trajectorySeconds = trajectorySeconds;
         this.maxLandingSpeed = maxLandingSpeed;
+        this.tutorial = tutorial;
 
         this.gameState = GameState.PAUSE;
 
@@ -123,6 +127,11 @@ public class Level
                     bounds.merge(gameEntityBounds);
                 }
             }
+        }
+
+        if (bounds == null)
+        {
+            bounds = new Rectangle();
         }
 
         bounds.x -= Constants.Game.LEVEL_BOUNDS_BUFFER;
@@ -383,5 +392,15 @@ public class Level
     public String getIconPath()
     {
         return this.iconPath;
+    }
+
+    public boolean isTutorial()
+    {
+        return this.tutorial;
+    }
+
+    public void startTutorial()
+    {
+        this.gameState = GameState.TUTORIAL;
     }
 }

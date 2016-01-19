@@ -99,6 +99,9 @@ public abstract class UIManager
         ScrollPane.ScrollPaneStyle scrollPaneStyle = getScrollPaneStyle();
         skin.add("default", scrollPaneStyle);
 
+        Window.WindowStyle windowStyle = getWindowStyle(skin);
+        skin.add("default", windowStyle);
+
         return skin;
     }
 
@@ -202,6 +205,15 @@ public abstract class UIManager
         scrollPaneStyle.vScroll = scrollBackground;
 
         return scrollPaneStyle;
+    }
+
+    private static Window.WindowStyle getWindowStyle(Skin skin)
+    {
+        Window.WindowStyle windowStyle = new Window.WindowStyle();
+        windowStyle.titleFont = skin.getFont("default");
+        windowStyle.titleFontColor = Color.WHITE;
+
+        return windowStyle;
     }
 
     public static TiledDrawable getTiledDrawable(Color color)

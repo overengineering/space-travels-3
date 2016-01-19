@@ -44,8 +44,6 @@ public class CollisionCache implements Pool.Poolable
             }
         }
 
-
-
         // Calculate the size and position of the grid of points to be checked
         float x1 = Float.MAX_VALUE;
         float x2 = Float.MIN_VALUE;
@@ -88,6 +86,16 @@ public class CollisionCache implements Pool.Poolable
         y1 -= physicsComponent.getBoundsCircle().radius;
         x2 += physicsComponent.getBoundsCircle().radius;
         y2 += physicsComponent.getBoundsCircle().radius;
+
+
+
+        if (collidablePhysicsComponents.isEmpty())
+        {
+            x1 = 0;
+            x2 = 0;
+            y1 = 0;
+            y2 = 0;
+        }
 
         // The offset are the coordinates of the bottom left corner of the grid.
         this.offset = PooledVector2.newVector2(x1, y1);

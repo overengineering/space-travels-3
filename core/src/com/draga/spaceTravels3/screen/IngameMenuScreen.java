@@ -143,7 +143,10 @@ public abstract class IngameMenuScreen extends Screen
     {
         ScreenManager.removeScreen(this);
         ScreenManager.removeScreen(this.gameScreen);
-        ScreenManager.addScreen(new LoadingScreen(this.level.getId(), this.level.getDifficulty()));
+        ScreenManager.addScreen(new LoadingScreen(
+            this.level.getId(),
+            this.level.getDifficulty(),
+            false));
     }
 
     @Override

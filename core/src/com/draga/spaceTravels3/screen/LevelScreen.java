@@ -167,7 +167,8 @@ public class LevelScreen extends Screen
                 {
                     LoadingScreen loadingScreen = new LoadingScreen(
                         serialisableLevel,
-                        difficulty);
+                        difficulty,
+                        false);
                     ScreenManager.addScreen(loadingScreen);
                     super.clicked(event, x, y);
                 }

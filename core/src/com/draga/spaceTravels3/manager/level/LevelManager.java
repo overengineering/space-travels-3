@@ -22,11 +22,14 @@ import java.util.List;
 public abstract class LevelManager
 {
     private static final String LOGGING_TAG = LevelManager.class.getSimpleName();
+
     private static ArrayList<SerialisableLevel> serialisableLevels;
+
+    private static SerialisableLevel tutorialSerialisableLevel;
 
     public static Level getLevel(
         SerialisableLevel serialisableLevel,
-        String difficulty)
+        String difficulty, boolean tutorial)
     {
         SerialisableDifficulty serialisableDifficulty =
             serialisableLevel.serialisedDifficulties.get(difficulty);
@@ -83,7 +86,8 @@ public abstract class LevelManager
             pickups,
             destinationPlanet,
             serialisableDifficulty.trajectorySeconds,
-            serialisableDifficulty.maxLandingSpeed);
+            serialisableDifficulty.maxLandingSpeed,
+            tutorial);
 
         // Run one update so everything is in place for the countdown
         GameEntityManager.update();
@@ -144,5 +148,21 @@ public abstract class LevelManager
 
             serialisableLevels.add(serialisableLevel);
         }
+    }
+
+    public static SerialisableLevel getTutorialSerialisableLevel()
+    {
+        if (tutorialSerialisableLevel == null)
+        {
+            Json json = new Json();
+            json.addClassTag("SerialisableLevel", SerialisableLevel.class);
+            String tutorialSerialisableLevelString =
+                Gdx.files.internal("tutorial/level.json").readString();
+
+            tutorialSerialisableLevel =
+                json.fromJson(SerialisableLevel.class, tutorialSerialisableLevelString);
+        }
+
+        return tutorialSerialisableLevel;
     }
 }

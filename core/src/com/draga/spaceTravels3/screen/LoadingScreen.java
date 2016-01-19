@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
@@ -40,17 +39,20 @@ public class LoadingScreen extends Screen
 
     private Stopwatch stopwatch;
 
-    public LoadingScreen(String levelId, String difficulty)
+    private boolean tutorial;
+
+    public LoadingScreen(String levelId, String difficulty, boolean tutorial)
     {
-        this(LevelManager.getSerialisableLevel(levelId), difficulty);
+        this(LevelManager.getSerialisableLevel(levelId), difficulty, tutorial);
     }
 
-    public LoadingScreen(SerialisableLevel serialisableLevel, String difficulty)
+    public LoadingScreen(SerialisableLevel serialisableLevel, String difficulty, boolean tutorial)
     {
         super(true, true);
 
         this.difficulty = difficulty;
         this.serialisableLevel = serialisableLevel;
+        this.tutorial = tutorial;
         this.stopwatch = Stopwatch.createStarted();
 
         this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
@@ -134,7 +136,7 @@ public class LoadingScreen extends Screen
                         this.stopwatch.elapsed(TimeUnit.NANOSECONDS) * MathUtils.nanoToSec));
             }
             Level level =
-                LevelManager.getLevel(this.serialisableLevel, this.difficulty);
+                LevelManager.getLevel(this.serialisableLevel, this.difficulty, this.tutorial);
             GameScreen gameScreen = new GameScreen(level);
             ScreenManager.addScreen(gameScreen);
             ScreenManager.removeScreen(this);

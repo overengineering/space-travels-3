@@ -1,0 +1,22 @@
+{
+  "class": "SerialisableLevel",
+  "name": "Aquarius",
+  "iconPath": "level/aquarius128.png",
+  "serialisedDifficulties": {
+    "Tutorial": {
+      "trajectorySeconds": 5,
+      "maxLandingSpeed": 120,
+      "fuel": 0,
+      "infiniteFuel": true
+    }
+  },
+  "serialisedShip": {
+    "x": 5,
+    "y": 15,
+    "mass": 1
+  },
+  "serialisedPlanets": [
+  ],
+  "serialisedPickups": [
+  ]
+}

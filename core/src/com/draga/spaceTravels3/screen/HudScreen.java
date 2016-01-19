@@ -207,6 +207,11 @@ public class HudScreen extends Screen
 
     private void drawApproachSpeedIndicator()
     {
+        if (this.level.getDestinationPlanet() == null)
+        {
+            return;
+        }
+
         float radius = this.level.getDestinationPlanet().physicsComponent.getBoundsCircle().radius;
         float shipSpeed = this.ship.physicsComponent.getVelocity().len();
         // "That is not going to be confusing at all" (cit. Lee)

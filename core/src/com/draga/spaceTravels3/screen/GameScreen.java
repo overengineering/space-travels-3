@@ -98,6 +98,11 @@ public class GameScreen extends Screen
     public void onAdded()
     {
         ScreenManager.addScreen(this.hudScreen);
+
+        if (this.level.isTutorial())
+        {
+            ScreenManager.addScreen(new TutorialScreen(this.level));
+        }
     }
 
     @Override
@@ -134,8 +139,9 @@ public class GameScreen extends Screen
             checkDebugKeys();
         }
 
-        if (this.level.getGameState() != GameState.PAUSE
-            && this.level.getGameState() != GameState.COUNTDOWN)
+        if (this.level.getGameState() == GameState.PLAY
+            || this.level.getGameState() == GameState.WIN
+            || this.level.getGameState() == GameState.LOSE)
         {
             update(deltaTime);
         }
