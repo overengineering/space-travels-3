@@ -54,17 +54,15 @@ public class MenuScreen extends Screen
             .expand()
             .center();
 
-        // Setting button.
+        // Buttons.
         table.row();
-        table
-            .add(getSettingsTextButton())
-            .bottom();
+        Table buttonsTable = UIManager.getDefaultTable();
 
-        // Setting button.
-        table.row();
-        table
-            .add(getTutorialButton())
-            .bottom();
+        buttonsTable.add(getSettingsTextButton());
+        buttonsTable.add(getTutorialButton());
+        buttonsTable.add(getCreditsButton());
+
+        table.add(buttonsTable);
 
         // Debug button.
         if (Constants.General.IS_DEBUGGING)
@@ -81,7 +79,7 @@ public class MenuScreen extends Screen
 
         return headerLabel;
     }
-    
+
     private ScrollPane getLevelList()
     {
         java.util.List<SerialisableLevel> serialisableLevels = LevelManager.getSerialisableLevels();
@@ -150,7 +148,7 @@ public class MenuScreen extends Screen
 
         return settingsTextButton;
     }
-
+    
     private Actor getTutorialButton()
     {
         TextButton tutorialTextButton = new BeepingTextButton("Tutorial", UIManager.skin);
@@ -166,6 +164,23 @@ public class MenuScreen extends Screen
             });
 
         return tutorialTextButton;
+    }
+
+    private Actor getCreditsButton()
+    {
+        TextButton settingsTextButton = new BeepingTextButton("Credits", UIManager.skin);
+
+        settingsTextButton.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    ScreenManager.addScreen(new CreditsScreen());
+                }
+            });
+
+        return settingsTextButton;
     }
 
     public Actor getDebugButton()
