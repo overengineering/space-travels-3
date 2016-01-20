@@ -1,6 +1,7 @@
 package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -121,7 +122,10 @@ public class CreditsScreen extends Screen
 
         table.row();
         table.add("Licence\r\nlinks");
-        Label ccby30Label = new Label("Attribution 3.0 Unported (CC BY 3.0)", UIManager.skin);
+        Label ccby30Label = new Label(
+            "Attribution 3.0 Unported (CC BY 3.0)\r\n"
+                + "https://creativecommons.org/licenses/by/3.0/",
+            UIManager.skin);
         ccby30Label.addListener(new ClickListener()
         {
             @Override
@@ -164,6 +168,13 @@ public class CreditsScreen extends Screen
     @Override
     public void render(float deltaTime)
     {
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
+            || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
+        {
+            ScreenManager.removeScreen(this);
+        }
+
         this.stage.getViewport().apply();
 
         this.stage.act(deltaTime);
