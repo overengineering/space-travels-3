@@ -1,7 +1,6 @@
 {
   "class": "SerialisableLevel",
   "name": "Cancer",
-  "iconPath": "level/cancer256.png",
   "serialisedDifficulties": {
     "Easy": {
       "trajectorySeconds": 5,
@@ -27,15 +26,14 @@
     "y": 5,
     "mass": 1
   },
+  "serialisedDestinationPlanet": {
+    "texturePath": "planet/nuEarth1-256.png",
+    "x": 103,
+    "y": 125,
+    "radius": 10,
+    "mass": 30000
+  },
   "serialisedPlanets": [
-    {
-      "texturePath": "planet/nuEarth1-256.png",
-      "x": 103,
-      "y": 125,
-      "radius": 10,
-      "mass": 30000,
-      "destination": true
-    },
     {
       "texturePath": "planet/arid3-128.png",
       "x": 97,

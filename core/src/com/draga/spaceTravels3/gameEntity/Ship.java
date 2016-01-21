@@ -1,5 +1,6 @@
 package com.draga.spaceTravels3.gameEntity;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.draga.PooledVector2;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.component.graphicComponent.StaticGraphicComponent;
@@ -29,7 +30,7 @@ public class Ship extends GameEntity
         float x,
         float y,
         float mass,
-        String texturePath,
+        Texture texture,
         float maxFuel,
         boolean infiniteFuel)
     {
@@ -54,7 +55,7 @@ public class Ship extends GameEntity
                 PhysicsComponentType.DYNAMIC);
 
         this.graphicComponent = new StaticGraphicComponent(
-            texturePath,
+            texture,
             Constants.Visual.SHIP_WIDTH,
             Constants.Visual.SHIP_HEIGHT,
             this.physicsComponent);

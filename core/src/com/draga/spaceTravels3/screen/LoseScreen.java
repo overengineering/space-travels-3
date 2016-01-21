@@ -1,7 +1,6 @@
 package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.draga.spaceTravels3.Level;
 import com.draga.spaceTravels3.manager.SettingsManager;

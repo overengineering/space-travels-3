@@ -1,7 +1,6 @@
 {
   "class": "SerialisableLevel",
-  "name": "Gemini",
-  "iconPath": "level/gemini256.png",
+  "name": "Virgo",
   "serialisedDifficulties": {
     "Easy": {
       "trajectorySeconds": 5,
@@ -23,74 +22,56 @@
     }
   },
   "serialisedShip": {
-    "x": 5,
-    "y": 30,
+    "x": 10,
+    "y": 75,
     "mass": 1
+  },
+  "serialisedDestinationPlanet": {
+    "texturePath": "planet/gas1-256.png",
+    "x": 280,
+    "y": 75,
+    "radius": 6.378,
+    "mass": 20000
   },
   "serialisedPlanets": [
     {
-      "texturePath": "planet/earth256.png",
-      "x": 190,
-      "y": 30,
-      "radius": 10,
-      "mass": 30000,
-      "destination": true
-    },
-    {
       "texturePath": "planet/mars256.png",
-      "x": 100,
-      "y": 30,
-      "radius": 10,
-      "mass": 30000
+      "x": 150,
+      "y": 75,
+      "radius": 8,
+      "mass": 20000
     },
     {
       "texturePath": "planet/jupiter256.png",
       "x": 100,
-      "y": 120,
+      "y": 90,
       "radius": 7,
-      "mass": 30000
+      "mass": 20000
+    },
+    {
+      "texturePath": "planet/mars256.png",
+      "x": 200,
+      "y": 110,
+      "radius": 6,
+      "mass": 20000
     }
   ],
   "serialisedPickups": [
     {
-      "x": 80,
-      "y": 30
-    },
-    {
-      "x": 120,
-      "y": 30
-    },
-    {
-      "x": 100,
-      "y": 10
-    },
-    {
-      "x": 100,
-      "y": 140
-    },
-    {
-      "x": 120,
-      "y": 120
-    },
-    {
-      "x": 80,
-      "y": 120
-    },
-    {
-      "x": 90,
-      "y": 90
-    },
-    {
-      "x": 90,
+      "x": 140,
       "y": 60
     },
     {
-      "x": 110,
+      "x": 160,
       "y": 60
     },
     {
-      "x": 110,
+      "x": 150,
       "y": 90
+    },
+    {
+      "x": 200,
+      "y": 100
     }
   ]
 }

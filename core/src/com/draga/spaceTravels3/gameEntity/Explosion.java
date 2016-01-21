@@ -2,6 +2,7 @@ package com.draga.spaceTravels3.gameEntity;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.component.graphicComponent.AnimatedGraphicComponent;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
@@ -14,7 +15,7 @@ public class Explosion extends GameEntity
 {
     private Sound sound;
 
-    public Explosion(float x, float y, float width, float height)
+    public Explosion(float x, float y, float width, float height, TextureAtlas textureAtlas)
     {
         this.physicsComponent = new PhysicsComponent(
             x,
@@ -27,7 +28,7 @@ public class Explosion extends GameEntity
             PhysicsComponentType.DYNAMIC);
 
         this.graphicComponent = new AnimatedGraphicComponent(
-            AssMan.getAssList().explosionTextureAtlas,
+            textureAtlas,
             Constants.Visual.EXPLOSION_LIFETIME,
             width,
             height,

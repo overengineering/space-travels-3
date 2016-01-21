@@ -3,14 +3,11 @@ package com.draga.spaceTravels3.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.manager.ScreenManager;
@@ -23,21 +20,17 @@ import com.draga.spaceTravels3.ui.BeepingClickListener;
 import com.draga.spaceTravels3.ui.BeepingTextButton;
 import com.draga.spaceTravels3.ui.Screen;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 public class MenuScreen extends Screen
 {
-    private Stage                             stage;
-    private HashMap<SerialisableLevel, Image> asyncLevelIcons;
+    private Stage stage;
+    private float levelIconsSize;
 
     public MenuScreen()
     {
         super(true, true);
 
-        this.asyncLevelIcons = new HashMap<>();
-
         this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
+        this.levelIconsSize = this.stage.getWidth() / 10f;
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
@@ -91,21 +84,13 @@ public class MenuScreen extends Screen
             Table innerTable = UIManager.getDefaultTable();
 
             // If the level icon is not loaded in the ass man then add to an map to load them async.
-            Image image;
-            if (AssMan.getMenuAssMan().isLoaded(serialisableLevel.iconPath))
-            {
-                Texture texture = AssMan.getMenuAssMan().get(serialisableLevel.iconPath);
-                image = new Image(new TextureRegionDrawable(new TextureRegion(texture)));
-            }
-            else
-            {
-                image = new Image();
-                this.asyncLevelIcons.put(serialisableLevel, image);
-            }
+            Image image = loadTextureAsync(
+                serialisableLevel.serialisedDestinationPlanet.texturePath,
+                AssMan.getAssMan());
 
             innerTable
                 .add(image)
-                .size(this.stage.getWidth() / 10f);
+                .size(this.levelIconsSize);
             innerTable.row();
 
             innerTable.add(serialisableLevel.name);
@@ -131,7 +116,7 @@ public class MenuScreen extends Screen
 
         return scrollPane;
     }
-    
+
     private TextButton getSettingsTextButton()
     {
         TextButton settingsTextButton = new BeepingTextButton("Settings", UIManager.skin);
@@ -165,7 +150,7 @@ public class MenuScreen extends Screen
 
         return tutorialTextButton;
     }
-
+    
     private Actor getCreditsButton()
     {
         TextButton settingsTextButton = new BeepingTextButton("Credits", UIManager.skin);
@@ -208,25 +193,7 @@ public class MenuScreen extends Screen
     @Override
     public void render(float deltaTime)
     {
-        // Check if we need to load level icons and if they are loaded show them.
-        if (!this.asyncLevelIcons.isEmpty())
-        {
-            ArrayList<SerialisableLevel> serialisableLevels =
-                new ArrayList<>(this.asyncLevelIcons.keySet());
-            for (SerialisableLevel serialisableLevel : serialisableLevels)
-            {
-                if (AssMan.getMenuAssMan().update()
-                    || AssMan.getMenuAssMan().isLoaded(serialisableLevel.iconPath))
-                {
-                    Texture texture = AssMan.getMenuAssMan().get(serialisableLevel.iconPath);
-                    this.asyncLevelIcons.get(serialisableLevel)
-                        .setDrawable(new TextureRegionDrawable(new TextureRegion(texture)));
-
-                    this.asyncLevelIcons.remove(serialisableLevel);
-                }
-            }
-        }
-
+        loadAsyncImages(AssMan.getAssMan());
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
             || Gdx.input.isKeyJustPressed(Input.Keys.BACK))

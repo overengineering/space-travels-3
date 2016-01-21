@@ -64,6 +64,7 @@ public abstract class ScoreManager
         {
             if (SCORE_FILE_HANDLE.exists())
             {
+                @SuppressWarnings("unchecked")
                 HashMap<String, HashMap<String, Integer>> levelScores =
                     JSON.fromJson(HashMap.class, HashMap.class, SCORE_FILE_HANDLE);
 

@@ -1,14 +1,9 @@
 [
-  "aries.json",
-  "taurus.json",
-  "gemini.json",
-  "cancer.json",
-  "leo.json",
-  //  "virgo.json",
-  //  "libra.json",
-  //  "scorpio.json",
-  //  "sagittarius.json",
-  //  "capricorn.json",
-  "aquarius.json",
-  //  "pisces.json"
+  "1.aries.json",
+  "2.taurus.json",
+  "3.gemini.json",
+  "4.cancer.json",
+  "5.leo.json",
+  "6.aquarius.json",
+  "7.virgo.json"
 ]

@@ -3,14 +3,11 @@ package com.draga.spaceTravels3.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.event.ScoreUpdatedEvent;
@@ -34,7 +31,6 @@ public class LevelScreen extends Screen
     private       Actor                  difficultiesList;
     private       Stage                  stage;
     private       HashMap<String, Label> difficultyHighScoreLabels;
-    private       Image                  headerImage;
 
     public LevelScreen(SerialisableLevel serialisableLevel)
     {
@@ -79,20 +75,14 @@ public class LevelScreen extends Screen
             new Label(this.serialisableLevel.name + " ", UIManager.skin, "large", Color.WHITE);
         table.add(label);
 
-        if (AssMan.getMenuAssMan().update()
-            || AssMan.getMenuAssMan().isLoaded(this.serialisableLevel.iconPath))
-        {
-            Texture texture =
-                AssMan.getMenuAssMan().get(this.serialisableLevel.iconPath, Texture.class);
-            this.headerImage = new Image(texture);
-        }
-        else
-        {
-            this.headerImage = new Image();
-        }
+
+        Image headerImage =
+            loadTextureAsync(
+                this.serialisableLevel.serialisedDestinationPlanet.texturePath,
+                AssMan.getAssMan());
 
         table
-            .add(this.headerImage)
+            .add(headerImage)
             .size(label.getHeight());
 
         return table;
@@ -221,23 +211,13 @@ public class LevelScreen extends Screen
     @Override
     public void render(float delta)
     {
-        // If the image still needs showing.
-        if (this.headerImage.getDrawable() == null
-            && (
-            AssMan.getMenuAssMan().update()
-                || AssMan.getMenuAssMan().isLoaded(this.serialisableLevel.iconPath)))
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
+            || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
         {
-            Texture texture = AssMan.getMenuAssMan().get(this.serialisableLevel.iconPath);
-            this.headerImage.setDrawable(new TextureRegionDrawable(new TextureRegion(texture)));
+            Gdx.app.exit();
         }
 
-        {
-            if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
-                || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
-            {
-                ScreenManager.removeScreen(LevelScreen.this);
-            }
-        }
+        loadAsyncImages(AssMan.getAssMan());
 
         this.stage.getViewport().apply();
         this.stage.act(delta);

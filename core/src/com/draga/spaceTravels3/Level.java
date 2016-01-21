@@ -3,6 +3,7 @@ package com.draga.spaceTravels3;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Pools;
@@ -31,7 +32,6 @@ public class Level
     private final float maxLandingSpeed;
 
     private final ArrayList<Pickup> pickups;
-    private final String            iconPath;
     private final Ship              ship;
     private final Thruster          thruster;
     private final Planet            destinationPlanet;
@@ -52,7 +52,6 @@ public class Level
         String id,
         String name,
         String difficulty,
-        String iconPath,
         Ship ship,
         Thruster thruster,
         ArrayList<Planet> planets,
@@ -64,7 +63,6 @@ public class Level
         this.id = id;
         this.name = name;
         this.difficulty = difficulty;
-        this.iconPath = iconPath;
 
         this.ship = ship;
         this.thruster = thruster;
@@ -125,6 +123,17 @@ public class Level
             }
         }
 
+        // If we have found no static phyComp avoid leaving bounds null.
+        if (bounds == null)
+        {
+            PhysicsComponent physicsComponent = this.ship.physicsComponent;
+            bounds = new Rectangle(
+                physicsComponent.getPosition().x - physicsComponent.getBoundsCircle().radius,
+                physicsComponent.getPosition().y - physicsComponent.getBoundsCircle().radius,
+                physicsComponent.getBoundsCircle().radius * 2f,
+                physicsComponent.getBoundsCircle().radius * 2f);
+        }
+
         bounds.x -= Constants.Game.LEVEL_BOUNDS_BUFFER;
         bounds.y -= Constants.Game.LEVEL_BOUNDS_BUFFER;
         bounds.height += Constants.Game.LEVEL_BOUNDS_BUFFER * 2f;
@@ -175,7 +184,9 @@ public class Level
                 shipPlanetCollisionEvent.ship.physicsComponent.getPosition().x,
                 shipPlanetCollisionEvent.ship.physicsComponent.getPosition().y,
                 shipPlanetCollisionEvent.ship.graphicComponent.getWidth(),
-                shipPlanetCollisionEvent.ship.graphicComponent.getHeight()
+                shipPlanetCollisionEvent.ship.graphicComponent.getHeight(),
+                AssMan.getGameAssMan()
+                    .get(AssMan.getAssList().explosionTextureAtlas, TextureAtlas.class)
             );
             GameEntityManager.addGameEntity(explosion);
 
@@ -379,10 +390,5 @@ public class Level
     public String getName()
     {
         return this.name;
-    }
-
-    public String getIconPath()
-    {
-        return this.iconPath;
     }
 }

@@ -2,6 +2,7 @@ package com.draga.spaceTravels3.gameEntity;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.draga.PooledVector2;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.component.graphicComponent.AnimatedGraphicComponent;
@@ -19,7 +20,7 @@ public class Thruster extends GameEntity
     private Sound sound;
     private long  soundInstance;
 
-    public Thruster(Ship ship)
+    public Thruster(Ship ship, TextureAtlas textureAtlas)
     {
         this.ship = ship;
 
@@ -34,7 +35,7 @@ public class Thruster extends GameEntity
             PhysicsComponentType.DYNAMIC);
 
         this.graphicComponent = new AnimatedGraphicComponent(
-            AssMan.getAssList().thrusterTextureAtlas,
+            textureAtlas,
             Constants.Visual.THRUSTER_ANIMATION_TIME,
             0,
             0,
