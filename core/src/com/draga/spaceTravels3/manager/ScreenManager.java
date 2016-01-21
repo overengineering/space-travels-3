@@ -131,7 +131,10 @@ public abstract class ScreenManager
 
     public static void resume()
     {
-        screens.peek().resume();
+        if (!screens.empty())
+        {
+            screens.peek().resume();
+        }
     }
 
     public static void pause()
