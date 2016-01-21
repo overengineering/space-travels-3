@@ -1,7 +1,7 @@
 {
   "class": "SerialisableLevel",
   "name": "Gemini",
-  "iconPath": "level/gemini128.png",
+  "iconPath": "level/gemini256.png",
   "serialisedDifficulties": {
     "Easy": {
       "trajectorySeconds": 5,

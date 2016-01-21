@@ -1,7 +1,7 @@
 {
   "class": "SerialisableLevel",
   "name": "Virgo",
-  "iconPath": "level/virgo128.png",
+  "iconPath": "level/virgo256.png",
   "serialisedDifficulties": {
     "Easy": {
       "trajectorySeconds": 5,
