@@ -1,7 +1,7 @@
 {
   "class": "SerialisableLevel",
   "name": "Aquarius",
-  "iconPath": "level/aquarius128.png",
+  "iconPath": "level/aquarius256.png",
   "serialisedDifficulties": {
     "Easy": {
       "trajectorySeconds": 5,

@@ -1,7 +1,7 @@
 {
   "class": "SerialisableLevel",
   "name": "Leo",
-  "iconPath": "level/leo128.png",
+  "iconPath": "level/leo256.png",
   "serialisedDifficulties": {
     "Easy": {
       "trajectorySeconds": 5,
