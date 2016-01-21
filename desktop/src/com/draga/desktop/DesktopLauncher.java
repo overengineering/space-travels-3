@@ -18,8 +18,8 @@ public class DesktopLauncher
         //        config.width = 100;
         //        config.height = 100;
 
-        config.fullscreen = true;
-        //        config.fullscreen = false;
+        //        config.fullscreen = true;
+        config.fullscreen = false;
 
         config.resizable = false;
 
