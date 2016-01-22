@@ -55,4 +55,10 @@ public class NullPlayServices implements PlayServices
     {
 
     }
+
+    @Override
+    public void rateApp()
+    {
+
+    }
 }

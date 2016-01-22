@@ -19,4 +19,6 @@ public interface PlayServices
     boolean isSignedIn();
 
     void updateLeaderboard(String leaderboardID, int score);
+
+    void rateApp();
 }
