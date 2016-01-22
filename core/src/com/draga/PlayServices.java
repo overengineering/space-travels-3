@@ -10,11 +10,13 @@ public interface PlayServices
 
     void unlockAchievement(String string);
 
-    void showAchievement(String achievementID);
+    void showAchievements();
 
     void submitScore(int highScore, String leaderboardID);
 
-    void showScore(String leaderboardID);
+    void showLeaderboard(String leaderboardID);
 
     boolean isSignedIn();
+
+    void updateLeaderboard(String leaderboardID, int score);
 }

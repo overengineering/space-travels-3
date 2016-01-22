@@ -14,9 +14,6 @@ public class SerialisableLevel
     public List<SerialisablePickup>                      serialisedPickups;
     public LinkedHashMap<String, SerialisableDifficulty> serialisedDifficulties;
 
-    // Google play achievement ID for completion.
-    public String playCompletionAchievementID;
-
     public SerialisableLevel()
     {
     }

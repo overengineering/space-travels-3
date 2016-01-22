@@ -86,7 +86,8 @@ public abstract class LevelManager
             destinationPlanet,
             serialisableDifficulty.trajectorySeconds,
             serialisableDifficulty.maxLandingSpeed,
-            serialisableLevel.playCompletionAchievementID);
+            serialisableDifficulty.playCompletionAchievementID,
+            serialisableDifficulty.playLeaderboardID);
 
         // Run one update so everything is in place for the countdown
         GameEntityManager.update();

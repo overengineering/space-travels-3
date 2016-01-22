@@ -27,7 +27,7 @@ public class NullPlayServices implements PlayServices
     }
 
     @Override
-    public void showAchievement(String achievementID)
+    public void showAchievements()
     {
 
     }
@@ -39,7 +39,7 @@ public class NullPlayServices implements PlayServices
     }
 
     @Override
-    public void showScore(String leaderboardID)
+    public void showLeaderboard(String leaderboardID)
     {
 
     }
@@ -48,5 +48,11 @@ public class NullPlayServices implements PlayServices
     public boolean isSignedIn()
     {
         return false;
+    }
+
+    @Override
+    public void updateLeaderboard(String leaderboardID, int score)
+    {
+
     }
 }

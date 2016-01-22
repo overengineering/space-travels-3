@@ -117,7 +117,7 @@ public class GooglePlayServices implements PlayServices
     }
 
     @Override
-    public void showAchievement(String achievementID)
+    public void showAchievements()
     {
         if (isSignedIn())
         {
@@ -132,7 +132,7 @@ public class GooglePlayServices implements PlayServices
     }
 
     @Override
-    public void showScore(String leaderboardID)
+    public void showLeaderboard(String leaderboardID)
     {
         if (isSignedIn())
         {
@@ -150,5 +150,18 @@ public class GooglePlayServices implements PlayServices
     public boolean isSignedIn()
     {
         return this.gameHelper.isSignedIn();
+    }
+
+    @Override
+    public void updateLeaderboard(String leaderboardID, int score)
+    {
+        if (isSignedIn())
+        {
+            Games.Leaderboards.submitScore(this.gameHelper.getApiClient(), leaderboardID, score);
+        }
+        else
+        {
+            signIn();
+        }
     }
 }

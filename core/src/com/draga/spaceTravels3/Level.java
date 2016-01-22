@@ -32,6 +32,7 @@ public class Level
     private final float maxLandingSpeed;
 
     private final String playCompletionAchievementID;
+    private final String playLeaderboardID;
 
     private final ArrayList<Pickup> pickups;
     private final Ship              ship;
@@ -61,7 +62,8 @@ public class Level
         Planet destinationPlanet,
         float trajectorySeconds,
         float maxLandingSpeed,
-        String playCompletionAchievementID)
+        String playCompletionAchievementID,
+        String playLeaderboardID)
     {
         this.id = id;
         this.name = name;
@@ -74,6 +76,7 @@ public class Level
         this.trajectorySeconds = trajectorySeconds;
         this.maxLandingSpeed = maxLandingSpeed;
         this.playCompletionAchievementID = playCompletionAchievementID;
+        this.playLeaderboardID = playLeaderboardID;
 
         this.gameState = GameState.PAUSE;
 
@@ -203,6 +206,9 @@ public class Level
             Constants.General.EVENT_BUS.post(new WinEvent());
 
             SpaceTravels3.playServices.unlockAchievement(this.playCompletionAchievementID);
+            SpaceTravels3.playServices.updateLeaderboard(
+                this.playLeaderboardID,
+                getScore().getTotalScore());
         }
     }
 
@@ -396,10 +402,5 @@ public class Level
     public String getName()
     {
         return this.name;
-    }
-
-    public String getPlayCompletionAchievementID()
-    {
-        return this.playCompletionAchievementID;
     }
 }

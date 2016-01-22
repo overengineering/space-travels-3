@@ -36,6 +36,7 @@ public class AndroidLauncher extends AndroidApplication
 
         tracker.enableExceptionReporting(true);
         tracker.enableAdvertisingIdCollection(true);
+        tracker.enableAutoActivityTracking(true);
 
         googleAnalytics.reportActivityStart(this);
 

@@ -1,25 +1,30 @@
 {
   "class": "SerialisableLevel",
   "name": "Level 1",
-  "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQAg",
   "serialisedDifficulties": {
     "Easy": {
       "trajectorySeconds": 5,
       "maxLandingSpeed": 100,
       "fuel": 0,
-      "infiniteFuel": true
+      "infiniteFuel": true,
+      "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQAg",
+      "playLeaderboardID": "CgkIxsSO8ZoXEAIQAQ"
     },
     "Medium": {
       "trajectorySeconds": 2,
       "maxLandingSpeed": 45,
       "fuel": 2,
-      "infiniteFuel": false
+      "infiniteFuel": false,
+      "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQCg",
+      "playLeaderboardID": "CgkIxsSO8ZoXEAIQDA"
     },
     "Hard": {
       "trajectorySeconds": 0,
       "maxLandingSpeed": 35,
       "fuel": 1,
-      "infiniteFuel": false
+      "infiniteFuel": false,
+      "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQCw",
+      "playLeaderboardID": "CgkIxsSO8ZoXEAIQDQ"
     }
   },
   "serialisedShip": {
