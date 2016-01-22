@@ -176,7 +176,9 @@ public class LevelScreen extends Screen
 
             innerDifficultyTable.add(beepingTextButton);
 
-            table.add(innerDifficultyTable);
+            difficultyTable.add(innerDifficultyTable);
+
+            table.add(difficultyTable);
         }
 
         ScrollPane scrollPane = new ScrollPane(table, UIManager.skin);
