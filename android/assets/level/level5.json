@@ -8,23 +8,23 @@
       "fuel": 0,
       "infiniteFuel": true,
       "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQBg",
-      "playLeaderboardID": ""
+      "playLeaderboardID": "CgkIxsSO8ZoXEAIQHQ"
     },
     "Medium": {
       "trajectorySeconds": 3,
       "maxLandingSpeed": 70,
       "fuel": 4,
       "infiniteFuel": false,
-      "playCompletionAchievementID": "",
-      "playLeaderboardID": ""
+      "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQIA",
+      "playLeaderboardID": "CgkIxsSO8ZoXEAIQHg"
     },
     "Hard": {
       "trajectorySeconds": 0,
       "maxLandingSpeed": 60,
       "fuel": 2,
       "infiniteFuel": false,
-      "playCompletionAchievementID": "",
-      "playLeaderboardID": ""
+      "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQIQ",
+      "playLeaderboardID": "CgkIxsSO8ZoXEAIQHw"
     }
   },
   "serialisedShip": {
