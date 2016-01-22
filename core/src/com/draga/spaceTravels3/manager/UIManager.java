@@ -91,6 +91,7 @@ public abstract class UIManager
             getImageTextButtonStyle(skin, AssMan.getAssList().iconLeaderboard));
         skin.add("rate", getImageTextButtonStyle(skin, AssMan.getAssList().iconRate));
         skin.add("tutorial", getImageTextButtonStyle(skin, AssMan.getAssList().iconTutorial));
+        skin.add("play", getImageTextButtonStyle(skin, AssMan.getAssList().iconPlay));
         skin.add("exit", getImageTextButtonStyle(skin, AssMan.getAssList().iconExit));
         skin.add(
             "touch",
