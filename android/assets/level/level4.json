@@ -1,24 +1,30 @@
 {
   "class": "SerialisableLevel",
-  "name": "Cancer",
+  "name": "Level 4",
   "serialisedDifficulties": {
     "Easy": {
       "trajectorySeconds": 5,
       "maxLandingSpeed": 120,
       "fuel": 0,
-      "infiniteFuel": true
+      "infiniteFuel": true,
+      "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQBQ",
+      "playLeaderboardID": "CgkIxsSO8ZoXEAIQGw"
     },
     "Medium": {
       "trajectorySeconds": 3,
       "maxLandingSpeed": 90,
       "fuel": 12,
-      "infiniteFuel": false
+      "infiniteFuel": false,
+      "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQGA",
+      "playLeaderboardID": "CgkIxsSO8ZoXEAIQGg"
     },
     "Hard": {
       "trajectorySeconds": 0,
       "maxLandingSpeed": 70,
       "fuel": 8,
-      "infiniteFuel": false
+      "infiniteFuel": false,
+      "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQGQ",
+      "playLeaderboardID": "CgkIxsSO8ZoXEAIQHA"
     }
   },
   "serialisedShip": {

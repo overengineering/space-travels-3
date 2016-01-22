@@ -96,7 +96,8 @@ public class LevelScreen extends Screen
 
         for (final String difficulty : serialisedDifficulties.keySet())
         {
-            SerialisableDifficulty serialisableDifficulty = serialisedDifficulties.get(difficulty);
+            final SerialisableDifficulty serialisableDifficulty =
+                serialisedDifficulties.get(difficulty);
 
             Table difficultyTable = new Table(UIManager.skin);
 
@@ -144,9 +145,19 @@ public class LevelScreen extends Screen
                     ? "infinite"
                     : String.valueOf(serialisableDifficulty.fuel))
                 .right();
+            innerDifficultyTable.row();
 
-            difficultyTable.add(innerDifficultyTable);
-            difficultyTable.row();
+            // Leaderboard button.
+            TextButton leaderboardTextButton = new BeepingTextButton("Leaderboard", UIManager.skin);
+            leaderboardTextButton.addListener(new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    SpaceTravels3.playServices.showLeaderboard(serialisableDifficulty.playLeaderboardID);
+                }
+            });
+            innerDifficultyTable.add(leaderboardTextButton);
 
             // Play button.
             BeepingTextButton beepingTextButton = new BeepingTextButton("Play", UIManager.skin);
@@ -163,7 +174,9 @@ public class LevelScreen extends Screen
                 }
             });
 
-            difficultyTable.add(beepingTextButton);
+            innerDifficultyTable.add(beepingTextButton);
+
+            difficultyTable.add(innerDifficultyTable);
 
             table.add(difficultyTable);
         }

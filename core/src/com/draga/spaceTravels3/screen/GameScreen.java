@@ -260,11 +260,5 @@ public class GameScreen extends Screen
     {
         ScreenManager.addScreen(new WinScreen(this.level, this));
 
-        Score score = this.level.getScore();
-        ScoreManager.saveHighScore(
-            this.level.getId(),
-            this.level.getDifficulty(),
-            score.getTotalScore());
-        Pools.free(score);
     }
 }

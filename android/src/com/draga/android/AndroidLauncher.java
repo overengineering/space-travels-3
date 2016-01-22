@@ -1,5 +1,6 @@
 package com.draga.android;
 
+import android.content.Intent;
 import android.os.Bundle;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
@@ -14,15 +15,20 @@ import io.fabric.sdk.android.Fabric;
 
 public class AndroidLauncher extends AndroidApplication
 {
+    private static final String LOGGING_TAG = AndroidLauncher.class.getSimpleName();
+
+    private GooglePlayServices googlePlayServices;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
+
         // Fabric init and ErrorHandler.
         Fabric.with(this, new Crashlytics(), new Answers());
-
         ErrorHandlerProvider.addErrorHandler(new FabricErrorHandler());
+
 
         // Google Analytics init and ErrorHandling.
         GoogleAnalytics googleAnalytics = GoogleAnalytics.getInstance(this);
@@ -30,10 +36,16 @@ public class AndroidLauncher extends AndroidApplication
 
         tracker.enableExceptionReporting(true);
         tracker.enableAdvertisingIdCollection(true);
+        tracker.enableAutoActivityTracking(true);
 
         googleAnalytics.reportActivityStart(this);
 
         ErrorHandlerProvider.addErrorHandler(new GoogleAnalyticsErrorHandler(tracker));
+
+
+        this.googlePlayServices = new GooglePlayServices(this);
+        this.googlePlayServices.signIn();
+
 
         // App config and launch.
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
@@ -42,7 +54,27 @@ public class AndroidLauncher extends AndroidApplication
         config.hideStatusBar = true;
         config.useWakelock = true;
 
-        initialize(new SpaceTravels3(), config);
+        initialize(new SpaceTravels3(this.googlePlayServices), config);
     }
 
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+        this.googlePlayServices.onStart(this);
+    }
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+        this.googlePlayServices.onStop();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        this.googlePlayServices.onActivityResult(requestCode, resultCode, data);
+    }
 }

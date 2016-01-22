@@ -59,6 +59,8 @@ public class DebugScreen extends Screen
         table.add(getForceCrashButton());
         table.row();
         table.add(getErrorButton());
+        table.row();
+        table.add(getSignOutButton());
 
         ScrollPane scrollPane = new ScrollPane(table);
 
@@ -181,6 +183,23 @@ public class DebugScreen extends Screen
         });
 
         return errorTextButton;
+    }
+
+    private Actor getSignOutButton()
+    {
+        final TextButton textButton = new BeepingTextButton("Sign out play", UIManager.skin);
+
+        textButton.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    SpaceTravels3.playServices.signOut();
+                }
+            });
+
+        return textButton;
     }
 
     @Override

@@ -1,24 +1,30 @@
 {
   "class": "SerialisableLevel",
-  "name": "Taurus",
+  "name": "Level 2",
   "serialisedDifficulties": {
     "Easy": {
       "trajectorySeconds": 5,
       "maxLandingSpeed": 70,
       "fuel": 0,
-      "infiniteFuel": true
+      "infiniteFuel": true,
+      "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQAw",
+      "playLeaderboardID": "CgkIxsSO8ZoXEAIQEA"
     },
     "Medium": {
       "trajectorySeconds": 3,
       "maxLandingSpeed": 70,
       "fuel": 4,
-      "infiniteFuel": false
+      "infiniteFuel": false,
+      "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQDg",
+      "playLeaderboardID": "CgkIxsSO8ZoXEAIQEg"
     },
     "Hard": {
       "trajectorySeconds": 0,
       "maxLandingSpeed": 60,
       "fuel": 2,
-      "infiniteFuel": false
+      "infiniteFuel": false,
+      "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQDw",
+      "playLeaderboardID": "CgkIxsSO8ZoXEAIQEg"
     }
   },
   "serialisedShip": {

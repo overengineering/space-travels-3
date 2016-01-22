@@ -54,6 +54,9 @@ public class MenuScreen extends Screen
         buttonsTable.add(getSettingsTextButton());
         buttonsTable.add(getTutorialButton());
         buttonsTable.add(getCreditsButton());
+        buttonsTable.add(getRateButton());
+        buttonsTable.add(getAchievementsButton());
+        buttonsTable.add(getLeaderboardsButton());
 
         table.add(buttonsTable);
 
@@ -133,7 +136,7 @@ public class MenuScreen extends Screen
 
         return settingsTextButton;
     }
-    
+
     private Actor getTutorialButton()
     {
         TextButton tutorialTextButton = new BeepingTextButton("Tutorial", UIManager.skin);
@@ -150,7 +153,7 @@ public class MenuScreen extends Screen
 
         return tutorialTextButton;
     }
-    
+
     private Actor getCreditsButton()
     {
         TextButton settingsTextButton = new BeepingTextButton("Credits", UIManager.skin);
@@ -166,6 +169,57 @@ public class MenuScreen extends Screen
             });
 
         return settingsTextButton;
+    }
+
+    private Actor getRateButton()
+    {
+        TextButton rateTextButton = new BeepingTextButton("Rate", UIManager.skin);
+
+        rateTextButton.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    SpaceTravels3.playServices.rateApp();
+                }
+            });
+
+        return rateTextButton;
+    }
+    
+    private Actor getAchievementsButton()
+    {
+        TextButton achievementsTextButton = new BeepingTextButton("Achievements", UIManager.skin);
+
+        achievementsTextButton.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    SpaceTravels3.playServices.showAchievements();
+                }
+            });
+
+        return achievementsTextButton;
+    }
+    
+    private Actor getLeaderboardsButton()
+    {
+        TextButton textButton = new BeepingTextButton("Leaderboards", UIManager.skin);
+
+        textButton.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    SpaceTravels3.playServices.showLeaderboards();
+                }
+            });
+
+        return textButton;
     }
 
     public Actor getDebugButton()
