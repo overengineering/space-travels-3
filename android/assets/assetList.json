@@ -29,5 +29,6 @@
   "iconAchievement": "icon/achievement64.png",
   "iconCredits": "icon/credits64.png",
   "iconRate": "icon/star64.png",
-  "iconTutorial": "icon/tutorial64.png"
+  "iconTutorial": "icon/tutorial64.png",
+  "iconExit": "icon/exit64.png"
 }

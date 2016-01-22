@@ -88,6 +88,7 @@ public abstract class UIManager
             getImageTextButtonStyles(skin, AssMan.getAssList().iconLeaderboard));
         skin.add("rate", getImageTextButtonStyles(skin, AssMan.getAssList().iconRate));
         skin.add("tutorial", getImageTextButtonStyles(skin, AssMan.getAssList().iconTutorial));
+        skin.add("exit", getImageTextButtonStyles(skin, AssMan.getAssList().iconExit));
 
         skin.add("checkable", getCheckableTextButtonStyle(skin));
 

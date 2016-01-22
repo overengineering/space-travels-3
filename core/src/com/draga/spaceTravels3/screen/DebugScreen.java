@@ -37,10 +37,9 @@ public class DebugScreen extends Screen
             .center();
 
         // Back button
-        TextButton backTextButton = getBackTextButton();
         table.row();
         table
-            .add(backTextButton)
+            .add(getBackTextButton())
             .bottom();
 
         this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
@@ -65,21 +64,6 @@ public class DebugScreen extends Screen
         ScrollPane scrollPane = new ScrollPane(table);
 
         return scrollPane;
-    }
-
-    private TextButton getBackTextButton()
-    {
-        TextButton backTextButton = new BeepingTextButton("Back", UIManager.skin);
-        backTextButton.addListener(new ClickListener()
-        {
-            @Override
-            public void clicked(InputEvent event, float x, float y)
-            {
-                ScreenManager.removeScreen(DebugScreen.this);
-            }
-        });
-
-        return backTextButton;
     }
 
     private TextButton getDebugDrawTextButton()

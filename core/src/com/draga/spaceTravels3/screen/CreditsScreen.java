@@ -9,13 +9,11 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
-import com.draga.spaceTravels3.ui.BeepingTextButton;
 import com.draga.spaceTravels3.ui.Screen;
 
 public class CreditsScreen extends Screen
@@ -142,21 +140,6 @@ public class CreditsScreen extends Screen
         scrollPane.setScrollingDisabled(true, false);
 
         return scrollPane;
-    }
-
-    private TextButton getBackTextButton()
-    {
-        TextButton backTextButton = new BeepingTextButton("Back", UIManager.skin);
-        backTextButton.addListener(new ClickListener()
-        {
-            @Override
-            public void clicked(InputEvent event, float x, float y)
-            {
-                ScreenManager.removeScreen(CreditsScreen.this);
-            }
-        });
-
-        return backTextButton;
     }
 
     @Override

@@ -34,6 +34,7 @@ public class AssList
     public String iconCredits;
     public String iconRate;
     public String iconTutorial;
+    public String iconExit;
 
     public AssList()
     {

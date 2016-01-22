@@ -5,17 +5,14 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
-import com.draga.spaceTravels3.ui.BeepingTextButton;
 import com.draga.spaceTravels3.ui.Screen;
 
 import java.util.HashMap;
@@ -75,21 +72,6 @@ public class TutorialScreen extends Screen
         scrollPane.setScrollingDisabled(true, false);
 
         return scrollPane;
-    }
-
-    private TextButton getBackTextButton()
-    {
-        TextButton backTextButton = new BeepingTextButton("Back", UIManager.skin);
-        backTextButton.addListener(new ClickListener()
-        {
-            @Override
-            public void clicked(InputEvent event, float x, float y)
-            {
-                ScreenManager.removeScreen(TutorialScreen.this);
-            }
-        });
-
-        return backTextButton;
     }
 
     private Actor getMovementTutorial()
