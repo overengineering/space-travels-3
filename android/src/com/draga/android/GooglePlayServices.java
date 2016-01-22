@@ -13,16 +13,16 @@ public class GooglePlayServices implements PlayServices
 {
     private static final String LOGGING_TAG = GooglePlayServices.class.getSimpleName();
 
-    private final AndroidLauncher androidLauncher;
-    private final GameHelper      gameHelper;
+    private final Activity activity;
+    private final GameHelper gameHelper;
 
     private int requestCode = 1;
 
-    public GooglePlayServices(AndroidLauncher androidLauncher)
+    public GooglePlayServices(AndroidLauncher activity)
     {
-        this.androidLauncher = androidLauncher;
+        this.activity = activity;
 
-        this.gameHelper = new GameHelper(androidLauncher, GameHelper.CLIENT_GAMES);
+        this.gameHelper = new GameHelper(activity, GameHelper.CLIENT_GAMES);
         this.gameHelper.enableDebugLog(false);
 
         GameHelper.GameHelperListener gameHelperListener = new GameHelper.GameHelperListener()
@@ -57,6 +57,21 @@ public class GooglePlayServices implements PlayServices
     }
 
     @Override
+    public void showLeaderboards()
+    {
+        if (isSignedIn())
+        {
+            Intent allLeaderboardsIntent = Games.Leaderboards.getAllLeaderboardsIntent(
+                this.gameHelper.getApiClient());
+            this.activity.startActivityForResult(allLeaderboardsIntent, this.requestCode);
+        }
+        else
+        {
+            signIn();
+        }
+    }
+
+    @Override
     public void signIn()
     {
         try
@@ -81,29 +96,26 @@ public class GooglePlayServices implements PlayServices
     }
 
     @Override
-    public void rateGame()
-    {
-        final String appPackageName =
-            this.androidLauncher.getPackageName();
-        try
-        {
-            this.androidLauncher.startActivity(new Intent(
-                Intent.ACTION_VIEW,
-                Uri.parse("market://details?id=" + appPackageName)));
-        } catch (android.content.ActivityNotFoundException anfe)
-        {
-            this.androidLauncher.startActivity(new Intent(
-                Intent.ACTION_VIEW,
-                Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
-        }
-    }
-
-    @Override
     public void unlockAchievement(String achievementID)
     {
         Games.Achievements.unlock(
             this.gameHelper.getApiClient(),
             achievementID);
+    }
+
+    @Override
+    public void showAchievements()
+    {
+        if (isSignedIn())
+        {
+            Intent achievementsIntent = Games.Achievements.getAchievementsIntent(
+                this.gameHelper.getApiClient());
+            this.activity.startActivityForResult(achievementsIntent, this.requestCode);
+        }
+        else
+        {
+            signIn();
+        }
     }
 
     @Override
@@ -118,28 +130,14 @@ public class GooglePlayServices implements PlayServices
     }
 
     @Override
-    public void showAchievements()
-    {
-        if (isSignedIn())
-        {
-            Intent achievementsIntent = Games.Achievements.getAchievementsIntent(
-                this.gameHelper.getApiClient());
-            this.androidLauncher.startActivityForResult(achievementsIntent, this.requestCode);
-        }
-        else
-        {
-            signIn();
-        }
-    }
-
-    @Override
     public void showLeaderboard(String leaderboardID)
     {
         if (isSignedIn())
         {
-            this.androidLauncher.startActivityForResult(Games.Leaderboards.getLeaderboardIntent(
+            Intent leaderboardIntent = Games.Leaderboards.getLeaderboardIntent(
                 this.gameHelper.getApiClient(),
-                leaderboardID), this.requestCode);
+                leaderboardID);
+            this.activity.startActivityForResult(leaderboardIntent, this.requestCode);
         }
         else
         {
@@ -169,7 +167,7 @@ public class GooglePlayServices implements PlayServices
     @Override
     public void rateApp()
     {
-        Uri uri = Uri.parse("market://details?id=" + this.androidLauncher.getPackageName());
+        Uri uri = Uri.parse("market://details?id=" + this.activity.getPackageName());
         Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
 
         // To count with Play market backstack, After pressing back button,
@@ -179,13 +177,13 @@ public class GooglePlayServices implements PlayServices
             Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
         try
         {
-            this.androidLauncher.startActivity(goToMarket);
+            this.activity.startActivity(goToMarket);
         } catch (ActivityNotFoundException e)
         {
-            this.androidLauncher.startActivity(new Intent(
+            this.activity.startActivity(new Intent(
                 Intent.ACTION_VIEW,
                 Uri.parse("http://play.google.com/store/apps/details?id="
-                    + this.androidLauncher.getPackageName())));
+                    + this.activity.getPackageName())));
         }
     }
 }
