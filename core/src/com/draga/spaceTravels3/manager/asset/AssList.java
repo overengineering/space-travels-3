@@ -27,7 +27,14 @@ public class AssList
     public String tutorialBelowLandingSpeedTexture;
     public String tutorialAboveLandingSpeedTexture;
     public String tutorialPickupTexture;
-    
+
+    public String iconSettings;
+    public String iconLeaderboard;
+    public String iconAchievement;
+    public String iconCredits;
+    public String iconRate;
+    public String iconTutorial;
+
     public AssList()
     {
     }
