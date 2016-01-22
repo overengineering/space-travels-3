@@ -12,6 +12,7 @@ import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponentType;
 import com.draga.spaceTravels3.event.*;
 import com.draga.spaceTravels3.gameEntity.*;
 import com.draga.spaceTravels3.manager.GameEntityManager;
+import com.draga.spaceTravels3.manager.ScoreManager;
 import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
@@ -154,11 +155,6 @@ public class Level
         return this.bounds;
     }
 
-    public String getDifficulty()
-    {
-        return this.difficulty;
-    }
-
     @Subscribe
     public void pickupCollected(PickupCollectedEvent pickupCollectedEvent)
     {
@@ -205,10 +201,17 @@ public class Level
 
             Constants.General.EVENT_BUS.post(new WinEvent());
 
+            Score score = getScore();
+
             SpaceTravels3.playServices.unlockAchievement(this.playCompletionAchievementID);
             SpaceTravels3.playServices.updateLeaderboard(
                 this.playLeaderboardID,
-                getScore().getTotalScore());
+                score.getTotalScore());
+
+            ScoreManager.saveHighScore(
+                this.getId(),
+                this.getDifficulty(),
+                score.getTotalScore());
         }
     }
 
@@ -233,6 +236,11 @@ public class Level
     public String getId()
     {
         return this.id;
+    }
+
+    public String getDifficulty()
+    {
+        return this.difficulty;
     }
 
     @Subscribe
