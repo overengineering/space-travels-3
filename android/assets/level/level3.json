@@ -1,7 +1,7 @@
 {
   "class": "SerialisableLevel",
-  "name": "Leo",
-  "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQBg",
+  "name": "Level 3",
+  "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQBA",
   "serialisedDifficulties": {
     "Easy": {
       "trajectorySeconds": 5,
@@ -23,63 +23,73 @@
     }
   },
   "serialisedShip": {
-    "x": 10,
-    "y": 75,
+    "x": 5,
+    "y": 30,
     "mass": 1
   },
   "serialisedDestinationPlanet": {
-    "texturePath": "planet/arid3-256.png",
-    "x": 280,
-    "y": 75,
-    "radius": 6.378,
-    "mass": 20000
+    "texturePath": "planet/drye2-256.png",
+    "x": 190,
+    "y": 30,
+    "radius": 10,
+    "mass": 30000
   },
   "serialisedPlanets": [
     {
       "texturePath": "planet/mars256.png",
-      "x": 260,
-      "y": 60,
-      "radius": 1,
-      "mass": 300
+      "x": 100,
+      "y": 30,
+      "radius": 10,
+      "mass": 30000
     },
     {
       "texturePath": "planet/jupiter256.png",
-      "x": 150,
-      "y": 75,
-      "radius": 25,
-      "mass": 100000
-    },
-    {
-      "texturePath": "planet/mars256.png",
-      "x": 70,
-      "y": 40,
-      "radius": 3.397,
-      "mass": 3000
-    },
-    {
-      "texturePath": "planet/venus256.png",
-      "x": 80,
-      "y": 90,
-      "radius": 6.052,
-      "mass": 10000
+      "x": 100,
+      "y": 120,
+      "radius": 7,
+      "mass": 30000
     }
   ],
   "serialisedPickups": [
     {
-      "x": 125,
-      "y": 50
+      "x": 80,
+      "y": 30
     },
     {
-      "x": 175,
-      "y": 50
+      "x": 120,
+      "y": 30
     },
     {
-      "x": 125,
-      "y": 100
+      "x": 100,
+      "y": 10
     },
     {
-      "x": 175,
-      "y": 100
+      "x": 100,
+      "y": 140
+    },
+    {
+      "x": 120,
+      "y": 120
+    },
+    {
+      "x": 80,
+      "y": 120
+    },
+    {
+      "x": 90,
+      "y": 90
+    },
+    {
+      "x": 90,
+      "y": 60
+    },
+    {
+      "x": 110,
+      "y": 60
+    },
+    {
+      "x": 110,
+      "y": 90
     }
   ]
 }

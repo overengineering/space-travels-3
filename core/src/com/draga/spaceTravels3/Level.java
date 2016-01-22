@@ -28,8 +28,9 @@ public class Level
 {
     private static final String LOGGING_TAG = Level.class.getSimpleName();
 
-    private final float  trajectorySeconds;
-    private final float  maxLandingSpeed;
+    private final float trajectorySeconds;
+    private final float maxLandingSpeed;
+
     private final String playCompletionAchievementID;
 
     private final ArrayList<Pickup> pickups;
@@ -200,6 +201,8 @@ public class Level
             this.gameState = GameState.WIN;
 
             Constants.General.EVENT_BUS.post(new WinEvent());
+
+            SpaceTravels3.playServices.unlockAchievement(this.playCompletionAchievementID);
         }
     }
 
