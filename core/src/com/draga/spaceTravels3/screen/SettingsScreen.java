@@ -17,7 +17,7 @@ import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.SoundManager;
 import com.draga.spaceTravels3.manager.UIManager;
-import com.draga.spaceTravels3.ui.BeepingTextButton;
+import com.draga.spaceTravels3.ui.BeepingImageTextButton;
 import com.draga.spaceTravels3.ui.Screen;
 
 public class SettingsScreen extends Screen
@@ -141,10 +141,11 @@ public class SettingsScreen extends Screen
     {
         Table table = UIManager.getDefaultTable();
 
-        ButtonGroup<TextButton> buttonGroup = new ButtonGroup<>();
+        ButtonGroup<ImageTextButton> buttonGroup = new ButtonGroup<>();
         buttonGroup.setMaxCheckCount(1);
 
-        TextButton touchButton = new BeepingTextButton("Touch", UIManager.skin, "checkable");
+        BeepingImageTextButton
+            touchButton = new BeepingImageTextButton("Touch", UIManager.skin, "touch");
         touchButton.setChecked(SettingsManager.getSettings().inputType == InputType.TOUCH);
         touchButton.addListener(new ClickListener()
         {
@@ -158,8 +159,8 @@ public class SettingsScreen extends Screen
         buttonGroup.add(touchButton);
         table.add(touchButton);
 
-        TextButton accelerometerButton =
-            new BeepingTextButton("Accelerometer", UIManager.skin, "checkable");
+        BeepingImageTextButton accelerometerButton =
+            new BeepingImageTextButton("Tilt", UIManager.skin, "accelerometer");
         accelerometerButton.setChecked(
             SettingsManager.getSettings().inputType == InputType.ACCELEROMETER);
         accelerometerButton.addListener(new ClickListener()

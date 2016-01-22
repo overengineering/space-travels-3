@@ -35,6 +35,11 @@ public class AssList
     public String iconRate;
     public String iconTutorial;
     public String iconExit;
+    public String iconTouch;
+    public String iconAccelerometer;
+    public String iconRetry;
+    public String iconAccelerometerChecked;
+    public String iconTouchChecked;
 
     public AssList()
     {

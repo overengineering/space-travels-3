@@ -17,6 +17,9 @@ import com.draga.spaceTravels3.manager.asset.AssMan;
 public abstract class UIManager
 {
     private static final String LOGGING_TAG = UIManager.class.getSimpleName();
+
+    private static final Color CHECKED_COLOR = Color.GREEN;
+
     public static Skin skin;
 
     private UIManager()
@@ -77,18 +80,31 @@ public abstract class UIManager
 
         skin.add("default", getTextButtonStyle(skin));
 
-        skin.add("default", getImageTextButtonStyles(skin));
-        skin.add("settings", getImageTextButtonStyles(skin, AssMan.getAssList().iconSettings));
+        skin.add("default", getImageTextButtonStyle(skin));
+        skin.add("settings", getImageTextButtonStyle(skin, AssMan.getAssList().iconSettings));
         skin.add(
             "achievement",
-            getImageTextButtonStyles(skin, AssMan.getAssList().iconAchievement));
-        skin.add("credits", getImageTextButtonStyles(skin, AssMan.getAssList().iconCredits));
+            getImageTextButtonStyle(skin, AssMan.getAssList().iconAchievement));
+        skin.add("credits", getImageTextButtonStyle(skin, AssMan.getAssList().iconCredits));
         skin.add(
             "leaderboard",
-            getImageTextButtonStyles(skin, AssMan.getAssList().iconLeaderboard));
-        skin.add("rate", getImageTextButtonStyles(skin, AssMan.getAssList().iconRate));
-        skin.add("tutorial", getImageTextButtonStyles(skin, AssMan.getAssList().iconTutorial));
-        skin.add("exit", getImageTextButtonStyles(skin, AssMan.getAssList().iconExit));
+            getImageTextButtonStyle(skin, AssMan.getAssList().iconLeaderboard));
+        skin.add("rate", getImageTextButtonStyle(skin, AssMan.getAssList().iconRate));
+        skin.add("tutorial", getImageTextButtonStyle(skin, AssMan.getAssList().iconTutorial));
+        skin.add("exit", getImageTextButtonStyle(skin, AssMan.getAssList().iconExit));
+        skin.add(
+            "touch",
+            getCheckableImageTextButtonStyles(
+                skin,
+                AssMan.getAssList().iconTouch,
+                AssMan.getAssList().iconTouchChecked));
+        skin.add(
+            "accelerometer",
+            getCheckableImageTextButtonStyles(
+                skin,
+                AssMan.getAssList().iconAccelerometer,
+                AssMan.getAssList().iconAccelerometerChecked));
+        skin.add("retry", getImageTextButtonStyle(skin, AssMan.getAssList().iconRetry));
 
         skin.add("checkable", getCheckableTextButtonStyle(skin));
 
@@ -133,7 +149,7 @@ public abstract class UIManager
         return textButtonStyle;
     }
 
-    private static ImageTextButton.ImageTextButtonStyle getImageTextButtonStyles(Skin skin)
+    private static ImageTextButton.ImageTextButtonStyle getImageTextButtonStyle(Skin skin)
     {
         ImageTextButton.ImageTextButtonStyle imageTextButtonStyle =
             new ImageTextButton.ImageTextButtonStyle();
@@ -145,7 +161,7 @@ public abstract class UIManager
         return imageTextButtonStyle;
     }
 
-    private static ImageTextButton.ImageTextButtonStyle getImageTextButtonStyles(
+    private static ImageTextButton.ImageTextButtonStyle getImageTextButtonStyle(
         Skin skin, String imagePath)
     {
         ImageTextButton.ImageTextButtonStyle imageTextButtonStyle =
@@ -159,10 +175,24 @@ public abstract class UIManager
         return imageTextButtonStyle;
     }
 
+    private static ImageTextButton.ImageTextButtonStyle getCheckableImageTextButtonStyles(
+        Skin skin,
+        String imagePath,
+        String checkedImagePath)
+    {
+        ImageTextButton.ImageTextButtonStyle imageTextButtonStyle =
+            getImageTextButtonStyle(skin, imagePath);
+        imageTextButtonStyle.checkedFontColor = CHECKED_COLOR;
+        imageTextButtonStyle.imageChecked =
+            new SpriteDrawable(new Sprite(new Texture(checkedImagePath)));
+
+        return imageTextButtonStyle;
+    }
+
     private static TextButton.TextButtonStyle getCheckableTextButtonStyle(Skin skin)
     {
         TextButton.TextButtonStyle checkableTextButtonStyle = new TextButton.TextButtonStyle();
-        checkableTextButtonStyle.checkedFontColor = Color.GREEN;
+        checkableTextButtonStyle.checkedFontColor = CHECKED_COLOR;
         checkableTextButtonStyle.fontColor = Color.BLACK;
         checkableTextButtonStyle.font = skin.getFont("default");
         checkableTextButtonStyle.down = skin.getDrawable("button");
