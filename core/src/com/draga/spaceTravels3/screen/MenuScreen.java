@@ -17,6 +17,7 @@ import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.manager.level.LevelManager;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.spaceTravels3.ui.BeepingClickListener;
+import com.draga.spaceTravels3.ui.BeepingImageTextButton;
 import com.draga.spaceTravels3.ui.BeepingTextButton;
 import com.draga.spaceTravels3.ui.Screen;
 
@@ -54,6 +55,7 @@ public class MenuScreen extends Screen
         buttonsTable.add(getSettingsTextButton());
         buttonsTable.add(getTutorialButton());
         buttonsTable.add(getCreditsButton());
+        buttonsTable.row();
         buttonsTable.add(getRateButton());
         buttonsTable.add(getAchievementsButton());
         buttonsTable.add(getLeaderboardsButton());
@@ -120,11 +122,12 @@ public class MenuScreen extends Screen
         return scrollPane;
     }
 
-    private TextButton getSettingsTextButton()
+    private Actor getSettingsTextButton()
     {
-        TextButton settingsTextButton = new BeepingTextButton("Settings", UIManager.skin);
+        BeepingImageTextButton button =
+            new BeepingImageTextButton("Settings", UIManager.skin, "settings");
 
-        settingsTextButton.addListener(
+        button.addListener(
             new ClickListener()
             {
                 @Override
@@ -134,14 +137,15 @@ public class MenuScreen extends Screen
                 }
             });
 
-        return settingsTextButton;
+        return button;
     }
 
     private Actor getTutorialButton()
     {
-        TextButton tutorialTextButton = new BeepingTextButton("Tutorial", UIManager.skin);
+        BeepingImageTextButton button =
+            new BeepingImageTextButton("Tutorial", UIManager.skin, "tutorial");
 
-        tutorialTextButton.addListener(
+        button.addListener(
             new ClickListener()
             {
                 @Override
@@ -151,14 +155,15 @@ public class MenuScreen extends Screen
                 }
             });
 
-        return tutorialTextButton;
+        return button;
     }
 
     private Actor getCreditsButton()
     {
-        TextButton settingsTextButton = new BeepingTextButton("Credits", UIManager.skin);
+        BeepingImageTextButton button =
+            new BeepingImageTextButton("Credits", UIManager.skin, "credits");
 
-        settingsTextButton.addListener(
+        button.addListener(
             new ClickListener()
             {
                 @Override
@@ -168,14 +173,15 @@ public class MenuScreen extends Screen
                 }
             });
 
-        return settingsTextButton;
+        return button;
     }
 
     private Actor getRateButton()
     {
-        TextButton rateTextButton = new BeepingTextButton("Rate", UIManager.skin);
+        BeepingImageTextButton
+            button = new BeepingImageTextButton("Rate", UIManager.skin, "rate");
 
-        rateTextButton.addListener(
+        button.addListener(
             new ClickListener()
             {
                 @Override
@@ -185,14 +191,15 @@ public class MenuScreen extends Screen
                 }
             });
 
-        return rateTextButton;
+        return button;
     }
     
     private Actor getAchievementsButton()
     {
-        TextButton achievementsTextButton = new BeepingTextButton("Achievements", UIManager.skin);
+        BeepingImageTextButton
+            button = new BeepingImageTextButton("Achievements", UIManager.skin, "achievement");
 
-        achievementsTextButton.addListener(
+        button.addListener(
             new ClickListener()
             {
                 @Override
@@ -202,14 +209,15 @@ public class MenuScreen extends Screen
                 }
             });
 
-        return achievementsTextButton;
+        return button;
     }
     
     private Actor getLeaderboardsButton()
     {
-        TextButton textButton = new BeepingTextButton("Leaderboards", UIManager.skin);
+        BeepingImageTextButton
+            button = new BeepingImageTextButton("Leaderboards", UIManager.skin, "leaderboard");
 
-        textButton.addListener(
+        button.addListener(
             new ClickListener()
             {
                 @Override
@@ -219,7 +227,7 @@ public class MenuScreen extends Screen
                 }
             });
 
-        return textButton;
+        return button;
     }
 
     public Actor getDebugButton()
