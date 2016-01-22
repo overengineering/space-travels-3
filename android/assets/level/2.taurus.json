@@ -1,6 +1,7 @@
 {
   "class": "SerialisableLevel",
   "name": "Taurus",
+  "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQAw",
   "serialisedDifficulties": {
     "Easy": {
       "trajectorySeconds": 5,

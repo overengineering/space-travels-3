@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import com.draga.PlayServices;
 import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.errorHandler.GdxErrorHandler;
 import com.draga.spaceTravels3.manager.*;
@@ -23,12 +24,18 @@ public class SpaceTravels3 implements ApplicationListener
     private static final String LOGGING_TAG = SpaceTravels3.class.getSimpleName();
 
     public static SpriteBatch     spriteBatch;
-    public static SpriteBatch overlaySpriteBath;
+    public static SpriteBatch     overlaySpriteBath;
     public static ShapeRenderer   shapeRenderer;
     public static ScalingViewport menuViewport;
     public static ExtendViewport  gameViewport;
+    public static PlayServices    playServices;
 
     private DebugOverlay debugOverlay;
+
+    public SpaceTravels3(PlayServices playServices)
+    {
+        SpaceTravels3.playServices = playServices;
+    }
 
     @Override
     public void create()

@@ -1,6 +1,7 @@
 {
   "class": "SerialisableLevel",
   "name": "Aries",
+  "playCompletionAchievementID": "",
   "serialisedDifficulties": {
     "Easy": {
       "trajectorySeconds": 5,

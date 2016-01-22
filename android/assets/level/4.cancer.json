@@ -1,6 +1,7 @@
 {
   "class": "SerialisableLevel",
   "name": "Cancer",
+  "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQBQ",
   "serialisedDifficulties": {
     "Easy": {
       "trajectorySeconds": 5,

@@ -30,6 +30,6 @@
                 android:name="io.fabric.ApiKey"
                 android:value="296bfbe6676f13addebc6a1065472fa18b42ff69"/>
         <meta-data android:name="com.google.android.gms.games.APP_ID"
-                   android:value="797490520646"/>
+                   android:value="@string/app_id"/>
     </application>
 </manifest>

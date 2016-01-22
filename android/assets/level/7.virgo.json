@@ -1,6 +1,7 @@
 {
   "class": "SerialisableLevel",
   "name": "Virgo",
+  "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQCA",
   "serialisedDifficulties": {
     "Easy": {
       "trajectorySeconds": 5,

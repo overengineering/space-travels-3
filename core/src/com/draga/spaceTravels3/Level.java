@@ -28,8 +28,9 @@ public class Level
 {
     private static final String LOGGING_TAG = Level.class.getSimpleName();
 
-    private final float trajectorySeconds;
-    private final float maxLandingSpeed;
+    private final float  trajectorySeconds;
+    private final float  maxLandingSpeed;
+    private final String playCompletionAchievementID;
 
     private final ArrayList<Pickup> pickups;
     private final Ship              ship;
@@ -58,7 +59,8 @@ public class Level
         ArrayList<Pickup> pickups,
         Planet destinationPlanet,
         float trajectorySeconds,
-        float maxLandingSpeed)
+        float maxLandingSpeed,
+        String playCompletionAchievementID)
     {
         this.id = id;
         this.name = name;
@@ -70,6 +72,7 @@ public class Level
         this.pickups = pickups;
         this.trajectorySeconds = trajectorySeconds;
         this.maxLandingSpeed = maxLandingSpeed;
+        this.playCompletionAchievementID = playCompletionAchievementID;
 
         this.gameState = GameState.PAUSE;
 
@@ -390,5 +393,10 @@ public class Level
     public String getName()
     {
         return this.name;
+    }
+
+    public String getPlayCompletionAchievementID()
+    {
+        return this.playCompletionAchievementID;
     }
 }

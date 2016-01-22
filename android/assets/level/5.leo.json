@@ -1,6 +1,7 @@
 {
   "class": "SerialisableLevel",
   "name": "Leo",
+  "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQBg",
   "serialisedDifficulties": {
     "Easy": {
       "trajectorySeconds": 5,

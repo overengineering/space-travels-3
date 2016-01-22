@@ -2,6 +2,7 @@ package com.draga.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.draga.NullPlayServices;
 import com.draga.spaceTravels3.SpaceTravels3;
 
 public class DesktopLauncher
@@ -27,6 +28,6 @@ public class DesktopLauncher
 
         config.resizable = false;
 
-        new LwjglApplication(new SpaceTravels3(), config);
+        new LwjglApplication(new SpaceTravels3(new NullPlayServices()), config);
     }
 }
