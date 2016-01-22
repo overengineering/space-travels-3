@@ -17,6 +17,8 @@ public class GooglePlayServices implements PlayServices
     private final Activity activity;
     private final GameHelper gameHelper;
 
+    private Runnable onSignInSucceededRunnable;
+
     private int requestCode = 1;
 
     public GooglePlayServices(Activity activity)
@@ -36,6 +38,13 @@ public class GooglePlayServices implements PlayServices
             @Override
             public void onSignInSucceeded()
             {
+                Runnable onSignInSucceededRunnable =
+                    GooglePlayServices.this.onSignInSucceededRunnable;
+                if (onSignInSucceededRunnable != null)
+                {
+                    GooglePlayServices.this.onSignInSucceededRunnable = null;
+                    onSignInSucceededRunnable.run();
+                }
             }
         };
 
@@ -55,21 +64,6 @@ public class GooglePlayServices implements PlayServices
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         this.gameHelper.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    public void showLeaderboards()
-    {
-        if (isSignedIn())
-        {
-            Intent allLeaderboardsIntent = Games.Leaderboards.getAllLeaderboardsIntent(
-                this.gameHelper.getApiClient());
-            this.activity.startActivityForResult(allLeaderboardsIntent, this.requestCode);
-        }
-        else
-        {
-            signIn();
-        }
     }
 
     @Override
@@ -97,74 +91,125 @@ public class GooglePlayServices implements PlayServices
     }
 
     @Override
-    public void unlockAchievement(String achievementID)
-    {
-        Games.Achievements.unlock(
-            this.gameHelper.getApiClient(),
-            achievementID);
-    }
-
-    @Override
-    public void showAchievements()
-    {
-        if (isSignedIn())
-        {
-            Intent achievementsIntent = Games.Achievements.getAchievementsIntent(
-                this.gameHelper.getApiClient());
-            this.activity.startActivityForResult(achievementsIntent, this.requestCode);
-        }
-        else
-        {
-            signIn();
-        }
-    }
-
-    @Override
-    public void submitScore(int highScore, String leaderboardID)
-    {
-        if (isSignedIn())
-        {
-            Games.Leaderboards.submitScore(
-                this.gameHelper.getApiClient(),
-                leaderboardID, highScore);
-        }
-    }
-
-    @Override
-    public void showLeaderboard(String leaderboardID)
-    {
-        if (isSignedIn())
-        {
-            Intent leaderboardIntent = Games.Leaderboards.getLeaderboardIntent(
-                this.gameHelper.getApiClient(),
-                leaderboardID,
-                LeaderboardVariant.TIME_SPAN_ALL_TIME,
-                LeaderboardVariant.COLLECTION_SOCIAL);
-            this.activity.startActivityForResult(leaderboardIntent, this.requestCode);
-        }
-        else
-        {
-            signIn();
-        }
-    }
-
-    @Override
     public boolean isSignedIn()
     {
         return this.gameHelper.isSignedIn();
     }
 
-    @Override
-    public void updateLeaderboard(String leaderboardID, int score)
+    private void runLoggingIn(Runnable runnable)
     {
         if (isSignedIn())
         {
-            Games.Leaderboards.submitScore(this.gameHelper.getApiClient(), leaderboardID, score);
+            runnable.run();
         }
         else
         {
+            this.onSignInSucceededRunnable = runnable;
             signIn();
         }
+    }
+
+    @Override
+    public void showLeaderboards()
+    {
+        runLoggingIn(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                Intent allLeaderboardsIntent = Games.Leaderboards.getAllLeaderboardsIntent(
+                    GooglePlayServices.this.gameHelper.getApiClient());
+                GooglePlayServices.this.activity.startActivityForResult(
+                    allLeaderboardsIntent,
+                    GooglePlayServices.this.requestCode);
+            }
+        });
+    }
+
+    @Override
+    public void showLeaderboard(final String leaderboardID)
+    {
+        runLoggingIn(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                Intent leaderboardIntent = Games.Leaderboards.getLeaderboardIntent(
+                    GooglePlayServices.this.gameHelper.getApiClient(),
+                    leaderboardID,
+                    LeaderboardVariant.TIME_SPAN_ALL_TIME,
+                    LeaderboardVariant.COLLECTION_SOCIAL);
+                GooglePlayServices.this.activity.startActivityForResult(
+                    leaderboardIntent,
+                    GooglePlayServices.this.requestCode);
+            }
+        });
+    }
+
+    @Override
+    public void submitScore(final int highScore, final String leaderboardID)
+    {
+        runLoggingIn(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                Games.Leaderboards.submitScore(
+                    GooglePlayServices.this.gameHelper.getApiClient(),
+                    leaderboardID,
+                    highScore);
+
+            }
+        });
+    }
+
+    @Override
+    public void showAchievements()
+    {
+        runLoggingIn(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                Intent achievementsIntent = Games.Achievements.getAchievementsIntent(
+                    GooglePlayServices.this.gameHelper.getApiClient());
+                GooglePlayServices.this.activity.startActivityForResult(
+                    achievementsIntent,
+                    GooglePlayServices.this.requestCode);
+
+            }
+        });
+    }
+
+    @Override
+    public void unlockAchievement(final String achievementID)
+    {
+        runLoggingIn(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                Games.Achievements.unlock(
+                    GooglePlayServices.this.gameHelper.getApiClient(),
+                    achievementID);
+            }
+        });
+    }
+
+    @Override
+    public void updateLeaderboard(final String leaderboardID, final int score)
+    {
+        runLoggingIn(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                Games.Leaderboards.submitScore(
+                    GooglePlayServices.this.gameHelper.getApiClient(),
+                    leaderboardID,
+                    score);
+            }
+        });
     }
 
     @Override
