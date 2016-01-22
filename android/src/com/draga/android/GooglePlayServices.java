@@ -7,6 +7,7 @@ import android.net.Uri;
 import com.draga.PlayServices;
 import com.draga.errorHandler.ErrorHandlerProvider;
 import com.google.android.gms.games.Games;
+import com.google.android.gms.games.leaderboard.LeaderboardVariant;
 import com.google.example.games.basegameutils.GameHelper;
 
 public class GooglePlayServices implements PlayServices
@@ -18,7 +19,7 @@ public class GooglePlayServices implements PlayServices
 
     private int requestCode = 1;
 
-    public GooglePlayServices(AndroidLauncher activity)
+    public GooglePlayServices(Activity activity)
     {
         this.activity = activity;
 
@@ -136,7 +137,9 @@ public class GooglePlayServices implements PlayServices
         {
             Intent leaderboardIntent = Games.Leaderboards.getLeaderboardIntent(
                 this.gameHelper.getApiClient(),
-                leaderboardID);
+                leaderboardID,
+                LeaderboardVariant.TIME_SPAN_ALL_TIME,
+                LeaderboardVariant.COLLECTION_SOCIAL);
             this.activity.startActivityForResult(leaderboardIntent, this.requestCode);
         }
         else
