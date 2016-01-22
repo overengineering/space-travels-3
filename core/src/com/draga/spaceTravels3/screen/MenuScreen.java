@@ -55,6 +55,7 @@ public class MenuScreen extends Screen
         buttonsTable.add(getTutorialButton());
         buttonsTable.add(getCreditsButton());
         buttonsTable.add(getRateButton());
+        buttonsTable.add(getAchievementsButton());
 
         table.add(buttonsTable);
 
@@ -151,7 +152,7 @@ public class MenuScreen extends Screen
 
         return tutorialTextButton;
     }
-    
+
     private Actor getCreditsButton()
     {
         TextButton settingsTextButton = new BeepingTextButton("Credits", UIManager.skin);
@@ -184,6 +185,23 @@ public class MenuScreen extends Screen
             });
 
         return rateTextButton;
+    }
+    
+    private Actor getAchievementsButton()
+    {
+        TextButton achievementsTextButton = new BeepingTextButton("Achievements", UIManager.skin);
+
+        achievementsTextButton.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    SpaceTravels3.playServices.showAchievements();
+                }
+            });
+
+        return achievementsTextButton;
     }
 
     public Actor getDebugButton()
