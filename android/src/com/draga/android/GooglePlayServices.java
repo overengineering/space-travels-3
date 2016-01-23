@@ -3,6 +3,7 @@ package com.draga.android;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import com.draga.PlayServices;
 import com.draga.errorHandler.ErrorHandlerProvider;
@@ -15,7 +16,7 @@ public class GooglePlayServices implements PlayServices
 {
     private static final String LOGGING_TAG = GooglePlayServices.class.getSimpleName();
 
-    private final Activity activity;
+    private final Activity   activity;
     private final GameHelper gameHelper;
 
     private Runnable onSignInSucceededRunnable;
@@ -68,6 +69,24 @@ public class GooglePlayServices implements PlayServices
     }
 
     @Override
+    public void shareFacebook()
+    {
+        Uri uri;
+        try
+        {// TODO: 23/01/2016 this won't work, prolly needs facebook sdk?
+            this.activity.getPackageManager().getPackageInfo("com.facebook.katana", 0);
+            uri = Uri.parse("fb://publish/profile/me?text=http://www.example.com");
+        } catch (PackageManager.NameNotFoundException e)
+        {
+            uri = Uri.parse(FACEBOOK_SHARE_URI);
+        }
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        this.activity.startActivityForResult(
+            intent,
+            GooglePlayServices.this.requestCode);
+    }
+
+    @Override
     public void invite()
     {
         runLoggingIn(new Runnable()
@@ -75,9 +94,12 @@ public class GooglePlayServices implements PlayServices
             @Override
             public void run()
             {
+                // Emails will get both title as subject and message as body but SMSs will only
+                // show the message
                 Intent intent = new AppInviteInvitation
-                    .IntentBuilder("Invitation title")
-                    .setMessage("message")
+                    .IntentBuilder("Checkout this game!")
+                    // Despite what the docs says it will throw without message!
+                    .setMessage("Checkout this game: Space Travels 3")
                     .build();
                 GooglePlayServices.this.activity.startActivityForResult(
                     intent,
@@ -129,23 +151,6 @@ public class GooglePlayServices implements PlayServices
                 GooglePlayServices.this.activity.startActivityForResult(
                     allLeaderboardsIntent,
                     GooglePlayServices.this.requestCode);
-            }
-        });
-    }
-
-    @Override
-    public void submitScore(final int highScore, final String leaderboardID)
-    {
-        runLoggingIn(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                Games.Leaderboards.submitScore(
-                    GooglePlayServices.this.gameHelper.getApiClient(),
-                    leaderboardID,
-                    highScore);
-
             }
         });
     }
@@ -236,9 +241,14 @@ public class GooglePlayServices implements PlayServices
         {
             this.activity.startActivity(new Intent(
                 Intent.ACTION_VIEW,
-                Uri.parse("http://play.google.com/store/apps/details?id="
-                    + this.activity.getPackageName())));
+                Uri.parse(getPlayStoreUriString())));
         }
+    }
+
+    private String getPlayStoreUriString()
+    {
+        return "http://play.google.com/store/apps/details?id="
+            + this.activity.getPackageName();
     }
 
     private void runLoggingIn(Runnable runnable)

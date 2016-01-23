@@ -55,6 +55,7 @@ public class MenuScreen extends Screen
         buttonsTable.add(getSettingsTextButton());
         buttonsTable.add(getTutorialButton());
         buttonsTable.add(getCreditsButton());
+        buttonsTable.add(getShareButton());
         buttonsTable.row();
         buttonsTable.add(getRateButton());
         buttonsTable.add(getAchievementsButton());
@@ -172,6 +173,22 @@ public class MenuScreen extends Screen
                     ScreenManager.addScreen(new CreditsScreen());
                 }
             });
+
+        return button;
+    }
+
+    private Actor getShareButton()
+    {
+        BeepingImageTextButton button =
+            new BeepingImageTextButton("Share", UIManager.skin, "share");
+        button.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                SpaceTravels3.playServices.invite();
+            }
+        });
 
         return button;
     }

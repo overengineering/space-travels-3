@@ -1,7 +1,15 @@
 package com.draga;
 
+import com.badlogic.gdx.Gdx;
+
 public class NullPlayServices implements PlayServices
 {
+    @Override
+    public void shareFacebook()
+    {
+        Gdx.net.openURI(FACEBOOK_SHARE_URI);
+    }
+
     @Override
     public void invite()
     {
@@ -28,12 +36,6 @@ public class NullPlayServices implements PlayServices
 
     @Override
     public void showLeaderboards()
-    {
-
-    }
-
-    @Override
-    public void submitScore(int highScore, String leaderboardID)
     {
 
     }

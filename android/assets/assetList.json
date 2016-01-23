@@ -36,5 +36,6 @@
   "iconTouchChecked": "icon/touchChecked64.png",
   "iconAccelerometerChecked": "icon/accelerometerChecked64.png",
   "iconRetry": "icon/retry64.png",
-  "iconPlay": "icon/play64.png"
+  "iconPlay": "icon/play64.png",
+  "iconShare": "icon/share64.png"
 }

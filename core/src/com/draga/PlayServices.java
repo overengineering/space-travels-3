@@ -2,6 +2,11 @@ package com.draga;
 
 public interface PlayServices
 {
+    String FACEBOOK_SHARE_URI =
+        "https://www.facebook.com/sharer/sharer.php?u=http://www.example.com";
+
+    void shareFacebook();
+
     void invite();
 
     void signIn();
@@ -11,8 +16,6 @@ public interface PlayServices
     void signOut();
 
     void showLeaderboards();
-
-    void submitScore(int highScore, String leaderboardID);
 
     void updateLeaderboard(String leaderboardID, int score);
 

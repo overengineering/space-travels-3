@@ -11,7 +11,7 @@
         "client_id": "android:com.draga.spaceTravels3",
         "client_type": 1,
         "android_client_info": {
-          "package_name": "com.draga.android"
+          "package_name": "com.draga.spaceTravels3"
         }
       },
       "oauth_client": [],
@@ -42,7 +42,7 @@
     {
       "client_info": {
         "mobilesdk_app_id": "1:797490520646:android:c890ec54bb35ff8f",
-        "client_id": "android:com.draga.spaceTravels3",
+        "client_id": "android:com.draga.android",
         "client_type": 1,
         "android_client_info": {
           "package_name": "com.draga.android"
@@ -69,7 +69,10 @@
       "api_key": [],
       "services": {
         "analytics_service": {
-          "status": 1
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-72699204-1"
+          }
         },
         "cloud_messaging_service": {
           "status": 1,
@@ -80,7 +83,7 @@
           "other_platform_oauth_client": []
         },
         "google_signin_service": {
-          "status": 1
+          "status": 2
         },
         "ads_service": {
           "status": 1
