@@ -38,6 +38,54 @@
           "status": 1
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:797490520646:android:c890ec54bb35ff8f",
+        "client_id": "android:com.draga.spaceTravels3",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "com.draga.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "797490520646-c7k2q1q0kief564f25p7nqngns3mjopl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.draga.android",
+            "certificate_hash": "348D40AAF25E705AD756FBAAF189EF402737EC1D"
+          }
+        },
+        {
+          "client_id": "797490520646-r64ci9mf7utj328phh1f0qbsnfnsqj68.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.draga.android",
+            "certificate_hash": "49181AE5F69BE6991C5843F0030E8FE4F39303B6"
+          }
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 1,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 1
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
     }
   ],
   "client_info": [],

@@ -2,6 +2,8 @@ package com.draga;
 
 public interface PlayServices
 {
+    void invite();
+
     void signIn();
 
     boolean isSignedIn();

@@ -3,6 +3,12 @@ package com.draga;
 public class NullPlayServices implements PlayServices
 {
     @Override
+    public void invite()
+    {
+
+    }
+
+    @Override
     public void signIn()
     {
 
