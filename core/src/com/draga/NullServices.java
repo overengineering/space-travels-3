@@ -1,7 +1,18 @@
 package com.draga;
 
-public class NullServices implements Services
+public class NullServices extends Services
 {
+    public NullServices()
+    {
+        super("");
+    }
+
+    @Override
+    public boolean hasFullVersion()
+    {
+        return false;
+    }
+
     @Override
     public void facebookShare()
     {
