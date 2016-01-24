@@ -37,5 +37,7 @@
   "iconAccelerometerChecked": "icon/accelerometerChecked64.png",
   "iconRetry": "icon/retry64.png",
   "iconPlay": "icon/play64.png",
-  "iconShare": "icon/share64.png"
+  "iconShare": "icon/share64.png",
+  "iconFacebook": "icon/facebook64.png",
+  "iconMessage": "icon/message64.png"
 }

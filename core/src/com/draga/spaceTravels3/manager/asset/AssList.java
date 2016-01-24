@@ -39,6 +39,8 @@ public class AssList
     public String iconRetry;
     public String iconTouch;
     public String iconPlay;
+    public String iconFacebook;
+    public String iconMessage;
     public String iconAccelerometer;
     public String iconAccelerometerChecked;
     public String iconTouchChecked;

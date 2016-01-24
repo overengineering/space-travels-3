@@ -40,8 +40,6 @@ public class SpaceTravels3 implements ApplicationListener
     @Override
     public void create()
     {
-        services.facebookShare();
-
         MathUtils.random.setSeed(System.currentTimeMillis());
         ErrorHandlerProvider.addErrorHandler(new GdxErrorHandler());
 

@@ -186,7 +186,7 @@ public class MenuScreen extends Screen
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                SpaceTravels3.services.googleInvite();
+                ScreenManager.addScreen(new ShareScreen());
             }
         });
 
