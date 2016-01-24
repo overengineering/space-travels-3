@@ -55,6 +55,7 @@ public class MenuScreen extends Screen
         buttonsTable.add(getSettingsTextButton());
         buttonsTable.add(getTutorialButton());
         buttonsTable.add(getCreditsButton());
+        buttonsTable.add(getShareButton());
         buttonsTable.row();
         buttonsTable.add(getRateButton());
         buttonsTable.add(getAchievementsButton());
@@ -176,6 +177,22 @@ public class MenuScreen extends Screen
         return button;
     }
 
+    private Actor getShareButton()
+    {
+        BeepingImageTextButton button =
+            new BeepingImageTextButton("Share", UIManager.skin, "share");
+        button.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                ScreenManager.addScreen(new ShareScreen());
+            }
+        });
+
+        return button;
+    }
+
     private Actor getRateButton()
     {
         BeepingImageTextButton
@@ -187,7 +204,7 @@ public class MenuScreen extends Screen
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    SpaceTravels3.playServices.rateApp();
+                    SpaceTravels3.services.rateApp();
                 }
             });
 
@@ -205,7 +222,7 @@ public class MenuScreen extends Screen
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    SpaceTravels3.playServices.showAchievements();
+                    SpaceTravels3.services.googleShowAchievements();
                 }
             });
 
@@ -223,7 +240,7 @@ public class MenuScreen extends Screen
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    SpaceTravels3.playServices.showLeaderboards();
+                    SpaceTravels3.services.googleShowLeaderboards();
                 }
             });
 

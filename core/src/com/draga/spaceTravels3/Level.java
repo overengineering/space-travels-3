@@ -203,8 +203,8 @@ public class Level
 
             Score score = getScore();
 
-            SpaceTravels3.playServices.unlockAchievement(this.playCompletionAchievementID);
-            SpaceTravels3.playServices.updateLeaderboard(
+            SpaceTravels3.services.googleUnlockAchievement(this.playCompletionAchievementID);
+            SpaceTravels3.services.googleUpdateLeaderboard(
                 this.playLeaderboardID,
                 score.getTotalScore());
 

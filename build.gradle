@@ -71,10 +71,16 @@ project(":android") {
         compile('com.crashlytics.sdk.android:crashlytics:2.2.2@aar') {
             transitive = true;
         }
+
+        // Complete list @ https://developers.google.com/android/guides/setup.
         compile 'com.google.android.gms:play-services-auth:8.4.0'
         compile 'com.google.android.gms:play-services-plus:8.4.0'
         compile 'com.google.android.gms:play-services-analytics:8.4.0'
         compile 'com.google.android.gms:play-services-games:8.4.0'
+        compile 'com.google.android.gms:play-services-appinvite:8.4.0'
+
+
+        compile 'com.facebook.android:facebook-android-sdk:4.9.0'
     }
 
     apply plugin: 'com.google.gms.google-services'

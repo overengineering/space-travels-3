@@ -153,7 +153,7 @@ public class LevelScreen extends Screen
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    SpaceTravels3.playServices.showLeaderboard(serialisableDifficulty.playLeaderboardID);
+                    SpaceTravels3.services.googleShowLeaderboard(serialisableDifficulty.playLeaderboardID);
                 }
             });
             innerDifficultyTable.add(leaderboardTextButton);
