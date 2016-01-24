@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.spaceTravels3.Constants;
@@ -28,7 +29,7 @@ public class ShareScreen extends Screen
 
         this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.overlaySpriteBath);
 
-
+        // If the stage is clicked then close this screen, unless the event was stopped.
         this.stage.addListener(new ClickListener()
         {
             @Override
@@ -42,7 +43,17 @@ public class ShareScreen extends Screen
         });
 
 
-        Table table = UIManager.addDefaultTableToStage(this.stage);
+        final Table table = UIManager.addDefaultTableToStage(this.stage);
+
+        // If the table is clicked stop the event propagating to the stage.
+        table.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                event.stop();
+            }
+        });
 
         table.setBackground(UIManager.getTiledDrawable(Constants.Visual.SCREEN_FADE_COLOUR));
         table.addAction(Actions.sequence(
@@ -58,6 +69,9 @@ public class ShareScreen extends Screen
             .row();
         table
             .add(getFacebookShareButton())
+            .row();
+        table
+            .add(getFacebookInviteActor())
             .row();
         table
             .add(getBackTextButton())
@@ -76,7 +90,6 @@ public class ShareScreen extends Screen
                                public void clicked(InputEvent event, float x, float y)
                                {
                                    SpaceTravels3.services.googleInvite();
-                                   event.stop();
                                }
                            }
         );
@@ -94,12 +107,39 @@ public class ShareScreen extends Screen
                                public void clicked(InputEvent event, float x, float y)
                                {
                                    SpaceTravels3.services.facebookShare();
-                                   event.stop();
                                }
                            }
         );
 
         return button;
+    }
+
+    private Actor getFacebookInviteActor()
+    {
+        if (SpaceTravels3.services.facebookCanInvite())
+        {
+            BeepingImageTextButton button =
+                new BeepingImageTextButton("Invite Facebook friend", UIManager.skin, "facebook");
+            button.addListener(new ClickListener()
+                               {
+                                   @Override
+                                   public void clicked(InputEvent event, float x, float y)
+                                   {
+                                       SpaceTravels3.services.facebookInvite();
+                                   }
+                               }
+            );
+
+            return button;
+        }
+        else
+        {
+            Label label = new Label(
+                "Download the facebook app to invite friends directly!",
+                UIManager.skin);
+
+            return label;
+        }
     }
 
     @Override
