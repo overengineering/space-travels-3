@@ -3,32 +3,40 @@ package com.draga.android;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import com.draga.PlayServices;
+import com.draga.Services;
 import com.draga.errorHandler.ErrorHandlerProvider;
+import com.draga.spaceTravels3.Constants;
+import com.facebook.share.model.AppInviteContent;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.AppInviteDialog;
+import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.leaderboard.LeaderboardVariant;
 import com.google.example.games.basegameutils.GameHelper;
 
-public class GooglePlayServices implements PlayServices
+public class AndroidServices implements Services
 {
-    private static final String LOGGING_TAG = GooglePlayServices.class.getSimpleName();
+    private static final String LOGGING_TAG = AndroidServices.class.getSimpleName();
 
     private final Activity   activity;
     private final GameHelper gameHelper;
 
-    private Runnable onSignInSucceededRunnable;
+    /**
+     * If an action that requires Google sign in is requested and we are not currently signed it
+     * then saves it in this runnable that gets executed, if not null, if login is successful.
+     */
+    private Runnable onGoogleSignInSucceededRunnable;
 
-    private int requestCode = 1;
+    private int activityRequestCode = 1;
 
-    public GooglePlayServices(Activity activity)
+    public AndroidServices(Activity activity)
     {
         this.activity = activity;
 
         this.gameHelper = new GameHelper(activity, GameHelper.CLIENT_GAMES);
-        this.gameHelper.enableDebugLog(false);
+        this.gameHelper.enableDebugLog(Constants.General.IS_DEBUGGING);
 
         GameHelper.GameHelperListener gameHelperListener = new GameHelper.GameHelperListener()
         {
@@ -41,10 +49,10 @@ public class GooglePlayServices implements PlayServices
             public void onSignInSucceeded()
             {
                 Runnable onSignInSucceededRunnable =
-                    GooglePlayServices.this.onSignInSucceededRunnable;
+                    AndroidServices.this.onGoogleSignInSucceededRunnable;
                 if (onSignInSucceededRunnable != null)
                 {
-                    GooglePlayServices.this.onSignInSucceededRunnable = null;
+                    AndroidServices.this.onGoogleSignInSucceededRunnable = null;
                     onSignInSucceededRunnable.run();
                 }
             }
@@ -68,48 +76,67 @@ public class GooglePlayServices implements PlayServices
         this.gameHelper.onActivityResult(requestCode, resultCode, data);
     }
 
+    /**
+     * Share on FB through FB SDK. Creates a browser dialog if the FB app is not installed.
+     */
     @Override
-    public void shareFacebook()
+    public void facebookShare()
     {
-        Uri uri;
-        try
-        {// TODO: 23/01/2016 this won't work, prolly needs facebook sdk?
-            this.activity.getPackageManager().getPackageInfo("com.facebook.katana", 0);
-            uri = Uri.parse("fb://publish/profile/me?text=http://www.example.com");
-        } catch (PackageManager.NameNotFoundException e)
+        ShareLinkContent content = new ShareLinkContent.Builder()
+            .setContentUrl(Uri.parse(getPlayStoreUriString()))
+            .build();
+        ShareDialog.show(this.activity, content);
+    }
+
+    /**
+     * Invite friends on FB. This only works if the FB app is installed and some other criteria are
+     * met so facebookCanInvite() should be checked before allowing the user to do it.
+     */
+    @Override
+    public void facebookInvite()
+    {
+        if (AppInviteDialog.canShow())
         {
-            uri = Uri.parse(FACEBOOK_SHARE_URI);
+            AppInviteContent content = new AppInviteContent.Builder()
+                .setApplinkUrl(getPlayStoreUriString())
+                .build();
+            AppInviteDialog.show(this.activity, content);
         }
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        this.activity.startActivityForResult(
-            intent,
-            GooglePlayServices.this.requestCode);
     }
 
     @Override
-    public void invite()
+    public boolean facebookCanInvite()
     {
-        runLoggingIn(new Runnable()
+        return AppInviteDialog.canShow();
+    }
+
+    /**
+     * Sign into G play and invite contacts through email or SMS.
+     */
+    @Override
+    public void googleInvite()
+    {
+        googleRunLoggingIn(new Runnable()
         {
             @Override
             public void run()
             {
                 // Emails will get both title as subject and message as body but SMSs will only
-                // show the message
+                // show the message.
                 Intent intent = new AppInviteInvitation
                     .IntentBuilder("Checkout this game!")
                     // Despite what the docs says it will throw without message!
                     .setMessage("Checkout this game: Space Travels 3")
                     .build();
-                GooglePlayServices.this.activity.startActivityForResult(
+                AndroidServices.this.activity.startActivityForResult(
                     intent,
-                    GooglePlayServices.this.requestCode);
+                    AndroidServices.this.activityRequestCode);
             }
         });
     }
 
     @Override
-    public void signIn()
+    public void googleSignIn()
     {
         try
         {
@@ -121,13 +148,13 @@ public class GooglePlayServices implements PlayServices
     }
 
     @Override
-    public boolean isSignedIn()
+    public boolean googleIsSignedIn()
     {
         return this.gameHelper.isSignedIn();
     }
 
     @Override
-    public void signOut()
+    public void googleSignOut()
     {
         try
         {
@@ -139,32 +166,32 @@ public class GooglePlayServices implements PlayServices
     }
 
     @Override
-    public void showLeaderboards()
+    public void googleShowLeaderboards()
     {
-        runLoggingIn(new Runnable()
+        googleRunLoggingIn(new Runnable()
         {
             @Override
             public void run()
             {
                 Intent allLeaderboardsIntent = Games.Leaderboards.getAllLeaderboardsIntent(
-                    GooglePlayServices.this.gameHelper.getApiClient());
-                GooglePlayServices.this.activity.startActivityForResult(
+                    AndroidServices.this.gameHelper.getApiClient());
+                AndroidServices.this.activity.startActivityForResult(
                     allLeaderboardsIntent,
-                    GooglePlayServices.this.requestCode);
+                    AndroidServices.this.activityRequestCode);
             }
         });
     }
 
     @Override
-    public void updateLeaderboard(final String leaderboardID, final int score)
+    public void googleUpdateLeaderboard(final String leaderboardID, final int score)
     {
-        runLoggingIn(new Runnable()
+        googleRunLoggingIn(new Runnable()
         {
             @Override
             public void run()
             {
                 Games.Leaderboards.submitScore(
-                    GooglePlayServices.this.gameHelper.getApiClient(),
+                    AndroidServices.this.gameHelper.getApiClient(),
                     leaderboardID,
                     score);
             }
@@ -172,71 +199,75 @@ public class GooglePlayServices implements PlayServices
     }
 
     @Override
-    public void showLeaderboard(final String leaderboardID)
+    public void googleShowLeaderboard(final String leaderboardID)
     {
-        runLoggingIn(new Runnable()
+        googleRunLoggingIn(new Runnable()
         {
             @Override
             public void run()
             {
                 Intent leaderboardIntent = Games.Leaderboards.getLeaderboardIntent(
-                    GooglePlayServices.this.gameHelper.getApiClient(),
+                    AndroidServices.this.gameHelper.getApiClient(),
                     leaderboardID,
                     LeaderboardVariant.TIME_SPAN_ALL_TIME,
                     LeaderboardVariant.COLLECTION_SOCIAL);
-                GooglePlayServices.this.activity.startActivityForResult(
+                AndroidServices.this.activity.startActivityForResult(
                     leaderboardIntent,
-                    GooglePlayServices.this.requestCode);
+                    AndroidServices.this.activityRequestCode);
             }
         });
     }
 
     @Override
-    public void unlockAchievement(final String achievementID)
+    public void googleUnlockAchievement(final String achievementID)
     {
-        runLoggingIn(new Runnable()
+        googleRunLoggingIn(new Runnable()
         {
             @Override
             public void run()
             {
                 Games.Achievements.unlock(
-                    GooglePlayServices.this.gameHelper.getApiClient(),
+                    AndroidServices.this.gameHelper.getApiClient(),
                     achievementID);
             }
         });
     }
 
     @Override
-    public void showAchievements()
+    public void googleShowAchievements()
     {
-        runLoggingIn(new Runnable()
+        googleRunLoggingIn(new Runnable()
         {
             @Override
             public void run()
             {
                 Intent achievementsIntent = Games.Achievements.getAchievementsIntent(
-                    GooglePlayServices.this.gameHelper.getApiClient());
-                GooglePlayServices.this.activity.startActivityForResult(
+                    AndroidServices.this.gameHelper.getApiClient());
+                AndroidServices.this.activity.startActivityForResult(
                     achievementsIntent,
-                    GooglePlayServices.this.requestCode);
+                    AndroidServices.this.activityRequestCode);
             }
         });
     }
 
+    /**
+     * Open a new activity to rate the app. If G play store can't be opened the browser is
+     * pointed there instead.
+     */
     @Override
     public void rateApp()
     {
         Uri uri = Uri.parse("market://details?id=" + this.activity.getPackageName());
-        Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 
         // To count with Play market backstack, After pressing back button,
         // to taken back to our application, we need to add following flags to intent.
-        goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY |
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY |
             Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET |
             Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
         try
         {
-            this.activity.startActivity(goToMarket);
+            this.activity.startActivity(intent);
         } catch (ActivityNotFoundException e)
         {
             this.activity.startActivity(new Intent(
@@ -245,22 +276,22 @@ public class GooglePlayServices implements PlayServices
         }
     }
 
-    private String getPlayStoreUriString()
+    private void googleRunLoggingIn(Runnable runnable)
     {
-        return "http://play.google.com/store/apps/details?id="
-            + this.activity.getPackageName();
-    }
-
-    private void runLoggingIn(Runnable runnable)
-    {
-        if (isSignedIn())
+        if (googleIsSignedIn())
         {
             runnable.run();
         }
         else
         {
-            this.onSignInSucceededRunnable = runnable;
-            signIn();
+            this.onGoogleSignInSucceededRunnable = runnable;
+            googleSignIn();
         }
+    }
+
+    private String getPlayStoreUriString()
+    {
+        return "http://play.google.com/store/apps/details?id="
+            + this.activity.getPackageName();
     }
 }

@@ -78,6 +78,9 @@ project(":android") {
         compile 'com.google.android.gms:play-services-analytics:8.4.0'
         compile 'com.google.android.gms:play-services-games:8.4.0'
         compile 'com.google.android.gms:play-services-appinvite:8.4.0'
+
+
+        compile 'com.facebook.android:facebook-android-sdk:4.9.0'
     }
 
     apply plugin: 'com.google.gms.google-services'

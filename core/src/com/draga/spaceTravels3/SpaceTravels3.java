@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
-import com.draga.PlayServices;
+import com.draga.Services;
 import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.errorHandler.GdxErrorHandler;
 import com.draga.spaceTravels3.manager.*;
@@ -28,18 +28,20 @@ public class SpaceTravels3 implements ApplicationListener
     public static ShapeRenderer   shapeRenderer;
     public static ScalingViewport menuViewport;
     public static ExtendViewport  gameViewport;
-    public static PlayServices    playServices;
+    public static Services        services;
 
     private DebugOverlay debugOverlay;
 
-    public SpaceTravels3(PlayServices playServices)
+    public SpaceTravels3(Services services)
     {
-        SpaceTravels3.playServices = playServices;
+        SpaceTravels3.services = services;
     }
 
     @Override
     public void create()
     {
+        services.facebookShare();
+
         MathUtils.random.setSeed(System.currentTimeMillis());
         ErrorHandlerProvider.addErrorHandler(new GdxErrorHandler());
 

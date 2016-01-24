@@ -186,7 +186,7 @@ public class MenuScreen extends Screen
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                SpaceTravels3.playServices.invite();
+                SpaceTravels3.services.googleInvite();
             }
         });
 
@@ -204,7 +204,7 @@ public class MenuScreen extends Screen
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    SpaceTravels3.playServices.rateApp();
+                    SpaceTravels3.services.rateApp();
                 }
             });
 
@@ -222,7 +222,7 @@ public class MenuScreen extends Screen
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    SpaceTravels3.playServices.showAchievements();
+                    SpaceTravels3.services.googleShowAchievements();
                 }
             });
 
@@ -240,7 +240,7 @@ public class MenuScreen extends Screen
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    SpaceTravels3.playServices.showLeaderboards();
+                    SpaceTravels3.services.googleShowLeaderboards();
                 }
             });
 
