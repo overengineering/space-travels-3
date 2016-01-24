@@ -89,7 +89,7 @@ public class AndroidServices implements Services
     }
 
     /**
-     * Invite friends on FB. This only works if the FB app is installed and some other criteria are
+     * Invite friends on FB. This only works if the FB app is installed OR some other criteria are
      * met so facebookCanInvite() should be checked before allowing the user to do it.
      */
     @Override
