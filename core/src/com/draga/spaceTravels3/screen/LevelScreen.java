@@ -175,13 +175,15 @@ public class LevelScreen extends Screen
             BeepingImageTextButton playButton =
                 new BeepingImageTextButton("Play", UIManager.skin, "play");
             this.playButtons.add(playButton);
-            playButton.setVisible(SpaceTravels3.services.hasFullVersion());
+            playButton.setVisible(!this.serialisableLevel.requiresFullVersion
+                || SpaceTravels3.services.hasFullVersion());
             playButton.addListener(new ClickListener()
             {
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    if (SpaceTravels3.services.hasFullVersion())
+                    if (!LevelScreen.this.serialisableLevel.requiresFullVersion
+                        || SpaceTravels3.services.hasFullVersion())
                     {
                         LoadingScreen loadingScreen = new LoadingScreen(
                             serialisableLevel,
