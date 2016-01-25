@@ -2,8 +2,6 @@ package com.draga.android;
 
 import android.content.Intent;
 import android.os.Bundle;
-import com.android.vending.billing.utils.IabHelper;
-import com.android.vending.billing.utils.IabResult;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.crashlytics.android.Crashlytics;
@@ -21,33 +19,14 @@ public class AndroidLauncher extends AndroidApplication
     private static final String LOGGING_TAG = AndroidLauncher.class.getSimpleName();
 
     private AndroidServices androidServices;
-    private IabHelper       iabHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+
         FacebookSdk.sdkInitialize(getApplicationContext());
-
-
-        // In app billing.
-        String base64EncodedPublicKey = "";
-        // compute your public key and store it in base64EncodedPublicKey
-        this.iabHelper = new IabHelper(this, base64EncodedPublicKey);
-        this.iabHelper.startSetup(new IabHelper.OnIabSetupFinishedListener()
-        {
-            public void onIabSetupFinished(IabResult result)
-            {
-                if (!result.isSuccess())
-                {
-                    // Oh noes, there was a problem.
-                    ErrorHandlerProvider.handle(
-                        LOGGING_TAG,
-                        "Problem setting up In-app Billing: " + result);
-                }
-                // Hooray, IAB is fully set up!
-            }
-        });
 
 
         // Fabric init and ErrorHandler.
@@ -69,7 +48,6 @@ public class AndroidLauncher extends AndroidApplication
 
 
         this.androidServices = new AndroidServices(this);
-        this.androidServices.googleSignIn();
 
 
         // App config and launch.
@@ -100,11 +78,7 @@ public class AndroidLauncher extends AndroidApplication
     public void onDestroy()
     {
         super.onDestroy();
-        if (this.iabHelper != null)
-        {
-            this.iabHelper.dispose();
-        }
-        this.iabHelper = null;
+        this.androidServices.onDestroy();
     }
 
     @Override

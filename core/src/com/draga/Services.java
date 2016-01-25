@@ -2,6 +2,10 @@ package com.draga;
 
 public interface Services
 {
+    void purchaseFullVersion();
+
+    boolean hasFullVersion();
+
     void facebookShare();
 
     void facebookInvite();

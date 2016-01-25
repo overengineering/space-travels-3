@@ -61,6 +61,11 @@ public class MenuScreen extends Screen
         buttonsTable.add(getAchievementsButton());
         buttonsTable.add(getLeaderboardsButton());
 
+        if (!SpaceTravels3.services.hasFullVersion())
+        {
+            buttonsTable.add(getPurchaseButton());
+        }
+
         table.add(buttonsTable);
 
         // Debug button.
@@ -210,7 +215,7 @@ public class MenuScreen extends Screen
 
         return button;
     }
-    
+
     private Actor getAchievementsButton()
     {
         BeepingImageTextButton
@@ -241,6 +246,24 @@ public class MenuScreen extends Screen
                 public void clicked(InputEvent event, float x, float y)
                 {
                     SpaceTravels3.services.googleShowLeaderboards();
+                }
+            });
+
+        return button;
+    }
+    
+    private Actor getPurchaseButton()
+    {
+        BeepingImageTextButton button =
+            new BeepingImageTextButton("Purchase", UIManager.skin, "tutorial");
+
+        button.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    SpaceTravels3.services.purchaseFullVersion();
                 }
             });
 
