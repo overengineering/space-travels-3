@@ -179,7 +179,7 @@ public class DebugScreen extends Screen
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    SpaceTravels3.playServices.signOut();
+                    SpaceTravels3.services.googleSignOut();
                 }
             });
 

@@ -93,6 +93,10 @@ public abstract class UIManager
         skin.add("tutorial", getImageTextButtonStyle(skin, AssMan.getAssList().iconTutorial));
         skin.add("play", getImageTextButtonStyle(skin, AssMan.getAssList().iconPlay));
         skin.add("exit", getImageTextButtonStyle(skin, AssMan.getAssList().iconExit));
+        skin.add("share", getImageTextButtonStyle(skin, AssMan.getAssList().iconShare));
+        skin.add("facebook", getImageTextButtonStyle(skin, AssMan.getAssList().iconFacebook));
+        skin.add("message", getImageTextButtonStyle(skin, AssMan.getAssList().iconMessage));
+        skin.add("unlock", getImageTextButtonStyle(skin, AssMan.getAssList().iconUnlock));
         skin.add(
             "touch",
             getCheckableImageTextButtonStyles(
@@ -116,6 +120,8 @@ public abstract class UIManager
         skin.add("default-horizontal", getSliderStyle());
 
         skin.add("default", getScrollPaneStyle());
+
+        skin.add("default", getWindowStyle(skin));
 
         return skin;
     }
@@ -260,6 +266,16 @@ public abstract class UIManager
         scrollPaneStyle.vScroll = scrollBackground;
 
         return scrollPaneStyle;
+    }
+
+    private static Window.WindowStyle getWindowStyle(Skin skin)
+    {
+        Window.WindowStyle windowStyle = new Window.WindowStyle();
+        windowStyle.titleFont = skin.getFont("large");
+        windowStyle.titleFontColor = Color.WHITE;
+        windowStyle.background = getTiledDrawable(Constants.Visual.SCREEN_FADE_COLOUR);
+
+        return windowStyle;
     }
 
     public static TiledDrawable getTiledDrawable(Color color)

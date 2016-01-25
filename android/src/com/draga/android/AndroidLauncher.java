@@ -8,6 +8,7 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.spaceTravels3.SpaceTravels3;
+import com.facebook.FacebookSdk;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import io.fabric.sdk.android.Fabric;
@@ -17,12 +18,15 @@ public class AndroidLauncher extends AndroidApplication
 {
     private static final String LOGGING_TAG = AndroidLauncher.class.getSimpleName();
 
-    private GooglePlayServices googlePlayServices;
+    private AndroidServices androidServices;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
 
 
         // Fabric init and ErrorHandler.
@@ -43,8 +47,7 @@ public class AndroidLauncher extends AndroidApplication
         ErrorHandlerProvider.addErrorHandler(new GoogleAnalyticsErrorHandler(tracker));
 
 
-        this.googlePlayServices = new GooglePlayServices(this);
-        this.googlePlayServices.signIn();
+        this.androidServices = new AndroidServices(this);
 
 
         // App config and launch.
@@ -54,27 +57,34 @@ public class AndroidLauncher extends AndroidApplication
         config.hideStatusBar = true;
         config.useWakelock = true;
 
-        initialize(new SpaceTravels3(this.googlePlayServices), config);
+        initialize(new SpaceTravels3(this.androidServices), config);
     }
 
     @Override
     protected void onStart()
     {
         super.onStart();
-        this.googlePlayServices.onStart(this);
+        this.androidServices.onStart(this);
     }
 
     @Override
     protected void onStop()
     {
         super.onStop();
-        this.googlePlayServices.onStop();
+        this.androidServices.onStop();
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+        this.androidServices.onDestroy();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
-        this.googlePlayServices.onActivityResult(requestCode, resultCode, data);
+        this.androidServices.onActivityResult(requestCode, resultCode, data);
     }
 }

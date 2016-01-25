@@ -1,3 +1,4 @@
+/android/assets/crashlytics-build.properties
 ## Java
 *.class
 *.war
@@ -27,7 +28,6 @@ android/gen/
 *.iws
 *.iml
 out/
-com_crashlytics_export_strings.xml
 
 ## Eclipse
 .classpath
@@ -59,3 +59,6 @@ gradle-app.setting
 
 ## OS Specific
 .DS_Store
+
+## Crashlytics
+com_crashlytics_export_strings.xml

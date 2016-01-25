@@ -1,6 +1,7 @@
 {
   "class": "SerialisableLevel",
   "name": "Level 3",
+  "requiresFullVersion": false,
   "serialisedDifficulties": {
     "Easy": {
       "trajectorySeconds": 5,
