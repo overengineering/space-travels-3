@@ -3,6 +3,12 @@ package com.draga;
 public class NullServices implements Services
 {
     @Override
+    public void share()
+    {
+
+    }
+
+    @Override
     public void purchaseFullVersion()
     {
 
@@ -12,30 +18,6 @@ public class NullServices implements Services
     public boolean hasFullVersion()
     {
         return false;
-    }
-
-    @Override
-    public void facebookShare()
-    {
-
-    }
-
-    @Override
-    public void facebookInvite()
-    {
-
-    }
-
-    @Override
-    public boolean facebookCanInvite()
-    {
-        return false;
-    }
-
-    @Override
-    public void googleInvite()
-    {
-
     }
 
     @Override

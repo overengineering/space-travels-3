@@ -12,11 +12,6 @@ import com.draga.Services;
 import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.event.VerifyPurchaseEvent;
-import com.facebook.share.model.AppInviteContent;
-import com.facebook.share.model.ShareLinkContent;
-import com.facebook.share.widget.AppInviteDialog;
-import com.facebook.share.widget.ShareDialog;
-import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.leaderboard.LeaderboardVariant;
 import com.google.example.games.basegameutils.GameHelper;
@@ -121,6 +116,21 @@ public class AndroidServices implements Services
     }
 
     @Override
+    public void share()
+    {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Checkout this game: Space Travels 3");
+        intent.putExtra(Intent.EXTRA_TITLE, "Checkout this game: Space Travels 3");
+        // FB messenger will cut the text out ref. https://developers.facebook.com/bugs/332619626816423
+        intent.putExtra(
+            Intent.EXTRA_TEXT,
+            "Checkout this game: Space Travels 3\r\n"
+                + getPlayStoreUriString());
+        this.activity.startActivity(Intent.createChooser(intent, "Share using"));
+    }
+
+    @Override
     public void purchaseFullVersion()
     {
         // TODO: 24/01/2016 pass payload to identify user as described here https://developer.android.com/training/in-app-billing/purchase-iab-products.html
@@ -160,65 +170,6 @@ public class AndroidServices implements Services
     public boolean hasFullVersion()
     {
         return this.hasFullVersion;
-    }
-
-    /**
-     * Share on FB through FB SDK. Creates a browser dialog if the FB app is not installed.
-     */
-    @Override
-    public void facebookShare()
-    {
-        ShareLinkContent content = new ShareLinkContent.Builder()
-            .setContentUrl(Uri.parse(getPlayStoreUriString()))
-            .build();
-        ShareDialog.show(this.activity, content);
-    }
-
-    /**
-     * Invite friends on FB. This only works if the FB app is installed OR some other criteria are
-     * met so facebookCanInvite() should be checked before allowing the user to do it.
-     */
-    @Override
-    public void facebookInvite()
-    {
-        if (AppInviteDialog.canShow())
-        {
-            AppInviteContent content = new AppInviteContent.Builder()
-                .setApplinkUrl(getPlayStoreUriString())
-                .build();
-            AppInviteDialog.show(this.activity, content);
-        }
-    }
-
-    @Override
-    public boolean facebookCanInvite()
-    {
-        return AppInviteDialog.canShow();
-    }
-
-    /**
-     * Sign into G play and invite contacts through email or SMS.
-     */
-    @Override
-    public void googleInvite()
-    {
-        googleRunLoggingIn(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                // Emails will get both title as subject and message as body but SMSs will only
-                // show the message.
-                Intent intent = new AppInviteInvitation
-                    .IntentBuilder("Checkout this game!")
-                    // Despite what the docs says it will throw without message!
-                    .setMessage("Checkout this game: Space Travels 3")
-                    .build();
-                AndroidServices.this.activity.startActivityForResult(
-                    intent,
-                    AndroidServices.this.activityRequestCode);
-            }
-        });
     }
 
     @Override
@@ -348,6 +299,8 @@ public class AndroidServices implements Services
 
         // To count with Play market backstack, After pressing back button,
         // to taken back to our application, we need to add following flags to intent.
+        // I know is deprecated but I don't want to increase the min SDK.
+        //noinspection deprecation
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY |
             Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET |
             Intent.FLAG_ACTIVITY_MULTIPLE_TASK);

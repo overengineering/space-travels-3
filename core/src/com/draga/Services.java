@@ -2,17 +2,11 @@ package com.draga;
 
 public interface Services
 {
+    void share();
+
     void purchaseFullVersion();
 
     boolean hasFullVersion();
-
-    void facebookShare();
-
-    void facebookInvite();
-
-    boolean facebookCanInvite();
-
-    void googleInvite();
 
     void googleSignIn();
 

@@ -192,7 +192,7 @@ public class MenuScreen extends Screen
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                ScreenManager.addScreen(new ShareScreen());
+                SpaceTravels3.services.share();
             }
         });
 
