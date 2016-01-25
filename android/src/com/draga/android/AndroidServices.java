@@ -11,6 +11,7 @@ import com.android.vending.billing.utils.Purchase;
 import com.draga.Services;
 import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.spaceTravels3.Constants;
+import com.draga.spaceTravels3.event.VerifyPurchaseEvent;
 import com.facebook.share.model.AppInviteContent;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.AppInviteDialog;
@@ -39,6 +40,7 @@ public class AndroidServices implements Services
     
     private String  fullVersionSKU = "full_version";
     private boolean hasFullVersion = false;
+
     private IabHelper iabHelper;
 
     public AndroidServices(Activity activity)
@@ -99,9 +101,10 @@ public class AndroidServices implements Services
     {
         try
         {
-            this.hasFullVersion = this.iabHelper
+            boolean hasFullVersion = this.iabHelper
                 .queryInventory(false, Collections.singletonList(this.fullVersionSKU))
                 .hasPurchase(this.fullVersionSKU);
+            setHasFullVersion(hasFullVersion);
         } catch (IabException e)
         {
             ErrorHandlerProvider.handle(
@@ -109,6 +112,12 @@ public class AndroidServices implements Services
                 e.getResult().getResponse() + "\r\n" + e.getResult().getMessage(),
                 e);
         }
+    }
+
+    public void setHasFullVersion(boolean hasFullVersion)
+    {
+        this.hasFullVersion = hasFullVersion;
+        Constants.General.EVENT_BUS.post(new VerifyPurchaseEvent(hasFullVersion));
     }
 
     @Override
@@ -128,7 +137,7 @@ public class AndroidServices implements Services
                     {
                         if (result.isSuccess())
                         {
-                            AndroidServices.this.hasFullVersion = true;
+                            AndroidServices.this.setHasFullVersion(true);
                         }
                         else
                         {
