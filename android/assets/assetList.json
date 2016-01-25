@@ -39,5 +39,6 @@
   "iconPlay": "icon/play64.png",
   "iconShare": "icon/share64.png",
   "iconFacebook": "icon/facebook64.png",
-  "iconMessage": "icon/message64.png"
+  "iconMessage": "icon/message64.png",
+  "iconUnlock": "icon/unlock64.png"
 }

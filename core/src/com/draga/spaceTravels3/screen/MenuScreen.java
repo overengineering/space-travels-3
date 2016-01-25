@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.SpaceTravels3;
+import com.draga.spaceTravels3.event.VerifyPurchaseEvent;
 import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
@@ -20,11 +21,13 @@ import com.draga.spaceTravels3.ui.BeepingClickListener;
 import com.draga.spaceTravels3.ui.BeepingImageTextButton;
 import com.draga.spaceTravels3.ui.BeepingTextButton;
 import com.draga.spaceTravels3.ui.Screen;
+import com.google.common.eventbus.Subscribe;
 
 public class MenuScreen extends Screen
 {
-    private Stage stage;
-    private float levelIconsSize;
+    private final Actor purchaseButton;
+    private       Stage stage;
+    private       float levelIconsSize;
 
     public MenuScreen()
     {
@@ -61,6 +64,9 @@ public class MenuScreen extends Screen
         buttonsTable.add(getAchievementsButton());
         buttonsTable.add(getLeaderboardsButton());
 
+        this.purchaseButton = getPurchaseButton();
+        buttonsTable.add(this.purchaseButton);
+
         table.add(buttonsTable);
 
         // Debug button.
@@ -70,6 +76,7 @@ public class MenuScreen extends Screen
         }
 
         this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
+        Constants.General.EVENT_BUS.register(this);
     }
 
     public Label getHeaderLabel()
@@ -210,7 +217,7 @@ public class MenuScreen extends Screen
 
         return button;
     }
-    
+
     private Actor getAchievementsButton()
     {
         BeepingImageTextButton
@@ -243,6 +250,26 @@ public class MenuScreen extends Screen
                     SpaceTravels3.services.googleShowLeaderboards();
                 }
             });
+
+        return button;
+    }
+    
+    private Actor getPurchaseButton()
+    {
+        BeepingImageTextButton button =
+            new BeepingImageTextButton("Purchase", UIManager.skin, "unlock");
+
+        button.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    SpaceTravels3.services.purchaseFullVersion();
+                }
+            });
+
+        button.setVisible(!SpaceTravels3.services.hasFullVersion());
 
         return button;
     }
@@ -314,5 +341,12 @@ public class MenuScreen extends Screen
     public void dispose()
     {
         this.stage.dispose();
+        Constants.General.EVENT_BUS.unregister(this);
+    }
+
+    @Subscribe
+    public void purchaseVerified(VerifyPurchaseEvent verifyPurchaseEvent)
+    {
+        this.purchaseButton.setVisible(!verifyPurchaseEvent.hasFullVersion);
     }
 }

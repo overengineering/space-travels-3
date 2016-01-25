@@ -4,9 +4,14 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
+import com.android.vending.billing.utils.IabException;
+import com.android.vending.billing.utils.IabHelper;
+import com.android.vending.billing.utils.IabResult;
+import com.android.vending.billing.utils.Purchase;
 import com.draga.Services;
 import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.spaceTravels3.Constants;
+import com.draga.spaceTravels3.event.VerifyPurchaseEvent;
 import com.facebook.share.model.AppInviteContent;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.AppInviteDialog;
@@ -15,6 +20,8 @@ import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.leaderboard.LeaderboardVariant;
 import com.google.example.games.basegameutils.GameHelper;
+
+import java.util.Collections;
 
 public class AndroidServices implements Services
 {
@@ -30,6 +37,11 @@ public class AndroidServices implements Services
     private Runnable onGoogleSignInSucceededRunnable;
 
     private int activityRequestCode = 1;
+    
+    private String  fullVersionSKU = "full_version";
+    private boolean hasFullVersion = false;
+
+    private IabHelper iabHelper;
 
     public AndroidServices(Activity activity)
     {
@@ -59,21 +71,95 @@ public class AndroidServices implements Services
         };
 
         this.gameHelper.setup(gameHelperListener);
+
+        // In app billing.
+        String base64EncodedPublicKey =
+            "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuxHcBKJW8RRYrMfo68bOMM1gXWqmGDe1ytGNXfPdk7ArMIB6vtLmZAwbyt38L3XYjYDnhysBMmhV9JYuCAe/zNzRl0G+IC75MmJVYUnUuXQUKrTC/6qvcNm5mgn2rRs1F+9I5uGYiHibXrYt8zNETkNIEP1W94X6H0we6pqPQjg9sEjp5ok3aetAtIHFQkuzT2OB7AcPIRxZcup6ZVUbvLvUbGqo3V38ik3wgj7S/oEybSnX/Wjw1ALpML7Eh/fTyaDyCVy8NM4WPEag/Hix1+Hz0OfJQ/yLl8keXhYA8um03y52vKZK2vu8efSVrAeTeF9lOCYMEKd4YkKHOB9vFQIDAQAB";
+        // compute your public key and store it in base64EncodedPublicKey
+        this.iabHelper = new IabHelper(this.activity, base64EncodedPublicKey);
+        this.iabHelper.enableDebugLogging(Constants.General.IS_DEBUGGING);
+
+        this.iabHelper.startSetup(new IabHelper.OnIabSetupFinishedListener()
+        {
+            public void onIabSetupFinished(IabResult result)
+            {
+                if (result.isSuccess())
+                {
+                    verifyPurchase();
+                }
+                else
+                {
+                    ErrorHandlerProvider.handle(
+                        LOGGING_TAG,
+                        "Problem setting up In-app Billing: " + result);
+                }
+            }
+        });
     }
 
-    public void onStart(Activity activity)
+    private void verifyPurchase()
     {
-        this.gameHelper.onStart(activity);
+        try
+        {
+            boolean hasFullVersion = this.iabHelper
+                .queryInventory(false, Collections.singletonList(this.fullVersionSKU))
+                .hasPurchase(this.fullVersionSKU);
+            setHasFullVersion(hasFullVersion);
+        } catch (IabException e)
+        {
+            ErrorHandlerProvider.handle(
+                LOGGING_TAG,
+                e.getResult().getResponse() + "\r\n" + e.getResult().getMessage(),
+                e);
+        }
     }
 
-    public void onStop()
+    public void setHasFullVersion(boolean hasFullVersion)
     {
-        this.gameHelper.onStop();
+        this.hasFullVersion = hasFullVersion;
+        Constants.General.EVENT_BUS.post(new VerifyPurchaseEvent(hasFullVersion));
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    @Override
+    public void purchaseFullVersion()
     {
-        this.gameHelper.onActivityResult(requestCode, resultCode, data);
+        // TODO: 24/01/2016 pass payload to identify user as described here https://developer.android.com/training/in-app-billing/purchase-iab-products.html
+        try
+        {
+            this.iabHelper.launchPurchaseFlow(
+                this.activity,
+                this.fullVersionSKU,
+                this.activityRequestCode,
+                new IabHelper.OnIabPurchaseFinishedListener()
+                {
+                    @Override
+                    public void onIabPurchaseFinished(IabResult result, Purchase purchase)
+                    {
+                        if (result.isSuccess())
+                        {
+                            AndroidServices.this.setHasFullVersion(true);
+                        }
+                        else
+                        {
+                            ErrorHandlerProvider.handle(
+                                LOGGING_TAG,
+                                result.getResponse() + "\r\n" + result.getMessage());
+                        }
+                    }
+                });
+        } catch (IllegalStateException e)
+        {
+            ErrorHandlerProvider.handle(
+                LOGGING_TAG,
+                "Exception thrown trying to launch a purchase flow",
+                e);
+        }
+    }
+
+    @Override
+    public boolean hasFullVersion()
+    {
+        return this.hasFullVersion;
     }
 
     /**
@@ -89,7 +175,7 @@ public class AndroidServices implements Services
     }
 
     /**
-     * Invite friends on FB. This only works if the FB app is installed and some other criteria are
+     * Invite friends on FB. This only works if the FB app is installed OR some other criteria are
      * met so facebookCanInvite() should be checked before allowing the user to do it.
      */
     @Override
@@ -293,5 +379,29 @@ public class AndroidServices implements Services
     {
         return "http://play.google.com/store/apps/details?id="
             + this.activity.getPackageName();
+    }
+
+    public void onStart(Activity activity)
+    {
+        this.gameHelper.onStart(activity);
+    }
+
+    public void onStop()
+    {
+        this.gameHelper.onStop();
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        this.gameHelper.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void onDestroy()
+    {
+        if (this.iabHelper != null)
+        {
+            this.iabHelper.dispose();
+        }
+        this.iabHelper = null;
     }
 }

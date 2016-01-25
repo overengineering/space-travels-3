@@ -48,7 +48,6 @@ public class AndroidLauncher extends AndroidApplication
 
 
         this.androidServices = new AndroidServices(this);
-        this.androidServices.googleSignIn();
 
 
         // App config and launch.
@@ -73,6 +72,13 @@ public class AndroidLauncher extends AndroidApplication
     {
         super.onStop();
         this.androidServices.onStop();
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+        this.androidServices.onDestroy();
     }
 
     @Override

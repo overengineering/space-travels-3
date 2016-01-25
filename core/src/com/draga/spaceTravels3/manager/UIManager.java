@@ -96,6 +96,7 @@ public abstract class UIManager
         skin.add("share", getImageTextButtonStyle(skin, AssMan.getAssList().iconShare));
         skin.add("facebook", getImageTextButtonStyle(skin, AssMan.getAssList().iconFacebook));
         skin.add("message", getImageTextButtonStyle(skin, AssMan.getAssList().iconMessage));
+        skin.add("unlock", getImageTextButtonStyle(skin, AssMan.getAssList().iconUnlock));
         skin.add(
             "touch",
             getCheckableImageTextButtonStyles(
