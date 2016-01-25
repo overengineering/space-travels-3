@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.event.ScoreUpdatedEvent;
+import com.draga.spaceTravels3.event.VerifyPurchaseEvent;
 import com.draga.spaceTravels3.manager.ScoreManager;
 import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
@@ -18,19 +19,22 @@ import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableDifficulty;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
-import com.draga.spaceTravels3.ui.BeepingTextButton;
+import com.draga.spaceTravels3.ui.BeepingImageTextButton;
 import com.draga.spaceTravels3.ui.Screen;
 import com.google.common.eventbus.Subscribe;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 public class LevelScreen extends Screen
 {
-    private final SerialisableLevel      serialisableLevel;
-    private       Actor                  difficultiesList;
-    private       Stage                  stage;
-    private       HashMap<String, Label> difficultyHighScoreLabels;
+    private final SerialisableLevel          serialisableLevel;
+    private       Actor                      purchaseButton;
+    private       Actor                      difficultiesList;
+    private       Stage                      stage;
+    private       HashMap<String, Label>     difficultyHighScoreLabels;
+    private       ArrayList<ImageTextButton> playButtons;
 
     public LevelScreen(SerialisableLevel serialisableLevel)
     {
@@ -39,6 +43,7 @@ public class LevelScreen extends Screen
         this.serialisableLevel = serialisableLevel;
 
         this.difficultyHighScoreLabels = new HashMap<>();
+        this.playButtons = new ArrayList<>();
 
         this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
 
@@ -54,6 +59,16 @@ public class LevelScreen extends Screen
             .add(this.difficultiesList)
             .expand()
             .center();
+
+        if (this.serialisableLevel.requiresFullVersion)
+        {
+            // Purchase button.
+            table.row();
+            this.purchaseButton = getPurchaseButton();
+            table
+                .add(this.purchaseButton)
+                .bottom();
+        }
 
         // Back button.
         table.row();
@@ -115,9 +130,6 @@ public class LevelScreen extends Screen
             difficultyTable.add(difficultyHighScoreLabel);
             difficultyTable.row();
 
-            difficultyTable.add("");
-            difficultyTable.row();
-
             // Difficulty details.
             Table innerDifficultyTable = UIManager.getDefaultTable();
 
@@ -147,8 +159,9 @@ public class LevelScreen extends Screen
             innerDifficultyTable.row();
 
             // Leaderboard button.
-            TextButton leaderboardTextButton = new BeepingTextButton("Leaderboard", UIManager.skin);
-            leaderboardTextButton.addListener(new ClickListener()
+            BeepingImageTextButton leaderboardButton =
+                new BeepingImageTextButton("Leaderboard", UIManager.skin, "leaderboard");
+            leaderboardButton.addListener(new ClickListener()
             {
                 @Override
                 public void clicked(InputEvent event, float x, float y)
@@ -156,24 +169,34 @@ public class LevelScreen extends Screen
                     SpaceTravels3.services.googleShowLeaderboard(serialisableDifficulty.playLeaderboardID);
                 }
             });
-            innerDifficultyTable.add(leaderboardTextButton);
+            innerDifficultyTable.add(leaderboardButton);
 
             // Play button.
-            BeepingTextButton beepingTextButton = new BeepingTextButton("Play", UIManager.skin);
-            beepingTextButton.addListener(new ClickListener()
+            BeepingImageTextButton playButton =
+                new BeepingImageTextButton("Play", UIManager.skin, "play");
+            this.playButtons.add(playButton);
+            playButton.setVisible(SpaceTravels3.services.hasFullVersion());
+            playButton.addListener(new ClickListener()
             {
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    LoadingScreen loadingScreen = new LoadingScreen(
-                        serialisableLevel,
-                        difficulty);
-                    ScreenManager.addScreen(loadingScreen);
-                    super.clicked(event, x, y);
+                    if (SpaceTravels3.services.hasFullVersion())
+                    {
+                        LoadingScreen loadingScreen = new LoadingScreen(
+                            serialisableLevel,
+                            difficulty);
+                        ScreenManager.addScreen(loadingScreen);
+                        super.clicked(event, x, y);
+                    }
+                    else
+                    {
+                        SpaceTravels3.services.purchaseFullVersion();
+                    }
                 }
             });
 
-            innerDifficultyTable.add(beepingTextButton);
+            innerDifficultyTable.add(playButton);
 
             difficultyTable.add(innerDifficultyTable);
 
@@ -185,6 +208,26 @@ public class LevelScreen extends Screen
         scrollPane.setScrollingDisabled(false, true);
 
         return scrollPane;
+    }
+
+    private Actor getPurchaseButton()
+    {
+        BeepingImageTextButton button =
+            new BeepingImageTextButton("Unlock", UIManager.skin, "unlock");
+
+        button.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    SpaceTravels3.services.purchaseFullVersion();
+                }
+            });
+
+        button.setVisible(!SpaceTravels3.services.hasFullVersion());
+
+        return button;
     }
 
     private String getHighScoreText(Integer score)
@@ -251,12 +294,26 @@ public class LevelScreen extends Screen
     }
 
     @Subscribe
-    public void ScoreUpdated(ScoreUpdatedEvent scoreUpdatedEvent)
+    public void scoreUpdated(ScoreUpdatedEvent scoreUpdatedEvent)
     {
         if (scoreUpdatedEvent.levelID.equals(this.serialisableLevel.id))
         {
             this.difficultyHighScoreLabels.get(scoreUpdatedEvent.difficulty)
                 .setText(getHighScoreText(scoreUpdatedEvent.score));
+        }
+    }
+
+    @Subscribe
+    public void purchaseVerified(VerifyPurchaseEvent verifyPurchaseEvent)
+    {
+        if (this.serialisableLevel.requiresFullVersion)
+        {
+            this.purchaseButton.setVisible(!verifyPurchaseEvent.hasFullVersion);
+            for (ImageTextButton playButton : this.playButtons)
+            {
+                playButton.setVisible(verifyPurchaseEvent.hasFullVersion);
+            }
+
         }
     }
 }
