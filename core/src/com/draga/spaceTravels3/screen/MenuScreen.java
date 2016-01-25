@@ -257,7 +257,7 @@ public class MenuScreen extends Screen
     private Actor getPurchaseButton()
     {
         BeepingImageTextButton button =
-            new BeepingImageTextButton("Purchase", UIManager.skin, "tutorial");
+            new BeepingImageTextButton("Purchase", UIManager.skin, "unlock");
 
         button.addListener(
             new ClickListener()

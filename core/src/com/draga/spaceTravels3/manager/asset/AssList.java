@@ -44,7 +44,8 @@ public class AssList
     public String iconAccelerometer;
     public String iconAccelerometerChecked;
     public String iconTouchChecked;
-
+    public String iconUnlock;
+    
     public AssList()
     {
     }
