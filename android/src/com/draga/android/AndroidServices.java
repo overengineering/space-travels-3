@@ -247,7 +247,7 @@ public class AndroidServices implements Services
                     AndroidServices.this.gameHelper.getApiClient(),
                     leaderboardID,
                     LeaderboardVariant.TIME_SPAN_ALL_TIME,
-                    LeaderboardVariant.COLLECTION_SOCIAL);
+                    LeaderboardVariant.COLLECTION_PUBLIC);
                 AndroidServices.this.activity.startActivityForResult(
                     leaderboardIntent,
                     AndroidServices.this.activityRequestCode);
