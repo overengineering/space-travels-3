@@ -1,28 +1,68 @@
 package com.draga;
 
-public interface Services
+import com.badlogic.gdx.pay.PurchaseManagerConfig;
+import com.badlogic.gdx.pay.PurchaseSystem;
+import com.draga.spaceTravels3.Constants;
+import com.draga.spaceTravels3.event.VerifyPurchaseEvent;
+
+public abstract class Services
 {
-    void share();
+    protected final String fullVersionIdentifier;
+    private boolean hasFullVersion = false;
 
-    void purchaseFullVersion();
+    public Services(String fullVersionIdentifier)
+    {
+        this.fullVersionIdentifier = fullVersionIdentifier;
+    }
 
-    boolean hasFullVersion();
+    protected void initPurchaseManager(PurchaseManagerConfig purchaseManagerConfig)
+    {
+        if (PurchaseSystem.hasManager())
+        {
+            PurchaseSystem.install(new PurchaseObserver(), purchaseManagerConfig, false);
+        }
+    }
 
-    void googleSignIn();
+    public void setHasFullVersion(boolean hasFullVersion)
+    {
+        this.hasFullVersion = hasFullVersion;
+        Constants.General.EVENT_BUS.post(new VerifyPurchaseEvent(hasFullVersion));
+    }
 
-    boolean googleIsSignedIn();
+    public void purchaseFullVersion()
+    {
+        PurchaseSystem.purchase(this.fullVersionIdentifier);
+    }
 
-    void googleSignOut();
+    public abstract void setupPurchaseManager();
 
-    void googleShowLeaderboards();
+    public abstract void share();
 
-    void googleUpdateLeaderboard(String leaderboardID, int score);
+    public boolean hasFullVersion()
+    {
+        return this.hasFullVersion;
+    }
 
-    void googleShowLeaderboard(String leaderboardID);
+    public abstract void googleSignIn();
 
-    void googleUnlockAchievement(String string);
+    public abstract boolean googleIsSignedIn();
 
-    void googleShowAchievements();
+    public abstract void googleSignOut();
 
-    void rateApp();
+    public abstract void googleShowLeaderboards();
+
+    public abstract void googleUpdateLeaderboard(String leaderboardID, int score);
+
+    public abstract void googleShowLeaderboard(String leaderboardID);
+
+    public abstract void googleUnlockAchievement(String string);
+
+    public abstract void googleShowAchievements();
+
+    public abstract void rateApp();
+
+    public void restorePurchase()
+    {
+        PurchaseSystem.purchaseRestore();
+    }
 }
