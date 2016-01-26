@@ -24,7 +24,6 @@ public class AndroidLauncher extends AndroidApplication
     {
         super.onCreate(savedInstanceState);
 
-
         // Fabric init and ErrorHandler.
         Fabric.with(this, new Crashlytics(), new Answers());
         ErrorHandlerProvider.addErrorHandler(new FabricErrorHandler());
@@ -69,14 +68,6 @@ public class AndroidLauncher extends AndroidApplication
         super.onStop();
         this.androidServices.onStop();
     }
-
-    @Override
-    public void onDestroy()
-    {
-        super.onDestroy();
-        this.androidServices.onDestroy();
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {

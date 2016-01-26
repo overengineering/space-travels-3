@@ -4,26 +4,22 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
-import com.android.vending.billing.utils.IabException;
-import com.android.vending.billing.utils.IabHelper;
-import com.android.vending.billing.utils.IabResult;
-import com.android.vending.billing.utils.Purchase;
+import com.badlogic.gdx.pay.Offer;
+import com.badlogic.gdx.pay.OfferType;
+import com.badlogic.gdx.pay.PurchaseManagerConfig;
 import com.draga.Services;
 import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.spaceTravels3.Constants;
-import com.draga.spaceTravels3.event.VerifyPurchaseEvent;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.leaderboard.LeaderboardVariant;
 import com.google.example.games.basegameutils.GameHelper;
 
-import java.util.Collections;
-
-public class AndroidServices implements Services
+public class AndroidServices extends Services
 {
     private static final String LOGGING_TAG = AndroidServices.class.getSimpleName();
 
     private final Activity   activity;
-    private final GameHelper gameHelper;
+    private       GameHelper gameHelper;
 
     /**
      * If an action that requires Google sign in is requested and we are not currently signed it
@@ -33,15 +29,45 @@ public class AndroidServices implements Services
 
     private int activityRequestCode = 1;
     
-    private String  fullVersionSKU = "full_version";
-    private boolean hasFullVersion = false;
+    private String fullVersionSKU = "full_version";
 
-    private IabHelper iabHelper;
+    //    private IabHelper iabHelper;
 
     public AndroidServices(Activity activity)
     {
+        super("full_version");
         this.activity = activity;
 
+        setupGameHelper(activity);
+
+/*
+        // In app billing.
+        String base64EncodedPublicKey =
+            "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuxHcBKJW8RRYrMfo68bOMM1gXWqmGDe1ytGNXfPdk7ArMIB6vtLmZAwbyt38L3XYjYDnhysBMmhV9JYuCAe/zNzRl0G+IC75MmJVYUnUuXQUKrTC/6qvcNm5mgn2rRs1F+9I5uGYiHibXrYt8zNETkNIEP1W94X6H0we6pqPQjg9sEjp5ok3aetAtIHFQkuzT2OB7AcPIRxZcup6ZVUbvLvUbGqo3V38ik3wgj7S/oEybSnX/Wjw1ALpML7Eh/fTyaDyCVy8NM4WPEag/Hix1+Hz0OfJQ/yLl8keXhYA8um03y52vKZK2vu8efSVrAeTeF9lOCYMEKd4YkKHOB9vFQIDAQAB";
+        // compute your public key and store it in base64EncodedPublicKey
+        this.iabHelper = new IabHelper(this.activity, base64EncodedPublicKey);
+        this.iabHelper.enableDebugLogging(Constants.General.IS_DEBUGGING);
+
+        this.iabHelper.startSetup(new IabHelper.OnIabSetupFinishedListener()
+        {
+            public void onIabSetupFinished(IabResult result)
+            {
+                if (result.isSuccess())
+                {
+                    verifyPurchase();
+                }
+                else
+                {
+                    ErrorHandlerProvider.handle(
+                        LOGGING_TAG,
+                        "Problem setting up In-app Billing: " + result);
+                }
+            }
+        });*/
+    }
+
+    private void setupGameHelper(Activity activity)
+    {
         this.gameHelper = new GameHelper(activity, GameHelper.CLIENT_GAMES);
         this.gameHelper.enableDebugLog(Constants.General.IS_DEBUGGING);
 
@@ -66,7 +92,23 @@ public class AndroidServices implements Services
         };
 
         this.gameHelper.setup(gameHelperListener);
-
+/*
+    private void verifyPurchase()
+    {
+        try
+        {
+            this.hasFullVersion = this.iabHelper
+                .queryInventory(false, Collections.singletonList(this.fullVersionSKU))
+                .hasPurchase(this.fullVersionSKU);
+        } catch (IabException e)
+        {
+            ErrorHandlerProvider.handle(
+                LOGGING_TAG,
+                e.getResult().getResponse() + "\r\n" + e.getResult().getMessage(),
+                e);
+        }
+    }*/
+/*
         // In app billing.
         String base64EncodedPublicKey =
             "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuxHcBKJW8RRYrMfo68bOMM1gXWqmGDe1ytGNXfPdk7ArMIB6vtLmZAwbyt38L3XYjYDnhysBMmhV9JYuCAe/zNzRl0G+IC75MmJVYUnUuXQUKrTC/6qvcNm5mgn2rRs1F+9I5uGYiHibXrYt8zNETkNIEP1W94X6H0we6pqPQjg9sEjp5ok3aetAtIHFQkuzT2OB7AcPIRxZcup6ZVUbvLvUbGqo3V38ik3wgj7S/oEybSnX/Wjw1ALpML7Eh/fTyaDyCVy8NM4WPEag/Hix1+Hz0OfJQ/yLl8keXhYA8um03y52vKZK2vu8efSVrAeTeF9lOCYMEKd4YkKHOB9vFQIDAQAB";
@@ -89,31 +131,48 @@ public class AndroidServices implements Services
                         "Problem setting up In-app Billing: " + result);
                 }
             }
-        });
+        });*/
     }
 
-    private void verifyPurchase()
+    @Override
+    public void setupPurchaseManager()
     {
-        try
+        PurchaseManagerConfig purchaseManagerConfig = new PurchaseManagerConfig();
+
+        Offer fullVersionOffer = new Offer();
+        fullVersionOffer
+            .setType(OfferType.ENTITLEMENT)
+            .setIdentifier(this.fullVersionIdentifier);
+        fullVersionOffer.putIdentifierForStore(
+            PurchaseManagerConfig.STORE_NAME_ANDROID_GOOGLE,
+            this.fullVersionIdentifier);
+        purchaseManagerConfig.addOffer(fullVersionOffer);
+
+        purchaseManagerConfig.addStoreParam(
+            PurchaseManagerConfig.STORE_NAME_ANDROID_GOOGLE,
+            "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuxHcBKJW8RRYrMfo68bOMM1gXWqmGDe1ytGNXfPdk7ArMIB6vtLmZAwbyt38L3XYjYDnhysBMmhV9JYuCAe/zNzRl0G+IC75MmJVYUnUuXQUKrTC/6qvcNm5mgn2rRs1F+9I5uGYiHibXrYt8zNETkNIEP1W94X6H0we6pqPQjg9sEjp5ok3aetAtIHFQkuzT2OB7AcPIRxZcup6ZVUbvLvUbGqo3V38ik3wgj7S/oEybSnX/Wjw1ALpML7Eh/fTyaDyCVy8NM4WPEag/Hix1+Hz0OfJQ/yLl8keXhYA8um03y52vKZK2vu8efSVrAeTeF9lOCYMEKd4YkKHOB9vFQIDAQAB");
+
+        initPurchaseManager(purchaseManagerConfig);
+    }
+
+    /*
+        private void verifyPurchase()
         {
-            boolean hasFullVersion = this.iabHelper
-                .queryInventory(false, Collections.singletonList(this.fullVersionSKU))
-                .hasPurchase(this.fullVersionSKU);
-            setHasFullVersion(hasFullVersion);
-        } catch (IabException e)
-        {
-            ErrorHandlerProvider.handle(
-                LOGGING_TAG,
-                e.getResult().getResponse() + "\r\n" + e.getResult().getMessage(),
-                e);
+            try
+            {
+                boolean hasFullVersion = this.iabHelper
+                    .queryInventory(false, Collections.singletonList(this.fullVersionSKU))
+                    .hasPurchase(this.fullVersionSKU);
+                setHasFullVersion(hasFullVersion);
+            } catch (IabException e)
+            {
+                ErrorHandlerProvider.handle(
+                    LOGGING_TAG,
+                    e.getResult().getResponse() + "\r\n" + e.getResult().getMessage(),
+                    e);
+            }
         }
-    }
-
-    public void setHasFullVersion(boolean hasFullVersion)
-    {
-        this.hasFullVersion = hasFullVersion;
-        Constants.General.EVENT_BUS.post(new VerifyPurchaseEvent(hasFullVersion));
-    }
+    */
 
     @Override
     public void share()
@@ -130,47 +189,49 @@ public class AndroidServices implements Services
         this.activity.startActivity(Intent.createChooser(intent, "Share using"));
     }
 
-    @Override
-    public void purchaseFullVersion()
+    private String getPlayStoreUriString()
     {
-        // TODO: 24/01/2016 pass payload to identify user as described here https://developer.android.com/training/in-app-billing/purchase-iab-products.html
-        try
-        {
-            this.iabHelper.launchPurchaseFlow(
-                this.activity,
-                this.fullVersionSKU,
-                this.activityRequestCode,
-                new IabHelper.OnIabPurchaseFinishedListener()
-                {
-                    @Override
-                    public void onIabPurchaseFinished(IabResult result, Purchase purchase)
-                    {
-                        if (result.isSuccess())
-                        {
-                            AndroidServices.this.setHasFullVersion(true);
-                        }
-                        else
-                        {
-                            ErrorHandlerProvider.handle(
-                                LOGGING_TAG,
-                                result.getResponse() + "\r\n" + result.getMessage());
-                        }
-                    }
-                });
-        } catch (IllegalStateException e)
-        {
-            ErrorHandlerProvider.handle(
-                LOGGING_TAG,
-                "Exception thrown trying to launch a purchase flow",
-                e);
-        }
+        return "http://play.google.com/store/apps/details?id="
+            + this.activity.getPackageName();
     }
 
-    @Override
-    public boolean hasFullVersion()
-    {
-        return this.hasFullVersion;
-    }
+    /*
+        @Override
+        public void purchaseFullVersion()
+        {
+            // TODO: 24/01/2016 pass payload to identify user as described here https://developer.android.com/training/in-app-billing/purchase-iab-products.html
+            try
+            {
+                this.iabHelper.launchPurchaseFlow(
+                    this.activity,
+                    this.fullVersionSKU,
+                    this.activityRequestCode,
+                    new IabHelper.OnIabPurchaseFinishedListener()
+                    {
+                        @Override
+                        public void onIabPurchaseFinished(IabResult result, Purchase purchase)
+                        {
+                            if (result.isSuccess())
+                            {
+                                AndroidServices.this.setHasFullVersion(true);
+                            }
+                            else
+                            {
+                                ErrorHandlerProvider.handle(
+                                    LOGGING_TAG,
+                                    result.getResponse() + "\r\n" + result.getMessage());
+                            }
+                        }
+                    });
+            } catch (IllegalStateException e)
+            {
+                ErrorHandlerProvider.handle(
+                    LOGGING_TAG,
+                    "Exception thrown trying to launch a purchase flow",
+                    e);
+            }
+        }
+    */
 
     @Override
     public void googleSignIn()
@@ -315,6 +376,43 @@ public class AndroidServices implements Services
         }
     }
 
+    /*
+        @Override
+        public void purchaseFullVersion(String fullVersionIdentifier)
+        {
+            // TODO: 24/01/2016 pass payload to identify user as described here https://developer.android.com/training/in-app-billing/purchase-iab-products.html
+            try
+            {
+                this.iabHelper.launchPurchaseFlow(
+                    this.activity,
+                    this.fullVersionSKU,
+                    this.activityRequestCode,
+                    new IabHelper.OnIabPurchaseFinishedListener()
+                    {
+                        @Override
+                        public void onIabPurchaseFinished(IabResult result, Purchase purchase)
+                        {
+                            if (result.isSuccess())
+                            {
+                                AndroidServices.this.hasFullVersion = true;
+                            }
+                            else
+                            {
+                                ErrorHandlerProvider.handle(
+                                    LOGGING_TAG,
+                                    result.getResponse() + "\r\n" + result.getMessage());
+                            }
+                        }
+                    });
+            } catch (IllegalStateException e)
+            {
+                ErrorHandlerProvider.handle(
+                    LOGGING_TAG,
+                    "Exception thrown trying to launch a purchase flow",
+                    e);
+            }
+        }
+    */
     private void googleRunLoggingIn(Runnable runnable)
     {
         if (googleIsSignedIn())
@@ -326,12 +424,6 @@ public class AndroidServices implements Services
             this.onGoogleSignInSucceededRunnable = runnable;
             googleSignIn();
         }
-    }
-
-    private String getPlayStoreUriString()
-    {
-        return "http://play.google.com/store/apps/details?id="
-            + this.activity.getPackageName();
     }
 
     public void onStart(Activity activity)
@@ -348,7 +440,7 @@ public class AndroidServices implements Services
     {
         this.gameHelper.onActivityResult(requestCode, resultCode, data);
     }
-
+/*
     public void onDestroy()
     {
         if (this.iabHelper != null)
@@ -357,4 +449,5 @@ public class AndroidServices implements Services
         }
         this.iabHelper = null;
     }
+    */
 }

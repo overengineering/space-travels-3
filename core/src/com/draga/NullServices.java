@@ -1,7 +1,12 @@
 package com.draga;
 
-public class NullServices implements Services
+public abstract class NullServices extends Services
 {
+    public NullServices()
+    {
+        super("");
+    }
+
     @Override
     public void share()
     {
