@@ -256,7 +256,7 @@ public class LevelScreen extends Screen
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
             || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
         {
-            Gdx.app.exit();
+            ScreenManager.removeScreen(this);
         }
 
         loadAsyncImages(AssMan.getAssMan());

@@ -190,7 +190,7 @@ public class SettingsScreen extends Screen
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
             || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
         {
-            ScreenManager.removeScreen(SettingsScreen.this);
+            ScreenManager.removeScreen(this);
         }
 
         this.stage.getViewport().apply();

@@ -198,7 +198,7 @@ public class DebugScreen extends Screen
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
             || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
         {
-            ScreenManager.removeScreen(DebugScreen.this);
+            ScreenManager.removeScreen(this);
         }
 
         this.stage.getViewport().apply();
