@@ -23,9 +23,17 @@ android {
             keyPassword "rubiatto"
         }
     }
+
+    defaultConfig {
+        signingConfig signingConfigs.release
+    }
+
     buildTypes {
         release {
             signingConfig signingConfigs.release
+            minifyEnabled true
+            proguardFile file('proguard-project.txt')
+            proguardFile getDefaultProguardFile('proguard-android-optimize.txt')
         }
     }
 }

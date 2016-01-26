@@ -26,6 +26,7 @@
 -dontwarn com.badlogic.gdx.utils.GdxBuild
 -dontwarn com.badlogic.gdx.physics.box2d.utils.Box2DBuild
 -dontwarn com.badlogic.gdx.jnigen.BuildTarget*
+-dontwarn com.badlogic.gdx.graphics.g2d.freetype.FreetypeBuild*
 
 -keep class com.badlogic.gdx.controllers.android.AndroidControllers
 
@@ -33,12 +34,113 @@
    <init>(com.badlogic.gdx.Application, android.content.Context, java.lang.Object, com.badlogic.gdx.backends.android.AndroidApplicationConfiguration);
 }
 
--keepclassmembers class com.badlogic.gdx.physics.box2d.World {
-   boolean contactFilter(long, long);
-   void    beginContact(long);
-   void    endContact(long);
-   void    preSolve(long, long);
-   void    postSolve(long, long);
-   boolean reportFixture(long);
-   float   reportRayFixture(long, float, float, float, float, float);
+
+#-keepclassmembers class com.badlogic.gdx.physics.box2d.World {
+#   boolean contactFilter(long, long);
+#   void    beginContact(long);
+#   void    endContact(long);
+#   void    preSolve(long, long);
+#   void    postSolve(long, long);
+#   boolean reportFixture(long);
+#   float   reportRayFixture(long, float, float, float, float, float);
+#}
+
+
+## Gdx-pay
+## maybe add https://github.com/libgdx/gdx-pay/wiki/Proguard ?
+-keep class com.android.vending.billing.**
+-keep class com.amazon.** {*;}
+-keep class com.sec.android.iap.**
+-keep class com.nokia.payment.iap.aidl.**
+-dontwarn org.onepf.oms.appstore.FortumoBillingService
+
+
+## Fabric
+-keep class com.crashlytics.** { *; }
+-keep class com.crashlytics.android.**
+-keepattributes SourceFile,LineNumberTable,*Annotation*
+-dontwarn com.crashlytics.**
+
+
+## Collision resolver
+#-keepclassmembers class com.draga.spaceTravels3.physic.CollisionResolver.CollisionResolvers{
+#    void resolveShipPlanetCollision(Ship ship, Planet planet);
+#    resolveShipPickupCollision(Ship ship, Pickup pickup);
+#}
+
+
+## Google play services
+-keep class * extends java.util.ListResourceBundle {
+    protected Object[][] getContents();
 }
+
+-keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
+    public static final *** NULL;
+}
+
+-keepnames @com.google.android.gms.common.annotation.KeepName class *
+-keepclassmembernames class * {
+    @com.google.android.gms.common.annotation.KeepName *;
+}
+
+-keepnames class * implements android.os.Parcelable {
+    public static final ** CREATOR;
+}
+
+## Guava
+#-injars path/to/myapplication.jar
+#-injars lib/guava-r07.jar
+#-libraryjars lib/jsr305.jar
+#-outjars myapplication-dist.jar
+#
+#-dontoptimize
+#-dontobfuscate
+#-dontwarn sun.misc.Unsafe
+#-dontwarn com.google.common.collect.MinMaxPriorityQueue
+#
+#-keepclasseswithmembers public class * {
+#    public static void main(java.lang.String[]);
+#}
+
+-keep class com.google.common.io.Resources {
+    public static <methods>;
+}
+-keep class com.google.common.collect.Lists {
+    public static ** reverse(**);
+}
+-keep class com.google.common.base.Charsets {
+    public static <fields>;
+}
+
+-keep class com.google.common.base.Joiner {
+    public static com.google.common.base.Joiner on(java.lang.String);
+    public ** join(...);
+}
+
+-keep class com.google.common.collect.MapMakerInternalMap$ReferenceEntry
+-keep class com.google.common.cache.LocalCache$ReferenceEntry
+
+# http://stackoverflow.com/questions/9120338/proguard-configuration-for-guava-with-obfuscation-and-optimization
+-dontwarn javax.annotation.**
+-dontwarn javax.inject.**
+-dontwarn sun.misc.Unsafe
+
+# Guava 19.0
+-dontwarn java.lang.ClassValue
+-dontwarn com.google.j2objc.annotations.Weak
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+
+
+##Google Analytics
+-keep class com.google.analytics.** { *; }
+
+
+## Amazon https://developer.amazon.com/public/apis/earn/in-app-purchasing/docs-v2/obfuscating-the-code
+-dontwarn com.amazon.**
+-keep class com.amazon.** {*;}
+-keepattributes *Annotation*
+-keep class com.amazon.** {
+    *;
+}
+
+-optimizations !code/allocation/variable
