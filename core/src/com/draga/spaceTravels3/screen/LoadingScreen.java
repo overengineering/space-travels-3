@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
@@ -38,7 +37,8 @@ public class LoadingScreen extends Screen
     private Stage       stage;
     private ProgressBar progressBar;
 
-    private Stopwatch stopwatch;
+    private Stopwatch  stopwatch;
+    private GameScreen gameScreen;
 
     public LoadingScreen(String levelId, String difficulty)
     {
@@ -119,6 +119,16 @@ public class LoadingScreen extends Screen
     @Override
     public void render(float deltaTime)
     {
+        // If GameScreen has been generated on the last step add it to the stack and remove itself.
+        if (this.gameScreen != null)
+        {
+            ScreenManager.addScreen(this.gameScreen);
+            ScreenManager.removeScreen(this);
+            return;
+        }
+
+        // If loaded creates the game screen but doesn't add it to the stack yet to skip this frame
+        // which will be long ref. #77
         if (AssMan.getGameAssMan().update())
         {
             if (Constants.General.IS_DEBUGGING)
@@ -135,11 +145,10 @@ public class LoadingScreen extends Screen
             }
             Level level =
                 LevelManager.getLevel(this.serialisableLevel, this.difficulty);
-            GameScreen gameScreen = new GameScreen(level);
-            ScreenManager.addScreen(gameScreen);
-            ScreenManager.removeScreen(this);
+            this.gameScreen = new GameScreen(level);
             return;
         }
+
         updateProgressBar();
 
         this.stage.getViewport().apply();
