@@ -88,7 +88,7 @@ public class TutorialScreen extends Screen
                 + "When using the touch screen 2 dashed circles will appear on the screen, touch "
                 + "within them to move the spaceship in that direction. The further away you touch from "
                 + "the Spaceship the greater the thrust produced (and fuel consumed).\r\n"
-                + "Being in space nothing but the planets' gravity will slow you down! Use the "
+                + "Being in space, nothing but the planets' gravity will slow you down! Use the "
                 + "inertia of the spaceship and the gravity of the planets in your favor.";
 
         Label movementLabel = new Label(movementText, UIManager.skin);
@@ -109,7 +109,7 @@ public class TutorialScreen extends Screen
 
         String goalText =
             "The goal is to land safely on the destination planet. This will be shown in blue in "
-                + "the minimap and will have an overlay to indicate how fast are you going .The "
+                + "the minimap and will have an overlay to indicate how fast are you going. The "
                 + "trajectory line colliding with it will appear blue.";
         Label goalLabel = new Label(goalText, UIManager.skin);
         goalLabel.setWrap(true);
@@ -218,9 +218,9 @@ public class TutorialScreen extends Screen
 
         String landingSpeedIndicatorText =
             "Grows from the center of the planet in color green when your ship speed is within the "
-                + "speed that you can approach the destination planet. Above that speed starts "
+                + "speed that you can approach the destination planet. Above that speed it starts "
                 + "shrinking and becomes red. Remember that the destination planet's gravity will "
-                + "pull your ship towards it the closer you are.";
+                + "pull your ship more the closer you are.";
         Label landingSpeedIndicatorLabel = new Label(landingSpeedIndicatorText, UIManager.skin);
         table
             .add(landingSpeedIndicatorLabel)
