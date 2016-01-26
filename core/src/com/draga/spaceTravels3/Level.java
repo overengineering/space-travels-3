@@ -11,10 +11,7 @@ import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponentType;
 import com.draga.spaceTravels3.event.*;
 import com.draga.spaceTravels3.gameEntity.*;
-import com.draga.spaceTravels3.manager.GameEntityManager;
-import com.draga.spaceTravels3.manager.ScoreManager;
-import com.draga.spaceTravels3.manager.ScreenManager;
-import com.draga.spaceTravels3.manager.SettingsManager;
+import com.draga.spaceTravels3.manager.*;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.physic.Projection;
 import com.draga.spaceTravels3.physic.ProjectionPoint;
@@ -250,6 +247,7 @@ public class Level
         {
             this.gameState = GameState.PLAY;
             this.elapsedPlayTime.start();
+            SoundManager.resumeGameSound();
         }
     }
 
@@ -296,6 +294,7 @@ public class Level
             {
                 this.elapsedPlayTime.stop();
             }
+            SoundManager.pauseGameSound();
         }
     }
 

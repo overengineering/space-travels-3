@@ -7,7 +7,6 @@
     <uses-sdk android:minSdkVersion="15" android:targetSdkVersion="23"/>
 
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="com.android.vending.BILLING"/>
@@ -37,16 +36,5 @@
         <meta-data
                 android:name="com.google.android.gms.games.APP_ID"
                 android:value="@string/app_id"/>
-        <meta-data android:name="com.facebook.sdk.ApplicationId"
-                   android:value="@string/facebook_app_id"/>
-
-        <activity android:name="com.facebook.FacebookActivity"
-                  android:configChanges=
-                          "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-                  android:theme="@android:style/Theme.Translucent.NoTitleBar"
-                  android:label="@string/app_name"/>
-        <provider android:authorities="com.facebook.app.FacebookContentProvider196432204044639"
-                  android:name="com.facebook.FacebookContentProvider"
-                  android:exported="true"/>
     </application>
 </manifest>

@@ -12,17 +12,17 @@ public final class FileUtils
 
     public static FileHandle getScoreFileHandle()
     {
-        FileHandle fileHandle = getExternalStorageFileHandle(Constants.General.SCORES_FILENAME);
+        FileHandle fileHandle = getLocalStorageFileHandle(Constants.General.SCORES_FILENAME);
 
         return fileHandle;
     }
 
-    private static FileHandle getExternalStorageFileHandle(String filename)
+    private static FileHandle getLocalStorageFileHandle(String filename)
     {
         FileHandle folderFileHandle;
-        if (Gdx.files.isExternalStorageAvailable())
+        if (Gdx.files.isLocalStorageAvailable())
         {
-            folderFileHandle = Gdx.files.external(Constants.General.FOLDER);
+            folderFileHandle = Gdx.files.local(Constants.General.FOLDER);
         }
         else
         {
@@ -49,7 +49,7 @@ public final class FileUtils
     public static FileHandle getFileHandle(String fileName)
     {
         FileHandle fileHandle =
-            getExternalStorageFileHandle(fileName);
+            getLocalStorageFileHandle(fileName);
 
         return fileHandle;
     }

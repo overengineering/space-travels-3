@@ -113,7 +113,8 @@ public abstract class UIManager
 
         skin.add("checkable", getCheckableTextButtonStyle(skin));
 
-        skin.add("default", getLabelStyle(skin), Label.LabelStyle.class);
+        skin.add("default", getLabelStyle(skin, "default"), Label.LabelStyle.class);
+        skin.add("large", getLabelStyle(skin, "large"), Label.LabelStyle.class);
 
         skin.add("default-horizontal", getProgressBarStyle());
 
@@ -208,10 +209,10 @@ public abstract class UIManager
         return checkableTextButtonStyle;
     }
 
-    private static Label.LabelStyle getLabelStyle(Skin skin)
+    private static Label.LabelStyle getLabelStyle(Skin skin, String fontName)
     {
         Label.LabelStyle labelStyle = new Label.LabelStyle();
-        labelStyle.font = skin.getFont("default");
+        labelStyle.font = skin.getFont(fontName);
 
         return labelStyle;
     }

@@ -8,7 +8,6 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.spaceTravels3.SpaceTravels3;
-import com.facebook.FacebookSdk;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import io.fabric.sdk.android.Fabric;
@@ -24,9 +23,6 @@ public class AndroidLauncher extends AndroidApplication
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-
-        FacebookSdk.sdkInitialize(getApplicationContext());
 
 
         // Fabric init and ErrorHandler.

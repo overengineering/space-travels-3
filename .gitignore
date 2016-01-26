@@ -62,3 +62,6 @@ gradle-app.setting
 
 ## Crashlytics
 com_crashlytics_export_strings.xml
+
+## Ignores the folder created as local storage by the desktop version.
+/android/assets/SpaceTravels3

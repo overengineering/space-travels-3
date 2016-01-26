@@ -59,7 +59,6 @@ public class MenuScreen extends Screen
         buttonsTable.add(getTutorialButton());
         buttonsTable.add(getCreditsButton());
         buttonsTable.add(getShareButton());
-        buttonsTable.row();
         buttonsTable.add(getRateButton());
         buttonsTable.add(getAchievementsButton());
         buttonsTable.add(getLeaderboardsButton());
@@ -133,7 +132,7 @@ public class MenuScreen extends Screen
     private Actor getSettingsTextButton()
     {
         BeepingImageTextButton button =
-            new BeepingImageTextButton("Settings", UIManager.skin, "settings");
+            new BeepingImageTextButton("", UIManager.skin, "settings");
 
         button.addListener(
             new ClickListener()
@@ -151,7 +150,7 @@ public class MenuScreen extends Screen
     private Actor getTutorialButton()
     {
         BeepingImageTextButton button =
-            new BeepingImageTextButton("Tutorial", UIManager.skin, "tutorial");
+            new BeepingImageTextButton("", UIManager.skin, "tutorial");
 
         button.addListener(
             new ClickListener()
@@ -169,7 +168,7 @@ public class MenuScreen extends Screen
     private Actor getCreditsButton()
     {
         BeepingImageTextButton button =
-            new BeepingImageTextButton("Credits", UIManager.skin, "credits");
+            new BeepingImageTextButton("", UIManager.skin, "credits");
 
         button.addListener(
             new ClickListener()
@@ -187,13 +186,13 @@ public class MenuScreen extends Screen
     private Actor getShareButton()
     {
         BeepingImageTextButton button =
-            new BeepingImageTextButton("Share", UIManager.skin, "share");
+            new BeepingImageTextButton("", UIManager.skin, "share");
         button.addListener(new ClickListener()
         {
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                ScreenManager.addScreen(new ShareScreen());
+                SpaceTravels3.services.share();
             }
         });
 
@@ -203,7 +202,7 @@ public class MenuScreen extends Screen
     private Actor getRateButton()
     {
         BeepingImageTextButton
-            button = new BeepingImageTextButton("Rate", UIManager.skin, "rate");
+            button = new BeepingImageTextButton("", UIManager.skin, "rate");
 
         button.addListener(
             new ClickListener()
@@ -221,7 +220,7 @@ public class MenuScreen extends Screen
     private Actor getAchievementsButton()
     {
         BeepingImageTextButton
-            button = new BeepingImageTextButton("Achievements", UIManager.skin, "achievement");
+            button = new BeepingImageTextButton("", UIManager.skin, "achievement");
 
         button.addListener(
             new ClickListener()
@@ -239,7 +238,7 @@ public class MenuScreen extends Screen
     private Actor getLeaderboardsButton()
     {
         BeepingImageTextButton
-            button = new BeepingImageTextButton("Leaderboards", UIManager.skin, "leaderboard");
+            button = new BeepingImageTextButton("", UIManager.skin, "leaderboard");
 
         button.addListener(
             new ClickListener()
@@ -257,7 +256,7 @@ public class MenuScreen extends Screen
     private Actor getPurchaseButton()
     {
         BeepingImageTextButton button =
-            new BeepingImageTextButton("Purchase", UIManager.skin, "unlock");
+            new BeepingImageTextButton("", UIManager.skin, "unlock");
 
         button.addListener(
             new ClickListener()
