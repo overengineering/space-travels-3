@@ -61,5 +61,4 @@ public class PurchaseObserver implements com.badlogic.gdx.pay.PurchaseObserver
     {
 
     }
-
 }
