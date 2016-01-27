@@ -46,8 +46,8 @@ public class PurchaseObserver implements com.badlogic.gdx.pay.PurchaseObserver
             && transaction.isPurchased())
         {
             SpaceTravels3.services.setHasFullVersion(true);
+            // TODO: 24/01/2016 thanks message
         }
-        // TODO: 24/01/2016 thanks message
     }
 
     @Override

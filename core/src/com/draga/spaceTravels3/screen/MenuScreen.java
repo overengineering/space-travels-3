@@ -16,6 +16,7 @@ import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.manager.level.LevelManager;
+import com.draga.spaceTravels3.manager.level.LevelPack;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.spaceTravels3.ui.BeepingClickListener;
 import com.draga.spaceTravels3.ui.BeepingImageTextButton;
@@ -87,7 +88,8 @@ public class MenuScreen extends Screen
 
     private ScrollPane getLevelList()
     {
-        java.util.List<SerialisableLevel> serialisableLevels = LevelManager.getSerialisableLevels();
+        java.util.List<SerialisableLevel> serialisableLevels =
+            ((LevelPack) LevelManager.getLevelPacks().toArray()[0]).getSerialisableLevels();
 
         final Table outerTable = UIManager.getDefaultTable();
 
@@ -289,6 +291,24 @@ public class MenuScreen extends Screen
         return debugButton;
     }
 
+    public static String s(String s, int j)
+    {
+        char[] chars = s.toCharArray();
+        for (int i = 0; i < chars.length; i++)
+        {
+            char c = chars[i];
+            if (Character.isDigit(c))
+            {
+                int newValue = Integer.parseInt(String.valueOf(c)) + j;
+                newValue += 10;
+                char[] charArray = String.valueOf(newValue).toCharArray();
+                chars[i] = charArray[charArray.length - 1];
+            }
+        }
+
+        return new String(chars);
+    }
+
     @Override
     public void show()
     {
@@ -347,20 +367,5 @@ public class MenuScreen extends Screen
     public void purchaseVerified(VerifyPurchaseEvent verifyPurchaseEvent)
     {
         this.purchaseButton.setVisible(!verifyPurchaseEvent.hasFullVersion);
-    }
-
-    public static String s(String s, int j) {
-        char[] chars = s.toCharArray();
-        for (int i = 0; i < chars.length; i++) {
-            char c = chars[i];
-            if (Character.isDigit(c)) {
-                int newValue = Integer.parseInt(String.valueOf(c)) + j;
-                newValue += 10;
-                char[] charArray = String.valueOf(newValue).toCharArray();
-                chars[i] = charArray[charArray.length - 1];
-            }
-        }
-
-        return new String(chars);
     }
 }

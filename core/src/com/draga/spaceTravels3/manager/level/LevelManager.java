@@ -2,6 +2,7 @@ package com.draga.spaceTravels3.manager.level;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Json;
@@ -13,18 +14,20 @@ import com.draga.spaceTravels3.gameEntity.Ship;
 import com.draga.spaceTravels3.gameEntity.Thruster;
 import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
-import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableDifficulty;
-import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
-import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisablePickup;
-import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisablePlanet;
+import com.draga.spaceTravels3.manager.level.serialisableEntities.*;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public abstract class LevelManager
 {
     private static final String LOGGING_TAG = LevelManager.class.getSimpleName();
-    private static ArrayList<SerialisableLevel> serialisableLevels;
+
+    private static ArrayList<LevelPack> levelPacks = loadLevelPacks();
+
+    public static ArrayList<LevelPack> getLevelPacks()
+    {
+        return levelPacks;
+    }
 
     public static Level getLevel(
         SerialisableLevel serialisableLevel,
@@ -67,6 +70,7 @@ public abstract class LevelManager
                 new Pickup(
                     serialisablePickup.x,
                     serialisablePickup.y,
+
                     gameAssMan.get(AssMan.getAssList().pickupTexture, Texture.class));
             pickups.add(pickup);
         }
@@ -111,11 +115,14 @@ public abstract class LevelManager
 
     public static SerialisableLevel getSerialisableLevel(String levelId)
     {
-        for (SerialisableLevel serialisableLevel : LevelManager.getSerialisableLevels())
+        for (LevelPack levelPack : levelPacks)
         {
-            if (serialisableLevel.id.equals(levelId))
+            for (SerialisableLevel serialisableLevel : levelPack.getSerialisableLevels())
             {
-                return serialisableLevel;
+                if (serialisableLevel.id.equals(levelId))
+                {
+                    return serialisableLevel;
+                }
             }
         }
 
@@ -125,40 +132,59 @@ public abstract class LevelManager
         return null;
     }
 
-    public static List<SerialisableLevel> getSerialisableLevels()
-    {
-        if (serialisableLevels == null)
-        {
-            loadSerialisableLevels();
-        }
-
-        return serialisableLevels;
-    }
-
-    /**
-     * Load the serialisableLevels from the level pack file in order
-     */
-    private static void loadSerialisableLevels()
+    private static ArrayList<LevelPack> loadLevelPacks()
     {
         Json json = new Json();
-        String levelPackString = Gdx.files.internal("level/levelPack.json").readString();
+
+        String levelPacksString = Gdx.files.internal("level/levelPacks.json").readString();
+
         @SuppressWarnings("unchecked")
-        ArrayList<String> levelFileNamesWithExtension = json.fromJson(
+        ArrayList<String> serialisableLevelPackPaths = json.fromJson(
             ArrayList.class,
             String.class,
-            levelPackString);
-        serialisableLevels = new ArrayList<>();
-        json.addClassTag("SerialisableLevel", SerialisableLevel.class);
-        for (String levelFileNameWithExtension : levelFileNamesWithExtension)
+            levelPacksString);
+
+        ArrayList<LevelPack> levelPacks = new ArrayList<>(serialisableLevelPackPaths.size());
+
+        for (String serialisableLevelPackPath : serialisableLevelPackPaths)
         {
-            String levelString =
-                Gdx.files.internal("level/" + levelFileNameWithExtension).readString();
-            SerialisableLevel serialisableLevel =
-                json.fromJson(SerialisableLevel.class, levelString);
-
-            serialisableLevel.id = levelFileNameWithExtension;
-
-            serialisableLevels.add(serialisableLevel);
+            LevelPack levelPack = loadLevelPack(serialisableLevelPackPath);
+            levelPacks.add(levelPack);
         }
+
+        return levelPacks;
+    }
+
+    private static LevelPack loadLevelPack(String serialisableLevelPackPath)
+    {
+        Json json = new Json();
+        json.addClassTag("SerialisableLevel", SerialisableLevel.class);
+
+
+        FileHandle serialisableLevelPackFileHandle =
+            Gdx.files.internal("level/" + serialisableLevelPackPath);
+        FileHandle levelPackRoot = serialisableLevelPackFileHandle.parent();
+
+        String serialisableLevelPackString = serialisableLevelPackFileHandle.readString();
+
+        SerialisedLevelPack serialisedLevelPack = json.fromJson(
+            SerialisedLevelPack.class,
+            serialisableLevelPackString);
+
+        LevelPack levelPack = new LevelPack(serialisedLevelPack.name);
+
+        for (String serialisableLevelPath : serialisedLevelPack.serialisableLevelPaths)
+        {
+            String serialisableLevelString =
+                levelPackRoot.child(serialisableLevelPath).readString();
+            SerialisableLevel serialisableLevel =
+                json.fromJson(SerialisableLevel.class, serialisableLevelString);
+
+            serialisableLevel.id = serialisedLevelPack.name + "/" + serialisableLevelPath;
+
+            levelPack.getSerialisableLevels().add(serialisableLevel);
+        }
+
+        return levelPack;
     }
 }
