@@ -17,6 +17,8 @@ import com.draga.spaceTravels3.Hud;
 import com.draga.spaceTravels3.component.graphicComponent.GraphicComponent;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 import com.draga.spaceTravels3.input.inputModifier.DeadZoneInputModifier;
+import com.draga.spaceTravels3.manager.level.LevelManager;
+import com.draga.spaceTravels3.manager.level.LevelPack;
 import com.draga.spaceTravels3.physic.GravityCache;
 import com.draga.spaceTravels3.screen.IngameMenuScreen;
 import com.draga.spaceTravels3.screen.MenuScreen;
@@ -41,7 +43,7 @@ public class AndroidServices extends Services
 
     public AndroidServices(Activity activity)
     {
-        super("full_version");
+        super();
         this.activity = activity;
 
         setupGameHelper(activity);
@@ -80,14 +82,20 @@ public class AndroidServices extends Services
     {
         PurchaseManagerConfig purchaseManagerConfig = new PurchaseManagerConfig();
 
-        Offer fullVersionOffer = new Offer();
-        fullVersionOffer
-            .setType(OfferType.ENTITLEMENT)
-            .setIdentifier(this.fullVersionIdentifier);
-        fullVersionOffer.putIdentifierForStore(
-            PurchaseManagerConfig.STORE_NAME_ANDROID_GOOGLE,
-            this.fullVersionIdentifier);
-        purchaseManagerConfig.addOffer(fullVersionOffer);
+        for (LevelPack levelPack : LevelManager.getLevelPacks())
+        {
+            if (!levelPack.isFree())
+            {
+                Offer offer = new Offer();
+                offer
+                    .setType(OfferType.ENTITLEMENT)
+                    .setIdentifier(levelPack.getGoogleSku());
+                offer.putIdentifierForStore(
+                    PurchaseManagerConfig.STORE_NAME_ANDROID_GOOGLE,
+                    levelPack.getGoogleSku());
+                purchaseManagerConfig.addOffer(offer);
+            }
+        }
 
         String key = PhysicsComponent.s(com.draga.shape.Circle.s(
             GraphicComponent.s(GravityCache.s)

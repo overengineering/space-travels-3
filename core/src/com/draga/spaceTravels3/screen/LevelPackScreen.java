@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.SpaceTravels3;
-import com.draga.spaceTravels3.event.VerifyPurchaseEvent;
+import com.draga.spaceTravels3.event.PurchasedEvent;
 import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
@@ -28,6 +28,7 @@ import java.util.ArrayList;
 public class LevelPackScreen extends Screen
 {
     private final LevelPack levelPack;
+    private final Actor purchaseButton;
     private       Stage stage;
     private       float levelIconsSize;
 
@@ -55,6 +56,10 @@ public class LevelPackScreen extends Screen
             .center();
 
         // Buttons.
+        table.row();
+        this.purchaseButton = getPurchaseButton();
+        table.add(this.purchaseButton);
+
         table.row();
         table.add(getBackButton());
 
@@ -99,7 +104,7 @@ public class LevelPackScreen extends Screen
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    LevelScreen levelScreen = new LevelScreen(serialisableLevel);
+                    LevelScreen levelScreen = new LevelScreen(LevelPackScreen.this.levelPack, serialisableLevel);
                     ScreenManager.addScreen(levelScreen);
                 }
             });
@@ -241,7 +246,7 @@ public class LevelPackScreen extends Screen
     private Actor getPurchaseButton()
     {
         BeepingImageTextButton button =
-            new BeepingImageTextButton("", UIManager.skin, "unlock");
+            new BeepingImageTextButton("Purchase", UIManager.skin, "unlock");
 
         button.addListener(
             new ClickListener()
@@ -249,11 +254,12 @@ public class LevelPackScreen extends Screen
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    SpaceTravels3.services.purchaseFullVersion();
+                    SpaceTravels3.services.purchaseSku(LevelPackScreen.this.levelPack.getGoogleSku());
                 }
             });
 
-        button.setVisible(!SpaceTravels3.services.hasFullVersion());
+        button.setVisible(!this.levelPack.isFree()
+            && !SpaceTravels3.services.hasPurchasedSku(this.levelPack.getGoogleSku()));
 
         return button;
     }
@@ -344,5 +350,15 @@ public class LevelPackScreen extends Screen
     {
         this.stage.dispose();
         Constants.General.EVENT_BUS.unregister(this);
+    }
+
+    @Subscribe
+    public void purchased(PurchasedEvent purchasedEvent)
+    {
+        if (!this.levelPack.isFree()
+            && this.levelPack.getGoogleSku().equals(purchasedEvent.sku))
+        {
+            this.purchaseButton.setVisible(false);
+        }
     }
 }

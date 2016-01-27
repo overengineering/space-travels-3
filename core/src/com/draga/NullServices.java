@@ -4,7 +4,7 @@ public class NullServices extends Services
 {
     public NullServices()
     {
-        super("");
+        super();
     }
 
     @Override
@@ -14,21 +14,9 @@ public class NullServices extends Services
     }
 
     @Override
-    public void purchaseFullVersion()
-    {
-
-    }
-
-    @Override
     public void setupPurchaseManager()
     {
 
-    }
-
-    @Override
-    public boolean hasFullVersion()
-    {
-        return false;
     }
 
     @Override

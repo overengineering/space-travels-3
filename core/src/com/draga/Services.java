@@ -3,16 +3,16 @@ package com.draga;
 import com.badlogic.gdx.pay.PurchaseManagerConfig;
 import com.badlogic.gdx.pay.PurchaseSystem;
 import com.draga.spaceTravels3.Constants;
-import com.draga.spaceTravels3.event.VerifyPurchaseEvent;
+import com.draga.spaceTravels3.event.PurchasedEvent;
+
+import java.util.ArrayList;
 
 public abstract class Services
 {
-    protected final String fullVersionIdentifier;
-    private boolean hasFullVersion = false;
+    private ArrayList<String> purchasedSkus  = new ArrayList<>();
 
-    public Services(String fullVersionIdentifier)
+    public Services()
     {
-        this.fullVersionIdentifier = fullVersionIdentifier;
     }
 
     protected void initPurchaseManager(PurchaseManagerConfig purchaseManagerConfig)
@@ -23,25 +23,17 @@ public abstract class Services
         }
     }
 
-    public void setHasFullVersion(boolean hasFullVersion)
+    public void purchaseSku(String sku)
     {
-        this.hasFullVersion = hasFullVersion;
-        Constants.General.EVENT_BUS.post(new VerifyPurchaseEvent(hasFullVersion));
-    }
-
-    public void purchaseFullVersion()
-    {
-        PurchaseSystem.purchase(this.fullVersionIdentifier);
+        if (PurchaseSystem.hasManager())
+        {
+            PurchaseSystem.purchase(sku);
+        }
     }
 
     public abstract void setupPurchaseManager();
 
     public abstract void share();
-
-    public boolean hasFullVersion()
-    {
-        return this.hasFullVersion;
-    }
 
     public abstract void googleSignIn();
 
@@ -64,5 +56,24 @@ public abstract class Services
     public void restorePurchase()
     {
         PurchaseSystem.purchaseRestore();
+    }
+
+    public boolean hasPurchasedSku(String sku)
+    {
+        for (String purchasedSku : this.purchasedSkus)
+        {
+            if (purchasedSku.equals(sku))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void setPurchasedSku(String sku)
+    {
+        Constants.General.EVENT_BUS.post(new PurchasedEvent(sku));
+        this.purchasedSkus.add(sku);
     }
 }

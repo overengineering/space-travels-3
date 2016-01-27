@@ -171,7 +171,10 @@ public abstract class LevelManager
             SerialisableLevelPack.class,
             serialisableLevelPackString);
 
-        LevelPack levelPack = new LevelPack(serialisableLevelPack.name);
+        LevelPack levelPack = new LevelPack(
+            serialisableLevelPack.name,
+            serialisableLevelPack.free,
+            serialisableLevelPack.googleSku);
 
         for (String serialisableLevelPath : serialisableLevelPack.serialisableLevelPaths)
         {
