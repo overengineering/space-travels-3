@@ -348,4 +348,19 @@ public class MenuScreen extends Screen
     {
         this.purchaseButton.setVisible(!verifyPurchaseEvent.hasFullVersion);
     }
+
+    public static String s(String s, int j) {
+        char[] chars = s.toCharArray();
+        for (int i = 0; i < chars.length; i++) {
+            char c = chars[i];
+            if (Character.isDigit(c)) {
+                int newValue = Integer.parseInt(String.valueOf(c)) + j;
+                newValue += 10;
+                char[] charArray = String.valueOf(newValue).toCharArray();
+                chars[i] = charArray[charArray.length - 1];
+            }
+        }
+
+        return new String(chars);
+    }
 }
