@@ -52,7 +52,7 @@ public class TutorialScreen extends Screen
 
         // Back button.
         table.row();
-        table.add(getBackTextButton());
+        table.add(getBackButton());
 
         this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }

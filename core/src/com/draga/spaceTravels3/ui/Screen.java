@@ -71,7 +71,7 @@ public abstract class Screen implements com.badlogic.gdx.Screen
         return image;
     }
 
-    protected Actor getBackTextButton()
+    protected Actor getBackButton()
     {
         BeepingImageTextButton button = new BeepingImageTextButton("Back", UIManager.skin, "exit");
         button.addListener(new ClickListener()

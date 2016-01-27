@@ -167,20 +167,20 @@ public abstract class LevelManager
 
         String serialisableLevelPackString = serialisableLevelPackFileHandle.readString();
 
-        SerialisedLevelPack serialisedLevelPack = json.fromJson(
-            SerialisedLevelPack.class,
+        SerialisableLevelPack serialisableLevelPack = json.fromJson(
+            SerialisableLevelPack.class,
             serialisableLevelPackString);
 
-        LevelPack levelPack = new LevelPack(serialisedLevelPack.name);
+        LevelPack levelPack = new LevelPack(serialisableLevelPack.name);
 
-        for (String serialisableLevelPath : serialisedLevelPack.serialisableLevelPaths)
+        for (String serialisableLevelPath : serialisableLevelPack.serialisableLevelPaths)
         {
             String serialisableLevelString =
                 levelPackRoot.child(serialisableLevelPath).readString();
             SerialisableLevel serialisableLevel =
                 json.fromJson(SerialisableLevel.class, serialisableLevelString);
 
-            serialisableLevel.id = serialisedLevelPack.name + "/" + serialisableLevelPath;
+            serialisableLevel.id = serialisableLevelPack.name + "/" + serialisableLevelPath;
 
             levelPack.getSerialisableLevels().add(serialisableLevel);
         }
