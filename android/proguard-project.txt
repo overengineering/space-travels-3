@@ -47,12 +47,38 @@
 
 
 ## Gdx-pay
-## maybe add https://github.com/libgdx/gdx-pay/wiki/Proguard ?
 -keep class com.android.vending.billing.**
 -keep class com.amazon.** {*;}
 -keep class com.sec.android.iap.**
 -keep class com.nokia.payment.iap.aidl.**
+-keep class com.badlogic.gdx.pay.android.ouya.PurchaseManagerAndroidOUYA
 -dontwarn org.onepf.oms.appstore.FortumoBillingService
+-keep class org.onepf.oms.appstore.**
+-dontwarn org.onepf.oms.appstore.**
+
+-keep public class com.badlogic.gdx.Gdx {
+  public protected *;
+}
+
+-keep public class com.badlogic.gdx.Application {
+  public protected *;
+}
+
+-keep public class com.badlogic.gdx.pay.android.IAP {
+  public protected *;
+}
+
+-keep public class com.badlogic.gdx.backends.android.AndroidEventListener {
+  public protected *;
+}
+
+-keep public class com.badlogic.gdx.backends.android.AndroidApplication {
+  public protected *;
+}
+
+-keep public class com.badlogic.gdx.pay.android.openiab.PurchaseManagerAndroidOpenIAB {
+  public protected *;
+}
 
 
 ## Fabric
@@ -144,3 +170,25 @@
 }
 
 -optimizations !code/allocation/variable
+
+
+## JSON serialisable
+-keepclassmembers class com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableDifficulty{
+   *;
+}
+-keepclassmembers class com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel{
+   *;
+}
+-keepclassmembers class com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisablePickup{
+   *;
+}
+-keepclassmembers class com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisablePlanet{
+   *;
+}
+-keepclassmembers class com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableShip{
+   *;
+}
+-keepclassmembers class com.draga.spaceTravels3.manager.asset.AssList{
+   *;
+}
+-keepattributes Signature
