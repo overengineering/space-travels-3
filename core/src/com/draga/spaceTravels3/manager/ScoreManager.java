@@ -2,6 +2,7 @@ package com.draga.spaceTravels3.manager;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonWriter;
 import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.event.ScoreUpdatedEvent;
@@ -13,7 +14,7 @@ public abstract class ScoreManager
 {
     private static final String LOGGING_TAG = ScoreManager.class.getSimpleName();
 
-    private static final Json JSON = new Json();
+    private static final Json JSON = new Json(JsonWriter.OutputType.json);
 
     private static final FileHandle                                SCORE_FILE_HANDLE       =
         FileUtils.getScoreFileHandle();
