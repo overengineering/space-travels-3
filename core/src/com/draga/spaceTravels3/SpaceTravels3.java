@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import com.draga.NullServices;
 import com.draga.Services;
 import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.errorHandler.GdxErrorHandler;
@@ -35,6 +36,11 @@ public class SpaceTravels3 implements ApplicationListener
     public SpaceTravels3(Services services)
     {
         SpaceTravels3.services = services;
+    }
+
+    public SpaceTravels3()
+    {
+        SpaceTravels3.services = new NullServices();
     }
 
     @Override

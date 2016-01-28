@@ -1,10 +1,10 @@
 package com.draga;
 
-public abstract class NullServices extends Services
+public class NullServices extends Services
 {
     public NullServices()
     {
-        super("");
+        super();
     }
 
     @Override
@@ -14,15 +14,9 @@ public abstract class NullServices extends Services
     }
 
     @Override
-    public void purchaseFullVersion()
+    public void setupPurchaseManager()
     {
 
-    }
-
-    @Override
-    public boolean hasFullVersion()
-    {
-        return false;
     }
 
     @Override

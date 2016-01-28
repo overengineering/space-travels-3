@@ -24,6 +24,8 @@ import com.draga.spaceTravels3.ui.Screen;
 
 public abstract class IngameMenuScreen extends Screen
 {
+    public static String s = "gTAKsCqx0NeZVO9igYzMNjolg61Y6KLwLQaulfOZzuI2WLhPNr*mAmEy3T%VP08ZzWILHaHhKDHXeGP";
+
     protected final Level  level;
     protected final Cell   centreCell;
     private final   Stage  stage;

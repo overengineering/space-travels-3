@@ -20,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 public class GravityCache
 {
     private static final String LOGGING_TAG = GravityCache.class.getSimpleName();
+    public static String s = "zvvovWnaoTXDUXVt9J0ondrsnnbpnd8nzvvopTxpndrnHKuPoxwj8eelEzSB68Obzz1TkjDZtqR1L";
     
     private static final float MIN_GRAVITY    = 1f;
 

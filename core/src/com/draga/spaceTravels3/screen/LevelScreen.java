@@ -10,13 +10,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.SpaceTravels3;
+import com.draga.spaceTravels3.event.PurchasedEvent;
 import com.draga.spaceTravels3.event.ScoreUpdatedEvent;
-import com.draga.spaceTravels3.event.VerifyPurchaseEvent;
 import com.draga.spaceTravels3.manager.ScoreManager;
 import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
+import com.draga.spaceTravels3.manager.level.LevelPack;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableDifficulty;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.spaceTravels3.ui.BeepingImageTextButton;
@@ -29,17 +30,18 @@ import java.util.LinkedHashMap;
 
 public class LevelScreen extends Screen
 {
+    private final LevelPack                  levelPack;
     private final SerialisableLevel          serialisableLevel;
-    private       Actor                      purchaseButton;
     private       Actor                      difficultiesList;
     private       Stage                      stage;
     private       HashMap<String, Label>     difficultyHighScoreLabels;
     private       ArrayList<ImageTextButton> playButtons;
 
-    public LevelScreen(SerialisableLevel serialisableLevel)
+    public LevelScreen(LevelPack levelPack, SerialisableLevel serialisableLevel)
     {
         super(true, true);
 
+        this.levelPack = levelPack;
         this.serialisableLevel = serialisableLevel;
 
         this.difficultyHighScoreLabels = new HashMap<>();
@@ -60,20 +62,10 @@ public class LevelScreen extends Screen
             .expand()
             .center();
 
-        if (this.serialisableLevel.requiresFullVersion)
-        {
-            // Purchase button.
-            table.row();
-            this.purchaseButton = getPurchaseButton();
-            table
-                .add(this.purchaseButton)
-                .bottom();
-        }
-
         // Back button.
         table.row();
         table
-            .add(getBackTextButton())
+            .add(getBackButton())
             .bottom();
 
         this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
@@ -175,15 +167,15 @@ public class LevelScreen extends Screen
             BeepingImageTextButton playButton =
                 new BeepingImageTextButton("Play", UIManager.skin, "play");
             this.playButtons.add(playButton);
-            playButton.setVisible(!this.serialisableLevel.requiresFullVersion
-                || SpaceTravels3.services.hasFullVersion());
+            playButton.setVisible(this.levelPack.isFree()
+                || SpaceTravels3.services.hasPurchasedSku(this.levelPack.getGoogleSku()));
             playButton.addListener(new ClickListener()
             {
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    if (!LevelScreen.this.serialisableLevel.requiresFullVersion
-                        || SpaceTravels3.services.hasFullVersion())
+                    if (LevelScreen.this.levelPack.isFree()
+                        || SpaceTravels3.services.hasPurchasedSku(LevelScreen.this.levelPack.getGoogleSku()))
                     {
                         LoadingScreen loadingScreen = new LoadingScreen(
                             serialisableLevel,
@@ -193,7 +185,7 @@ public class LevelScreen extends Screen
                     }
                     else
                     {
-                        SpaceTravels3.services.purchaseFullVersion();
+                        SpaceTravels3.services.purchaseSku(LevelScreen.this.levelPack.getGoogleSku());
                     }
                 }
             });
@@ -212,6 +204,18 @@ public class LevelScreen extends Screen
         return scrollPane;
     }
 
+    private String getHighScoreText(Integer score)
+    {
+        if (score != null)
+        {
+            return "High score : " + String.valueOf(score);
+        }
+        else
+        {
+            return "";
+        }
+    }
+
     private Actor getPurchaseButton()
     {
         BeepingImageTextButton button =
@@ -223,25 +227,13 @@ public class LevelScreen extends Screen
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    SpaceTravels3.services.purchaseFullVersion();
+                    SpaceTravels3.services.purchaseSku(LevelScreen.this.levelPack.getGoogleSku());
                 }
             });
 
-        button.setVisible(!SpaceTravels3.services.hasFullVersion());
+        button.setVisible(!SpaceTravels3.services.hasPurchasedSku(this.levelPack.getGoogleSku()));
 
         return button;
-    }
-
-    private String getHighScoreText(Integer score)
-    {
-        if (score != null)
-        {
-            return "High score : " + String.valueOf(score);
-        }
-        else
-        {
-            return "";
-        }
     }
 
     @Override
@@ -306,16 +298,15 @@ public class LevelScreen extends Screen
     }
 
     @Subscribe
-    public void purchaseVerified(VerifyPurchaseEvent verifyPurchaseEvent)
+    public void purchased(PurchasedEvent purchasedEvent)
     {
-        if (this.serialisableLevel.requiresFullVersion)
+        if (!this.levelPack.isFree()
+            && this.levelPack.getGoogleSku().equals(purchasedEvent.sku))
         {
-            this.purchaseButton.setVisible(!verifyPurchaseEvent.hasFullVersion);
             for (ImageTextButton playButton : this.playButtons)
             {
-                playButton.setVisible(verifyPurchaseEvent.hasFullVersion);
+                playButton.setVisible(true);
             }
-
         }
     }
 }

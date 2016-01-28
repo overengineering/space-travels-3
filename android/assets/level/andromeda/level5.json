@@ -1,31 +1,30 @@
 {
   "class": "SerialisableLevel",
-  "name": "Level 7",
-  "requiresFullVersion": true,
+  "name": "Level 5",
   "serialisedDifficulties": {
     "Easy": {
       "trajectorySeconds": 5,
       "maxLandingSpeed": 70,
       "fuel": 0,
       "infiniteFuel": true,
-      "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQCA",
-      "playLeaderboardID": "CgkIxsSO8ZoXEAIQKQ"
+      "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQBg",
+      "playLeaderboardID": "CgkIxsSO8ZoXEAIQHQ"
     },
     "Medium": {
       "trajectorySeconds": 3,
       "maxLandingSpeed": 70,
       "fuel": 4,
       "infiniteFuel": false,
-      "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQJw",
-      "playLeaderboardID": "CgkIxsSO8ZoXEAIQKg"
+      "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQIA",
+      "playLeaderboardID": "CgkIxsSO8ZoXEAIQHg"
     },
     "Hard": {
       "trajectorySeconds": 0,
       "maxLandingSpeed": 60,
       "fuel": 2,
       "infiniteFuel": false,
-      "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQKA",
-      "playLeaderboardID": "CgkIxsSO8ZoXEAIQKw"
+      "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQIQ",
+      "playLeaderboardID": "CgkIxsSO8ZoXEAIQHw"
     }
   },
   "serialisedShip": {
@@ -34,7 +33,7 @@
     "mass": 1
   },
   "serialisedDestinationPlanet": {
-    "texturePath": "planet/gas1-256.png",
+    "texturePath": "planet/arid3-256.png",
     "x": 280,
     "y": 75,
     "radius": 6.378,
@@ -43,41 +42,48 @@
   "serialisedPlanets": [
     {
       "texturePath": "planet/mars256.png",
-      "x": 150,
-      "y": 75,
-      "radius": 8,
-      "mass": 20000
+      "x": 260,
+      "y": 60,
+      "radius": 1,
+      "mass": 300
     },
     {
       "texturePath": "planet/jupiter256.png",
-      "x": 100,
-      "y": 90,
-      "radius": 7,
-      "mass": 20000
+      "x": 150,
+      "y": 75,
+      "radius": 25,
+      "mass": 100000
     },
     {
       "texturePath": "planet/mars256.png",
-      "x": 200,
-      "y": 110,
-      "radius": 6,
-      "mass": 20000
+      "x": 70,
+      "y": 40,
+      "radius": 3.397,
+      "mass": 3000
+    },
+    {
+      "texturePath": "planet/venus256.png",
+      "x": 80,
+      "y": 90,
+      "radius": 6.052,
+      "mass": 10000
     }
   ],
   "serialisedPickups": [
     {
-      "x": 140,
-      "y": 60
+      "x": 125,
+      "y": 50
     },
     {
-      "x": 160,
-      "y": 60
+      "x": 175,
+      "y": 50
     },
     {
-      "x": 150,
-      "y": 90
+      "x": 125,
+      "y": 100
     },
     {
-      "x": 200,
+      "x": 175,
       "y": 100
     }
   ]

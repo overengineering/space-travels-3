@@ -10,12 +10,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.SpaceTravels3;
-import com.draga.spaceTravels3.event.VerifyPurchaseEvent;
+import com.draga.spaceTravels3.event.PurchasedEvent;
 import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.manager.level.LevelManager;
+import com.draga.spaceTravels3.manager.level.LevelPack;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.spaceTravels3.ui.BeepingClickListener;
 import com.draga.spaceTravels3.ui.BeepingImageTextButton;
@@ -23,9 +24,10 @@ import com.draga.spaceTravels3.ui.BeepingTextButton;
 import com.draga.spaceTravels3.ui.Screen;
 import com.google.common.eventbus.Subscribe;
 
+import java.util.ArrayList;
+
 public class MenuScreen extends Screen
 {
-    private final Actor purchaseButton;
     private       Stage stage;
     private       float levelIconsSize;
 
@@ -47,7 +49,7 @@ public class MenuScreen extends Screen
         // Level list.
         table.row();
         table
-            .add(getLevelList())
+            .add(getLevelPackList())
             .expand()
             .center();
 
@@ -63,19 +65,14 @@ public class MenuScreen extends Screen
         buttonsTable.add(getAchievementsButton());
         buttonsTable.add(getLeaderboardsButton());
 
-        this.purchaseButton = getPurchaseButton();
-        buttonsTable.add(this.purchaseButton);
-
         table.add(buttonsTable);
 
-        // Debug button.
         if (Constants.General.IS_DEBUGGING)
         {
             this.stage.addActor(getDebugButton());
         }
 
         this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
-        Constants.General.EVENT_BUS.register(this);
     }
 
     public Label getHeaderLabel()
@@ -85,27 +82,41 @@ public class MenuScreen extends Screen
         return headerLabel;
     }
 
-    private ScrollPane getLevelList()
+    private ScrollPane getLevelPackList()
     {
-        java.util.List<SerialisableLevel> serialisableLevels = LevelManager.getSerialisableLevels();
+        java.util.List<LevelPack> levelPacks =
+            LevelManager.getLevelPacks();
 
         final Table outerTable = UIManager.getDefaultTable();
 
-        for (final SerialisableLevel serialisableLevel : serialisableLevels)
+        for (final LevelPack levelPack : levelPacks)
         {
             Table innerTable = UIManager.getDefaultTable();
 
-            // If the level icon is not loaded in the ass man then add to an map to load them async.
-            Image image = loadTextureAsync(
-                serialisableLevel.serialisedDestinationPlanet.texturePath,
-                AssMan.getAssMan());
+            WidgetGroup group = new WidgetGroup();
 
+            // Overlaps the images of the destination planets leaving a 1/3 offset from each other.
+            // Starts from right and the last planet because the last drawn will be on top.
+            ArrayList<SerialisableLevel> serialisableLevels = levelPack.getSerialisableLevels();
+            for (int i = serialisableLevels.size() - 1; i >= 0; i--)
+            {
+                SerialisableLevel serialisableLevel = serialisableLevels.get(i);
+                Image image = loadTextureAsync(
+                    serialisableLevel.serialisedDestinationPlanet.texturePath,
+                    AssMan.getAssMan());
+                image.sizeBy(this.levelIconsSize);
+                image.setX(i * (this.levelIconsSize / 3f));
+                group.addActor(image);
+            }
+
+            group.sizeBy(this.levelIconsSize);
             innerTable
-                .add(image)
-                .size(this.levelIconsSize);
+                .add(group)
+                .height(this.levelIconsSize)
+                .width(this.levelIconsSize * ((levelPack.getSerialisableLevels().size() / 3f) + (2f/3f)));
             innerTable.row();
 
-            innerTable.add(serialisableLevel.name);
+            innerTable.add(levelPack.getName());
             innerTable.row();
 
             innerTable.addListener(BeepingClickListener.BEEPING_CLICK_LISTENER);
@@ -114,8 +125,8 @@ public class MenuScreen extends Screen
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    LevelScreen levelScreen = new LevelScreen(serialisableLevel);
-                    ScreenManager.addScreen(levelScreen);
+                    LevelPackScreen levelPackScreen = new LevelPackScreen(levelPack);
+                    ScreenManager.addScreen(levelPackScreen);
                 }
             });
 
@@ -252,26 +263,6 @@ public class MenuScreen extends Screen
 
         return button;
     }
-    
-    private Actor getPurchaseButton()
-    {
-        BeepingImageTextButton button =
-            new BeepingImageTextButton("", UIManager.skin, "unlock");
-
-        button.addListener(
-            new ClickListener()
-            {
-                @Override
-                public void clicked(InputEvent event, float x, float y)
-                {
-                    SpaceTravels3.services.purchaseFullVersion();
-                }
-            });
-
-        button.setVisible(!SpaceTravels3.services.hasFullVersion());
-
-        return button;
-    }
 
     public Actor getDebugButton()
     {
@@ -287,6 +278,24 @@ public class MenuScreen extends Screen
                 }
             });
         return debugButton;
+    }
+
+    public static String s(String s, int j)
+    {
+        char[] chars = s.toCharArray();
+        for (int i = 0; i < chars.length; i++)
+        {
+            char c = chars[i];
+            if (Character.isDigit(c))
+            {
+                int newValue = Integer.parseInt(String.valueOf(c)) + j;
+                newValue += 10;
+                char[] charArray = String.valueOf(newValue).toCharArray();
+                chars[i] = charArray[charArray.length - 1];
+            }
+        }
+
+        return new String(chars);
     }
 
     @Override
@@ -340,12 +349,5 @@ public class MenuScreen extends Screen
     public void dispose()
     {
         this.stage.dispose();
-        Constants.General.EVENT_BUS.unregister(this);
-    }
-
-    @Subscribe
-    public void purchaseVerified(VerifyPurchaseEvent verifyPurchaseEvent)
-    {
-        this.purchaseButton.setVisible(!verifyPurchaseEvent.hasFullVersion);
     }
 }

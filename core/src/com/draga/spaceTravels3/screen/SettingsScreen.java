@@ -46,7 +46,7 @@ public class SettingsScreen extends Screen
         // Back button.
         table.row();
         table
-            .add(getBackTextButton())
+            .add(getBackButton())
             .bottom();
 
         this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);

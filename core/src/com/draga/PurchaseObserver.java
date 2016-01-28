@@ -25,10 +25,9 @@ public class PurchaseObserver implements com.badlogic.gdx.pay.PurchaseObserver
     {
         for (Transaction transaction : transactions)
         {
-            if (transaction.getIdentifier().equals(SpaceTravels3.services.fullVersionIdentifier)
-                && transaction.isPurchased())
+            if (transaction.isPurchased())
             {
-                SpaceTravels3.services.setHasFullVersion(true);
+                SpaceTravels3.services.setPurchasedSku(transaction.getIdentifier());
             }
         }
     }
@@ -42,12 +41,11 @@ public class PurchaseObserver implements com.badlogic.gdx.pay.PurchaseObserver
     @Override
     public void handlePurchase(Transaction transaction)
     {
-        if (transaction.getIdentifier().equals(SpaceTravels3.services.fullVersionIdentifier)
-            && transaction.isPurchased())
+        if (transaction.isPurchased())
         {
-            SpaceTravels3.services.setHasFullVersion(true);
+            SpaceTravels3.services.setPurchasedSku(transaction.getIdentifier());
+            // TODO: 24/01/2016 thanks message
         }
-        // TODO: 24/01/2016 thanks message
     }
 
     @Override

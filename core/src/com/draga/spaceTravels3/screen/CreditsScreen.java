@@ -37,7 +37,7 @@ public class CreditsScreen extends Screen
             .expand();
         table.row();
 
-        table.add(getBackTextButton());
+        table.add(getBackButton());
 
         this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }

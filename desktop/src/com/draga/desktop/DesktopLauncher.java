@@ -28,6 +28,6 @@ public class DesktopLauncher
 
         config.resizable = false;
 
-        new LwjglApplication(new SpaceTravels3(new NullServices()), config);
+        new LwjglApplication(new SpaceTravels3(), config);
     }
 }
