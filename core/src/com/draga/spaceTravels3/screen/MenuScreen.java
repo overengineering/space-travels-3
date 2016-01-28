@@ -67,14 +67,12 @@ public class MenuScreen extends Screen
 
         table.add(buttonsTable);
 
-        // Debug button.
         if (Constants.General.IS_DEBUGGING)
         {
             this.stage.addActor(getDebugButton());
         }
 
         this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
-        Constants.General.EVENT_BUS.register(this);
     }
 
     public Label getHeaderLabel()
@@ -95,11 +93,10 @@ public class MenuScreen extends Screen
         {
             Table innerTable = UIManager.getDefaultTable();
 
-
-
             WidgetGroup group = new WidgetGroup();
 
-            // If the level icon is not loaded in the ass man then add to an map to load them async.
+            // Overlaps the images of the destination planets leaving a 1/3 offset from each other.
+            // Starts from right and the last planet because the last drawn will be on top.
             ArrayList<SerialisableLevel> serialisableLevels = levelPack.getSerialisableLevels();
             for (int i = serialisableLevels.size() - 1; i >= 0; i--)
             {
@@ -352,6 +349,5 @@ public class MenuScreen extends Screen
     public void dispose()
     {
         this.stage.dispose();
-        Constants.General.EVENT_BUS.unregister(this);
     }
 }
