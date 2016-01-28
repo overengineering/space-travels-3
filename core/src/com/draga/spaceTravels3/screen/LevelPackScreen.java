@@ -69,7 +69,7 @@ public class LevelPackScreen extends Screen
 
     public Label getHeaderLabel()
     {
-        Label headerLabel = new Label("Space Travels 3", UIManager.skin, "large", Color.WHITE);
+        Label headerLabel = new Label(this.levelPack.getName(), UIManager.skin, "large", Color.WHITE);
 
         return headerLabel;
     }
@@ -118,130 +118,6 @@ public class LevelPackScreen extends Screen
 
         return scrollPane;
     }
-
-    private Actor getSettingsTextButton()
-    {
-        BeepingImageTextButton button =
-            new BeepingImageTextButton("", UIManager.skin, "settings");
-
-        button.addListener(
-            new ClickListener()
-            {
-                @Override
-                public void clicked(InputEvent event, float x, float y)
-                {
-                    ScreenManager.addScreen(new SettingsScreen());
-                }
-            });
-
-        return button;
-    }
-
-    private Actor getTutorialButton()
-    {
-        BeepingImageTextButton button =
-            new BeepingImageTextButton("", UIManager.skin, "tutorial");
-
-        button.addListener(
-            new ClickListener()
-            {
-                @Override
-                public void clicked(InputEvent event, float x, float y)
-                {
-                    ScreenManager.addScreen(new TutorialScreen());
-                }
-            });
-
-        return button;
-    }
-
-    private Actor getCreditsButton()
-    {
-        BeepingImageTextButton button =
-            new BeepingImageTextButton("", UIManager.skin, "credits");
-
-        button.addListener(
-            new ClickListener()
-            {
-                @Override
-                public void clicked(InputEvent event, float x, float y)
-                {
-                    ScreenManager.addScreen(new CreditsScreen());
-                }
-            });
-
-        return button;
-    }
-
-    private Actor getShareButton()
-    {
-        BeepingImageTextButton button =
-            new BeepingImageTextButton("", UIManager.skin, "share");
-        button.addListener(new ClickListener()
-        {
-            @Override
-            public void clicked(InputEvent event, float x, float y)
-            {
-                SpaceTravels3.services.share();
-            }
-        });
-
-        return button;
-    }
-
-    private Actor getRateButton()
-    {
-        BeepingImageTextButton
-            button = new BeepingImageTextButton("", UIManager.skin, "rate");
-
-        button.addListener(
-            new ClickListener()
-            {
-                @Override
-                public void clicked(InputEvent event, float x, float y)
-                {
-                    SpaceTravels3.services.rateApp();
-                }
-            });
-
-        return button;
-    }
-
-    private Actor getAchievementsButton()
-    {
-        BeepingImageTextButton
-            button = new BeepingImageTextButton("", UIManager.skin, "achievement");
-
-        button.addListener(
-            new ClickListener()
-            {
-                @Override
-                public void clicked(InputEvent event, float x, float y)
-                {
-                    SpaceTravels3.services.googleShowAchievements();
-                }
-            });
-
-        return button;
-    }
-    
-    private Actor getLeaderboardsButton()
-    {
-        BeepingImageTextButton
-            button = new BeepingImageTextButton("", UIManager.skin, "leaderboard");
-
-        button.addListener(
-            new ClickListener()
-            {
-                @Override
-                public void clicked(InputEvent event, float x, float y)
-                {
-                    SpaceTravels3.services.googleShowLeaderboards();
-                }
-            });
-
-        return button;
-    }
     
     private Actor getPurchaseButton()
     {
@@ -262,40 +138,6 @@ public class LevelPackScreen extends Screen
             && !SpaceTravels3.services.hasPurchasedSku(this.levelPack.getGoogleSku()));
 
         return button;
-    }
-
-    public Actor getDebugButton()
-    {
-        TextButton debugButton = new BeepingTextButton("Debug", UIManager.skin);
-
-        debugButton.addListener(
-            new ClickListener()
-            {
-                @Override
-                public void clicked(InputEvent event, float x, float y)
-                {
-                    ScreenManager.addScreen(new DebugScreen());
-                }
-            });
-        return debugButton;
-    }
-
-    public static String s(String s, int j)
-    {
-        char[] chars = s.toCharArray();
-        for (int i = 0; i < chars.length; i++)
-        {
-            char c = chars[i];
-            if (Character.isDigit(c))
-            {
-                int newValue = Integer.parseInt(String.valueOf(c)) + j;
-                newValue += 10;
-                char[] charArray = String.valueOf(newValue).toCharArray();
-                chars[i] = charArray[charArray.length - 1];
-            }
-        }
-
-        return new String(chars);
     }
 
     @Override
