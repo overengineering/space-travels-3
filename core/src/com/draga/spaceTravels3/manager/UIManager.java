@@ -110,6 +110,9 @@ public abstract class UIManager
                 AssMan.getAssList().iconAccelerometer,
                 AssMan.getAssList().iconAccelerometerChecked));
         skin.add("retry", getImageTextButtonStyle(skin, AssMan.getAssList().iconRetry));
+        skin.add(
+            "unlockOverlay",
+            new Sprite(new Texture(AssMan.getAssList().iconUnlockOverlay)));
 
         skin.add("checkable", getCheckableTextButtonStyle(skin));
 

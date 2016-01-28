@@ -41,11 +41,15 @@ public abstract class Constants
         // Screen.
         public static final float SCREEN_FADE_DURATION = 1f;
         public static final Color SCREEN_FADE_COLOUR   = new Color(0, 0, 0, 0.7f);
+        public static final Color FADE_TINT_COLOUR     = new Color(0.3f, 0.3f, 0.3f, 1f);
 
         // Delimited progress bar.
         public static final Color DELIMITED_PROGRESSBAR_BACKGROUND  = Color.DARK_GRAY;
         public static final Color DELIMITED_PROGRESSBAR_DELIMITER   = Color.WHITE;
         public static final Color DELIMITED_PROGRESSBAR_KNOB_BEFORE = Color.LIGHT_GRAY;
+
+        public static final float LEVEL_ICON_SIZE             = Gdx.graphics.getHeight() / 5f;
+        public static final float LEVEL_ICON_OVERLAP_DISTANCE = LEVEL_ICON_SIZE / 3f;
 
 
         public abstract static class Background

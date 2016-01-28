@@ -30,7 +30,6 @@ public class LevelPackScreen extends Screen
     private final LevelPack levelPack;
     private final Actor purchaseButton;
     private       Stage stage;
-    private       float levelIconsSize;
 
     public LevelPackScreen(LevelPack levelPack)
     {
@@ -38,7 +37,6 @@ public class LevelPackScreen extends Screen
         this.levelPack = levelPack;
 
         this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
-        this.levelIconsSize = this.stage.getWidth() / 10f;
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
@@ -92,7 +90,7 @@ public class LevelPackScreen extends Screen
 
             innerTable
                 .add(image)
-                .size(this.levelIconsSize);
+                .size(Constants.Visual.LEVEL_ICON_SIZE);
             innerTable.row();
 
             innerTable.add(serialisableLevel.name);

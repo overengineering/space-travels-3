@@ -73,7 +73,7 @@ public abstract class Services
 
     public void setPurchasedSku(String sku)
     {
-        Constants.General.EVENT_BUS.post(new PurchasedEvent(sku));
         this.purchasedSkus.add(sku);
+        Constants.General.EVENT_BUS.post(new PurchasedEvent(sku));
     }
 }
