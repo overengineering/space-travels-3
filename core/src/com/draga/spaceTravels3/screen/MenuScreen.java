@@ -28,12 +28,13 @@ import java.util.ArrayList;
 
 public class MenuScreen extends Screen
 {
-    private final Cell       levelPackListCell;
-    private       Stage      stage;
+    private final Cell  levelPackListCell;
+    private       Stage stage;
 
     public MenuScreen()
     {
         super(true, true);
+        Constants.General.EVENT_BUS.register(this);
 
         this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
 
@@ -73,7 +74,6 @@ public class MenuScreen extends Screen
         }
 
         this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
-        Constants.General.EVENT_BUS.register(this);
     }
 
     public Label getHeaderLabel()
@@ -112,9 +112,9 @@ public class MenuScreen extends Screen
                 levelImages.add(image);
             }
 
-            float imageGroupWidth = Constants.Visual.LEVEL_ICON_SIZE * (
-                (levelPack.getSerialisableLevels().size() / 3f) + (
-                    2f / 3f));
+            float imageGroupWidth = Constants.Visual.LEVEL_ICON_SIZE
+                + ((levelPack.getSerialisableLevels().size() - 1)
+                    * Constants.Visual.LEVEL_ICON_OVERLAP_DISTANCE);
 
             if (!levelPack.isFree()
                 && !SpaceTravels3.services.hasPurchasedSku(levelPack.getGoogleSku()))
@@ -126,7 +126,8 @@ public class MenuScreen extends Screen
 
                 Image unlockImage = new Image(UIManager.skin, "unlockOverlay");
                 unlockImage.setX(imageGroupWidth / 2f - unlockImage.getWidth() / 2f);
-                unlockImage.setY(Constants.Visual.LEVEL_ICON_SIZE / 2f - unlockImage.getHeight() / 2f);
+                unlockImage.setY(Constants.Visual.LEVEL_ICON_SIZE / 2f
+                    - unlockImage.getHeight() / 2f);
                 imageGroup.addActor(unlockImage);
             }
 
@@ -383,7 +384,11 @@ public class MenuScreen extends Screen
     @Subscribe
     public void purchased(PurchasedEvent purchasedEvent)
     {
-        this.levelPackListCell.clearActor();
-        this.levelPackListCell.setActor(getLevelPackList());
+        // If it doesn't exists it means it has not been created yet and it will taken care of.
+        if (this.levelPackListCell != null)
+        {
+            this.levelPackListCell.clearActor();
+            this.levelPackListCell.setActor(getLevelPackList());
+        }
     }
 }
