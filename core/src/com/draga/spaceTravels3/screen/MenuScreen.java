@@ -28,15 +28,15 @@ import java.util.ArrayList;
 
 public class MenuScreen extends Screen
 {
+    private final Cell  levelPackListCell;
     private       Stage stage;
-    private       float levelIconsSize;
 
     public MenuScreen()
     {
         super(true, true);
+        Constants.General.EVENT_BUS.register(this);
 
         this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
-        this.levelIconsSize = this.stage.getWidth() / 10f;
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
@@ -48,10 +48,14 @@ public class MenuScreen extends Screen
 
         // Level list.
         table.row();
-        table
-            .add(getLevelPackList())
+
+        // Firstly create the cell so that if the event comes through it will generate the level
+        // pack list again.
+        this.levelPackListCell = table
+            .add()
             .expand()
             .center();
+        this.levelPackListCell.setActor(getLevelPackList());
 
         // Buttons.
         table.row();
@@ -93,10 +97,11 @@ public class MenuScreen extends Screen
         {
             Table innerTable = UIManager.getDefaultTable();
 
-            WidgetGroup group = new WidgetGroup();
+            ArrayList<Image> levelImages = new ArrayList<>();
 
             // Overlaps the images of the destination planets leaving a 1/3 offset from each other.
             // Starts from right and the last planet because the last drawn will be on top.
+            WidgetGroup imageGroup = new WidgetGroup();
             ArrayList<SerialisableLevel> serialisableLevels = levelPack.getSerialisableLevels();
             for (int i = serialisableLevels.size() - 1; i >= 0; i--)
             {
@@ -104,16 +109,35 @@ public class MenuScreen extends Screen
                 Image image = loadTextureAsync(
                     serialisableLevel.serialisedDestinationPlanet.texturePath,
                     AssMan.getAssMan());
-                image.sizeBy(this.levelIconsSize);
-                image.setX(i * (this.levelIconsSize / 3f));
-                group.addActor(image);
+                image.sizeBy(Constants.Visual.LEVEL_ICON_SIZE);
+                image.setX(i * (Constants.Visual.LEVEL_ICON_OVERLAP_DISTANCE));
+                imageGroup.addActor(image);
+                levelImages.add(image);
             }
 
-            group.sizeBy(this.levelIconsSize);
+            float imageGroupWidth = Constants.Visual.LEVEL_ICON_SIZE
+                + ((levelPack.getSerialisableLevels().size() - 1)
+                    * Constants.Visual.LEVEL_ICON_OVERLAP_DISTANCE);
+
+            if (!levelPack.isFree()
+                && !SpaceTravels3.services.hasPurchasedSku(levelPack.getGoogleSku()))
+            {
+                for (Image levelImage : levelImages)
+                {
+                    levelImage.setColor(Constants.Visual.FADE_TINT_COLOUR);
+                }
+
+                Image unlockImage = new Image(UIManager.skin, "unlockOverlay");
+                unlockImage.setX(imageGroupWidth / 2f - unlockImage.getWidth() / 2f);
+                unlockImage.setY(Constants.Visual.LEVEL_ICON_SIZE / 2f
+                    - unlockImage.getHeight() / 2f);
+                imageGroup.addActor(unlockImage);
+            }
+
             innerTable
-                .add(group)
-                .height(this.levelIconsSize)
-                .width(this.levelIconsSize * ((levelPack.getSerialisableLevels().size() / 3f) + (2f/3f)));
+                .add(imageGroup)
+                .height(Constants.Visual.LEVEL_ICON_SIZE)
+                .width(imageGroupWidth);
             innerTable.row();
 
             innerTable.add(levelPack.getName());
@@ -125,8 +149,16 @@ public class MenuScreen extends Screen
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    LevelPackScreen levelPackScreen = new LevelPackScreen(levelPack);
-                    ScreenManager.addScreen(levelPackScreen);
+                    if (levelPack.isFree()
+                        || SpaceTravels3.services.hasPurchasedSku(levelPack.getGoogleSku()))
+                    {
+                        LevelPackScreen levelPackScreen = new LevelPackScreen(levelPack);
+                        ScreenManager.addScreen(levelPackScreen);
+                    }
+                    else
+                    {
+                        SpaceTravels3.services.purchaseSku(levelPack.getGoogleSku());
+                    }
                 }
             });
 
@@ -349,5 +381,17 @@ public class MenuScreen extends Screen
     public void dispose()
     {
         this.stage.dispose();
+        Constants.General.EVENT_BUS.unregister(this);
+    }
+
+    @Subscribe
+    public void purchased(PurchasedEvent purchasedEvent)
+    {
+        // If it doesn't exists it means it has not been created yet and it will taken care of.
+        if (this.levelPackListCell != null)
+        {
+            this.levelPackListCell.clearActor();
+            this.levelPackListCell.setActor(getLevelPackList());
+        }
     }
 }
