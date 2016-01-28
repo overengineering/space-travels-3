@@ -49,10 +49,13 @@ public class MenuScreen extends Screen
         // Level list.
         table.row();
 
+        // Firstly create the cell so that if the event comes through it will generate the level
+        // pack list again.
         this.levelPackListCell = table
-            .add(getLevelPackList())
+            .add()
             .expand()
             .center();
+        this.levelPackListCell.setActor(getLevelPackList());
 
         // Buttons.
         table.row();
