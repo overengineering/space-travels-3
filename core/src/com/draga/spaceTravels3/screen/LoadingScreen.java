@@ -99,82 +99,62 @@ public class LoadingScreen extends Screen
         LevelParameters levelParameters = new LevelParameters(serialisableLevel, this.difficulty);
         this.levelAssetDescriptor = new AssetDescriptor("level", Level.class, levelParameters);
 
-
-
         // Loads sounds first 'cause of weird quirk of Android not loading them in time.
-        AssetDescriptor<Sound> thrusterSoundAssetDescriptor =
-            new AssetDescriptor<>(AssMan.getAssList().thrusterSound, Sound.class);
-        assMan.load(thrusterSoundAssetDescriptor);
-        levelParameters.dependencies.add(thrusterSoundAssetDescriptor);
+        loadLevelAsset(assMan, levelParameters, AssMan.getAssList().thrusterSound, Sound.class);
+        loadLevelAsset(assMan, levelParameters, AssMan.getAssList().explosionSound, Sound.class);
+        loadLevelAsset(
+            assMan,
+            levelParameters,
+            AssMan.getAssList().pickupCollectSound,
+            Sound.class);
+        loadLevelAsset(assMan, levelParameters, AssMan.getAssList().loseSound, Sound.class);
+        loadLevelAsset(assMan, levelParameters, AssMan.getAssList().winSound, Sound.class);
 
-        AssetDescriptor<Sound> explosionSoundAssetDescriptor =
-            new AssetDescriptor<>(AssMan.getAssList().explosionSound, Sound.class);
-        assMan.load(explosionSoundAssetDescriptor);
-        levelParameters.dependencies.add(explosionSoundAssetDescriptor);
-
-        AssetDescriptor<Sound> pickupCollectSoundAssetDescriptor =
-            new AssetDescriptor<>(AssMan.getAssList().pickupCollectSound, Sound.class);
-        assMan.load(pickupCollectSoundAssetDescriptor);
-        levelParameters.dependencies.add(pickupCollectSoundAssetDescriptor);
-
-        AssetDescriptor<Sound> loseSoundAssetDescriptor =
-            new AssetDescriptor<>(AssMan.getAssList().loseSound, Sound.class);
-        assMan.load(loseSoundAssetDescriptor);
-        levelParameters.dependencies.add(loseSoundAssetDescriptor);
-
-        AssetDescriptor<Sound> winSoundAssetDescriptor =
-            new AssetDescriptor<>(AssMan.getAssList().winSound, Sound.class);
-        assMan.load(winSoundAssetDescriptor);
-        levelParameters.dependencies.add(winSoundAssetDescriptor);
-
-
-        AssetDescriptor<Texture> pickupGreyTextureAssetDescriptor =
-            new AssetDescriptor<>(AssMan.getAssList().pickupGreyTexture, Texture.class);
-        assMan.load(pickupGreyTextureAssetDescriptor);
-        levelParameters.dependencies.add(pickupGreyTextureAssetDescriptor);
-
-        AssetDescriptor<Texture> shipTextureAssetDescriptor = new AssetDescriptor<>(
-            AssMan.getAssList().shipTexture, Texture.class);
-        assMan.load(shipTextureAssetDescriptor);
-        levelParameters.dependencies.add(shipTextureAssetDescriptor);
-
-        AssetDescriptor<TextureAtlas> thrusterTextureAtlasAssetDescriptor = new AssetDescriptor<>(
-            AssMan.getAssList().thrusterTextureAtlas, TextureAtlas.class);
-        assMan.load(thrusterTextureAtlasAssetDescriptor);
-        levelParameters.dependencies.add(thrusterTextureAtlasAssetDescriptor);
-
+        loadLevelAsset(
+            assMan,
+            levelParameters,
+            AssMan.getAssList().pickupGreyTexture,
+            Texture.class);
+        loadLevelAsset(assMan, levelParameters, AssMan.getAssList().shipTexture, Texture.class);
+        loadLevelAsset(
+            assMan,
+            levelParameters,
+            AssMan.getAssList().thrusterTextureAtlas,
+            TextureAtlas.class);
         for (SerialisablePlanet serialisablePlanet : serialisableLevel.serialisedPlanets)
         {
-            AssetDescriptor<Texture> planetTextureAssetDescriptor =
-                new AssetDescriptor<>(serialisablePlanet.texturePath, Texture.class);
-            assMan.load(planetTextureAssetDescriptor);
-            levelParameters.dependencies.add(planetTextureAssetDescriptor);
+            loadLevelAsset(assMan, levelParameters, serialisablePlanet.texturePath, Texture.class);
         }
-        AssetDescriptor<TextureAtlas> explosionTextureAtlasAssetDescriptor =
-            new AssetDescriptor<>(AssMan.getAssList().explosionTextureAtlas, TextureAtlas.class);
-        assMan.load(explosionTextureAtlasAssetDescriptor);
-        levelParameters.dependencies.add(explosionTextureAtlasAssetDescriptor);
-
-        AssetDescriptor<Texture> pickupTexture =
-            new AssetDescriptor<>(AssMan.getAssList().pickupTexture, Texture.class);
-        assMan.load(pickupTexture);
-        levelParameters.dependencies.add(pickupTexture);
-
+        loadLevelAsset(
+            assMan,
+            levelParameters,
+            AssMan.getAssList().explosionTextureAtlas,
+            TextureAtlas.class);
+        loadLevelAsset(assMan, levelParameters, AssMan.getAssList().pickupTexture, Texture.class);
 
         assMan.load(this.levelAssetDescriptor);
 
         GravityCacheParameters gravityCacheParameters = new GravityCacheParameters();
-        gravityCacheParameters.dependencies.add(levelAssetDescriptor);
+        gravityCacheParameters.dependencies.add(this.levelAssetDescriptor);
         AssetDescriptor<GravityCache> gravityCacheAssetDescriptor =
             new AssetDescriptor<>("gravityCache", GravityCache.class,
                 gravityCacheParameters);
         assMan.load(gravityCacheAssetDescriptor);
 
-
-
         assMan.load(Constants.Visual.HUD.JOYSTICK_ASSET_DESCRIPTOR);
 
         assMan.update();
+    }
+
+    private void loadLevelAsset(
+        AssetManager assMan,
+        LevelParameters levelParameters,
+        String assetPath, Class assetClass)
+    {
+        AssetDescriptor<Sound> thrusterSoundAssetDescriptor =
+            new AssetDescriptor<>(assetPath, assetClass);
+        assMan.load(thrusterSoundAssetDescriptor);
+        levelParameters.dependencies.add(thrusterSoundAssetDescriptor);
     }
 
     @Override
