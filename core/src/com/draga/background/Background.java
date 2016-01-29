@@ -9,10 +9,8 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
-import com.google.common.base.Stopwatch;
 
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 public class Background implements Disposable
 {
@@ -140,8 +138,6 @@ public class Background implements Disposable
         float maxParallax,
         float starMaxDiameterScale)
     {
-        Stopwatch stopwatch = Stopwatch.createStarted();
-
         Pixmap pixmap = getStarLayerPixmap(
             this.layerWidth,
             this.layerHeight,
@@ -153,9 +149,6 @@ public class Background implements Disposable
             minParallax,
             maxParallax);
         this.layerParallaxScale.add(parallaxScale);
-
-        Gdx.app.debug(LOGGING_TAG, "Generating star layer took " + stopwatch.elapsed(
-            TimeUnit.NANOSECONDS) * MathUtils.nanoToSec + "s");
 
     }
 
