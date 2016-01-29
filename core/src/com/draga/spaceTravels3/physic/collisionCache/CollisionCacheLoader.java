@@ -6,12 +6,9 @@ import com.badlogic.gdx.assets.loaders.AsynchronousAssetLoader;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.draga.NullFileHandleResolver;
+import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 import com.draga.spaceTravels3.level.Level;
-import com.draga.spaceTravels3.manager.asset.AssMan;
-import com.draga.spaceTravels3.physic.PhysicsEngine;
-import com.draga.spaceTravels3.physic.gravityCache.GravityCache;
-import com.draga.spaceTravels3.physic.gravityCache.GravityCacheParameters;
 
 public class CollisionCacheLoader
     extends AsynchronousAssetLoader<CollisionCache, CollisionCacheParameters>
@@ -30,10 +27,9 @@ public class CollisionCacheLoader
     public void loadAsync(
         AssetManager manager, String fileName, FileHandle file, CollisionCacheParameters parameter)
     {
-        Level level = manager.get("level", Level.class);
+        Level level = manager.get(Constants.Game.LEVEL_ASSET_FILENAME, Level.class);
         PhysicsComponent physicsComponent = level.getShip().physicsComponent;
         this.collisionCache = new CollisionCache(physicsComponent);
-        PhysicsEngine.addPhysicsComponentCollisions(physicsComponent, this.collisionCache);
     }
 
     @Override

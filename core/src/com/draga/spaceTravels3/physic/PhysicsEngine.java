@@ -255,14 +255,18 @@ public class PhysicsEngine
         force.add(x, y);
     }
 
-    public static void create()
+    public static void setup(
+        HashMap<PhysicsComponent, CollisionCache> physicsComponentCollisionCache,
+        GravityCache gravityCache)
     {
-        physicsComponentCollisionCache = new HashMap<>();
+        PhysicsEngine.physicsComponentCollisionCache = physicsComponentCollisionCache;
+        PhysicsEngine.gravityCache = gravityCache;
     }
     
     public static void dispose()
     {
         physicsComponentCollisionCache = null;
+        PhysicsEngine.gravityCache = null;
     }
     
     public static PerformanceCounter getGravityProjectionPerformanceCounter()
@@ -390,17 +394,5 @@ public class PhysicsEngine
             calculateGravityForce(physicsComponent, otherPhysicsComponents);
 
         return gravityForce;
-    }
-
-    public static void addPhysicsComponentCollisions(
-        PhysicsComponent physicsComponent, CollisionCache collisionCache)
-    {
-        physicsComponentCollisionCache.put(physicsComponent, collisionCache);
-    }
-
-    public static GravityCache cacheGravity()
-    {
-        gravityCache = new GravityCache();
-        return gravityCache;
     }
 }

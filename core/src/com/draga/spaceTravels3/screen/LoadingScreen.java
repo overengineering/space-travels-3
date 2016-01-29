@@ -23,7 +23,6 @@ import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.manager.level.LevelManager;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisablePlanet;
-import com.draga.spaceTravels3.physic.PhysicsEngine;
 import com.draga.spaceTravels3.physic.collisionCache.CollisionCache;
 import com.draga.spaceTravels3.physic.collisionCache.CollisionCacheParameters;
 import com.draga.spaceTravels3.physic.gravityCache.GravityCache;
@@ -100,7 +99,8 @@ public class LoadingScreen extends Screen
     {
         AssetManager assMan = AssMan.getGameAssMan();
         LevelParameters levelParameters = new LevelParameters(serialisableLevel, this.difficulty);
-        this.levelAssetDescriptor = new AssetDescriptor("level", Level.class, levelParameters);
+        this.levelAssetDescriptor =
+            new AssetDescriptor<>(Constants.Game.LEVEL_ASSET_FILENAME, Level.class, levelParameters);
 
         // Loads sounds first 'cause of weird quirk of Android not loading them in time.
         loadLevelAsset(assMan, levelParameters, AssMan.getAssList().thrusterSound, Sound.class);
@@ -137,18 +137,18 @@ public class LoadingScreen extends Screen
 
         assMan.load(this.levelAssetDescriptor);
 
-        PhysicsEngine.create();
         GravityCacheParameters gravityCacheParameters = new GravityCacheParameters();
         gravityCacheParameters.dependencies.add(this.levelAssetDescriptor);
         AssetDescriptor<GravityCache> gravityCacheAssetDescriptor =
-            new AssetDescriptor<>("gravityCache", GravityCache.class,
+            new AssetDescriptor<>(Constants.Game.GRAVITY_CACHE_ASSET_FILENAME, GravityCache.class,
                 gravityCacheParameters);
         assMan.load(gravityCacheAssetDescriptor);
 
         CollisionCacheParameters collisionCacheParameters = new CollisionCacheParameters();
         collisionCacheParameters.dependencies.add(this.levelAssetDescriptor);
         AssetDescriptor<CollisionCache> collisionCacheAssetDescriptor =
-            new AssetDescriptor<>("collisionCache", CollisionCache.class,
+            new AssetDescriptor<>(Constants.Game.COLLISION_CACHE_ASSET_FILENAME,
+                CollisionCache.class,
                 collisionCacheParameters);
         assMan.load(collisionCacheAssetDescriptor);
 
@@ -160,12 +160,13 @@ public class LoadingScreen extends Screen
     private void loadLevelAsset(
         AssetManager assMan,
         LevelParameters levelParameters,
-        String assetPath, Class assetClass)
+        String assetPath,
+        Class assetClass)
     {
-        AssetDescriptor<Sound> thrusterSoundAssetDescriptor =
-            new AssetDescriptor<>(assetPath, assetClass);
-        assMan.load(thrusterSoundAssetDescriptor);
-        levelParameters.dependencies.add(thrusterSoundAssetDescriptor);
+        AssetDescriptor assetDescriptor =
+            new AssetDescriptor(assetPath, assetClass);
+        assMan.load(assetDescriptor);
+        levelParameters.dependencies.add(assetDescriptor);
     }
 
     @Override

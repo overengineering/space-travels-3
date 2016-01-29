@@ -8,6 +8,9 @@ import com.draga.background.BackgroundParameters;
 import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.joystick.Joystick;
 import com.draga.joystick.JoystickParameters;
+import com.draga.spaceTravels3.level.Level;
+import com.draga.spaceTravels3.physic.collisionCache.CollisionCache;
+import com.draga.spaceTravels3.physic.gravityCache.GravityCache;
 import com.google.common.eventbus.EventBus;
 
 import java.text.DecimalFormat;
@@ -183,6 +186,12 @@ public abstract class Constants
         public static float SHIP_ACCELERATION_PER_SECOND = 40f;
 
         public static int PHYSICS_STEPS = 10;
+
+        public static final String LEVEL_ASSET_FILENAME           = Level.class.getSimpleName();
+        public static final String GRAVITY_CACHE_ASSET_FILENAME   =
+            GravityCache.class.getSimpleName();
+        public static final String COLLISION_CACHE_ASSET_FILENAME =
+            CollisionCache.class.getSimpleName();
     }
 
 

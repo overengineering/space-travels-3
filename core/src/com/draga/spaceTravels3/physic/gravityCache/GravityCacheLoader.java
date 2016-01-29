@@ -6,7 +6,6 @@ import com.badlogic.gdx.assets.loaders.AsynchronousAssetLoader;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.draga.NullFileHandleResolver;
-import com.draga.spaceTravels3.physic.PhysicsEngine;
 
 public class GravityCacheLoader
     extends AsynchronousAssetLoader<GravityCache, GravityCacheParameters>
@@ -24,7 +23,7 @@ public class GravityCacheLoader
     public void loadAsync(
         AssetManager manager, String fileName, FileHandle file, GravityCacheParameters parameter)
     {
-        this.gravityCache = PhysicsEngine.cacheGravity();
+        this.gravityCache = new GravityCache();
     }
 
     @Override
