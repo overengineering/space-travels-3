@@ -9,6 +9,7 @@ import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponentType;
 import com.draga.spaceTravels3.gameEntity.GameEntity;
 import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
+import com.draga.spaceTravels3.physic.gravityCache.GravityCache;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -396,8 +397,9 @@ public class PhysicsEngine
         physicsComponentCollisionCache.put(physicsComponent, collisionCache);
     }
 
-    public static void cacheGravity()
+    public static GravityCache cacheGravity()
     {
         gravityCache = new GravityCache();
+        return gravityCache;
     }
 }

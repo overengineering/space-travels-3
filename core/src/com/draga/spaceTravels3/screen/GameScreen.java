@@ -9,6 +9,7 @@ import com.draga.spaceTravels3.*;
 import com.draga.spaceTravels3.event.LoseEvent;
 import com.draga.spaceTravels3.event.WinEvent;
 import com.draga.spaceTravels3.gameEntity.GameEntity;
+import com.draga.spaceTravels3.level.Level;
 import com.draga.spaceTravels3.manager.*;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.physic.PhysicDebugDrawer;
@@ -44,7 +45,6 @@ public class GameScreen extends Screen
 
         PhysicsEngine.create();
         PhysicsEngine.cachePhysicsComponentCollisions(level.getShip().physicsComponent);
-        PhysicsEngine.cacheGravity();
 
         Constants.General.EVENT_BUS.register(this);
 

@@ -1,4 +1,4 @@
-package com.draga.spaceTravels3.physic;
+package com.draga.spaceTravels3.physic.gravityCache;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;

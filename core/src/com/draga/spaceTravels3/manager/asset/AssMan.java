@@ -7,6 +7,10 @@ import com.draga.background.Background;
 import com.draga.background.BackgroundLoader;
 import com.draga.joystick.Joystick;
 import com.draga.joystick.JoystickLoader;
+import com.draga.spaceTravels3.level.Level;
+import com.draga.spaceTravels3.level.LevelLoader;
+import com.draga.spaceTravels3.physic.gravityCache.GravityCache;
+import com.draga.spaceTravels3.physic.gravityCache.GravityCacheLoader;
 
 public abstract class AssMan
 {
@@ -23,6 +27,8 @@ public abstract class AssMan
     {
         GAME_ASSET_MANAGER = new AssetManager();
         GAME_ASSET_MANAGER.setLoader(Joystick.class, new JoystickLoader());
+        GAME_ASSET_MANAGER.setLoader(Level.class, new LevelLoader());
+        GAME_ASSET_MANAGER.setLoader(GravityCache.class, new GravityCacheLoader());
 
         ASSET_MANAGER = new AssetManager();
         ASSET_MANAGER.setLoader(Background.class, new BackgroundLoader());
