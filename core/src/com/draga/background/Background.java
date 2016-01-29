@@ -18,6 +18,12 @@ public class Background implements Disposable
 {
     private static final String LOGGING_TAG = Background.class.getSimpleName();
 
+    private final int layerWidth;
+    private final int layerHeight;
+
+    private final float u2Offset;
+    private final float v2Offset;
+
     private ArrayList<Texture> textures;
     private ArrayList<Float>   layerParallaxScale;
     private ArrayList<Pixmap>  pixmaps;
@@ -31,6 +37,13 @@ public class Background implements Disposable
         this.pixmaps = new ArrayList<>();
 
         this.position = new Vector2();
+
+        // uses the next pow2 size because GL has problem with textures not being in pow2 format.
+        this.layerWidth = MathUtils.nextPowerOfTwo(Gdx.graphics.getWidth());
+        this.layerHeight = MathUtils.nextPowerOfTwo(Gdx.graphics.getHeight());
+
+        this.u2Offset = (float) Gdx.graphics.getWidth() / this.layerWidth;
+        this.v2Offset = (float) Gdx.graphics.getHeight() / this.layerHeight;
     }
 
     /**
@@ -47,7 +60,6 @@ public class Background implements Disposable
             float offsetX = this.position.x * parallax;
             float offsetY = this.position.y * parallax;
 
-
             float u = offsetX / camera.viewportWidth;
             float v = offsetY / camera.viewportHeight;
 
@@ -61,8 +73,8 @@ public class Background implements Disposable
                 camera.viewportHeight,
                 u,
                 v,
-                u + 1f,
-                v + 1f);
+                u + this.u2Offset,
+                v + this.v2Offset);
         }
     }
 
@@ -113,7 +125,9 @@ public class Background implements Disposable
         for (int i = 0; i < layerCount; i++)
         {
             generateStarLayerPixmap(
-                starsCount / layerCount,
+                starsCount / layerCount
+                    * (this.layerWidth * this.layerHeight)
+                    / (Gdx.graphics.getWidth() * Gdx.graphics.getHeight()),
                 minParallax,
                 maxParallax,
                 starMaxDiameterScale);
@@ -129,8 +143,8 @@ public class Background implements Disposable
         Stopwatch stopwatch = Stopwatch.createStarted();
 
         Pixmap pixmap = getStarLayerPixmap(
-            Gdx.graphics.getWidth(),
-            Gdx.graphics.getHeight(),
+            this.layerWidth,
+            this.layerHeight,
             starsCount,
             starMaxDiameterScale);
         this.pixmaps.add(pixmap);
@@ -148,12 +162,14 @@ public class Background implements Disposable
     private Pixmap getStarLayerPixmap(
         int width,
         int height,
-        int starsCount, float starMaxDiameterScale)
+        int starsCount,
+        float starMaxDiameterScale)
     {
         Pixmap pixmap = new Pixmap(width, height, Pixmap.Format.RGBA8888);
         Pixmap.setBlending(Pixmap.Blending.None);
 
-        float maxDiameter = width * height * starMaxDiameterScale;
+        float maxDiameter =
+            Gdx.graphics.getWidth() * Gdx.graphics.getHeight() * starMaxDiameterScale;
         Interpolation alphaInterpolation = Interpolation.pow4;
 
         for (int i = 0; i < starsCount; i++)
