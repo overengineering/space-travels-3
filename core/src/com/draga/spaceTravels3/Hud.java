@@ -18,6 +18,7 @@ import com.draga.PooledVector2;
 import com.draga.joystick.Joystick;
 import com.draga.spaceTravels3.event.PickupCollectedEvent;
 import com.draga.spaceTravels3.gameEntity.Ship;
+import com.draga.spaceTravels3.level.Level;
 import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;

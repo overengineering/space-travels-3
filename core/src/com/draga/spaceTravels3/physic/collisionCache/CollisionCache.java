@@ -1,4 +1,4 @@
-package com.draga.spaceTravels3.physic;
+package com.draga.spaceTravels3.physic.collisionCache;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Pool;
 import com.draga.PooledVector2;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponentType;
+import com.draga.spaceTravels3.physic.PhysicsEngine;
 import com.draga.utils.FileUtils;
 import com.google.common.base.Stopwatch;
 

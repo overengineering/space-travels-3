@@ -1,6 +1,7 @@
 package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
@@ -12,8 +13,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.draga.spaceTravels3.Constants;
-import com.draga.spaceTravels3.Level;
 import com.draga.spaceTravels3.SpaceTravels3;
+import com.draga.spaceTravels3.level.Level;
+import com.draga.spaceTravels3.level.LevelParameters;
 import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
@@ -21,6 +23,10 @@ import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.manager.level.LevelManager;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisablePlanet;
+import com.draga.spaceTravels3.physic.collisionCache.CollisionCache;
+import com.draga.spaceTravels3.physic.collisionCache.CollisionCacheParameters;
+import com.draga.spaceTravels3.physic.gravityCache.GravityCache;
+import com.draga.spaceTravels3.physic.gravityCache.GravityCacheParameters;
 import com.draga.spaceTravels3.ui.Screen;
 import com.google.common.base.Joiner;
 import com.google.common.base.Stopwatch;
@@ -37,8 +43,9 @@ public class LoadingScreen extends Screen
     private Stage       stage;
     private ProgressBar progressBar;
 
-    private Stopwatch  stopwatch;
-    private GameScreen gameScreen;
+    private Stopwatch              stopwatch;
+    private GameScreen             gameScreen;
+    private AssetDescriptor<Level> levelAssetDescriptor;
 
     public LoadingScreen(String levelId, String difficulty)
     {
@@ -91,29 +98,75 @@ public class LoadingScreen extends Screen
     private void loadAssets(SerialisableLevel serialisableLevel)
     {
         AssetManager assMan = AssMan.getGameAssMan();
+        LevelParameters levelParameters = new LevelParameters(serialisableLevel, this.difficulty);
+        this.levelAssetDescriptor =
+            new AssetDescriptor<>(Constants.Game.LEVEL_ASSET_FILENAME, Level.class, levelParameters);
 
         // Loads sounds first 'cause of weird quirk of Android not loading them in time.
-        assMan.load(AssMan.getAssList().thrusterSound, Sound.class);
-        assMan.load(AssMan.getAssList().explosionSound, Sound.class);
-        assMan.load(AssMan.getAssList().pickupCollectSound, Sound.class);
-        assMan.load(AssMan.getAssList().loseSound, Sound.class);
-        assMan.load(AssMan.getAssList().winSound, Sound.class);
+        loadLevelAsset(assMan, levelParameters, AssMan.getAssList().thrusterSound, Sound.class);
+        loadLevelAsset(assMan, levelParameters, AssMan.getAssList().explosionSound, Sound.class);
+        loadLevelAsset(
+            assMan,
+            levelParameters,
+            AssMan.getAssList().pickupCollectSound,
+            Sound.class);
+        loadLevelAsset(assMan, levelParameters, AssMan.getAssList().loseSound, Sound.class);
+        loadLevelAsset(assMan, levelParameters, AssMan.getAssList().winSound, Sound.class);
 
-        assMan.load(AssMan.getAssList().pickupGreyTexture, Texture.class);
-        assMan.load(
-            AssMan.getAssList().shipTexture, Texture.class);
-        assMan.load(
-            AssMan.getAssList().thrusterTextureAtlas, TextureAtlas.class);
+        loadLevelAsset(
+            assMan,
+            levelParameters,
+            AssMan.getAssList().pickupGreyTexture,
+            Texture.class);
+        loadLevelAsset(assMan, levelParameters, AssMan.getAssList().shipTexture, Texture.class);
+        loadLevelAsset(
+            assMan,
+            levelParameters,
+            AssMan.getAssList().thrusterTextureAtlas,
+            TextureAtlas.class);
         for (SerialisablePlanet serialisablePlanet : serialisableLevel.serialisedPlanets)
         {
-            assMan.load(serialisablePlanet.texturePath, Texture.class);
+            loadLevelAsset(assMan, levelParameters, serialisablePlanet.texturePath, Texture.class);
         }
-        assMan.load(AssMan.getAssList().explosionTextureAtlas, TextureAtlas.class);
-        assMan.load(AssMan.getAssList().pickupTexture, Texture.class);
+        loadLevelAsset(
+            assMan,
+            levelParameters,
+            AssMan.getAssList().explosionTextureAtlas,
+            TextureAtlas.class);
+        loadLevelAsset(assMan, levelParameters, AssMan.getAssList().pickupTexture, Texture.class);
+
+        assMan.load(this.levelAssetDescriptor);
+
+        GravityCacheParameters gravityCacheParameters = new GravityCacheParameters();
+        gravityCacheParameters.dependencies.add(this.levelAssetDescriptor);
+        AssetDescriptor<GravityCache> gravityCacheAssetDescriptor =
+            new AssetDescriptor<>(Constants.Game.GRAVITY_CACHE_ASSET_FILENAME, GravityCache.class,
+                gravityCacheParameters);
+        assMan.load(gravityCacheAssetDescriptor);
+
+        CollisionCacheParameters collisionCacheParameters = new CollisionCacheParameters();
+        collisionCacheParameters.dependencies.add(this.levelAssetDescriptor);
+        AssetDescriptor<CollisionCache> collisionCacheAssetDescriptor =
+            new AssetDescriptor<>(Constants.Game.COLLISION_CACHE_ASSET_FILENAME,
+                CollisionCache.class,
+                collisionCacheParameters);
+        assMan.load(collisionCacheAssetDescriptor);
 
         assMan.load(Constants.Visual.HUD.JOYSTICK_ASSET_DESCRIPTOR);
 
         assMan.update();
+    }
+
+    private void loadLevelAsset(
+        AssetManager assMan,
+        LevelParameters levelParameters,
+        String assetPath,
+        Class assetClass)
+    {
+        AssetDescriptor assetDescriptor =
+            new AssetDescriptor(assetPath, assetClass);
+        assMan.load(assetDescriptor);
+        levelParameters.dependencies.add(assetDescriptor);
     }
 
     @Override
@@ -143,8 +196,7 @@ public class LoadingScreen extends Screen
                         "Loading time: %fs",
                         this.stopwatch.elapsed(TimeUnit.NANOSECONDS) * MathUtils.nanoToSec));
             }
-            Level level =
-                LevelManager.getLevel(this.serialisableLevel, this.difficulty);
+            Level level = AssMan.getGameAssMan().get(this.levelAssetDescriptor);
             this.gameScreen = new GameScreen(level);
             return;
         }

@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.draga.shape.Circle;
 import com.draga.spaceTravels3.gameEntity.GameEntity;
+import com.draga.spaceTravels3.level.Level;
 import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.spaceTravels3.physic.Projection;
 import com.draga.utils.GraphicsUtils;

@@ -2,7 +2,7 @@ package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.draga.spaceTravels3.Level;
+import com.draga.spaceTravels3.level.Level;
 import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.ui.BeepingImageTextButton;

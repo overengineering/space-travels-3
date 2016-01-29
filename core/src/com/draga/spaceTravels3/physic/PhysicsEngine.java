@@ -9,6 +9,8 @@ import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponentType;
 import com.draga.spaceTravels3.gameEntity.GameEntity;
 import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
+import com.draga.spaceTravels3.physic.collisionCache.CollisionCache;
+import com.draga.spaceTravels3.physic.gravityCache.GravityCache;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -181,7 +183,7 @@ public class PhysicsEngine
      * Check if both {@link PhysicsComponent} can collide with each other and if the two are
      * overlapping.
      */
-    protected static boolean areColliding(
+    public static boolean areColliding(
         PhysicsComponent physicsComponentA,
         PhysicsComponent physicsComponentB)
     {
@@ -253,14 +255,18 @@ public class PhysicsEngine
         force.add(x, y);
     }
 
-    public static void create()
+    public static void setup(
+        HashMap<PhysicsComponent, CollisionCache> physicsComponentCollisionCache,
+        GravityCache gravityCache)
     {
-        physicsComponentCollisionCache = new HashMap<>();
+        PhysicsEngine.physicsComponentCollisionCache = physicsComponentCollisionCache;
+        PhysicsEngine.gravityCache = gravityCache;
     }
     
     public static void dispose()
     {
         physicsComponentCollisionCache = null;
+        PhysicsEngine.gravityCache = null;
     }
     
     public static PerformanceCounter getGravityProjectionPerformanceCounter()
@@ -361,7 +367,7 @@ public class PhysicsEngine
         return projectionPoints;
     }
     
-    protected static ArrayList<PhysicsComponent> getAllPhysicsComponentsExcept(PhysicsComponent excludePhysicsComponent)
+    public static ArrayList<PhysicsComponent> getAllPhysicsComponentsExcept(PhysicsComponent excludePhysicsComponent)
     {
         ArrayList<PhysicsComponent> physicsComponents = getAllPhysicsComponents();
         physicsComponents.remove(excludePhysicsComponent);
@@ -388,16 +394,5 @@ public class PhysicsEngine
             calculateGravityForce(physicsComponent, otherPhysicsComponents);
 
         return gravityForce;
-    }
-
-    public static void cachePhysicsComponentCollisions(PhysicsComponent physicsComponent)
-    {
-        CollisionCache collisionCache = new CollisionCache(physicsComponent);
-        physicsComponentCollisionCache.put(physicsComponent, collisionCache);
-    }
-
-    public static void cacheGravity()
-    {
-        gravityCache = new GravityCache();
     }
 }

@@ -1,4 +1,4 @@
-package com.draga.spaceTravels3.physic;
+package com.draga.spaceTravels3.physic.gravityCache;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;

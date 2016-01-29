@@ -6,19 +6,24 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.utils.Pools;
 import com.draga.spaceTravels3.*;
+import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 import com.draga.spaceTravels3.event.LoseEvent;
 import com.draga.spaceTravels3.event.WinEvent;
 import com.draga.spaceTravels3.gameEntity.GameEntity;
+import com.draga.spaceTravels3.level.Level;
 import com.draga.spaceTravels3.manager.*;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.physic.PhysicDebugDrawer;
 import com.draga.spaceTravels3.physic.PhysicsEngine;
 import com.draga.spaceTravels3.physic.Projection;
 import com.draga.spaceTravels3.physic.ProjectionPoint;
+import com.draga.spaceTravels3.physic.collisionCache.CollisionCache;
+import com.draga.spaceTravels3.physic.gravityCache.GravityCache;
 import com.draga.spaceTravels3.ui.Screen;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class GameScreen extends Screen
 {
@@ -42,9 +47,15 @@ public class GameScreen extends Screen
             new PhysicsComponentBackgroundPositionController(level.getShip().physicsComponent);
         BackgroundPositionManager.setBackgroundPositionController(this.shipBackgroundPositionController);
 
-        PhysicsEngine.create();
-        PhysicsEngine.cachePhysicsComponentCollisions(level.getShip().physicsComponent);
-        PhysicsEngine.cacheGravity();
+        HashMap<PhysicsComponent, CollisionCache>
+            physicsComponentsCollisionCache = new HashMap<>();
+        physicsComponentsCollisionCache.put(
+            level.getShip().physicsComponent,
+            AssMan.getGameAssMan()
+                .get(Constants.Game.COLLISION_CACHE_ASSET_FILENAME, CollisionCache.class));
+        PhysicsEngine.setup(physicsComponentsCollisionCache, AssMan.getGameAssMan().get(
+            Constants.Game.GRAVITY_CACHE_ASSET_FILENAME,
+            GravityCache.class));
 
         Constants.General.EVENT_BUS.register(this);
 
