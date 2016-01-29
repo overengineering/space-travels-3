@@ -43,9 +43,6 @@ public class GameScreen extends Screen
             new PhysicsComponentBackgroundPositionController(level.getShip().physicsComponent);
         BackgroundPositionManager.setBackgroundPositionController(this.shipBackgroundPositionController);
 
-        PhysicsEngine.create();
-        PhysicsEngine.cachePhysicsComponentCollisions(level.getShip().physicsComponent);
-
         Constants.General.EVENT_BUS.register(this);
 
         this.hud = new Hud(this.level);

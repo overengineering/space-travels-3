@@ -9,6 +9,7 @@ import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponentType;
 import com.draga.spaceTravels3.gameEntity.GameEntity;
 import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
+import com.draga.spaceTravels3.physic.collisionCache.CollisionCache;
 import com.draga.spaceTravels3.physic.gravityCache.GravityCache;
 
 import java.util.ArrayList;
@@ -182,7 +183,7 @@ public class PhysicsEngine
      * Check if both {@link PhysicsComponent} can collide with each other and if the two are
      * overlapping.
      */
-    protected static boolean areColliding(
+    public static boolean areColliding(
         PhysicsComponent physicsComponentA,
         PhysicsComponent physicsComponentB)
     {
@@ -362,7 +363,7 @@ public class PhysicsEngine
         return projectionPoints;
     }
     
-    protected static ArrayList<PhysicsComponent> getAllPhysicsComponentsExcept(PhysicsComponent excludePhysicsComponent)
+    public static ArrayList<PhysicsComponent> getAllPhysicsComponentsExcept(PhysicsComponent excludePhysicsComponent)
     {
         ArrayList<PhysicsComponent> physicsComponents = getAllPhysicsComponents();
         physicsComponents.remove(excludePhysicsComponent);
@@ -391,9 +392,9 @@ public class PhysicsEngine
         return gravityForce;
     }
 
-    public static void cachePhysicsComponentCollisions(PhysicsComponent physicsComponent)
+    public static void addPhysicsComponentCollisions(
+        PhysicsComponent physicsComponent, CollisionCache collisionCache)
     {
-        CollisionCache collisionCache = new CollisionCache(physicsComponent);
         physicsComponentCollisionCache.put(physicsComponent, collisionCache);
     }
 

@@ -23,6 +23,9 @@ import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.manager.level.LevelManager;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisablePlanet;
+import com.draga.spaceTravels3.physic.PhysicsEngine;
+import com.draga.spaceTravels3.physic.collisionCache.CollisionCache;
+import com.draga.spaceTravels3.physic.collisionCache.CollisionCacheParameters;
 import com.draga.spaceTravels3.physic.gravityCache.GravityCache;
 import com.draga.spaceTravels3.physic.gravityCache.GravityCacheParameters;
 import com.draga.spaceTravels3.ui.Screen;
@@ -134,12 +137,20 @@ public class LoadingScreen extends Screen
 
         assMan.load(this.levelAssetDescriptor);
 
+        PhysicsEngine.create();
         GravityCacheParameters gravityCacheParameters = new GravityCacheParameters();
         gravityCacheParameters.dependencies.add(this.levelAssetDescriptor);
         AssetDescriptor<GravityCache> gravityCacheAssetDescriptor =
             new AssetDescriptor<>("gravityCache", GravityCache.class,
                 gravityCacheParameters);
         assMan.load(gravityCacheAssetDescriptor);
+
+        CollisionCacheParameters collisionCacheParameters = new CollisionCacheParameters();
+        collisionCacheParameters.dependencies.add(this.levelAssetDescriptor);
+        AssetDescriptor<CollisionCache> collisionCacheAssetDescriptor =
+            new AssetDescriptor<>("collisionCache", CollisionCache.class,
+                collisionCacheParameters);
+        assMan.load(collisionCacheAssetDescriptor);
 
         assMan.load(Constants.Visual.HUD.JOYSTICK_ASSET_DESCRIPTOR);
 
