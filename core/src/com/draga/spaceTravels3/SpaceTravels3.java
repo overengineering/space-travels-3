@@ -48,7 +48,6 @@ public class SpaceTravels3 implements ApplicationListener
     {
         services.setupPurchaseManager();
 
-
         MathUtils.random.setSeed(System.currentTimeMillis());
         ErrorHandlerProvider.addErrorHandler(new GdxErrorHandler());
 
