@@ -41,28 +41,28 @@
   },
   "serialisedPlanets": [
     {
-      "texturePath": "planet/mars256.png",
+      "texturePath": "planet/dead-64.png",
       "x": 260,
       "y": 60,
       "radius": 1,
       "mass": 300
     },
     {
-      "texturePath": "planet/jupiter256.png",
+      "texturePath": "planet/wind1-256.png",
       "x": 150,
       "y": 75,
       "radius": 25,
       "mass": 100000
     },
     {
-      "texturePath": "planet/mars256.png",
+      "texturePath": "planet/ice3-128.png",
       "x": 70,
       "y": 40,
       "radius": 3.397,
       "mass": 3000
     },
     {
-      "texturePath": "planet/venus256.png",
+      "texturePath": "planet/arid3-128.png",
       "x": 80,
       "y": 90,
       "radius": 6.052,

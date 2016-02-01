@@ -2,19 +2,14 @@ package com.draga;
 
 public class NullServices extends Services
 {
-    public NullServices()
+    @Override
+    public void setupPurchaseManager()
     {
-        super();
+
     }
 
     @Override
     public void share()
-    {
-
-    }
-
-    @Override
-    public void setupPurchaseManager()
     {
 
     }
@@ -71,5 +66,11 @@ public class NullServices extends Services
     public void rateApp()
     {
 
+    }
+
+    @Override
+    public boolean hasPurchasedSku(String sku)
+    {
+        return true;
     }
 }
