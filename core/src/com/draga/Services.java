@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public abstract class Services
 {
-    private ArrayList<String> purchasedSkus  = new ArrayList<>();
+    private ArrayList<String> purchasedSkus = new ArrayList<>();
 
     public Services()
     {
