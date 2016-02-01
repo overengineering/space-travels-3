@@ -41,7 +41,7 @@
   },
   "serialisedPlanets": [
     {
-      "texturePath": "planet/nuEarth1-256.png",
+      "texturePath": "planet/nuEarth1-128.png",
       "x": 60,
       "y": 15,
       "radius": 5,
@@ -55,28 +55,28 @@
       "mass": 20000
     },
     {
-      "texturePath": "planet/gas1-256.png",
+      "texturePath": "planet/gas1-128.png",
       "x": 160,
       "y": 15,
       "radius": 5,
       "mass": 20000
     },
     {
-      "texturePath": "planet/nuEarth1-256.png",
+      "texturePath": "planet/drye2-128.png",
       "x": 60,
       "y": 95,
       "radius": 5,
       "mass": 20000
     },
     {
-      "texturePath": "planet/arid3-128.png",
+      "texturePath": "planet/waterless4-128.png",
       "x": 110,
       "y": 95,
       "radius": 5,
       "mass": 20000
     },
     {
-      "texturePath": "planet/gas1-256.png",
+      "texturePath": "planet/drye3-128.png",
       "x": 160,
       "y": 95,
       "radius": 5,

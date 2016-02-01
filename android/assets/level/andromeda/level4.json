@@ -48,14 +48,14 @@
       "mass": 20000
     },
     {
-      "texturePath": "planet/gas1-256.png",
+      "texturePath": "planet/gas1-128.png",
       "x": 36,
       "y": 104,
       "radius": 9,
       "mass": 30000
     },
     {
-      "texturePath": "planet/wind3-256.png",
+      "texturePath": "planet/wind3-128.png",
       "x": 68,
       "y": 194,
       "radius": 9,
