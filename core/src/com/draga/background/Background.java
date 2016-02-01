@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
+import com.draga.utils.GraphicsUtils;
 
 import java.util.ArrayList;
 
@@ -36,9 +37,9 @@ public class Background implements Disposable
 
         this.position = new Vector2();
 
-        // uses the next pow2 size because GL has problem with textures not being in pow2 format.
-        this.layerWidth = MathUtils.nextPowerOfTwo(Gdx.graphics.getWidth());
-        this.layerHeight = MathUtils.nextPowerOfTwo(Gdx.graphics.getHeight());
+        // uses a pow2 size because GL has problem with textures not being in pow2 format.
+        this.layerWidth = GraphicsUtils.getClosestPowerOfTwo(Gdx.graphics.getWidth());
+        this.layerHeight = GraphicsUtils.getClosestPowerOfTwo(Gdx.graphics.getHeight());
 
         this.u2Offset = (float) Gdx.graphics.getWidth() / this.layerWidth;
         this.v2Offset = (float) Gdx.graphics.getHeight() / this.layerHeight;
@@ -103,6 +104,7 @@ public class Background implements Disposable
             Texture texture = new Texture(pixmap);
             pixmap.dispose();
             texture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+            // TODO: 01/02/2016 set texture filter to linear? It decreases the FPS a bit too much...
             this.textures.add(texture);
         }
 
