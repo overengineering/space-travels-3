@@ -4,24 +4,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
-import com.draga.spaceTravels3.ui.BeepingTextButton;
 import com.draga.spaceTravels3.ui.Screen;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TutorialScreen extends Screen
@@ -59,7 +52,7 @@ public class TutorialScreen extends Screen
 
         // Back button.
         table.row();
-        table.add(getBackTextButton());
+        table.add(getBackButton());
 
         this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
@@ -81,21 +74,6 @@ public class TutorialScreen extends Screen
         return scrollPane;
     }
 
-    private TextButton getBackTextButton()
-    {
-        TextButton backTextButton = new BeepingTextButton("Back", UIManager.skin);
-        backTextButton.addListener(new ClickListener()
-        {
-            @Override
-            public void clicked(InputEvent event, float x, float y)
-            {
-                ScreenManager.removeScreen(TutorialScreen.this);
-            }
-        });
-
-        return backTextButton;
-    }
-
     private Actor getMovementTutorial()
     {
         Table table = new Table(UIManager.skin);
@@ -110,7 +88,7 @@ public class TutorialScreen extends Screen
                 + "When using the touch screen 2 dashed circles will appear on the screen, touch "
                 + "within them to move the spaceship in that direction. The further away you touch from "
                 + "the Spaceship the greater the thrust produced (and fuel consumed).\r\n"
-                + "Being in space nothing but the planets' gravity will slow you down! Use the "
+                + "Being in space, nothing but the planets' gravity will slow you down! Use the "
                 + "inertia of the spaceship and the gravity of the planets in your favor.";
 
         Label movementLabel = new Label(movementText, UIManager.skin);
@@ -131,7 +109,7 @@ public class TutorialScreen extends Screen
 
         String goalText =
             "The goal is to land safely on the destination planet. This will be shown in blue in "
-                + "the minimap and will have an overlay to indicate how fast are you going .The "
+                + "the minimap and will have an overlay to indicate how fast are you going. The "
                 + "trajectory line colliding with it will appear blue.";
         Label goalLabel = new Label(goalText, UIManager.skin);
         goalLabel.setWrap(true);
@@ -176,8 +154,7 @@ public class TutorialScreen extends Screen
         table.add("Your ship");
         table.row();
 
-        Image shipImage = new Image();
-        loadTextureAsync(shipImage, AssMan.getAssList().shipTexture);
+        Image shipImage = loadTextureAsync(AssMan.getAssList().shipTexture, this.assMan);
         table
             .add(shipImage)
             .size(this.imageSize);
@@ -221,14 +198,10 @@ public class TutorialScreen extends Screen
         table.add("Landing speed indicator");
         table.row();
 
-        Image aboveLandingSpeedImage = new Image();
-        loadTextureAsync(
-            aboveLandingSpeedImage,
-            AssMan.getAssList().tutorialAboveLandingSpeedTexture);
-        Image belowLandingSpeedImage = new Image();
-        loadTextureAsync(
-            belowLandingSpeedImage,
-            AssMan.getAssList().tutorialBelowLandingSpeedTexture);
+        Image aboveLandingSpeedImage =
+            loadTextureAsync(AssMan.getAssList().tutorialAboveLandingSpeedTexture, this.assMan);
+        Image belowLandingSpeedImage =
+            loadTextureAsync(AssMan.getAssList().tutorialBelowLandingSpeedTexture, this.assMan);
 
         Table imageTable = new Table();
         imageTable
@@ -245,9 +218,9 @@ public class TutorialScreen extends Screen
 
         String landingSpeedIndicatorText =
             "Grows from the center of the planet in color green when your ship speed is within the "
-                + "speed that you can approach the destination planet. Above that speed starts "
+                + "speed that you can approach the destination planet. Above that speed it starts "
                 + "shrinking and becomes red. Remember that the destination planet's gravity will "
-                + "pull your ship towards it the closer you are.";
+                + "pull your ship more the closer you are.";
         Label landingSpeedIndicatorLabel = new Label(landingSpeedIndicatorText, UIManager.skin);
         table
             .add(landingSpeedIndicatorLabel)
@@ -263,8 +236,8 @@ public class TutorialScreen extends Screen
         table.add("Pickup");
         table.row();
 
-        Image pickupImage = new Image();
-        loadTextureAsync(pickupImage, AssMan.getAssList().tutorialPickupTexture);
+        Image pickupImage =
+            loadTextureAsync(AssMan.getAssList().tutorialPickupTexture, this.assMan);
         table
             .add(pickupImage)
             .size(this.imageSize);
@@ -316,8 +289,8 @@ public class TutorialScreen extends Screen
         table.add("Minimap");
         table.row();
 
-        Image minimapImage = new Image();
-        loadTextureAsync(minimapImage, AssMan.getAssList().tutorialMinimapTexture);
+        Image minimapImage =
+            loadTextureAsync(AssMan.getAssList().tutorialMinimapTexture, this.assMan);
         table
             .add(minimapImage)
             .height(this.imageSize);
@@ -335,13 +308,6 @@ public class TutorialScreen extends Screen
         return table;
     }
 
-    private void loadTextureAsync(Image image, String filePath)
-    {
-        this.assMan.load(filePath, Texture.class);
-        this.asyncImages.put(filePath, image);
-        this.assMan.update();
-    }
-
     @Override
     public void show()
     {
@@ -351,28 +317,12 @@ public class TutorialScreen extends Screen
     @Override
     public void render(float delta)
     {
-        // Check if we need to load images and if they are loaded show them.
-        if (!this.asyncImages.isEmpty())
-        {
-            ArrayList<String> filePaths = new ArrayList<>(this.asyncImages.keySet());
-            for (String filePath : filePaths)
-            {
-                if (this.assMan.update()
-                    || this.assMan.isLoaded(filePath))
-                {
-                    Texture texture = this.assMan.get(filePath);
-                    this.asyncImages.get(filePath)
-                        .setDrawable(new TextureRegionDrawable(new TextureRegion(texture)));
-
-                    this.asyncImages.remove(filePath);
-                }
-            }
-        }
+        loadAsyncImages(this.assMan);
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
             || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
         {
-            ScreenManager.removeScreen(TutorialScreen.this);
+            ScreenManager.removeScreen(this);
         }
 
         this.stage.getViewport().apply();

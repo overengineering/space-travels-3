@@ -1,22 +1,22 @@
 package com.draga.spaceTravels3.component.graphicComponent;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
-import com.draga.spaceTravels3.manager.asset.AssMan;
 
 public class StaticGraphicComponent extends GraphicComponent
 {
     private Texture texture;
 
     public StaticGraphicComponent(
-        String texturePath,
+        Texture texture,
         float width,
         float height,
         PhysicsComponent physicsComponent)
     {
-        super(physicsComponent, height, width);
-        this.texture = AssMan.getGameAssMan().get(texturePath);
+        super(physicsComponent, width, height);
+        this.texture = texture;
     }
 
     @Override
@@ -45,5 +45,13 @@ public class StaticGraphicComponent extends GraphicComponent
     public void dispose()
     {
         // Doesn't dispose texture.
+    }
+
+    @Override
+    public TextureRegion getTexture()
+    {
+        TextureRegion textureRegion = new TextureRegion(this.texture);
+
+        return textureRegion;
     }
 }

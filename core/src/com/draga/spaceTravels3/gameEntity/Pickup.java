@@ -1,10 +1,11 @@
 package com.draga.spaceTravels3.gameEntity;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.draga.spaceTravels3.Constants;
-import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 import com.draga.spaceTravels3.component.graphicComponent.StaticGraphicComponent;
 import com.draga.spaceTravels3.component.miniMapGraphicComponent.StarMiniMapGraphicComponent;
+import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponentType;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.List;
 
 public class Pickup extends GameEntity
 {
-    public Pickup(float x, float y, String texturePath)
+    public Pickup(float x, float y, Texture texture)
     {
         List<Class<? extends GameEntity>> collidesWith = new ArrayList<>();
         collidesWith.add(Ship.class);
@@ -30,14 +31,14 @@ public class Pickup extends GameEntity
 
         this.graphicComponent =
             new StaticGraphicComponent(
-                texturePath,
+                texture,
                 Constants.Visual.PICKUP_WIDTH,
                 Constants.Visual.PICKUP_HEIGHT,
                 this.physicsComponent);
 
         this.miniMapGraphicComponent =
             new StarMiniMapGraphicComponent(
-                physicsComponent,
+                this.physicsComponent,
                 Constants.Visual.HUD.Minimap.PICKUP_COLOR,
                 Constants.Game.PICKUP_RADIUS);
     }

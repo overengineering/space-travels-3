@@ -1,0 +1,90 @@
+{
+  "class": "SerialisableLevel",
+  "name": "Level 5",
+  "serialisedDifficulties": {
+    "Easy": {
+      "trajectorySeconds": 5,
+      "maxLandingSpeed": 70,
+      "fuel": 0,
+      "infiniteFuel": true,
+      "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQBg",
+      "playLeaderboardID": "CgkIxsSO8ZoXEAIQHQ"
+    },
+    "Medium": {
+      "trajectorySeconds": 3,
+      "maxLandingSpeed": 70,
+      "fuel": 4,
+      "infiniteFuel": false,
+      "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQIA",
+      "playLeaderboardID": "CgkIxsSO8ZoXEAIQHg"
+    },
+    "Hard": {
+      "trajectorySeconds": 0,
+      "maxLandingSpeed": 60,
+      "fuel": 2,
+      "infiniteFuel": false,
+      "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQIQ",
+      "playLeaderboardID": "CgkIxsSO8ZoXEAIQHw"
+    }
+  },
+  "serialisedShip": {
+    "x": 10,
+    "y": 75,
+    "mass": 1
+  },
+  "serialisedDestinationPlanet": {
+    "texturePath": "planet/arid3-256.png",
+    "x": 280,
+    "y": 75,
+    "radius": 6.378,
+    "mass": 20000
+  },
+  "serialisedPlanets": [
+    {
+      "texturePath": "planet/mars256.png",
+      "x": 260,
+      "y": 60,
+      "radius": 1,
+      "mass": 300
+    },
+    {
+      "texturePath": "planet/jupiter256.png",
+      "x": 150,
+      "y": 75,
+      "radius": 25,
+      "mass": 100000
+    },
+    {
+      "texturePath": "planet/mars256.png",
+      "x": 70,
+      "y": 40,
+      "radius": 3.397,
+      "mass": 3000
+    },
+    {
+      "texturePath": "planet/venus256.png",
+      "x": 80,
+      "y": 90,
+      "radius": 6.052,
+      "mass": 10000
+    }
+  ],
+  "serialisedPickups": [
+    {
+      "x": 125,
+      "y": 50
+    },
+    {
+      "x": 175,
+      "y": 50
+    },
+    {
+      "x": 125,
+      "y": 100
+    },
+    {
+      "x": 175,
+      "y": 100
+    }
+  ]
+}

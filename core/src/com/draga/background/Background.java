@@ -9,14 +9,19 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
-import com.google.common.base.Stopwatch;
+import com.draga.utils.GraphicsUtils;
 
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 public class Background implements Disposable
 {
     private static final String LOGGING_TAG = Background.class.getSimpleName();
+
+    private final int layerWidth;
+    private final int layerHeight;
+
+    private final float u2Offset;
+    private final float v2Offset;
 
     private ArrayList<Texture> textures;
     private ArrayList<Float>   layerParallaxScale;
@@ -31,6 +36,13 @@ public class Background implements Disposable
         this.pixmaps = new ArrayList<>();
 
         this.position = new Vector2();
+
+        // uses a pow2 size because GL has problem with textures not being in pow2 format.
+        this.layerWidth = GraphicsUtils.getClosestPowerOfTwo(Gdx.graphics.getWidth());
+        this.layerHeight = GraphicsUtils.getClosestPowerOfTwo(Gdx.graphics.getHeight());
+
+        this.u2Offset = (float) Gdx.graphics.getWidth() / this.layerWidth;
+        this.v2Offset = (float) Gdx.graphics.getHeight() / this.layerHeight;
     }
 
     /**
@@ -47,7 +59,6 @@ public class Background implements Disposable
             float offsetX = this.position.x * parallax;
             float offsetY = this.position.y * parallax;
 
-
             float u = offsetX / camera.viewportWidth;
             float v = offsetY / camera.viewportHeight;
 
@@ -61,8 +72,8 @@ public class Background implements Disposable
                 camera.viewportHeight,
                 u,
                 v,
-                u + 1f,
-                v + 1f);
+                u + this.u2Offset,
+                v + this.v2Offset);
         }
     }
 
@@ -93,6 +104,7 @@ public class Background implements Disposable
             Texture texture = new Texture(pixmap);
             pixmap.dispose();
             texture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+            // TODO: 01/02/2016 set texture filter to linear? It decreases the FPS a bit too much...
             this.textures.add(texture);
         }
 
@@ -113,7 +125,9 @@ public class Background implements Disposable
         for (int i = 0; i < layerCount; i++)
         {
             generateStarLayerPixmap(
-                starsCount / layerCount,
+                starsCount / layerCount
+                    * (this.layerWidth * this.layerHeight)
+                    / (Gdx.graphics.getWidth() * Gdx.graphics.getHeight()),
                 minParallax,
                 maxParallax,
                 starMaxDiameterScale);
@@ -126,11 +140,9 @@ public class Background implements Disposable
         float maxParallax,
         float starMaxDiameterScale)
     {
-        Stopwatch stopwatch = Stopwatch.createStarted();
-
         Pixmap pixmap = getStarLayerPixmap(
-            Gdx.graphics.getWidth(),
-            Gdx.graphics.getHeight(),
+            this.layerWidth,
+            this.layerHeight,
             starsCount,
             starMaxDiameterScale);
         this.pixmaps.add(pixmap);
@@ -140,20 +152,19 @@ public class Background implements Disposable
             maxParallax);
         this.layerParallaxScale.add(parallaxScale);
 
-        Gdx.app.debug(LOGGING_TAG, "Generating star layer took " + stopwatch.elapsed(
-            TimeUnit.NANOSECONDS) * MathUtils.nanoToSec + "s");
-
     }
 
     private Pixmap getStarLayerPixmap(
         int width,
         int height,
-        int starsCount, float starMaxDiameterScale)
+        int starsCount,
+        float starMaxDiameterScale)
     {
         Pixmap pixmap = new Pixmap(width, height, Pixmap.Format.RGBA8888);
         Pixmap.setBlending(Pixmap.Blending.None);
 
-        float maxDiameter = width * height * starMaxDiameterScale;
+        float maxDiameter =
+            Gdx.graphics.getWidth() * Gdx.graphics.getHeight() * starMaxDiameterScale;
         Interpolation alphaInterpolation = Interpolation.pow4;
 
         for (int i = 0; i < starsCount; i++)

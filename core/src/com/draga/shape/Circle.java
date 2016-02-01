@@ -10,4 +10,10 @@ public class Circle implements Serializable
     {
         this.radius = radius;
     }
+
+    public static String s(String s) {
+        return s
+            .replace('*', '/')
+            .replace('%', '+');
+    }
 }

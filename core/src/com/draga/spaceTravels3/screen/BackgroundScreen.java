@@ -15,8 +15,8 @@ public class BackgroundScreen extends Screen
     public BackgroundScreen()
     {
         super(false, false);
-        AssMan.getMenuAssMan().load(Constants.Visual.Background.BACKGROUND_ASSET_DESCRIPTOR);
-        AssMan.getMenuAssMan().update();
+        AssMan.getAssMan().load(Constants.Visual.Background.BACKGROUND_ASSET_DESCRIPTOR);
+        AssMan.getAssMan().update();
     }
 
     @Override
@@ -30,14 +30,14 @@ public class BackgroundScreen extends Screen
     {
         if (this.background == null)
         {
-            if (AssMan.getMenuAssMan().update()
-                || AssMan.getMenuAssMan()
+            if (AssMan.getAssMan().update()
+                || AssMan.getAssMan()
                 .isLoaded(
                     Constants.Visual.Background.BACKGROUND_ASSET_DESCRIPTOR.fileName,
                     Constants.Visual.Background.BACKGROUND_ASSET_DESCRIPTOR.type))
             {
                 this.background =
-                    AssMan.getMenuAssMan()
+                    AssMan.getAssMan()
                         .get(Constants.Visual.Background.BACKGROUND_ASSET_DESCRIPTOR);
                 BackgroundPositionManager.create(
                     this.background,

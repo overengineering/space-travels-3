@@ -1,0 +1,100 @@
+{
+  "class": "SerialisableLevel",
+  "name": "Level 3",
+  "serialisedDifficulties": {
+    "Easy": {
+      "trajectorySeconds": 5,
+      "maxLandingSpeed": 70,
+      "fuel": 0,
+      "infiniteFuel": true,
+      "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQBA",
+      "playLeaderboardID": "CgkIxsSO8ZoXEAIQEw"
+    },
+    "Medium": {
+      "trajectorySeconds": 3,
+      "maxLandingSpeed": 70,
+      "fuel": 4,
+      "infiniteFuel": false,
+      "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQFg",
+      "playLeaderboardID": "CgkIxsSO8ZoXEAIQFA"
+    },
+    "Hard": {
+      "trajectorySeconds": 0,
+      "maxLandingSpeed": 60,
+      "fuel": 2,
+      "infiniteFuel": false,
+      "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQFw",
+      "playLeaderboardID": "CgkIxsSO8ZoXEAIQFQ"
+    }
+  },
+  "serialisedShip": {
+    "x": 5,
+    "y": 30,
+    "mass": 1
+  },
+  "serialisedDestinationPlanet": {
+    "texturePath": "planet/drye2-256.png",
+    "x": 190,
+    "y": 30,
+    "radius": 10,
+    "mass": 30000
+  },
+  "serialisedPlanets": [
+    {
+      "texturePath": "planet/mars256.png",
+      "x": 100,
+      "y": 30,
+      "radius": 10,
+      "mass": 30000
+    },
+    {
+      "texturePath": "planet/jupiter256.png",
+      "x": 100,
+      "y": 120,
+      "radius": 7,
+      "mass": 30000
+    }
+  ],
+  "serialisedPickups": [
+    {
+      "x": 80,
+      "y": 30
+    },
+    {
+      "x": 120,
+      "y": 30
+    },
+    {
+      "x": 100,
+      "y": 10
+    },
+    {
+      "x": 100,
+      "y": 140
+    },
+    {
+      "x": 120,
+      "y": 120
+    },
+    {
+      "x": 80,
+      "y": 120
+    },
+    {
+      "x": 90,
+      "y": 90
+    },
+    {
+      "x": 90,
+      "y": 60
+    },
+    {
+      "x": 110,
+      "y": 60
+    },
+    {
+      "x": 110,
+      "y": 90
+    }
+  ]
+}

@@ -8,6 +8,9 @@ import com.draga.background.BackgroundParameters;
 import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.joystick.Joystick;
 import com.draga.joystick.JoystickParameters;
+import com.draga.spaceTravels3.level.Level;
+import com.draga.spaceTravels3.physic.collisionCache.CollisionCache;
+import com.draga.spaceTravels3.physic.gravityCache.GravityCache;
 import com.google.common.eventbus.EventBus;
 
 import java.text.DecimalFormat;
@@ -41,11 +44,15 @@ public abstract class Constants
         // Screen.
         public static final float SCREEN_FADE_DURATION = 1f;
         public static final Color SCREEN_FADE_COLOUR   = new Color(0, 0, 0, 0.7f);
+        public static final Color FADE_TINT_COLOUR     = new Color(0.3f, 0.3f, 0.3f, 1f);
 
         // Delimited progress bar.
         public static final Color DELIMITED_PROGRESSBAR_BACKGROUND  = Color.DARK_GRAY;
         public static final Color DELIMITED_PROGRESSBAR_DELIMITER   = Color.WHITE;
         public static final Color DELIMITED_PROGRESSBAR_KNOB_BEFORE = Color.LIGHT_GRAY;
+
+        public static final float LEVEL_ICON_SIZE             = Gdx.graphics.getHeight() / 5f;
+        public static final float LEVEL_ICON_OVERLAP_DISTANCE = LEVEL_ICON_SIZE / 3f;
 
 
         public abstract static class Background
@@ -179,6 +186,12 @@ public abstract class Constants
         public static float SHIP_ACCELERATION_PER_SECOND = 40f;
 
         public static int PHYSICS_STEPS = 10;
+
+        public static final String LEVEL_ASSET_FILENAME           = Level.class.getSimpleName();
+        public static final String GRAVITY_CACHE_ASSET_FILENAME   =
+            GravityCache.class.getSimpleName();
+        public static final String COLLISION_CACHE_ASSET_FILENAME =
+            CollisionCache.class.getSimpleName();
     }
 
 

@@ -1,0 +1,112 @@
+{
+  "class": "SerialisableLevel",
+  "name": "Level 6",
+  "serialisedDifficulties": {
+    "Easy": {
+      "trajectorySeconds": 5,
+      "maxLandingSpeed": 120,
+      "fuel": 0,
+      "infiniteFuel": true,
+      "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQBw",
+      "playLeaderboardID": "CgkIxsSO8ZoXEAIQJA"
+    },
+    "Medium": {
+      "trajectorySeconds": 3,
+      "maxLandingSpeed": 90,
+      "fuel": 12,
+      "infiniteFuel": false,
+      "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQIg",
+      "playLeaderboardID": "CgkIxsSO8ZoXEAIQJQ"
+    },
+    "Hard": {
+      "trajectorySeconds": 0,
+      "maxLandingSpeed": 70,
+      "fuel": 8,
+      "infiniteFuel": false,
+      "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQIw",
+      "playLeaderboardID": "CgkIxsSO8ZoXEAIQJg"
+    }
+  },
+  "serialisedShip": {
+    "x": 5,
+    "y": 15,
+    "mass": 1
+  },
+  "serialisedDestinationPlanet": {
+    "texturePath": "planet/wind3-256.png",
+    "x": 110,
+    "y": 55,
+    "radius": 5,
+    "mass": 20000
+  },
+  "serialisedPlanets": [
+    {
+      "texturePath": "planet/nuEarth1-256.png",
+      "x": 60,
+      "y": 15,
+      "radius": 5,
+      "mass": 20000
+    },
+    {
+      "texturePath": "planet/arid3-128.png",
+      "x": 110,
+      "y": 15,
+      "radius": 5,
+      "mass": 20000
+    },
+    {
+      "texturePath": "planet/gas1-256.png",
+      "x": 160,
+      "y": 15,
+      "radius": 5,
+      "mass": 20000
+    },
+    {
+      "texturePath": "planet/nuEarth1-256.png",
+      "x": 60,
+      "y": 95,
+      "radius": 5,
+      "mass": 20000
+    },
+    {
+      "texturePath": "planet/arid3-128.png",
+      "x": 110,
+      "y": 95,
+      "radius": 5,
+      "mass": 20000
+    },
+    {
+      "texturePath": "planet/gas1-256.png",
+      "x": 160,
+      "y": 95,
+      "radius": 5,
+      "mass": 20000
+    }
+  ],
+  "serialisedPickups": [
+    {
+      "x": 60,
+      "y": 5
+    },
+    {
+      "x": 110,
+      "y": 25
+    },
+    {
+      "x": 170,
+      "y": 5
+    },
+    {
+      "x": 50,
+      "y": 105
+    },
+    {
+      "x": 110,
+      "y": 85
+    },
+    {
+      "x": 170,
+      "y": 105
+    }
+  ]
+}

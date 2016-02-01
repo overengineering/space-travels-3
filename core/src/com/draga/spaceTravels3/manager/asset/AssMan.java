@@ -7,11 +7,17 @@ import com.draga.background.Background;
 import com.draga.background.BackgroundLoader;
 import com.draga.joystick.Joystick;
 import com.draga.joystick.JoystickLoader;
+import com.draga.spaceTravels3.level.Level;
+import com.draga.spaceTravels3.level.LevelLoader;
+import com.draga.spaceTravels3.physic.collisionCache.CollisionCache;
+import com.draga.spaceTravels3.physic.collisionCache.CollisionCacheLoader;
+import com.draga.spaceTravels3.physic.gravityCache.GravityCache;
+import com.draga.spaceTravels3.physic.gravityCache.GravityCacheLoader;
 
 public abstract class AssMan
 {
     private static AssetManager GAME_ASSET_MANAGER;
-    private static AssetManager MENU_ASSET_MANAGER;
+    private static AssetManager ASSET_MANAGER;
 
     private static AssList ASSET_LIST;
 
@@ -23,9 +29,12 @@ public abstract class AssMan
     {
         GAME_ASSET_MANAGER = new AssetManager();
         GAME_ASSET_MANAGER.setLoader(Joystick.class, new JoystickLoader());
+        GAME_ASSET_MANAGER.setLoader(Level.class, new LevelLoader());
+        GAME_ASSET_MANAGER.setLoader(GravityCache.class, new GravityCacheLoader());
+        GAME_ASSET_MANAGER.setLoader(CollisionCache.class, new CollisionCacheLoader());
 
-        MENU_ASSET_MANAGER = new AssetManager();
-        MENU_ASSET_MANAGER.setLoader(Background.class, new BackgroundLoader());
+        ASSET_MANAGER = new AssetManager();
+        ASSET_MANAGER.setLoader(Background.class, new BackgroundLoader());
 
         ASSET_LIST = new Json().fromJson(
             AssList.class,
@@ -35,7 +44,7 @@ public abstract class AssMan
     public static void dispose()
     {
         GAME_ASSET_MANAGER.dispose();
-        MENU_ASSET_MANAGER.dispose();
+        ASSET_MANAGER.dispose();
     }
 
     public static AssetManager getGameAssMan()
@@ -43,9 +52,9 @@ public abstract class AssMan
         return GAME_ASSET_MANAGER;
     }
 
-    public static AssetManager getMenuAssMan()
+    public static AssetManager getAssMan()
     {
-        return MENU_ASSET_MANAGER;
+        return ASSET_MANAGER;
     }
 
     public static AssList getAssList()

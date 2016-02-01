@@ -23,5 +23,21 @@
   "tutorialMinimapTexture": "tutorial/minimap.png",
   "tutorialBelowLandingSpeedTexture": "tutorial/belowLandingSpeed.png",
   "tutorialAboveLandingSpeedTexture": "tutorial/aboveLandingSpeed.png",
-  "tutorialPickupTexture": "tutorial/star128.png"
+  "tutorialPickupTexture": "tutorial/star128.png",
+  "iconSettings": "icon/settings64.png",
+  "iconLeaderboard": "icon/leaderboard64.png",
+  "iconAchievement": "icon/achievement64.png",
+  "iconCredits": "icon/credits64.png",
+  "iconRate": "icon/star64.png",
+  "iconTutorial": "icon/tutorial64.png",
+  "iconExit": "icon/exit64.png",
+  "iconTouch": "icon/touch64.png",
+  "iconAccelerometer": "icon/accelerometer64.png",
+  "iconTouchChecked": "icon/touchChecked64.png",
+  "iconAccelerometerChecked": "icon/accelerometerChecked64.png",
+  "iconRetry": "icon/retry64.png",
+  "iconPlay": "icon/play64.png",
+  "iconShare": "icon/share64.png",
+  "iconUnlock": "icon/unlock64.png",
+  "iconUnlockOverlay": "icon/unlock100w.png"
 }

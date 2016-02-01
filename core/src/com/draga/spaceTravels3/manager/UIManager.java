@@ -4,13 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.manager.asset.AssMan;
@@ -18,6 +17,9 @@ import com.draga.spaceTravels3.manager.asset.AssMan;
 public abstract class UIManager
 {
     private static final String LOGGING_TAG = UIManager.class.getSimpleName();
+
+    private static final Color CHECKED_COLOR = Color.GREEN;
+
     public static Skin skin;
 
     private UIManager()
@@ -74,30 +76,54 @@ public abstract class UIManager
             skin.add("debug", debugFont);
         }
 
-        // Create a button 9 patch
-        NinePatch buttonNinePatch = getNinePatch();
-        skin.add("button", buttonNinePatch);
+        skin.add("button", getNinePatch());
 
-        // Create a text button style
-        TextButton.TextButtonStyle textButtonStyle = getTextButtonStyle(skin);
-        skin.add("default", textButtonStyle);
+        skin.add("default", getTextButtonStyle(skin));
 
-        // Create a text button style
-        TextButton.TextButtonStyle checkableTextButtonStyle = getCheckableTextButtonStyle(skin);
-        skin.add("checkable", checkableTextButtonStyle);
+        skin.add("default", getImageTextButtonStyle(skin));
+        skin.add("settings", getImageTextButtonStyle(skin, AssMan.getAssList().iconSettings));
+        skin.add(
+            "achievement",
+            getImageTextButtonStyle(skin, AssMan.getAssList().iconAchievement));
+        skin.add("credits", getImageTextButtonStyle(skin, AssMan.getAssList().iconCredits));
+        skin.add(
+            "leaderboard",
+            getImageTextButtonStyle(skin, AssMan.getAssList().iconLeaderboard));
+        skin.add("rate", getImageTextButtonStyle(skin, AssMan.getAssList().iconRate));
+        skin.add("tutorial", getImageTextButtonStyle(skin, AssMan.getAssList().iconTutorial));
+        skin.add("play", getImageTextButtonStyle(skin, AssMan.getAssList().iconPlay));
+        skin.add("exit", getImageTextButtonStyle(skin, AssMan.getAssList().iconExit));
+        skin.add("share", getImageTextButtonStyle(skin, AssMan.getAssList().iconShare));
+        skin.add("unlock", getImageTextButtonStyle(skin, AssMan.getAssList().iconUnlock));
+        skin.add(
+            "touch",
+            getCheckableImageTextButtonStyles(
+                skin,
+                AssMan.getAssList().iconTouch,
+                AssMan.getAssList().iconTouchChecked));
+        skin.add(
+            "accelerometer",
+            getCheckableImageTextButtonStyles(
+                skin,
+                AssMan.getAssList().iconAccelerometer,
+                AssMan.getAssList().iconAccelerometerChecked));
+        skin.add("retry", getImageTextButtonStyle(skin, AssMan.getAssList().iconRetry));
+        skin.add(
+            "unlockOverlay",
+            new Sprite(new Texture(AssMan.getAssList().iconUnlockOverlay)));
 
-        // Label style
-        Label.LabelStyle labelStyle = getLabelStyle(skin);
-        skin.add("default", labelStyle, Label.LabelStyle.class);
+        skin.add("checkable", getCheckableTextButtonStyle(skin));
 
-        ProgressBar.ProgressBarStyle progressBarStyle = getProgressBarStyle();
-        skin.add("default-horizontal", progressBarStyle);
+        skin.add("default", getLabelStyle(skin, "default"), Label.LabelStyle.class);
+        skin.add("large", getLabelStyle(skin, "large"), Label.LabelStyle.class);
 
-        Slider.SliderStyle sliderStyle = getSliderStyle();
-        skin.add("default-horizontal", sliderStyle);
+        skin.add("default-horizontal", getProgressBarStyle());
 
-        ScrollPane.ScrollPaneStyle scrollPaneStyle = getScrollPaneStyle();
-        skin.add("default", scrollPaneStyle);
+        skin.add("default-horizontal", getSliderStyle());
+
+        skin.add("default", getScrollPaneStyle());
+
+        skin.add("default", getWindowStyle(skin));
 
         return skin;
     }
@@ -132,10 +158,50 @@ public abstract class UIManager
         return textButtonStyle;
     }
 
+    private static ImageTextButton.ImageTextButtonStyle getImageTextButtonStyle(Skin skin)
+    {
+        ImageTextButton.ImageTextButtonStyle imageTextButtonStyle =
+            new ImageTextButton.ImageTextButtonStyle();
+        imageTextButtonStyle.fontColor = Color.BLACK;
+        imageTextButtonStyle.font = skin.getFont("default");
+        imageTextButtonStyle.down = skin.getDrawable("button");
+        imageTextButtonStyle.up = skin.getDrawable("button");
+
+        return imageTextButtonStyle;
+    }
+
+    private static ImageTextButton.ImageTextButtonStyle getImageTextButtonStyle(
+        Skin skin, String imagePath)
+    {
+        ImageTextButton.ImageTextButtonStyle imageTextButtonStyle =
+            new ImageTextButton.ImageTextButtonStyle(skin.get(
+                ImageTextButton.ImageTextButtonStyle.class));
+        Drawable settingsDrawable =
+            new SpriteDrawable(new Sprite(new Texture(imagePath)));
+        imageTextButtonStyle.imageUp = settingsDrawable;
+        imageTextButtonStyle.imageDown = settingsDrawable;
+
+        return imageTextButtonStyle;
+    }
+
+    private static ImageTextButton.ImageTextButtonStyle getCheckableImageTextButtonStyles(
+        Skin skin,
+        String imagePath,
+        String checkedImagePath)
+    {
+        ImageTextButton.ImageTextButtonStyle imageTextButtonStyle =
+            getImageTextButtonStyle(skin, imagePath);
+        imageTextButtonStyle.checkedFontColor = CHECKED_COLOR;
+        imageTextButtonStyle.imageChecked =
+            new SpriteDrawable(new Sprite(new Texture(checkedImagePath)));
+
+        return imageTextButtonStyle;
+    }
+
     private static TextButton.TextButtonStyle getCheckableTextButtonStyle(Skin skin)
     {
         TextButton.TextButtonStyle checkableTextButtonStyle = new TextButton.TextButtonStyle();
-        checkableTextButtonStyle.checkedFontColor = Color.GREEN;
+        checkableTextButtonStyle.checkedFontColor = CHECKED_COLOR;
         checkableTextButtonStyle.fontColor = Color.BLACK;
         checkableTextButtonStyle.font = skin.getFont("default");
         checkableTextButtonStyle.down = skin.getDrawable("button");
@@ -144,10 +210,10 @@ public abstract class UIManager
         return checkableTextButtonStyle;
     }
 
-    private static Label.LabelStyle getLabelStyle(Skin skin)
+    private static Label.LabelStyle getLabelStyle(Skin skin, String fontName)
     {
         Label.LabelStyle labelStyle = new Label.LabelStyle();
-        labelStyle.font = skin.getFont("default");
+        labelStyle.font = skin.getFont(fontName);
 
         return labelStyle;
     }
@@ -202,6 +268,16 @@ public abstract class UIManager
         scrollPaneStyle.vScroll = scrollBackground;
 
         return scrollPaneStyle;
+    }
+
+    private static Window.WindowStyle getWindowStyle(Skin skin)
+    {
+        Window.WindowStyle windowStyle = new Window.WindowStyle();
+        windowStyle.titleFont = skin.getFont("large");
+        windowStyle.titleFontColor = Color.WHITE;
+        windowStyle.background = getTiledDrawable(Constants.Visual.SCREEN_FADE_COLOUR);
+
+        return windowStyle;
     }
 
     public static TiledDrawable getTiledDrawable(Color color)

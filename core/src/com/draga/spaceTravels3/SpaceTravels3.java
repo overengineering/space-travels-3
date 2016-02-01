@@ -5,19 +5,18 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import com.draga.NullServices;
+import com.draga.Services;
 import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.errorHandler.GdxErrorHandler;
 import com.draga.spaceTravels3.manager.*;
 import com.draga.spaceTravels3.manager.asset.AssMan;
-import com.draga.spaceTravels3.manager.level.LevelManager;
-import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.spaceTravels3.screen.BackgroundScreen;
 import com.draga.spaceTravels3.screen.MenuScreen;
 
@@ -26,16 +25,29 @@ public class SpaceTravels3 implements ApplicationListener
     private static final String LOGGING_TAG = SpaceTravels3.class.getSimpleName();
 
     public static SpriteBatch     spriteBatch;
-    public static SpriteBatch overlaySpriteBath;
+    public static SpriteBatch     overlaySpriteBath;
     public static ShapeRenderer   shapeRenderer;
     public static ScalingViewport menuViewport;
     public static ExtendViewport  gameViewport;
+    public static Services        services;
 
     private DebugOverlay debugOverlay;
+
+    public SpaceTravels3(Services services)
+    {
+        SpaceTravels3.services = services;
+    }
+
+    public SpaceTravels3()
+    {
+        SpaceTravels3.services = new NullServices();
+    }
 
     @Override
     public void create()
     {
+        services.setupPurchaseManager();
+
         MathUtils.random.setSeed(System.currentTimeMillis());
         ErrorHandlerProvider.addErrorHandler(new GdxErrorHandler());
 
@@ -55,13 +67,6 @@ public class SpaceTravels3 implements ApplicationListener
         Gdx.input.setCatchBackKey(true);
 
         AssMan.create();
-        for (SerialisableLevel serialisableLevel : LevelManager.getSerialisableLevels())
-        {
-            AssMan.getMenuAssMan().load(serialisableLevel.iconPath, Texture.class);
-        }
-        AssMan.getMenuAssMan().update();
-
-
         ScreenManager.create();
         UIManager.create();
         SoundManager.create();
