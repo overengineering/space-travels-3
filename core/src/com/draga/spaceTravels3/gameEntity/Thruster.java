@@ -51,37 +51,40 @@ public class Thruster extends GameEntity
     @Override
     public void update(float deltaTime)
     {
-        PooledVector2 inputForce = InputManager.getInputForce();
-        if (!this.ship.isInfiniteFuel() && this.ship.getCurrentFuel() <= 0)
+        try (PooledVector2 inputForce = InputManager.getInputForce())
         {
-            inputForce.setZero();
-        }
-
-        float thrusterScale = inputForce.len();
-        this.graphicComponent.setWidth(Constants.Visual.THRUSTER_MAX_WIDTH * thrusterScale);
-        this.graphicComponent.setHeight(Constants.Visual.THRUSTER_MAX_HEIGHT * thrusterScale);
-
-        try (PooledVector2 thrusterOffsetPosition = Constants.Visual.THRUSTER_OFFSET.cpy())
-        {
-            thrusterOffsetPosition.sub(this.graphicComponent.getHalfWidth(), 0)
-                .rotate(this.ship.physicsComponent.getAngle());
-
-            try (PooledVector2 shipPosition = PooledVector2.newVector2(this.ship.physicsComponent.getPosition()
-                .cpy()))
+            if (!this.ship.isInfiniteFuel() && this.ship.getCurrentFuel() <= 0)
             {
-                this.physicsComponent.getPosition()
-                    .set(shipPosition
-                        .add(thrusterOffsetPosition));
+                inputForce.setZero();
             }
+
+            float thrusterScale = inputForce.len();
+            this.graphicComponent.setWidth(Constants.Visual.THRUSTER_MAX_WIDTH * thrusterScale);
+            this.graphicComponent.setHeight(Constants.Visual.THRUSTER_MAX_HEIGHT * thrusterScale);
+
+            try (PooledVector2 thrusterOffsetPosition = Constants.Visual.THRUSTER_OFFSET.cpy())
+            {
+                thrusterOffsetPosition.sub(this.graphicComponent.getHalfWidth(), 0)
+                    .rotate(this.ship.physicsComponent.getAngle());
+
+                try (PooledVector2 shipPosition = PooledVector2.newVector2(this.ship.physicsComponent
+                    .getPosition()
+                    .cpy()))
+                {
+                    this.physicsComponent.getPosition()
+                        .set(shipPosition
+                            .add(thrusterOffsetPosition));
+                }
+            }
+            this.physicsComponent.getVelocity()
+                .set(this.ship.physicsComponent.getVelocity());
+
+            this.physicsComponent.setAngle(this.ship.physicsComponent.getAngle());
+
+            this.sound.setVolume(
+                this.soundInstance,
+                inputForce.len() * SettingsManager.getSettings().volumeFX);
         }
-        this.physicsComponent.getVelocity()
-            .set(this.ship.physicsComponent.getVelocity());
-
-        this.physicsComponent.setAngle(this.ship.physicsComponent.getAngle());
-
-        this.sound.setVolume(
-            this.soundInstance,
-            inputForce.len() * SettingsManager.getSettings().volumeFX);
     }
 
     @Override
