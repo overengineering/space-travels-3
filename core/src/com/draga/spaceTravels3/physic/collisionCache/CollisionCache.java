@@ -1,6 +1,5 @@
 package com.draga.spaceTravels3.physic.collisionCache;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
@@ -11,10 +10,8 @@ import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponentType;
 import com.draga.spaceTravels3.physic.PhysicsEngine;
 import com.draga.utils.FileUtils;
-import com.google.common.base.Stopwatch;
 
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 public class CollisionCache implements Pool.Poolable
 {
@@ -27,8 +24,6 @@ public class CollisionCache implements Pool.Poolable
 
     public CollisionCache(PhysicsComponent originalPhysicsComponent)
     {
-        Stopwatch stopwatch = Stopwatch.createStarted();
-
         PhysicsComponent physicsComponent = new PhysicsComponent(originalPhysicsComponent);
 
         ArrayList<PhysicsComponent> collidablePhysicsComponents = new ArrayList<>();
@@ -124,14 +119,6 @@ public class CollisionCache implements Pool.Poolable
 
             }
         }
-
-        Gdx.app.debug(
-            LOGGING_TAG,
-            "Cache collision for "
-                + physicsComponent.getOwnerClass()
-                + " took "
-                + stopwatch.elapsed(TimeUnit.NANOSECONDS) * MathUtils.nanoToSec
-                + "s");
     }
 
     private void saveBitMap()
@@ -172,7 +159,7 @@ public class CollisionCache implements Pool.Poolable
 
     public ArrayList<PhysicsComponent> getPossibleCollidingPhysicsComponents(float x, float y)
     {
-        ArrayList<PhysicsComponent> pointCollisions = new ArrayList<>();
+        ArrayList<PhysicsComponent> physicsComponents = new ArrayList<>();
 
         int floorX = MathUtils.floor(x - this.offset.x);
         int floorY = MathUtils.floor(y - this.offset.y);
@@ -186,49 +173,39 @@ public class CollisionCache implements Pool.Poolable
 
         if (floorXInArray)
         {
-            if (floorYInArray)
+            if (floorYInArray
+            && this.collisions[floorX][floorY] != null)
             {
-                addCollisions(pointCollisions, this.collisions[floorX][floorY]);
+                physicsComponents.addAll(this.collisions[floorX][floorY]);
             }
-            if (ceilYInArray)
+            if (ceilYInArray
+                && this.collisions[floorX][ceilY] != null)
             {
-                addCollisions(pointCollisions, this.collisions[floorX][ceilY]);
+                physicsComponents.addAll(this.collisions[floorX][ceilY]);
             }
         }
         if (ceilXInArray)
         {
-            if (floorYInArray)
+            if (floorYInArray
+                && this.collisions[ceilX][floorY] != null)
             {
-                addCollisions(pointCollisions, this.collisions[ceilX][floorY]);
+                physicsComponents.addAll(this.collisions[ceilX][floorY]);
             }
-            if (ceilYInArray)
+            if (ceilYInArray
+                && this.collisions[ceilX][ceilY] != null)
             {
-                addCollisions(pointCollisions, this.collisions[ceilX][ceilY]);
+                physicsComponents.addAll(this.collisions[ceilX][ceilY]);
             }
         }
 
-        return pointCollisions;
-    }
-
-    private void addCollisions(ArrayList<PhysicsComponent> to, ArrayList<PhysicsComponent> from)
-    {
-        if (from != null)
-        {
-            for (PhysicsComponent physicsComponent : from)
-            {
-                if (!to.contains(physicsComponent))
-                {
-                    to.add(physicsComponent);
-                }
-            }
-        }
+        return physicsComponents;
     }
 
     @Override
     public void reset()
     {
         this.offset.close();
-        this.offset= null;
+        this.offset = null;
         this.collisions = null;
     }
 }
