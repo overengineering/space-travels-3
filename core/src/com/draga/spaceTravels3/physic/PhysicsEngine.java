@@ -14,6 +14,7 @@ import com.draga.spaceTravels3.physic.gravityCache.GravityCache;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 public class PhysicsEngine
 {
@@ -94,10 +95,12 @@ public class PhysicsEngine
      */
     private static void checkCollisions()
     {
-        for (int x = 1; x < GameEntityManager.getGameEntities().size(); x++)
+        LinkedList<GameEntity> gameEntities = GameEntityManager.getGameEntities();
+        for (int x = 1; x < gameEntities.size(); x++)
         {
-            GameEntity gameEntityA = GameEntityManager.getGameEntities().get(x);
+            GameEntity gameEntityA = gameEntities.get(x);
 
+            // There is a cache for this physComp.
             if (physicsComponentCollisionCache.containsKey(gameEntityA.physicsComponent))
             {
                 CollisionCache collisionCache =
@@ -108,7 +111,7 @@ public class PhysicsEngine
                         gameEntityA.physicsComponent.getPosition().y);
                 for (int y = 0; y < x; y++)
                 {
-                    GameEntity gameEntityB = GameEntityManager.getGameEntities().get(y);
+                    GameEntity gameEntityB = gameEntities.get(y);
                     if (gameEntityB.physicsComponent.getPhysicsComponentType()
                         == PhysicsComponentType.DYNAMIC
                         || possibleCollidingStaticPhysicsComponents.contains(gameEntityB.physicsComponent))
@@ -129,11 +132,12 @@ public class PhysicsEngine
                 }
 
             }
+            // There's no cache for this physComp.
             else
             {
                 for (int y = 0; y < x; y++)
                 {
-                    GameEntity gameEntityB = GameEntityManager.getGameEntities().get(y);
+                    GameEntity gameEntityB = gameEntities.get(y);
                     if (gameEntityA.physicsComponent.getPhysicsComponentType()
                         == PhysicsComponentType.DYNAMIC
                         || gameEntityB.physicsComponent.getPhysicsComponentType()
@@ -162,8 +166,7 @@ public class PhysicsEngine
      */
     private static void applyVelocity(PhysicsComponent physicsComponent, float deltaTime)
     {
-        try (PooledVector2 velocity = PooledVector2.newVector2(physicsComponent.getVelocity()
-            .cpy()))
+        try (PooledVector2 velocity = PooledVector2.newVector2(physicsComponent.getVelocity()))
         {
             physicsComponent.getPosition()
                 .add(velocity.scl(deltaTime));

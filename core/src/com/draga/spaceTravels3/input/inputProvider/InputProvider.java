@@ -20,7 +20,7 @@ public abstract class InputProvider
     {
         PooledVector2 rawInput = getRawInput();
 
-        for (InputModifier inputModifier : inputModifiers)
+        for (InputModifier inputModifier : this.inputModifiers)
         {
             inputModifier.modify(rawInput);
         }
@@ -34,6 +34,6 @@ public abstract class InputProvider
 
     protected void addInputModifier(InputModifier inputModifier)
     {
-        inputModifiers.add(inputModifier);
+        this.inputModifiers.add(inputModifier);
     }
 }
