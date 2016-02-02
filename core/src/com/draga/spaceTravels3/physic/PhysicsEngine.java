@@ -99,77 +99,65 @@ public class PhysicsEngine
         for (int x = 1; x < gameEntities.size(); x++)
         {
             GameEntity gameEntityA = gameEntities.get(x);
-
-            // There is a cache for this physComp.
-            if (physicsComponentCollisionCache.containsKey(gameEntityA.physicsComponent))
+            for (int y = 0; y < x; y++)
             {
-                CollisionCache collisionCache =
-                    physicsComponentCollisionCache.get(gameEntityA.physicsComponent);
-                ArrayList<PhysicsComponent> possibleCollidingStaticPhysicsComponents =
-                    collisionCache.getPossibleCollidingPhysicsComponents(
-                        gameEntityA.physicsComponent.getPosition().x,
-                        gameEntityA.physicsComponent.getPosition().y);
-                for (int y = 0; y < x; y++)
-                {
-                    GameEntity gameEntityB = gameEntities.get(y);
-                    if (gameEntityB.physicsComponent.getPhysicsComponentType()
-                        == PhysicsComponentType.DYNAMIC
-                        || possibleCollidingStaticPhysicsComponents.contains(gameEntityB.physicsComponent))
-                    {
-                        if (areColliding(
-                            gameEntityA.physicsComponent,
-                            gameEntityB.physicsComponent))
-                        {
-                            Gdx.app.debug(
-                                LOGGING_TAG,
-                                "Collision between "
-                                    + gameEntityA.getClass().getSimpleName()
-                                    + " and "
-                                    + gameEntityB.getClass().getSimpleName());
-                            CollisionResolver.resolve(gameEntityA, gameEntityB);
-                        }
-                    }
-                }
-
-            }
-            // There's no cache for this physComp.
-            else
-            {
-                for (int y = 0; y < x; y++)
-                {
-                    GameEntity gameEntityB = gameEntities.get(y);
-                    if (gameEntityA.physicsComponent.getPhysicsComponentType()
-                        == PhysicsComponentType.DYNAMIC
-                        || gameEntityB.physicsComponent.getPhysicsComponentType()
-                        == PhysicsComponentType.DYNAMIC)
-                    {
-                        if (areColliding(
-                            gameEntityA.physicsComponent,
-                            gameEntityB.physicsComponent))
-                        {
-                            Gdx.app.debug(
-                                LOGGING_TAG,
-                                "Collision between "
-                                    + gameEntityA.getClass().getSimpleName()
-                                    + " and "
-                                    + gameEntityB.getClass().getSimpleName());
-                            CollisionResolver.resolve(gameEntityA, gameEntityB);
-                        }
-                    }
-                }
+                GameEntity gameEntityB = gameEntities.get(y);
+                checkCollision(gameEntityA, gameEntityB);
             }
         }
     }
-    
-    /**
-     * Applies the {@link PhysicsComponent}'s velocity to its position.
-     */
-    private static void applyVelocity(PhysicsComponent physicsComponent, float deltaTime)
+
+    private static void checkCollision(GameEntity gameEntityA, GameEntity gameEntityB)
     {
-        try (PooledVector2 velocity = PooledVector2.newVector2(physicsComponent.getVelocity()))
+        // If none of them is dynamic skip.
+        if (gameEntityA.physicsComponent.getPhysicsComponentType() == PhysicsComponentType.DYNAMIC
+            || gameEntityB.physicsComponent.getPhysicsComponentType()
+            == PhysicsComponentType.DYNAMIC)
         {
-            physicsComponent.getPosition()
-                .add(velocity.scl(deltaTime));
+            if (physicsComponentCollisionCache.containsKey(gameEntityA.physicsComponent))
+            {
+                checkCachedCollision(gameEntityA, gameEntityB);
+            }
+            else if (physicsComponentCollisionCache.containsKey(gameEntityB.physicsComponent))
+            {
+                checkCachedCollision(gameEntityB, gameEntityA);
+            }
+            else
+            {
+                checkRawCollision(gameEntityA, gameEntityB);
+            }
+        }
+    }
+
+    private static void checkCachedCollision(
+        GameEntity cachedGameEntity,
+        GameEntity otherGameEntity)
+    {
+        CollisionCache collisionCache =
+            physicsComponentCollisionCache.get(cachedGameEntity.physicsComponent);
+        ArrayList<PhysicsComponent> possibleCollidingStaticPhysicsComponents =
+            collisionCache.getPossibleCollidingPhysicsComponents(
+                cachedGameEntity.physicsComponent.getPosition().x,
+                cachedGameEntity.physicsComponent.getPosition().y);
+        if (possibleCollidingStaticPhysicsComponents.contains(otherGameEntity.physicsComponent))
+        {
+            checkRawCollision(cachedGameEntity, otherGameEntity);
+        }
+    }
+
+    private static void checkRawCollision(GameEntity gameEntityA, GameEntity gameEntityB)
+    {
+        if (areColliding(
+            gameEntityA.physicsComponent,
+            gameEntityB.physicsComponent))
+        {
+            Gdx.app.debug(
+                LOGGING_TAG,
+                "Collision between "
+                    + gameEntityA.getClass().getSimpleName()
+                    + " and "
+                    + gameEntityB.getClass().getSimpleName());
+            CollisionResolver.resolve(gameEntityA, gameEntityB);
         }
     }
     
@@ -180,32 +168,6 @@ public class PhysicsEngine
     {
         physicsComponent.setAngle(physicsComponent.getAngle()
             + physicsComponent.getAngularVelocity() * deltaTime);
-    }
-    
-    /**
-     * Check if both {@link PhysicsComponent} can collide with each other and if the two are
-     * overlapping.
-     */
-    public static boolean areColliding(
-        PhysicsComponent physicsComponentA,
-        PhysicsComponent physicsComponentB)
-    {
-        return physicsComponentA.getCollidesWith().contains(physicsComponentB.getOwnerClass())
-            && physicsComponentB.getCollidesWith().contains(physicsComponentA.getOwnerClass())
-            && areOverlapping(physicsComponentA, physicsComponentB);
-    }
-    
-    private static boolean areOverlapping(
-        PhysicsComponent physicsComponentA,
-        PhysicsComponent physicsComponentB)
-    {
-        float overlappingDistance =
-            physicsComponentA.getBoundsCircle().radius + physicsComponentB.getBoundsCircle().radius;
-        float distance2 = physicsComponentA.getPosition().dst2(physicsComponentB.getPosition());
-
-        boolean areOverlapping = distance2 <= overlappingDistance * overlappingDistance;
-
-        return areOverlapping;
     }
     
     /**
@@ -257,7 +219,7 @@ public class PhysicsEngine
 
         force.add(x, y);
     }
-
+    
     public static void setup(
         HashMap<PhysicsComponent, CollisionCache> physicsComponentCollisionCache,
         GravityCache gravityCache)
@@ -276,7 +238,7 @@ public class PhysicsEngine
     {
         return GRAVITY_PROJECTION_PERFORMANCE_COUNTER;
     }
-    
+
     public static ArrayList<ProjectionPoint> gravityProjection(
         PhysicsComponent originalPhysicsComponent,
         float projectionSeconds,
@@ -377,7 +339,32 @@ public class PhysicsEngine
 
         return physicsComponents;
     }
-
+    
+    /**
+     * Applies the {@link PhysicsComponent}'s velocity to its position.
+     */
+    private static void applyVelocity(PhysicsComponent physicsComponent, float deltaTime)
+    {
+        try (PooledVector2 velocity = PooledVector2.newVector2(physicsComponent.getVelocity()))
+        {
+            physicsComponent.getPosition()
+                .add(velocity.scl(deltaTime));
+        }
+    }
+    
+    /**
+     * Check if both {@link PhysicsComponent} can collide with each other and if the two are
+     * overlapping.
+     */
+    public static boolean areColliding(
+        PhysicsComponent physicsComponentA,
+        PhysicsComponent physicsComponentB)
+    {
+        return physicsComponentA.getCollidesWith().contains(physicsComponentB.getOwnerClass())
+            && physicsComponentB.getCollidesWith().contains(physicsComponentA.getOwnerClass())
+            && areOverlapping(physicsComponentA, physicsComponentB);
+    }
+    
     public static ArrayList<PhysicsComponent> getAllPhysicsComponents()
     {
         ArrayList<PhysicsComponent> physicsComponents = new ArrayList<>();
@@ -387,6 +374,19 @@ public class PhysicsEngine
         }
 
         return physicsComponents;
+    }
+
+    private static boolean areOverlapping(
+        PhysicsComponent physicsComponentA,
+        PhysicsComponent physicsComponentB)
+    {
+        float overlappingDistance =
+            physicsComponentA.getBoundsCircle().radius + physicsComponentB.getBoundsCircle().radius;
+        float distance2 = physicsComponentA.getPosition().dst2(physicsComponentB.getPosition());
+
+        boolean areOverlapping = distance2 <= overlappingDistance * overlappingDistance;
+
+        return areOverlapping;
     }
     
     public static PooledVector2 calculateGravityForce(PhysicsComponent physicsComponent)
