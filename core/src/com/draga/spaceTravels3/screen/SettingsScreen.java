@@ -3,6 +3,7 @@ package com.draga.spaceTravels3.screen;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -99,7 +100,8 @@ public class SettingsScreen extends Screen
             @Override
             public void changed(ChangeEvent event, Actor actor)
             {
-                SettingsManager.getSettings().volumeFX = volumeSlider.getValue();
+                float volume = Interpolation.pow2In.apply(volumeSlider.getValue());
+                SettingsManager.getSettings().volumeFX = volume;
             }
         });
         volumeSlider.addListener(new ClickListener()
@@ -127,7 +129,8 @@ public class SettingsScreen extends Screen
             @Override
             public void changed(ChangeEvent event, Actor actor)
             {
-                SettingsManager.getSettings().setVolumeMusic(volumeSlider.getValue());
+                float volume = Interpolation.pow2In.apply(volumeSlider.getValue());
+                SettingsManager.getSettings().setVolumeMusic(volume);
             }
         });
 
