@@ -164,11 +164,12 @@ public class Level
     @Subscribe
     public void shipPlanetCollision(ShipPlanetCollisionEvent shipPlanetCollisionEvent)
     {
+        float shipVelocity = this.ship.physicsComponent.getVelocity().len();
         if (Constants.General.IS_DEBUGGING)
         {
             Gdx.app.debug(
                 LOGGING_TAG,
-                "Linear velocity on collision: " + this.ship.physicsComponent.getVelocity().len());
+                "Linear velocity on collision: " + shipVelocity);
         }
 
         this.elapsedPlayTime.stop();
@@ -176,9 +177,11 @@ public class Level
         GameEntityManager.removeGameEntity(this.ship);
         GameEntityManager.removeGameEntity(this.thruster);
 
-        if (this.ship.physicsComponent.getVelocity().len()
-            > this.getMaxLandingSpeed()
-            || !shipPlanetCollisionEvent.planet.equals(this.destinationPlanet))
+        boolean shipIsTooFast = shipVelocity
+            > this.getMaxLandingSpeed();
+        boolean planetIsDestination = shipPlanetCollisionEvent.planet.equals(this.destinationPlanet);
+        if (shipIsTooFast
+            || !planetIsDestination)
         {
             this.gameState = GameState.LOSE;
             GameEntity explosion = new Explosion(
@@ -191,7 +194,8 @@ public class Level
             );
             GameEntityManager.addGameEntity(explosion);
 
-            Constants.General.EVENT_BUS.post(new LoseEvent());
+            LoseEvent loseEvent = new LoseEvent(planetIsDestination, shipIsTooFast);
+            Constants.General.EVENT_BUS.post(loseEvent);
         }
         else
         {
