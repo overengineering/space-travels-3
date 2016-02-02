@@ -11,7 +11,7 @@ public class ProjectionPoint implements Pool.Poolable
     private PooledVector2               position;
     private ArrayList<PhysicsComponent> collidingPhysicsComponents;
 
-    public ProjectionPoint(
+    public void set(
         PooledVector2 position,
         ArrayList<PhysicsComponent> collidingPhysicsComponents)
     {
@@ -21,12 +21,12 @@ public class ProjectionPoint implements Pool.Poolable
 
     public ArrayList<PhysicsComponent> getCollidingPhysicsComponents()
     {
-        return collidingPhysicsComponents;
+        return this.collidingPhysicsComponents;
     }
 
     public PooledVector2 getPosition()
     {
-        return position;
+        return this.position;
     }
 
     @Override

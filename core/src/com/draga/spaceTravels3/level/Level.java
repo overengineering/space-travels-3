@@ -346,7 +346,7 @@ public class Level
                 for (int j = lastCollisionIndex; j < i; j++)
                 {
                     Vertex vertex = vertexPool.obtain();
-                    vertex.set(currentColor, projectionPoints.get(j).getPosition());
+                    vertex.set(currentColor, projectionPoints.get(j).getPosition().cpy());
                     vertices.add(j, vertex);
                 }
                 lastCollisionIndex = i;

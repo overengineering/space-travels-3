@@ -2,6 +2,8 @@ package com.draga.spaceTravels3.physic;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.PerformanceCounter;
+import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.utils.Pools;
 import com.draga.PooledVector2;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
@@ -246,6 +248,8 @@ public class PhysicsEngine
     {
         GRAVITY_PROJECTION_PERFORMANCE_COUNTER.start();
 
+        Pool<ProjectionPoint> projectionPointPool = Pools.get(ProjectionPoint.class);
+
         int points = Math.round(projectionSeconds / pointTime);
 
         // Create a copy of the PhysicsComponent so that it won't be changed.
@@ -320,7 +324,8 @@ public class PhysicsEngine
                 }
             }
 
-            ProjectionPoint projectionPoint = new ProjectionPoint(
+            ProjectionPoint projectionPoint = projectionPointPool.obtain();
+            projectionPoint.set(
                 PooledVector2.newVector2(physicsComponent.getPosition()),
                 collidingPhysicsComponents);
             projectionPoints.add(projectionPoint);
