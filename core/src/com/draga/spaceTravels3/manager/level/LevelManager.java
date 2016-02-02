@@ -129,6 +129,7 @@ public abstract class LevelManager
         ErrorHandlerProvider.handle(
             LOGGING_TAG,
             "Could not find a level with name \"" + levelId + "\"");
+
         return null;
     }
 

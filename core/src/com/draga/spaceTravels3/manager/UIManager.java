@@ -294,7 +294,9 @@ public abstract class UIManager
             skin.add(name, tiledDrawable);
         }
 
-        return skin.get(name, TiledDrawable.class);
+        TiledDrawable tiledDrawable = skin.get(name, TiledDrawable.class);
+
+        return new TiledDrawable(tiledDrawable);
     }
 
     public static ProgressBar getDelimitedProgressBar(float max, float width)

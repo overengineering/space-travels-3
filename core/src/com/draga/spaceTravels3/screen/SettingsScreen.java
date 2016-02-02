@@ -91,7 +91,7 @@ public class SettingsScreen extends Screen
 
     private void addVolumeFX(Table table)
     {
-        table.add(new Label("Volume FX", UIManager.skin));
+        table.add(new Label("Effects volume", UIManager.skin));
         final Slider volumeSlider = new Slider(0f, 1f, 0.01f, false, UIManager.skin);
         volumeSlider.setValue(SettingsManager.getSettings().volumeFX);
         volumeSlider.addListener(new ChangeListener()
@@ -119,7 +119,7 @@ public class SettingsScreen extends Screen
 
     private void addVolumeMusic(Table table)
     {
-        table.add(new Label("Volume music", UIManager.skin));
+        table.add(new Label("Music volume", UIManager.skin));
         final Slider volumeSlider = new Slider(0f, 1f, 0.01f, false, UIManager.skin);
         volumeSlider.setValue(SettingsManager.getSettings().getVolumeMusic());
         volumeSlider.addListener(new ChangeListener()
