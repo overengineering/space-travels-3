@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
 import com.draga.spaceTravels3.*;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
@@ -179,7 +181,8 @@ public class Level
 
         boolean shipIsTooFast = shipVelocity
             > this.getMaxLandingSpeed();
-        boolean planetIsDestination = shipPlanetCollisionEvent.planet.equals(this.destinationPlanet);
+        boolean planetIsDestination =
+            shipPlanetCollisionEvent.planet.equals(this.destinationPlanet);
         if (shipIsTooFast
             || !planetIsDestination)
         {
@@ -314,6 +317,7 @@ public class Level
 
     public Projection processProjection(ArrayList<ProjectionPoint> projectionPoints)
     {
+        Pool<Vertex> vertexPool = Pools.get(Vertex.class);
         ArrayList<Vertex> vertices = new ArrayList<>(projectionPoints.size());
 
         int lastCollisionIndex = 0;
@@ -341,7 +345,7 @@ public class Level
                 // Add all the vertices up to this collision with the correct color.
                 for (int j = lastCollisionIndex; j < i; j++)
                 {
-                    Vertex vertex = Pools.obtain(Vertex.class);
+                    Vertex vertex = vertexPool.obtain();
                     vertex.set(currentColor, projectionPoints.get(j).getPosition());
                     vertices.add(j, vertex);
                 }
@@ -358,10 +362,13 @@ public class Level
             }
         }
 
+        Pool<ProjectionPoint> projectionPointPool = Pools.get(ProjectionPoint.class);
+
         for (ProjectionPoint projectionPoint : projectionPoints)
         {
-            Pools.free(projectionPoint);
+            projectionPointPool.free(projectionPoint);
         }
+
 
         Projection projection = Pools.obtain(Projection.class);
         projection.set(vertices);
