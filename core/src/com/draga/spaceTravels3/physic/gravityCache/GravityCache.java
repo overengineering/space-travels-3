@@ -63,8 +63,7 @@ public class GravityCache
             {
                 totalMass += otherPhysicsComponent.getMass();
                 try (PooledVector2 weightedPosition = PooledVector2.newVector2(otherPhysicsComponent
-                    .getPosition()
-                    .cpy()))
+                    .getPosition()))
                 {
                     weightedPosition.scl(otherPhysicsComponent.getMass());
                     barycentre.add(weightedPosition);

@@ -321,7 +321,7 @@ public class PhysicsEngine
             }
 
             ProjectionPoint projectionPoint = new ProjectionPoint(
-                PooledVector2.newVector2(physicsComponent.getPosition().cpy()),
+                PooledVector2.newVector2(physicsComponent.getPosition()),
                 collidingPhysicsComponents);
             projectionPoints.add(projectionPoint);
         }

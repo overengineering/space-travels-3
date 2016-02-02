@@ -68,8 +68,7 @@ public class Thruster extends GameEntity
                     .rotate(this.ship.physicsComponent.getAngle());
 
                 try (PooledVector2 shipPosition = PooledVector2.newVector2(this.ship.physicsComponent
-                    .getPosition()
-                    .cpy()))
+                    .getPosition()))
                 {
                     this.physicsComponent.getPosition()
                         .set(shipPosition
