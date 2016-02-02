@@ -13,13 +13,13 @@
     "Medium": {
       "trajectorySeconds": 3,
       "maxLandingSpeed": 90,
-      "fuel": 12,
+      "fuel": 8,
       "infiniteFuel": false,
       "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQGA",
       "playLeaderboardID": "CgkIxsSO8ZoXEAIQGg"
     },
     "Hard": {
-      "trajectorySeconds": 0,
+      "trajectorySeconds": 0.5,
       "maxLandingSpeed": 70,
       "fuel": 8,
       "infiniteFuel": false,
