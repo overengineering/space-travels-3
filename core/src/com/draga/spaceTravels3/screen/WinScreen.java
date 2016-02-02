@@ -27,7 +27,7 @@ public class WinScreen extends IngameMenuScreen
 
         Table table = new Table(UIManager.skin);
 
-        table.add("You won!");
+        table.add("WIN", "large");
         table.row();
 
         // Best score.

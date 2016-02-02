@@ -263,7 +263,7 @@ public class GameScreen extends Screen
     @Subscribe
     public void Lose(LoseEvent loseEvent)
     {
-        ScreenManager.addScreen(new LoseScreen(this.level, this));
+        ScreenManager.addScreen(new LoseScreen(this.level, this, loseEvent));
     }
 
     @Subscribe
