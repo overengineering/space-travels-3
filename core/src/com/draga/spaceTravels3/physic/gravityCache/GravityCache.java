@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.draga.PooledVector2;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponentType;
@@ -102,8 +103,9 @@ public class GravityCache
     
     private GravityCacheNode getStartingNode(PhysicsComponent physicsComponent)
     {
-        GravityCacheNode gravityCacheNode;
+        Vector2 physicsComponentPosition = physicsComponent.getPosition();
 
+        GravityCacheNode gravityCacheNode;
         if (this.lastUsedPhysicsComponent != null
             && this.lastUsedPhysicsComponent.equals(physicsComponent))
         {
@@ -111,7 +113,7 @@ public class GravityCache
         }
         else
         {
-            if (!GravityCache.this.rootNode.contains(physicsComponent.getPosition()))
+            if (!GravityCache.this.rootNode.contains(physicsComponentPosition))
             {
                 gravityCacheNode = GravityCacheNode.NULL_GRAVITY_CACHE_NODE;
             }
@@ -122,10 +124,11 @@ public class GravityCache
         }
 
         // Go up until the physicsComponent is in the boundaries
-        while (!gravityCacheNode.contains(physicsComponent.getPosition()))
+        while (!gravityCacheNode.contains(physicsComponentPosition))
         {
             gravityCacheNode = gravityCacheNode.getParentNode();
         }
+
         return gravityCacheNode;
     }
     
@@ -133,11 +136,14 @@ public class GravityCache
         PhysicsComponent physicsComponent,
         GravityCacheNode gravityCacheNode)
     {
+        float y = physicsComponent.getPosition().y;
+        float x = physicsComponent.getPosition().x;
+
         while (gravityCacheNode.hasChildren())
         {
-            if (physicsComponent.getPosition().x < gravityCacheNode.getCentre().x)
+            if (x < gravityCacheNode.getCentre().x)
             {
-                if (physicsComponent.getPosition().y < gravityCacheNode.getCentre().y)
+                if (y < gravityCacheNode.getCentre().y)
                 {
                     gravityCacheNode = gravityCacheNode.getBottomLeftNode();
                 }
@@ -148,7 +154,7 @@ public class GravityCache
             }
             else
             {
-                if (physicsComponent.getPosition().y < gravityCacheNode.getCentre().y)
+                if (y < gravityCacheNode.getCentre().y)
                 {
                     gravityCacheNode = gravityCacheNode.getBottomRightNode();
                 }
@@ -158,6 +164,7 @@ public class GravityCache
                 }
             }
         }
+
         return gravityCacheNode;
     }
     
