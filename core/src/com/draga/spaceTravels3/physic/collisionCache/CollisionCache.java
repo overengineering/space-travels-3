@@ -40,8 +40,6 @@ public class CollisionCache implements Pool.Poolable
             }
         }
 
-
-
         // Calculate the size and position of the grid of points to be checked
         float x1 = Float.MAX_VALUE;
         float x2 = Float.MIN_VALUE;
@@ -157,10 +155,15 @@ public class CollisionCache implements Pool.Poolable
         PixmapIO.writePNG(FileUtils.getFileHandle("collisionBitmap.png"), pixmap);
     }
 
+    /**
+     * Gets all the {@link PhysicsComponent}s that could be colliding at this coordinates.
+     * These needs to be then manually checked if are actually colliding.
+     */
     public ArrayList<PhysicsComponent> getPossibleCollidingPhysicsComponents(float x, float y)
     {
         ArrayList<PhysicsComponent> physicsComponents = new ArrayList<>();
 
+        // Finds the 4 points in the array around the coordinates.
         int floorX = MathUtils.floor(x - this.offset.x);
         int floorY = MathUtils.floor(y - this.offset.y);
         int ceilX = MathUtils.ceil(x - this.offset.x);
@@ -171,34 +174,48 @@ public class CollisionCache implements Pool.Poolable
         boolean ceilXInArray = ceilX >= 0 && ceilX < this.arrayWidth;
         boolean ceilYInArray = ceilY >= 0 && ceilY < this.arrayHeight;
 
+        // Add all their collision lists phys comps.
         if (floorXInArray)
         {
-            if (floorYInArray
-            && this.collisions[floorX][floorY] != null)
+            if (floorYInArray)
             {
-                physicsComponents.addAll(this.collisions[floorX][floorY]);
+                addCollisions(physicsComponents, this.collisions[floorX][floorY]);
             }
-            if (ceilYInArray
-                && this.collisions[floorX][ceilY] != null)
+            if (ceilYInArray)
             {
-                physicsComponents.addAll(this.collisions[floorX][ceilY]);
+                addCollisions(physicsComponents, this.collisions[floorX][ceilY]);
             }
         }
         if (ceilXInArray)
         {
-            if (floorYInArray
-                && this.collisions[ceilX][floorY] != null)
+            if (floorYInArray)
             {
-                physicsComponents.addAll(this.collisions[ceilX][floorY]);
+                addCollisions(physicsComponents, this.collisions[ceilX][floorY]);
             }
-            if (ceilYInArray
-                && this.collisions[ceilX][ceilY] != null)
+            if (ceilYInArray)
             {
-                physicsComponents.addAll(this.collisions[ceilX][ceilY]);
+                addCollisions(physicsComponents, this.collisions[ceilX][ceilY]);
             }
         }
 
         return physicsComponents;
+    }
+
+    /**
+     * Add the collisions of the from list to the other array, unless already present.
+     */
+    private void addCollisions(ArrayList<PhysicsComponent> to, ArrayList<PhysicsComponent> from)
+    {
+        if (from != null)
+        {
+            for (PhysicsComponent physicsComponent : from)
+            {
+                if (!to.contains(physicsComponent))
+                {
+                    to.add(physicsComponent);
+                }
+            }
+        }
     }
 
     @Override
