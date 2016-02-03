@@ -250,6 +250,11 @@ public class PhysicsEngine
 
         Pool<ProjectionPoint> projectionPointPool = Pools.get(ProjectionPoint.class);
 
+        CollisionCache collisionCache =
+            physicsComponentCollisionCache.containsKey(originalPhysicsComponent)
+                ? physicsComponentCollisionCache.get(originalPhysicsComponent)
+                : null;
+
         int points = Math.round(projectionSeconds / pointTime);
 
         // Create a copy of the PhysicsComponent so that it won't be changed.
@@ -282,24 +287,25 @@ public class PhysicsEngine
                 applyVelocity(physicsComponent, stepTime);
 
                 // If we have collision with static physComp cached..
-                if (physicsComponentCollisionCache.containsKey(originalPhysicsComponent))
+                if (collisionCache != null)
                 {
-                    CollisionCache collisionCache =
-                        physicsComponentCollisionCache.get(originalPhysicsComponent);
                     ArrayList<PhysicsComponent> possibleCollidingPhysicsComponents =
                         collisionCache.getPossibleCollidingPhysicsComponents(
                             physicsComponent.getPosition().x,
                             physicsComponent.getPosition().y);
                     for (PhysicsComponent otherPhysicsComponent : otherPhysicsComponents)
                     {
+                        // If not already in the list of colliding phys comps.
                         if (!collidingPhysicsComponents.contains(otherPhysicsComponent))
                         {
+                            // Check dynamic phys comp manually because they are not cached.
                             if (otherPhysicsComponent.getPhysicsComponentType()
                                 == PhysicsComponentType.DYNAMIC
                                 && areColliding(physicsComponent, otherPhysicsComponent))
                             {
                                 collidingPhysicsComponents.add(otherPhysicsComponent);
                             }
+                            // Check all the other phys comps that could possibly collide.
                             else if (possibleCollidingPhysicsComponents.contains(
                                 otherPhysicsComponent)
                                 && areColliding(physicsComponent, otherPhysicsComponent))
