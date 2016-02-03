@@ -18,7 +18,6 @@ import com.draga.spaceTravels3.physic.PhysicsEngine;
 import com.draga.spaceTravels3.physic.Projection;
 import com.draga.spaceTravels3.physic.ProjectionPoint;
 import com.draga.spaceTravels3.physic.collisionCache.CollisionCache;
-import com.draga.spaceTravels3.physic.gravityCache.GravityCache;
 import com.draga.spaceTravels3.ui.Screen;
 import com.google.common.eventbus.Subscribe;
 
@@ -53,9 +52,7 @@ public class GameScreen extends Screen
             level.getShip().physicsComponent,
             AssMan.getGameAssMan()
                 .get(Constants.Game.COLLISION_CACHE_ASSET_FILENAME, CollisionCache.class));
-        PhysicsEngine.setup(physicsComponentsCollisionCache, AssMan.getGameAssMan().get(
-            Constants.Game.GRAVITY_CACHE_ASSET_FILENAME,
-            GravityCache.class));
+        PhysicsEngine.setup(physicsComponentsCollisionCache);
 
         Constants.General.EVENT_BUS.register(this);
 

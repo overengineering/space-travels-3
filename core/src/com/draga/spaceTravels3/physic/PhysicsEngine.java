@@ -12,7 +12,6 @@ import com.draga.spaceTravels3.gameEntity.GameEntity;
 import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.physic.collisionCache.CollisionCache;
-import com.draga.spaceTravels3.physic.gravityCache.GravityCache;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,8 +26,7 @@ public class PhysicsEngine
     private static final PerformanceCounter STEP_PERFORMANCE_COUNTER               =
         new PerformanceCounter("step", 60);
     private static HashMap<PhysicsComponent, CollisionCache>
-                                physicsComponentCollisionCache;
-    private static GravityCache gravityCache;
+        physicsComponentCollisionCache;
 
     public static PerformanceCounter getStepPerformanceCounter()
     {
@@ -73,20 +71,24 @@ public class PhysicsEngine
      */
     private static void stepPhysicsComponent(PhysicsComponent physicsComponent, float deltaTime)
     {
+        float halfDeltaTime = deltaTime / 2f;
+
+        applyVelocity(physicsComponent, halfDeltaTime);
+
         if (!SettingsManager.getDebugSettings().noGravity
             && physicsComponent.isAffectedByGravity())
         {
-            try (PooledVector2 gravity = gravityCache.getCachedGravity(physicsComponent))
+            try (PooledVector2 gravity = calculateGravityForce(physicsComponent))
             {
                 physicsComponent.getVelocity().add(gravity.scl(deltaTime));
             }
         }
-        
-        applyVelocity(physicsComponent, deltaTime);
+
+        applyVelocity(physicsComponent, halfDeltaTime);
+
         applyAngularVelocity(physicsComponent, deltaTime);
-        
     }
-    
+
     /**
      * Check for collisions following this pattern to avoid duplicates:
      * ___|_X0_|_X1_|_X2_
@@ -108,7 +110,7 @@ public class PhysicsEngine
             }
         }
     }
-
+    
     private static void checkCollision(GameEntity gameEntityA, GameEntity gameEntityB)
     {
         // If none of them is dynamic skip.
@@ -162,7 +164,7 @@ public class PhysicsEngine
             CollisionResolver.resolve(gameEntityA, gameEntityB);
         }
     }
-    
+
     /**
      * Applies the {@link PhysicsComponent}'s angular velocity to its rotation.
      */
@@ -177,7 +179,8 @@ public class PhysicsEngine
      */
     private static void stepGravity(
         PhysicsComponent physicsComponent,
-        ArrayList<PhysicsComponent> otherPhysicsComponents, float deltaTime)
+        ArrayList<PhysicsComponent> otherPhysicsComponents,
+        float deltaTime)
     {
         try (PooledVector2 gravityForce = calculateGravityForce(
             physicsComponent,
@@ -222,31 +225,29 @@ public class PhysicsEngine
         force.add(x, y);
     }
     
-    public static void setup(
-        HashMap<PhysicsComponent, CollisionCache> physicsComponentCollisionCache,
-        GravityCache gravityCache)
+    public static void setup(HashMap<PhysicsComponent, CollisionCache> physicsComponentCollisionCache)
     {
         PhysicsEngine.physicsComponentCollisionCache = physicsComponentCollisionCache;
-        PhysicsEngine.gravityCache = gravityCache;
     }
     
     public static void dispose()
     {
         physicsComponentCollisionCache = null;
-        PhysicsEngine.gravityCache = null;
     }
     
     public static PerformanceCounter getGravityProjectionPerformanceCounter()
     {
         return GRAVITY_PROJECTION_PERFORMANCE_COUNTER;
     }
-
+    
     public static ArrayList<ProjectionPoint> gravityProjection(
         PhysicsComponent originalPhysicsComponent,
         float projectionSeconds,
         float pointTime)
     {
         GRAVITY_PROJECTION_PERFORMANCE_COUNTER.start();
+
+        float halfPointTime = pointTime / 2f;
 
         Pool<ProjectionPoint> projectionPointPool = Pools.get(ProjectionPoint.class);
 
@@ -267,68 +268,63 @@ public class PhysicsEngine
 
         for (int i = 0; i < points; i++)
         {
-            // Sub points to make the physics calculations more accurate without adding visual points.
-            float stepTime = Constants.Visual.HUD.TrajectoryLine.STEP_TIME;
-
             ArrayList<PhysicsComponent> collidingPhysicsComponents = new ArrayList<>();
-            for (float remainingStepTime = pointTime; remainingStepTime > 0;
-                 remainingStepTime -= stepTime)
+
+            // Applies half velocity between calculating gravity force so that it will be more precise.
+            applyVelocity(physicsComponent, halfPointTime);
+            try (PooledVector2 gravity = calculateGravityForce(
+                physicsComponent,
+                otherPhysicsComponents))
             {
-                if (remainingStepTime < stepTime)
-                {
-                    stepTime = remainingStepTime;
-                }
+                gravity.scl(pointTime);
+                physicsComponent.getVelocity().add(gravity);
+            }
+            applyVelocity(physicsComponent, halfPointTime);
 
-                try (PooledVector2 gravity = gravityCache.getCachedGravity(physicsComponent))
-                {
-                    physicsComponent.getVelocity().add(gravity.scl(stepTime));
-                }
 
-                applyVelocity(physicsComponent, stepTime);
-
-                // If we have collision with static physComp cached..
-                if (collisionCache != null)
+            // If we have collision with static physComp cached..
+            if (collisionCache != null)
+            {
+                ArrayList<PhysicsComponent> possibleCollidingPhysicsComponents =
+                    collisionCache.getPossibleCollidingPhysicsComponents(
+                        physicsComponent.getPosition().x,
+                        physicsComponent.getPosition().y);
+                for (PhysicsComponent otherPhysicsComponent : otherPhysicsComponents)
                 {
-                    ArrayList<PhysicsComponent> possibleCollidingPhysicsComponents =
-                        collisionCache.getPossibleCollidingPhysicsComponents(
-                            physicsComponent.getPosition().x,
-                            physicsComponent.getPosition().y);
-                    for (PhysicsComponent otherPhysicsComponent : otherPhysicsComponents)
+                    // If not already in the list of colliding phys comps.
+                    if (!collidingPhysicsComponents.contains(otherPhysicsComponent))
                     {
-                        // If not already in the list of colliding phys comps.
-                        if (!collidingPhysicsComponents.contains(otherPhysicsComponent))
+                        // Check dynamic phys comp manually because they are not cached.
+                        if (otherPhysicsComponent.getPhysicsComponentType()
+                            == PhysicsComponentType.DYNAMIC
+                            && areColliding(physicsComponent, otherPhysicsComponent))
                         {
-                            // Check dynamic phys comp manually because they are not cached.
-                            if (otherPhysicsComponent.getPhysicsComponentType()
-                                == PhysicsComponentType.DYNAMIC
-                                && areColliding(physicsComponent, otherPhysicsComponent))
-                            {
-                                collidingPhysicsComponents.add(otherPhysicsComponent);
-                            }
-                            // Check all the other phys comps that could possibly collide.
-                            else if (possibleCollidingPhysicsComponents.contains(
-                                otherPhysicsComponent)
-                                && areColliding(physicsComponent, otherPhysicsComponent))
-                            {
-                                collidingPhysicsComponents.add(otherPhysicsComponent);
-                            }
+                            collidingPhysicsComponents.add(otherPhysicsComponent);
                         }
-
-                    }
-                }
-                // If we DON'T have collision with static physComp cached..
-                else
-                {
-                    for (PhysicsComponent otherPhysicsComponent : otherPhysicsComponents)
-                    {
-                        if (!collidingPhysicsComponents.contains(otherPhysicsComponent)
+                        // Check all the other phys comps that could possibly collide.
+                        else if (possibleCollidingPhysicsComponents.contains(
+                            otherPhysicsComponent)
                             && areColliding(physicsComponent, otherPhysicsComponent))
                         {
                             collidingPhysicsComponents.add(otherPhysicsComponent);
                         }
                     }
+
                 }
             }
+            // If we DON'T have collision with static physComp cached..
+            else
+            {
+                for (PhysicsComponent otherPhysicsComponent : otherPhysicsComponents)
+                {
+                    if (!collidingPhysicsComponents.contains(otherPhysicsComponent)
+                        && areColliding(physicsComponent, otherPhysicsComponent))
+                    {
+                        collidingPhysicsComponents.add(otherPhysicsComponent);
+                    }
+                }
+            }
+
 
             ProjectionPoint projectionPoint = projectionPointPool.obtain();
             projectionPoint.set(
@@ -342,7 +338,7 @@ public class PhysicsEngine
 
         return projectionPoints;
     }
-    
+
     public static ArrayList<PhysicsComponent> getAllPhysicsComponentsExcept(PhysicsComponent excludePhysicsComponent)
     {
         ArrayList<PhysicsComponent> physicsComponents = getAllPhysicsComponents();
@@ -350,7 +346,7 @@ public class PhysicsEngine
 
         return physicsComponents;
     }
-    
+
     /**
      * Applies the {@link PhysicsComponent}'s velocity to its position.
      */
@@ -358,8 +354,8 @@ public class PhysicsEngine
     {
         try (PooledVector2 velocity = PooledVector2.newVector2(physicsComponent.getVelocity()))
         {
-            physicsComponent.getPosition()
-                .add(velocity.scl(deltaTime));
+            velocity.scl(deltaTime);
+            physicsComponent.getPosition().add(velocity);
         }
     }
     
