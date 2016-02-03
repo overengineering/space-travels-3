@@ -206,4 +206,9 @@ public class Background implements Disposable
     {
         this.position.add(vector2);
     }
+
+    public Vector2 getPosition()
+    {
+        return this.position;
+    }
 }

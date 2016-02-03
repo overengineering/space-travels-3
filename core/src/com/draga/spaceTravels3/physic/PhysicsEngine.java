@@ -352,11 +352,10 @@ public class PhysicsEngine
      */
     private static void applyVelocity(PhysicsComponent physicsComponent, float deltaTime)
     {
-        try (PooledVector2 velocity = PooledVector2.newVector2(physicsComponent.getVelocity()))
-        {
-            velocity.scl(deltaTime);
-            physicsComponent.getPosition().add(velocity);
-        }
+        physicsComponent.getPosition()
+            .add(
+                physicsComponent.getVelocity().x * deltaTime,
+                physicsComponent.getVelocity().y * deltaTime);
     }
     
     /**

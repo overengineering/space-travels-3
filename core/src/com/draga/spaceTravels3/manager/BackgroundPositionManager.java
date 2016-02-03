@@ -23,10 +23,7 @@ public abstract class BackgroundPositionManager
 
     public static void update(float deltaTime)
     {
-        try (PooledVector2 movement = backgroundPositionController.getMovement(deltaTime))
-        {
-            background.move(movement);
-        }
+        backgroundPositionController.move(background, deltaTime);
     }
 
     public static void dispose()

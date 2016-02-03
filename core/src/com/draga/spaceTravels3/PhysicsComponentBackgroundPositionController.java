@@ -2,6 +2,7 @@ package com.draga.spaceTravels3;
 
 import com.badlogic.gdx.math.Vector2;
 import com.draga.PooledVector2;
+import com.draga.background.Background;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 
 public class PhysicsComponentBackgroundPositionController extends BackgroundPositionController
@@ -16,14 +17,14 @@ public class PhysicsComponentBackgroundPositionController extends BackgroundPosi
     }
 
     @Override
-    public PooledVector2 getMovement(float deltaTime)
+    public void move(Background background, float deltaTime)
     {
-        PooledVector2 movement = PooledVector2.newVector2(this.physicsComponent.getPosition());
+        Vector2 newPosition = this.physicsComponent.getPosition();
 
-        movement.sub(this.lastPosition);
+        background.getPosition().add(
+            (newPosition.x - this.lastPosition.x) * deltaTime,
+            (newPosition.y - this.lastPosition.y) * deltaTime);
 
-        this.lastPosition.set(this.physicsComponent.getPosition());
-
-        return movement;
+        this.lastPosition.set(newPosition);
     }
 }
