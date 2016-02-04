@@ -1,6 +1,5 @@
 package com.draga.spaceTravels3.physic.collisionCache;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
@@ -11,10 +10,8 @@ import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponentType;
 import com.draga.spaceTravels3.physic.PhysicsEngine;
 import com.draga.utils.FileUtils;
-import com.google.common.base.Stopwatch;
 
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 public class CollisionCache implements Pool.Poolable
 {
@@ -27,8 +24,6 @@ public class CollisionCache implements Pool.Poolable
 
     public CollisionCache(PhysicsComponent originalPhysicsComponent)
     {
-        Stopwatch stopwatch = Stopwatch.createStarted();
-
         PhysicsComponent physicsComponent = new PhysicsComponent(originalPhysicsComponent);
 
         ArrayList<PhysicsComponent> collidablePhysicsComponents = new ArrayList<>();
@@ -44,8 +39,6 @@ public class CollisionCache implements Pool.Poolable
                 collidablePhysicsComponents.add(otherPhysicsComponent);
             }
         }
-
-
 
         // Calculate the size and position of the grid of points to be checked
         float x1 = Float.MAX_VALUE;
@@ -124,14 +117,6 @@ public class CollisionCache implements Pool.Poolable
 
             }
         }
-
-        Gdx.app.debug(
-            LOGGING_TAG,
-            "Cache collision for "
-                + physicsComponent.getOwnerClass()
-                + " took "
-                + stopwatch.elapsed(TimeUnit.NANOSECONDS) * MathUtils.nanoToSec
-                + "s");
     }
 
     private void saveBitMap()
@@ -170,10 +155,15 @@ public class CollisionCache implements Pool.Poolable
         PixmapIO.writePNG(FileUtils.getFileHandle("collisionBitmap.png"), pixmap);
     }
 
+    /**
+     * Gets all the {@link PhysicsComponent}s that could be colliding at this coordinates.
+     * These needs to be then manually checked if are actually colliding.
+     */
     public ArrayList<PhysicsComponent> getPossibleCollidingPhysicsComponents(float x, float y)
     {
-        ArrayList<PhysicsComponent> pointCollisions = new ArrayList<>();
+        ArrayList<PhysicsComponent> physicsComponents = new ArrayList<>();
 
+        // Finds the 4 points in the array around the coordinates.
         int floorX = MathUtils.floor(x - this.offset.x);
         int floorY = MathUtils.floor(y - this.offset.y);
         int ceilX = MathUtils.ceil(x - this.offset.x);
@@ -184,32 +174,36 @@ public class CollisionCache implements Pool.Poolable
         boolean ceilXInArray = ceilX >= 0 && ceilX < this.arrayWidth;
         boolean ceilYInArray = ceilY >= 0 && ceilY < this.arrayHeight;
 
+        // Add all their collision lists phys comps.
         if (floorXInArray)
         {
             if (floorYInArray)
             {
-                addCollisions(pointCollisions, this.collisions[floorX][floorY]);
+                addCollisions(physicsComponents, this.collisions[floorX][floorY]);
             }
             if (ceilYInArray)
             {
-                addCollisions(pointCollisions, this.collisions[floorX][ceilY]);
+                addCollisions(physicsComponents, this.collisions[floorX][ceilY]);
             }
         }
         if (ceilXInArray)
         {
             if (floorYInArray)
             {
-                addCollisions(pointCollisions, this.collisions[ceilX][floorY]);
+                addCollisions(physicsComponents, this.collisions[ceilX][floorY]);
             }
             if (ceilYInArray)
             {
-                addCollisions(pointCollisions, this.collisions[ceilX][ceilY]);
+                addCollisions(physicsComponents, this.collisions[ceilX][ceilY]);
             }
         }
 
-        return pointCollisions;
+        return physicsComponents;
     }
 
+    /**
+     * Add the collisions of the from list to the other array, unless already present.
+     */
     private void addCollisions(ArrayList<PhysicsComponent> to, ArrayList<PhysicsComponent> from)
     {
         if (from != null)
@@ -228,7 +222,7 @@ public class CollisionCache implements Pool.Poolable
     public void reset()
     {
         this.offset.close();
-        this.offset= null;
+        this.offset = null;
         this.collisions = null;
     }
 }

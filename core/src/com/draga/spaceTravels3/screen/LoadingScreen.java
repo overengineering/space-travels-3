@@ -25,8 +25,6 @@ import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLe
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisablePlanet;
 import com.draga.spaceTravels3.physic.collisionCache.CollisionCache;
 import com.draga.spaceTravels3.physic.collisionCache.CollisionCacheParameters;
-import com.draga.spaceTravels3.physic.gravityCache.GravityCache;
-import com.draga.spaceTravels3.physic.gravityCache.GravityCacheParameters;
 import com.draga.spaceTravels3.ui.Screen;
 import com.google.common.base.Joiner;
 import com.google.common.base.Stopwatch;
@@ -136,13 +134,6 @@ public class LoadingScreen extends Screen
         loadLevelAsset(assMan, levelParameters, AssMan.getAssList().pickupTexture, Texture.class);
 
         assMan.load(this.levelAssetDescriptor);
-
-        GravityCacheParameters gravityCacheParameters = new GravityCacheParameters();
-        gravityCacheParameters.dependencies.add(this.levelAssetDescriptor);
-        AssetDescriptor<GravityCache> gravityCacheAssetDescriptor =
-            new AssetDescriptor<>(Constants.Game.GRAVITY_CACHE_ASSET_FILENAME, GravityCache.class,
-                gravityCacheParameters);
-        assMan.load(gravityCacheAssetDescriptor);
 
         CollisionCacheParameters collisionCacheParameters = new CollisionCacheParameters();
         collisionCacheParameters.dependencies.add(this.levelAssetDescriptor);

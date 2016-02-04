@@ -10,7 +10,6 @@ import com.draga.joystick.Joystick;
 import com.draga.joystick.JoystickParameters;
 import com.draga.spaceTravels3.level.Level;
 import com.draga.spaceTravels3.physic.collisionCache.CollisionCache;
-import com.draga.spaceTravels3.physic.gravityCache.GravityCache;
 import com.google.common.eventbus.EventBus;
 
 import java.text.DecimalFormat;
@@ -147,14 +146,12 @@ public abstract class Constants
             public abstract static class TrajectoryLine
             {
                 public static final float POINTS_TIME              = 0.05f;
-                public static final float STEP_TIME                = 1f / 100f;
                 public static final Color COLOR_NEUTRAL            = new Color(0.5f, 0.5f, 0.5f, 1);
                 public static final Color COLOR_PLANET_LOSE        = new Color(0.8f, 0.2f, 0.2f, 1);
                 public static final Color COLOR_PICKUP             = Color.GREEN;
                 public static final Color COLOR_PLANET_DESTINATION =
                     Minimap.PLANET_DESTINATION_COLOUR;
             }
-
         }
     }
 
@@ -182,16 +179,11 @@ public abstract class Constants
         public static final float PICKUP_RADIUS       =
             (Visual.PICKUP_WIDTH + Visual.PICKUP_HEIGHT) / 2f * 1.3f;
         public static final float LEVEL_BOUNDS_BUFFER = 10;
-
-        public static float SHIP_ACCELERATION_PER_SECOND = 40f;
-
-        public static int PHYSICS_STEPS = 10;
-
         public static final String LEVEL_ASSET_FILENAME           = Level.class.getSimpleName();
-        public static final String GRAVITY_CACHE_ASSET_FILENAME   =
-            GravityCache.class.getSimpleName();
         public static final String COLLISION_CACHE_ASSET_FILENAME =
             CollisionCache.class.getSimpleName();
+        public static float SHIP_ACCELERATION_PER_SECOND = 40f;
+        public static int PHYSICS_STEPS = 10;
     }
 
 

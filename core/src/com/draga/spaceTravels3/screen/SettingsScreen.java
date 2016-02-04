@@ -94,14 +94,14 @@ public class SettingsScreen extends Screen
     {
         table.add(new Label("Effects volume", UIManager.skin));
         final Slider volumeSlider = new Slider(0f, 1f, 0.01f, false, UIManager.skin);
-        volumeSlider.setValue(SettingsManager.getSettings().volumeFX);
+        volumeSlider.setValue((float) Math.sqrt(SettingsManager.getSettings().volumeFX));
         volumeSlider.addListener(new ChangeListener()
         {
             @Override
             public void changed(ChangeEvent event, Actor actor)
             {
-                float volume = Interpolation.pow2In.apply(volumeSlider.getValue());
-                SettingsManager.getSettings().volumeFX = volume;
+                SettingsManager.getSettings().volumeFX =
+                    (float) Math.pow(volumeSlider.getValue(), 2);
             }
         });
         volumeSlider.addListener(new ClickListener()
@@ -123,13 +123,13 @@ public class SettingsScreen extends Screen
     {
         table.add(new Label("Music volume", UIManager.skin));
         final Slider volumeSlider = new Slider(0f, 1f, 0.01f, false, UIManager.skin);
-        volumeSlider.setValue(SettingsManager.getSettings().getVolumeMusic());
+        volumeSlider.setValue((float) Math.sqrt(SettingsManager.getSettings().getVolumeMusic()));
         volumeSlider.addListener(new ChangeListener()
         {
             @Override
             public void changed(ChangeEvent event, Actor actor)
             {
-                float volume = Interpolation.pow2In.apply(volumeSlider.getValue());
+                float volume = (float) Math.pow(volumeSlider.getValue(), 2);
                 SettingsManager.getSettings().setVolumeMusic(volume);
             }
         });
