@@ -22,8 +22,8 @@ public class PhysicsComponentBackgroundPositionController extends BackgroundPosi
         Vector2 newPosition = this.physicsComponent.getPosition();
 
         background.getPosition().add(
-            (newPosition.x - this.lastPosition.x) * deltaTime,
-            (newPosition.y - this.lastPosition.y) * deltaTime);
+            (newPosition.x - this.lastPosition.x),
+            (newPosition.y - this.lastPosition.y));
 
         this.lastPosition.set(newPosition);
     }

@@ -104,7 +104,7 @@ public class Background implements Disposable
             Texture texture = new Texture(pixmap);
             pixmap.dispose();
             texture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
-            // TODO: 01/02/2016 set texture filter to linear? It decreases the FPS a bit too much...
+            texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
             this.textures.add(texture);
         }
 
