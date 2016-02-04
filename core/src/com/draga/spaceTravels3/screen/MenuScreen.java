@@ -74,13 +74,7 @@ public class MenuScreen extends Screen
             this.stage.addActor(getDebugButton());
         }
 
-        if (!SettingsManager.getSettings().disableFaceUpWarning)
-        {
-            addFaceUpWarning(this.stage);
-        }
-
-//        this.stage.setDebugAll(true);
-                this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
+        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
     private ScrollPane getLevelPackList()
@@ -308,62 +302,6 @@ public class MenuScreen extends Screen
                 }
             });
         return debugButton;
-    }
-
-    private void addFaceUpWarning(Stage stage)
-    {
-        final Dialog dialog = new Dialog("", UIManager.skin);
-
-        TextButton dismissButton = new BeepingTextButton("Dismiss", UIManager.skin);
-        Button settingsButton = getSettingsTextButton(true);
-
-        ClickListener disableWarningListener = new ClickListener()
-        {
-            @Override
-            public void clicked(InputEvent event, float x, float y)
-            {
-                SettingsManager.getSettings().disableFaceUpWarning = true;
-                dialog.hide();
-            }
-        };
-
-        dismissButton.addListener(disableWarningListener);
-        settingsButton.addListener(disableWarningListener);
-
-        Table table = UIManager.getDefaultTable();
-
-        dialog.add(table);
-
-        table
-            .add("Face up!", "large")
-            .center()
-            .row();
-
-        Image image = loadTextureAsync(AssMan.getAssList().iconFaceUp, AssMan.getAssMan());
-        float iconSize = this.stage.getHeight() / 5f;
-        table
-            .add(image)
-            .size(iconSize)
-            .row();
-
-        table
-            .add("Tilting the device controls the spaceship movements\r\n"
-                + "when playing. Make sure to start your game orienting\r\n"
-                + "you device face up or change the input in the settings")
-            .center()
-            .row();
-
-        Table buttonsTable = UIManager.getDefaultTable();
-        buttonsTable
-            .add(settingsButton);
-        buttonsTable
-            .add(dismissButton)
-            .center();
-
-        table
-            .add(buttonsTable);
-
-        dialog.show(stage);
     }
 
     public static String s(String s, int j)
