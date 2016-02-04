@@ -8,11 +8,12 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.spaceTravels3.Constants;
+import com.draga.spaceTravels3.InputType;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.level.Level;
 import com.draga.spaceTravels3.level.LevelParameters;
@@ -25,6 +26,7 @@ import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLe
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisablePlanet;
 import com.draga.spaceTravels3.physic.collisionCache.CollisionCache;
 import com.draga.spaceTravels3.physic.collisionCache.CollisionCacheParameters;
+import com.draga.spaceTravels3.ui.BeepingTextButton;
 import com.draga.spaceTravels3.ui.Screen;
 import com.google.common.base.Joiner;
 import com.google.common.base.Stopwatch;
@@ -44,6 +46,8 @@ public class LoadingScreen extends Screen
     private Stopwatch              stopwatch;
     private GameScreen             gameScreen;
     private AssetDescriptor<Level> levelAssetDescriptor;
+
+    private boolean waitingForWarning = false;
 
     public LoadingScreen(String levelId, String difficulty)
     {
@@ -70,7 +74,63 @@ public class LoadingScreen extends Screen
             .add(this.progressBar)
             .width(this.stage.getWidth() * 0.75f);
 
+        if (!SettingsManager.getSettings().disableFaceUpWarning
+            && SettingsManager.getSettings().inputType == InputType.ACCELEROMETER)
+        {
+            showFaceUpWarning();
+            this.waitingForWarning = true;
+        }
+
         this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
+    }
+
+    public void showFaceUpWarning()
+    {
+        final Dialog dialog = new Dialog("", UIManager.skin);
+
+        TextButton dismissButton = new BeepingTextButton("Dismiss", UIManager.skin);
+
+        ClickListener disableWarningListener = new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                SettingsManager.getSettings().disableFaceUpWarning = true;
+                dialog.hide();
+                LoadingScreen.this.waitingForWarning = false;
+            }
+        };
+
+        dismissButton.addListener(disableWarningListener);
+
+        Table table = UIManager.getDefaultTable();
+
+        dialog.add(table);
+
+        table
+            .add("Face up!", "large")
+            .center()
+            .row();
+
+        Image image = loadTextureAsync(AssMan.getAssList().iconFaceUp, AssMan.getAssMan());
+        float iconSize = this.stage.getHeight() / 5f;
+        table
+            .add(image)
+            .size(iconSize)
+            .row();
+
+        table
+            .add("Tilting the device controls the spaceship\r\n"
+                + "movements. Please turn your device face\r\n"
+                + "up or change the input in the settings")
+            .center()
+            .row();
+
+        table
+            .add(dismissButton)
+            .center();
+
+        dialog.show(this.stage);
     }
 
     private ProgressBar getProgressBar()
@@ -81,6 +141,7 @@ public class LoadingScreen extends Screen
             0.01f,
             false,
             UIManager.skin);
+        progressBar.setAnimateDuration(0.05f);
 
         return progressBar;
     }
@@ -163,6 +224,8 @@ public class LoadingScreen extends Screen
     @Override
     public void render(float deltaTime)
     {
+        loadAsyncImages(AssMan.getAssMan());
+
         // If GameScreen has been generated on the last step add it to the stack and remove itself.
         if (this.gameScreen != null)
         {
@@ -172,8 +235,9 @@ public class LoadingScreen extends Screen
         }
 
         // If loaded creates the game screen but doesn't add it to the stack yet to skip this frame
-        // which will be long ref. #77
-        if (AssMan.getGameAssMan().update())
+        // which will be long (ref. #77).
+        if (AssMan.getGameAssMan().update()
+            && !this.waitingForWarning)
         {
             if (Constants.General.IS_DEBUGGING)
             {

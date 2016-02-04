@@ -36,7 +36,7 @@ public abstract class IngameMenuScreen extends Screen
         super(true, false);
         this.gameScreen = gameScreen;
         this.level = level;
-        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.overlaySpriteBath);
+        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
 

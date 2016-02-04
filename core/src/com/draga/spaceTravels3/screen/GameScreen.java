@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Pools;
 import com.draga.spaceTravels3.*;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
@@ -183,6 +184,7 @@ public class GameScreen extends Screen
 
         SpaceTravels3.spriteBatch.setProjectionMatrix(SpaceTravels3.gameViewport.getCamera().combined);
         SpaceTravels3.spriteBatch.begin();
+        SpaceTravels3.spriteBatch.setColor(Color.WHITE);
 
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
