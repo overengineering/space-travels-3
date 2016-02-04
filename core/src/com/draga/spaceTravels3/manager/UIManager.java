@@ -271,7 +271,7 @@ public abstract class UIManager
         Window.WindowStyle windowStyle = new Window.WindowStyle();
         windowStyle.titleFont = skin.getFont("large");
         windowStyle.titleFontColor = Color.WHITE;
-        windowStyle.background = getTiledDrawable(Constants.Visual.SCREEN_FADE_COLOUR);
+        windowStyle.stageBackground = getTiledDrawable(Constants.Visual.SCREEN_FADE_COLOUR);
 
         return windowStyle;
     }

@@ -2,7 +2,6 @@ package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -41,9 +40,8 @@ public class MenuScreen extends Screen
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
         // Header label.
-        Label headerLabel = getHeaderLabel();
         table
-            .add(headerLabel)
+            .add("Space Travels 3", "large")
             .top();
 
         // Level list.
@@ -61,7 +59,7 @@ public class MenuScreen extends Screen
         table.row();
         Table buttonsTable = UIManager.getDefaultTable();
 
-        buttonsTable.add(getSettingsTextButton());
+        buttonsTable.add(getSettingsTextButton(false));
         buttonsTable.add(getTutorialButton());
         buttonsTable.add(getCreditsButton());
         buttonsTable.add(getShareButton());
@@ -76,14 +74,13 @@ public class MenuScreen extends Screen
             this.stage.addActor(getDebugButton());
         }
 
-        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
-    }
+        if (!SettingsManager.getSettings().disableFaceUpWarning)
+        {
+            addFaceUpWarning(this.stage);
+        }
 
-    public Label getHeaderLabel()
-    {
-        Label headerLabel = new Label("Space Travels 3", UIManager.skin, "large", Color.WHITE);
-
-        return headerLabel;
+//        this.stage.setDebugAll(true);
+                this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
     private ScrollPane getLevelPackList()
@@ -116,7 +113,8 @@ public class MenuScreen extends Screen
             }
 
             float imageGroupWidth = Constants.Visual.LEVEL_ICON_SIZE
-                + ((levelPack.getSerialisableLevels().size() - 1)
+                + (
+                (levelPack.getSerialisableLevels().size() - 1)
                     * Constants.Visual.LEVEL_ICON_OVERLAP_DISTANCE);
 
             if (!levelPack.isFree()
@@ -172,10 +170,10 @@ public class MenuScreen extends Screen
         return scrollPane;
     }
 
-    private Actor getSettingsTextButton()
+    private Button getSettingsTextButton(boolean useText)
     {
         BeepingImageTextButton button =
-            new BeepingImageTextButton("", UIManager.skin, "settings");
+            new BeepingImageTextButton(useText ? "Settings" : "", UIManager.skin, "settings");
 
         button.addListener(
             new ClickListener()
@@ -277,7 +275,7 @@ public class MenuScreen extends Screen
 
         return button;
     }
-    
+
     private Actor getLeaderboardsButton()
     {
         BeepingImageTextButton
@@ -295,7 +293,7 @@ public class MenuScreen extends Screen
 
         return button;
     }
-
+    
     public Actor getDebugButton()
     {
         TextButton debugButton = new BeepingTextButton("Debug", UIManager.skin);
@@ -310,6 +308,42 @@ public class MenuScreen extends Screen
                 }
             });
         return debugButton;
+    }
+
+    private void addFaceUpWarning(Stage stage)
+    {
+        Dialog dialog = new Dialog("", UIManager.skin);
+
+        TextButton dismissButton = new BeepingTextButton("Dismiss", UIManager.skin);
+        Button settingsButton = getSettingsTextButton(true);
+
+        ClickListener disableWarningListener = new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                SettingsManager.getSettings().disableFaceUpWarning = true;
+            }
+        };
+
+        dismissButton.addListener(disableWarningListener);
+        settingsButton.addListener(disableWarningListener);
+
+        dialog.getContentTable()
+            .add("Face up!", "large")
+            .center()
+            .row();
+        dialog.getContentTable()
+            .add("Tilting the device moves the spaceship when playing.\r\n"
+                + "Make sure to start your games orienting you device\n"
+                + "face up or change the input in the settings")
+            .center();
+        dialog
+            .button(settingsButton)
+            .button(dismissButton)
+            .center();
+
+        dialog.show(stage);
     }
 
     public static String s(String s, int j)
