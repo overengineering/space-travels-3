@@ -312,7 +312,7 @@ public class MenuScreen extends Screen
 
     private void addFaceUpWarning(Stage stage)
     {
-        Dialog dialog = new Dialog("", UIManager.skin);
+        final Dialog dialog = new Dialog("", UIManager.skin);
 
         TextButton dismissButton = new BeepingTextButton("Dismiss", UIManager.skin);
         Button settingsButton = getSettingsTextButton(true);
@@ -323,25 +323,45 @@ public class MenuScreen extends Screen
             public void clicked(InputEvent event, float x, float y)
             {
                 SettingsManager.getSettings().disableFaceUpWarning = true;
+                dialog.hide();
             }
         };
 
         dismissButton.addListener(disableWarningListener);
         settingsButton.addListener(disableWarningListener);
 
-        dialog.getContentTable()
+        Table table = UIManager.getDefaultTable();
+
+        dialog.add(table);
+
+        table
             .add("Face up!", "large")
             .center()
             .row();
-        dialog.getContentTable()
-            .add("Tilting the device moves the spaceship when playing.\r\n"
-                + "Make sure to start your games orienting you device\n"
-                + "face up or change the input in the settings")
+
+        Image image = loadTextureAsync(AssMan.getAssList().iconFaceUp, AssMan.getAssMan());
+        float iconSize = this.stage.getHeight() / 5f;
+        table
+            .add(image)
+            .size(iconSize)
+            .row();
+
+        table
+            .add("Tilting the device controls the spaceship movements\r\n"
+                + "when playing. Make sure to start your game orienting\r\n"
+                + "you device face up or change the input in the settings")
+            .center()
+            .row();
+
+        Table buttonsTable = UIManager.getDefaultTable();
+        buttonsTable
+            .add(settingsButton);
+        buttonsTable
+            .add(dismissButton)
             .center();
-        dialog
-            .button(settingsButton)
-            .button(dismissButton)
-            .center();
+
+        table
+            .add(buttonsTable);
 
         dialog.show(stage);
     }

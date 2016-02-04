@@ -23,7 +23,7 @@ public class PurchaseThanksScreen extends Screen
     {
         super(true, false);
 
-        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.overlaySpriteBath);
+        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
 
         // If the stage is clicked then close this screen, unless the event was stopped.
         this.stage.addListener(new ClickListener()
@@ -37,7 +37,6 @@ public class PurchaseThanksScreen extends Screen
                 }
             }
         });
-
 
         final Table table = UIManager.addDefaultTableToStage(this.stage);
 

@@ -2,6 +2,7 @@ package com.draga.background;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -50,6 +51,8 @@ public class Background implements Disposable
      */
     public void draw(Camera camera, Batch batch)
     {
+        batch.setColor(Color.WHITE);
+
         float x = camera.position.x - (camera.viewportWidth / 2f);
         float y = camera.position.y - (camera.viewportHeight / 2f);
 

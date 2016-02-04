@@ -29,7 +29,6 @@ public class SpaceTravels3 implements ApplicationListener
         new PerformanceCounter(LOGGING_TAG, 60);
 
     public static SpriteBatch     spriteBatch;
-    public static SpriteBatch     overlaySpriteBath;
     public static ShapeRenderer   shapeRenderer;
     public static ScalingViewport menuViewport;
     public static ExtendViewport  gameViewport;
@@ -55,7 +54,6 @@ public class SpaceTravels3 implements ApplicationListener
         ErrorHandlerProvider.addErrorHandler(new GdxErrorHandler());
 
         spriteBatch = new SpriteBatch(200);
-        overlaySpriteBath = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setAutoShapeType(true);
         menuViewport = new ScalingViewport(
