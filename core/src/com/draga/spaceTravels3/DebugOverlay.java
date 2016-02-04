@@ -70,7 +70,7 @@ public class DebugOverlay implements Screen
             "Load:%3f\r\n"
                 + "Engine:%9f\r\n"
                 + "Projection:%9f\r\n"
-                + "FPS:%3d|Heap:%7s|Nat. heap:%7s",
+                + "FPS:%2d|Heap:%7s|Nat. heap:%7s",
             SpaceTravels3.getPerformanceCounter().load.latest,
             PhysicsEngine.getStepPerformanceCounter().time.mean.getMean(),
             PhysicsEngine.getGravityProjectionPerformanceCounter().time.mean.getMean(),
