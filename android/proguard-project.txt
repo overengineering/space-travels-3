@@ -35,17 +35,6 @@
 }
 
 
-#-keepclassmembers class com.badlogic.gdx.physics.box2d.World {
-#   boolean contactFilter(long, long);
-#   void    beginContact(long);
-#   void    endContact(long);
-#   void    preSolve(long, long);
-#   void    postSolve(long, long);
-#   boolean reportFixture(long);
-#   float   reportRayFixture(long, float, float, float, float, float);
-#}
-
-
 ## Gdx-pay
 -keep class com.android.vending.billing.**
 -keep class com.amazon.** {*;}
@@ -99,16 +88,13 @@
 -keep class * extends java.util.ListResourceBundle {
     protected Object[][] getContents();
 }
-
 -keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
     public static final *** NULL;
 }
-
 -keepnames @com.google.android.gms.common.annotation.KeepName class *
 -keepclassmembernames class * {
     @com.google.android.gms.common.annotation.KeepName *;
 }
-
 -keepnames class * implements android.os.Parcelable {
     public static final ** CREATOR;
 }
@@ -127,7 +113,6 @@
 #-keepclasseswithmembers public class * {
 #    public static void main(java.lang.String[]);
 #}
-
 -keep class com.google.common.io.Resources {
     public static <methods>;
 }
@@ -137,14 +122,13 @@
 -keep class com.google.common.base.Charsets {
     public static <fields>;
 }
-
 -keep class com.google.common.base.Joiner {
     public static com.google.common.base.Joiner on(java.lang.String);
     public ** join(...);
 }
-
 -keep class com.google.common.collect.MapMakerInternalMap$ReferenceEntry
 -keep class com.google.common.cache.LocalCache$ReferenceEntry
+
 
 # http://stackoverflow.com/questions/9120338/proguard-configuration-for-guava-with-obfuscation-and-optimization
 -dontwarn javax.annotation.**
@@ -173,22 +157,12 @@
 
 
 ## JSON serialisable
--keepclassmembers class com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableDifficulty{
-   *;
-}
--keepclassmembers class com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel{
-   *;
-}
--keepclassmembers class com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisablePickup{
-   *;
-}
--keepclassmembers class com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisablePlanet{
-   *;
-}
--keepclassmembers class com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableShip{
-   *;
-}
--keepclassmembers class com.draga.spaceTravels3.manager.asset.AssList{
-   *;
-}
+-keepclassmembers class com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableDifficulty { *; }
+-keepclassmembers class com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel { *; }
+-keepclassmembers class com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisablePickup { *; }
+-keepclassmembers class com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisablePlanet { *; }
+-keepclassmembers class com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableShip { *; }
+-keepclassmembers class com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevelPack { *; }
+-keepclassmembers class com.draga.spaceTravels3.manager.asset.AssList { *; }
+
 -keepattributes Signature

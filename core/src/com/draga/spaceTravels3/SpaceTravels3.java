@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonWriter;
 import com.badlogic.gdx.utils.PerformanceCounter;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -20,6 +22,8 @@ import com.draga.spaceTravels3.manager.*;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.screen.BackgroundScreen;
 import com.draga.spaceTravels3.screen.MenuScreen;
+import com.google.common.eventbus.DeadEvent;
+import com.google.common.eventbus.Subscribe;
 
 public class SpaceTravels3 implements ApplicationListener
 {
@@ -43,6 +47,11 @@ public class SpaceTravels3 implements ApplicationListener
     public SpaceTravels3()
     {
         SpaceTravels3.services = new NullServices();
+    }
+
+    public static PerformanceCounter getPerformanceCounter()
+    {
+        return PERFORMANCE_COUNTER;
     }
 
     @Override
@@ -108,11 +117,6 @@ public class SpaceTravels3 implements ApplicationListener
         }
     }
 
-    public static PerformanceCounter getPerformanceCounter()
-    {
-        return PERFORMANCE_COUNTER;
-    }
-
     @Override
     public void render()
     {
@@ -164,5 +168,18 @@ public class SpaceTravels3 implements ApplicationListener
 
         spriteBatch.dispose();
         shapeRenderer.dispose();
+    }
+
+    @Subscribe
+    public void deadEvent(DeadEvent deadEvent)
+    {
+        ErrorHandlerProvider.handle(
+            LOGGING_TAG,
+            "Could not dispatch event "
+                + deadEvent.getEvent()
+                + " from "
+                + deadEvent.getSource()
+                + " , came back dead!\r\n"
+                + new Json().toJson(deadEvent.getEvent()));
     }
 }

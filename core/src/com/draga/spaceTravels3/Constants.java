@@ -8,8 +8,6 @@ import com.draga.background.BackgroundParameters;
 import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.joystick.Joystick;
 import com.draga.joystick.JoystickParameters;
-import com.draga.spaceTravels3.level.Level;
-import com.draga.spaceTravels3.physic.collisionCache.CollisionCache;
 import com.google.common.eventbus.EventBus;
 
 import java.text.DecimalFormat;
@@ -179,11 +177,12 @@ public abstract class Constants
         public static final float PICKUP_RADIUS       =
             (Visual.PICKUP_WIDTH + Visual.PICKUP_HEIGHT) / 2f * 1.3f;
         public static final float LEVEL_BOUNDS_BUFFER = 10;
-        public static final String LEVEL_ASSET_FILENAME           = Level.class.getSimpleName();
-        public static final String COLLISION_CACHE_ASSET_FILENAME =
-            CollisionCache.class.getSimpleName();
+
+        public static final String LEVEL_ASSET_FILENAME           = "Level";
+        public static final String COLLISION_CACHE_ASSET_FILENAME = "CollisionCache";
+
         public static float SHIP_ACCELERATION_PER_SECOND = 40f;
-        public static int PHYSICS_STEPS = 10;
+        public static int   PHYSICS_STEPS                = 10;
     }
 
 
