@@ -1,0 +1,11 @@
+{
+  "name": "Andromeda",
+  "serialisableLevelPaths": [
+    "level4.json",
+    "level5.json",
+    "level6.json",
+    "level7.json"
+  ],
+  "free": false,
+  "googleSku": "level_pack_galaxy_2"
+}

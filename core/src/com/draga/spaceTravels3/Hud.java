@@ -18,6 +18,7 @@ import com.draga.PooledVector2;
 import com.draga.joystick.Joystick;
 import com.draga.spaceTravels3.event.PickupCollectedEvent;
 import com.draga.spaceTravels3.gameEntity.Ship;
+import com.draga.spaceTravels3.level.Level;
 import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
@@ -30,6 +31,8 @@ import java.util.Stack;
 
 public class Hud implements Screen
 {
+    public static String s = "*6DIPaZ5ZTA2EeF1s%9v5HtlVuVOkElG8MargXavrc1j94k6u0JR6CDcdWT9FrWC5BX3NRGnGvusdXHMg2";
+
     private final Label                 scoreLabel;
     private final Level                 level;
     private       Stage                 stage;

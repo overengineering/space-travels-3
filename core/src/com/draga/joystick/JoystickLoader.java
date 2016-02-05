@@ -1,16 +1,21 @@
 package com.draga.joystick;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.AsynchronousAssetLoader;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
-import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.NullFileHandleResolver;
+import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.utils.FileUtils;
 import com.draga.utils.PixmapUtils;
+import com.google.common.base.Stopwatch;
+
+import java.util.concurrent.TimeUnit;
 
 public class JoystickLoader
     extends AsynchronousAssetLoader<Joystick, JoystickParameters>
@@ -18,7 +23,8 @@ public class JoystickLoader
     private static final String LOGGING_TAG =
         JoystickLoader.class.getSimpleName();
 
-    private Pixmap pixmap;
+    private Pixmap    pixmap;
+    private Stopwatch stopwatch;
 
     public JoystickLoader()
     {
@@ -32,6 +38,8 @@ public class JoystickLoader
         FileHandle fileHandle,
         JoystickParameters joystickParameters)
     {
+        this.stopwatch = Stopwatch.createStarted();
+
         if (joystickParameters == null)
         {
             ErrorHandlerProvider.handle(LOGGING_TAG, "JoystickParameters can't be null");
@@ -44,6 +52,8 @@ public class JoystickLoader
         this.pixmap = !fileHandle.exists()
             ? createAndSaveJoystick(fileHandle, joystickParameters)
             : new Pixmap(fileHandle);
+
+        this.stopwatch.stop();
     }
 
     private Pixmap createAndSaveJoystick(
@@ -93,8 +103,12 @@ public class JoystickLoader
         FileHandle fileHandle,
         JoystickParameters joystickParameters)
     {
+        this.stopwatch.start();
 
         Joystick joystick = new Joystick(this.pixmap);
+
+        Gdx.app.debug(LOGGING_TAG, +this.stopwatch.elapsed(
+            TimeUnit.NANOSECONDS) * MathUtils.nanoToSec + "s");
 
         return joystick;
     }

@@ -9,7 +9,17 @@ import com.badlogic.gdx.pay.OfferType;
 import com.badlogic.gdx.pay.PurchaseManagerConfig;
 import com.draga.Services;
 import com.draga.errorHandler.ErrorHandlerProvider;
+import com.draga.joystick.Joystick;
+import com.draga.shape.Circle;
 import com.draga.spaceTravels3.Constants;
+import com.draga.spaceTravels3.Hud;
+import com.draga.spaceTravels3.component.graphicComponent.GraphicComponent;
+import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
+import com.draga.spaceTravels3.input.inputModifier.DeadZoneInputModifier;
+import com.draga.spaceTravels3.manager.level.LevelManager;
+import com.draga.spaceTravels3.manager.level.LevelPack;
+import com.draga.spaceTravels3.screen.IngameMenuScreen;
+import com.draga.spaceTravels3.screen.MenuScreen;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.leaderboard.LeaderboardVariant;
 import com.google.example.games.basegameutils.GameHelper;
@@ -31,7 +41,7 @@ public class AndroidServices extends Services
 
     public AndroidServices(Activity activity)
     {
-        super("full_version");
+        super();
         this.activity = activity;
 
         setupGameHelper(activity);
@@ -70,19 +80,30 @@ public class AndroidServices extends Services
     {
         PurchaseManagerConfig purchaseManagerConfig = new PurchaseManagerConfig();
 
-        Offer fullVersionOffer = new Offer();
-        fullVersionOffer
-            .setType(OfferType.ENTITLEMENT)
-            .setIdentifier(this.fullVersionIdentifier);
-        fullVersionOffer.putIdentifierForStore(
-            PurchaseManagerConfig.STORE_NAME_ANDROID_GOOGLE,
-            this.fullVersionIdentifier);
-        purchaseManagerConfig.addOffer(fullVersionOffer);
+        for (LevelPack levelPack : LevelManager.getLevelPacks())
+        {
+            if (!levelPack.isFree())
+            {
+                Offer offer = new Offer();
+                offer
+                    .setType(OfferType.ENTITLEMENT)
+                    .setIdentifier(levelPack.getGoogleSku());
+                offer.putIdentifierForStore(
+                    PurchaseManagerConfig.STORE_NAME_ANDROID_GOOGLE,
+                    levelPack.getGoogleSku());
+                purchaseManagerConfig.addOffer(offer);
+            }
+        }
 
+        String key = PhysicsComponent.s(com.draga.shape.Circle.s(
+            GraphicComponent.s(Circle.s)
+                + MenuScreen.s(IngameMenuScreen.s, -3)
+                + GraphicComponent.s(Hud.s)
+                + MenuScreen.s(DeadZoneInputModifier.s, 4)
+                + GraphicComponent.s(Joystick.s)));
         purchaseManagerConfig.addStoreParam(
             PurchaseManagerConfig.STORE_NAME_ANDROID_GOOGLE,
-            "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuxHcBKJW8RRYrMfo68bOMM1gXWqmGDe1ytGNXfPdk7ArMIB6vtLmZAwbyt38L3XYjYDnhysBMmhV9JYuCAe/zNzRl0G+IC75MmJVYUnUuXQUKrTC/6qvcNm5mgn2rRs1F+9I5uGYiHibXrYt8zNETkNIEP1W94X6H0we6pqPQjg9sEjp5ok3aetAtIHFQkuzT2OB7AcPIRxZcup6ZVUbvLvUbGqo3V38ik3wgj7S/oEybSnX/Wjw1ALpML7Eh/fTyaDyCVy8NM4WPEag/Hix1+Hz0OfJQ/yLl8keXhYA8um03y52vKZK2vu8efSVrAeTeF9lOCYMEKd4YkKHOB9vFQIDAQAB");
-
+            key);
         initPurchaseManager(purchaseManagerConfig);
     }
 

@@ -14,8 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.spaceTravels3.Constants;
-import com.draga.spaceTravels3.Level;
 import com.draga.spaceTravels3.SpaceTravels3;
+import com.draga.spaceTravels3.level.Level;
 import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
@@ -24,6 +24,8 @@ import com.draga.spaceTravels3.ui.Screen;
 
 public abstract class IngameMenuScreen extends Screen
 {
+    public static String s = "gTAKsCqx0NeZVO9igYzMNjolg61Y6KLwLQaulfOZzuI2WLhPNr*mAmEy3T%VP08ZzWILHaHhKDHXeGP";
+
     protected final Level  level;
     protected final Cell   centreCell;
     private final   Stage  stage;
@@ -34,7 +36,7 @@ public abstract class IngameMenuScreen extends Screen
         super(true, false);
         this.gameScreen = gameScreen;
         this.level = level;
-        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.overlaySpriteBath);
+        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
 

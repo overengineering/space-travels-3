@@ -1,4 +1,4 @@
-package com.draga.spaceTravels3;
+package com.draga.spaceTravels3.level;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
@@ -6,7 +6,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
+import com.draga.spaceTravels3.*;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponentType;
 import com.draga.spaceTravels3.event.*;
@@ -163,11 +166,12 @@ public class Level
     @Subscribe
     public void shipPlanetCollision(ShipPlanetCollisionEvent shipPlanetCollisionEvent)
     {
+        float shipVelocity = this.ship.physicsComponent.getVelocity().len();
         if (Constants.General.IS_DEBUGGING)
         {
             Gdx.app.debug(
                 LOGGING_TAG,
-                "Linear velocity on collision: " + this.ship.physicsComponent.getVelocity().len());
+                "Linear velocity on collision: " + shipVelocity);
         }
 
         this.elapsedPlayTime.stop();
@@ -175,9 +179,12 @@ public class Level
         GameEntityManager.removeGameEntity(this.ship);
         GameEntityManager.removeGameEntity(this.thruster);
 
-        if (this.ship.physicsComponent.getVelocity().len()
-            > this.getMaxLandingSpeed()
-            || !shipPlanetCollisionEvent.planet.equals(this.destinationPlanet))
+        boolean shipIsTooFast = shipVelocity
+            > this.getMaxLandingSpeed();
+        boolean planetIsDestination =
+            shipPlanetCollisionEvent.planet.equals(this.destinationPlanet);
+        if (shipIsTooFast
+            || !planetIsDestination)
         {
             this.gameState = GameState.LOSE;
             GameEntity explosion = new Explosion(
@@ -190,7 +197,8 @@ public class Level
             );
             GameEntityManager.addGameEntity(explosion);
 
-            Constants.General.EVENT_BUS.post(new LoseEvent());
+            LoseEvent loseEvent = new LoseEvent(planetIsDestination, shipIsTooFast);
+            Constants.General.EVENT_BUS.post(loseEvent);
         }
         else
         {
@@ -309,6 +317,7 @@ public class Level
 
     public Projection processProjection(ArrayList<ProjectionPoint> projectionPoints)
     {
+        Pool<Vertex> vertexPool = Pools.get(Vertex.class);
         ArrayList<Vertex> vertices = new ArrayList<>(projectionPoints.size());
 
         int lastCollisionIndex = 0;
@@ -336,8 +345,8 @@ public class Level
                 // Add all the vertices up to this collision with the correct color.
                 for (int j = lastCollisionIndex; j < i; j++)
                 {
-                    Vertex vertex = Pools.obtain(Vertex.class);
-                    vertex.set(currentColor, projectionPoints.get(j).getPosition());
+                    Vertex vertex = vertexPool.obtain();
+                    vertex.set(currentColor, projectionPoints.get(j).getPosition().cpy());
                     vertices.add(j, vertex);
                 }
                 lastCollisionIndex = i;
@@ -353,10 +362,13 @@ public class Level
             }
         }
 
+        Pool<ProjectionPoint> projectionPointPool = Pools.get(ProjectionPoint.class);
+
         for (ProjectionPoint projectionPoint : projectionPoints)
         {
-            Pools.free(projectionPoint);
+            projectionPointPool.free(projectionPoint);
         }
+
 
         Projection projection = Pools.obtain(Projection.class);
         projection.set(vertices);

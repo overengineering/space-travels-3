@@ -25,10 +25,10 @@ public class Projection implements Pool.Poolable
         GraphicsUtils.enableBlending();
         SpaceTravels3.shapeRenderer.set(ShapeRenderer.ShapeType.Line);
 
-        for (int i = 1; i < vertices.size(); i += 2)
+        for (int i = 1; i < this.vertices.size(); i += 2)
         {
-            Vertex vertexA = vertices.get(i);
-            Vertex vertexB = vertices.get(i - 1);
+            Vertex vertexA = this.vertices.get(i);
+            Vertex vertexB = this.vertices.get(i - 1);
             Color color = vertexA.getColor().cpy().lerp(vertexB.getColor(), 0.5f);
             SpaceTravels3.shapeRenderer.setColor(color);
 
@@ -46,9 +46,10 @@ public class Projection implements Pool.Poolable
     @Override
     public void reset()
     {
+        Pool<Vertex> vertexPool = Pools.get(Vertex.class);
         for (Vertex vertex : this.vertices)
         {
-            Pools.free(vertex);
+            vertexPool.free(vertex);
         }
         this.vertices = null;
     }

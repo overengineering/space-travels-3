@@ -8,6 +8,8 @@ public class Settings
     public  float     volumeFX           = 1f;
     private float     volumeMusic        = 1f;
 
+    public boolean disableFaceUpWarning = false;
+
     public float getVolumeMusic()
     {
         return this.volumeMusic;

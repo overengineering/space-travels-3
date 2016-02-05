@@ -3,6 +3,8 @@ package com.draga;
 import com.badlogic.gdx.pay.Transaction;
 import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.spaceTravels3.SpaceTravels3;
+import com.draga.spaceTravels3.manager.ScreenManager;
+import com.draga.spaceTravels3.screen.PurchaseThanksScreen;
 
 public class PurchaseObserver implements com.badlogic.gdx.pay.PurchaseObserver
 {
@@ -25,10 +27,9 @@ public class PurchaseObserver implements com.badlogic.gdx.pay.PurchaseObserver
     {
         for (Transaction transaction : transactions)
         {
-            if (transaction.getIdentifier().equals(SpaceTravels3.services.fullVersionIdentifier)
-                && transaction.isPurchased())
+            if (transaction.isPurchased())
             {
-                SpaceTravels3.services.setHasFullVersion(true);
+                SpaceTravels3.services.setPurchasedSku(transaction.getIdentifier());
             }
         }
     }
@@ -42,12 +43,12 @@ public class PurchaseObserver implements com.badlogic.gdx.pay.PurchaseObserver
     @Override
     public void handlePurchase(Transaction transaction)
     {
-        if (transaction.getIdentifier().equals(SpaceTravels3.services.fullVersionIdentifier)
-            && transaction.isPurchased())
+        if (transaction.isPurchased())
         {
-            SpaceTravels3.services.setHasFullVersion(true);
+            SpaceTravels3.services.setPurchasedSku(transaction.getIdentifier());
+
+            ScreenManager.addScreen(new PurchaseThanksScreen());
         }
-        // TODO: 24/01/2016 thanks message
     }
 
     @Override
@@ -61,5 +62,4 @@ public class PurchaseObserver implements com.badlogic.gdx.pay.PurchaseObserver
     {
 
     }
-
 }

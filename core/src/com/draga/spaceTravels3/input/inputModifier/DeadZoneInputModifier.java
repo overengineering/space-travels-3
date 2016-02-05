@@ -4,6 +4,8 @@ import com.draga.PooledVector2;
 
 public class DeadZoneInputModifier implements InputModifier
 {
+    public static String s = "BO3NpCVEkMphc2MIHoiYiHoTdb9I94vx9jtw3F*bRloFaK*Jwj7NYcZY3Ru*sGlnQlPIl4AZ0JCRnt*Uv";
+
     private final float deadZone;
 
     public DeadZoneInputModifier(float deadZone)

@@ -17,12 +17,12 @@ public class Vertex implements Pool.Poolable
 
     public PooledVector2 getPosition()
     {
-        return position;
+        return this.position;
     }
 
     public Color getColor()
     {
-        return color;
+        return this.color;
     }
 
     @Override
