@@ -38,8 +38,7 @@
   "iconRetry": "icon/retry64.png",
   "iconPlay": "icon/play64.png",
   "iconShare": "icon/share64.png",
-  "iconFacebook": "icon/facebook64.png",
-  "iconMessage": "icon/message64.png",
   "iconUnlock": "icon/unlock64.png",
-  "iconUnlockOverlay": "icon/unlock100w.png"
+  "iconUnlockOverlay": "icon/unlock100w.png",
+  "iconFaceUp": "icon/faceUp100.png"
 }

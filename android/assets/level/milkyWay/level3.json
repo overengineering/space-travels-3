@@ -21,7 +21,7 @@
     "Hard": {
       "trajectorySeconds": 0,
       "maxLandingSpeed": 60,
-      "fuel": 2,
+      "fuel": 3,
       "infiniteFuel": false,
       "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQFw",
       "playLeaderboardID": "CgkIxsSO8ZoXEAIQFQ"
@@ -41,14 +41,14 @@
   },
   "serialisedPlanets": [
     {
-      "texturePath": "planet/mars256.png",
+      "texturePath": "planet/drye2-128.png",
       "x": 100,
       "y": 30,
       "radius": 10,
       "mass": 30000
     },
     {
-      "texturePath": "planet/jupiter256.png",
+      "texturePath": "planet/drye3-128.png",
       "x": 100,
       "y": 120,
       "radius": 7,

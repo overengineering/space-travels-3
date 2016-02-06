@@ -4,14 +4,13 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.pay.Offer;
 import com.badlogic.gdx.pay.OfferType;
 import com.badlogic.gdx.pay.PurchaseManagerConfig;
 import com.draga.Services;
 import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.joystick.Joystick;
+import com.draga.shape.Circle;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.Hud;
 import com.draga.spaceTravels3.component.graphicComponent.GraphicComponent;
@@ -19,7 +18,6 @@ import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 import com.draga.spaceTravels3.input.inputModifier.DeadZoneInputModifier;
 import com.draga.spaceTravels3.manager.level.LevelManager;
 import com.draga.spaceTravels3.manager.level.LevelPack;
-import com.draga.spaceTravels3.physic.GravityCache;
 import com.draga.spaceTravels3.screen.IngameMenuScreen;
 import com.draga.spaceTravels3.screen.MenuScreen;
 import com.google.android.gms.games.Games;
@@ -98,11 +96,11 @@ public class AndroidServices extends Services
         }
 
         String key = PhysicsComponent.s(com.draga.shape.Circle.s(
-            GraphicComponent.s(GravityCache.s)
-            + MenuScreen.s(IngameMenuScreen.s, -3)
-            + GraphicComponent.s(Hud.s)
-            + MenuScreen.s(DeadZoneInputModifier.s, 4)
-            + GraphicComponent.s(Joystick.s)));
+            GraphicComponent.s(Circle.s)
+                + MenuScreen.s(IngameMenuScreen.s, -3)
+                + GraphicComponent.s(Hud.s)
+                + MenuScreen.s(DeadZoneInputModifier.s, 4)
+                + GraphicComponent.s(Joystick.s)));
         purchaseManagerConfig.addStoreParam(
             PurchaseManagerConfig.STORE_NAME_ANDROID_GOOGLE,
             key);

@@ -3,6 +3,7 @@ package com.draga.spaceTravels3;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.draga.PooledVector2;
+import com.draga.background.Background;
 
 public class RandomBackgroundPositionController extends BackgroundPositionController
 {
@@ -16,7 +17,7 @@ public class RandomBackgroundPositionController extends BackgroundPositionContro
     }
 
     @Override
-    public PooledVector2 getMovement(float deltaTime)
+    public void move(Background background, float deltaTime)
     {
         float accelerationX = MathUtils.random(-100f, 100f) * deltaTime;
         float accelerationY = MathUtils.random(-100f, 100f) * deltaTime;
@@ -25,10 +26,6 @@ public class RandomBackgroundPositionController extends BackgroundPositionContro
 
         this.velocity.limit(MAX_SPEED);
 
-        PooledVector2 movement = PooledVector2.newVector2(this.velocity);
-
-        movement.scl(deltaTime);
-
-        return movement;
+        background.getPosition().add(this.velocity.x * deltaTime, this.velocity.y * deltaTime);
     }
 }

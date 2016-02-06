@@ -13,13 +13,13 @@
     "Medium": {
       "trajectorySeconds": 3,
       "maxLandingSpeed": 90,
-      "fuel": 12,
+      "fuel": 8,
       "infiniteFuel": false,
       "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQGA",
       "playLeaderboardID": "CgkIxsSO8ZoXEAIQGg"
     },
     "Hard": {
-      "trajectorySeconds": 0,
+      "trajectorySeconds": 0.5,
       "maxLandingSpeed": 70,
       "fuel": 8,
       "infiniteFuel": false,
@@ -48,14 +48,14 @@
       "mass": 20000
     },
     {
-      "texturePath": "planet/gas1-256.png",
+      "texturePath": "planet/gas1-128.png",
       "x": 36,
       "y": 104,
       "radius": 9,
       "mass": 30000
     },
     {
-      "texturePath": "planet/wind3-256.png",
+      "texturePath": "planet/wind3-128.png",
       "x": 68,
       "y": 194,
       "radius": 9,

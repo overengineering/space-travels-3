@@ -21,7 +21,7 @@
     "Hard": {
       "trajectorySeconds": 0,
       "maxLandingSpeed": 60,
-      "fuel": 2,
+      "fuel": 4,
       "infiniteFuel": false,
       "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQKA",
       "playLeaderboardID": "CgkIxsSO8ZoXEAIQKw"
@@ -41,21 +41,21 @@
   },
   "serialisedPlanets": [
     {
-      "texturePath": "planet/mars256.png",
+      "texturePath": "planet/ice3-128.png",
       "x": 150,
       "y": 75,
       "radius": 8,
       "mass": 20000
     },
     {
-      "texturePath": "planet/jupiter256.png",
+      "texturePath": "planet/wind3-128.png",
       "x": 100,
       "y": 90,
       "radius": 7,
       "mass": 20000
     },
     {
-      "texturePath": "planet/mars256.png",
+      "texturePath": "planet/caldonia1-128.png",
       "x": 200,
       "y": 110,
       "radius": 6,
