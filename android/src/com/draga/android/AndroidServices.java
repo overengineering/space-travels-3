@@ -76,7 +76,7 @@ public class AndroidServices extends Services
     }
 
     @Override
-    public void setupPurchaseManager()
+    protected PurchaseManagerConfig getPurchaseManagerConfig()
     {
         PurchaseManagerConfig purchaseManagerConfig = new PurchaseManagerConfig();
 
@@ -104,7 +104,8 @@ public class AndroidServices extends Services
         purchaseManagerConfig.addStoreParam(
             PurchaseManagerConfig.STORE_NAME_ANDROID_GOOGLE,
             key);
-        initPurchaseManager(purchaseManagerConfig);
+
+        return purchaseManagerConfig;
     }
 
     @Override
