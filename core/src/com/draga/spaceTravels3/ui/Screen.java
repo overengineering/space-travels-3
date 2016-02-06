@@ -52,6 +52,7 @@ public abstract class Screen implements com.badlogic.gdx.Screen
                     || assMan.isLoaded(texturePath))
                 {
                     Texture texture = assMan.get(texturePath);
+                    texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
                     this.asyncImages.get(texturePath)
                         .setDrawable(new TextureRegionDrawable(new TextureRegion(texture)));
 

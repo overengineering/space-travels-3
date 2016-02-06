@@ -17,6 +17,7 @@ public class StaticGraphicComponent extends GraphicComponent
     {
         super(physicsComponent, width, height);
         this.texture = texture;
+        this.texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
     }
 
     @Override
