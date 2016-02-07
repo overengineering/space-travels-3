@@ -15,10 +15,11 @@ public abstract class Services
     {
     }
 
-    protected void initPurchaseManager(PurchaseManagerConfig purchaseManagerConfig)
+    public void setupPurchaseManager()
     {
         if (PurchaseSystem.hasManager())
         {
+            PurchaseManagerConfig purchaseManagerConfig = getPurchaseManagerConfig();
             PurchaseSystem.install(new PurchaseObserver(), purchaseManagerConfig, false);
         }
     }
@@ -31,7 +32,7 @@ public abstract class Services
         }
     }
 
-    public abstract void setupPurchaseManager();
+    protected abstract PurchaseManagerConfig getPurchaseManagerConfig();
 
     public abstract void share();
 

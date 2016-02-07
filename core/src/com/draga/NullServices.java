@@ -1,11 +1,13 @@
 package com.draga;
 
+import com.badlogic.gdx.pay.PurchaseManagerConfig;
+
 public class NullServices extends Services
 {
     @Override
-    public void setupPurchaseManager()
+    protected PurchaseManagerConfig getPurchaseManagerConfig()
     {
-
+        return null;
     }
 
     @Override
