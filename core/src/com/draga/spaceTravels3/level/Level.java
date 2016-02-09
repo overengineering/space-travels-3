@@ -166,6 +166,11 @@ public class Level
     @Subscribe
     public void shipPlanetCollision(ShipPlanetCollisionEvent shipPlanetCollisionEvent)
     {
+        if (this.tutorial)
+        {
+            return;
+        }
+
         float shipVelocity = this.ship.physicsComponent.getVelocity().len();
         if (Constants.General.IS_DEBUGGING)
         {

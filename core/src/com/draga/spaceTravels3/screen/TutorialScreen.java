@@ -14,6 +14,7 @@ import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.InputType;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
+import com.draga.spaceTravels3.event.ShipPlanetCollisionEvent;
 import com.draga.spaceTravels3.gameEntity.Pickup;
 import com.draga.spaceTravels3.gameEntity.Planet;
 import com.draga.spaceTravels3.level.Level;
@@ -33,6 +34,7 @@ import com.draga.spaceTravels3.tutorial.PhysicsComponentVelocityAction;
 import com.draga.spaceTravels3.tutorial.PickupCollectedAction;
 import com.draga.spaceTravels3.ui.BeepingTextButton;
 import com.draga.spaceTravels3.ui.Screen;
+import com.google.common.eventbus.Subscribe;
 
 public class TutorialScreen extends Screen
 {
@@ -46,6 +48,7 @@ public class TutorialScreen extends Screen
     private       Stage             stage;
     private       InputType         originalInputType;
     private       ClickListener     nextTextButtonListener;
+    private       Planet            planet;
 
     public TutorialScreen(Level level, GameScreen gameScreen)
     {
@@ -81,6 +84,8 @@ public class TutorialScreen extends Screen
         table
             .add(this.dialogButton)
             .right();
+
+        Constants.General.EVENT_BUS.register(this);
 
         moveTilt();
     }
@@ -259,7 +264,7 @@ public class TutorialScreen extends Screen
                     @Override
                     protected void onTriggered()
                     {
-                        planet();
+                        planet(false);
                     }
                 });
                 TutorialScreen.this.level.endTutorial();
@@ -269,7 +274,7 @@ public class TutorialScreen extends Screen
         this.dialog.show(this.stage);
     }
 
-    private void planet()
+    private void planet(boolean retry)
     {
         this.level.startTutorial();
 
@@ -285,7 +290,7 @@ public class TutorialScreen extends Screen
             firstSerialisableLevel.serialisedPlanets.get(0);
         // TODO: dispose this texture
         Texture texture = new Texture(firstSerialisablePlanet.texturePath);
-        final Planet planet = new Planet(
+        this.planet = new Planet(
             10000f,
             5f,
             shipPhysicsComponent.getPosition().x
@@ -293,7 +298,7 @@ public class TutorialScreen extends Screen
             shipPhysicsComponent.getPosition().y,
             texture,
             false);
-        GameEntityManager.addGameEntity(planet);
+        GameEntityManager.addGameEntity(this.planet);
         GameEntityManager.update();
 
         PhysicsEngine.recacheCollisions(shipPhysicsComponent);
@@ -302,9 +307,12 @@ public class TutorialScreen extends Screen
         this.dialogHeader.setText("Planet");
 
         final int numberOfOrbits = 3;
-        this.dialogMessage.setText("Planets attracts you with their gravity.\r\n"
-            + "This planet is not your destination and you will lose if you land on it.\r\n"
-            + "Try to make " + numberOfOrbits + " orbits around it!");
+        String text = retry
+            ? "You crashed in the planet, try again!\r\n"
+            : "Planets attracts you with their gravity.\r\n"
+                + "This planet is not your destination and you will lose if you land on it.\r\n";
+        text += "Try to make " + numberOfOrbits + " orbits around it!";
+        this.dialogMessage.setText(text);
 
         this.dialogButton.removeListener(this.nextTextButtonListener);
         this.nextTextButtonListener = new ClickListener()
@@ -315,7 +323,7 @@ public class TutorialScreen extends Screen
                 TutorialScreen.this.dialog.hide();
                 TutorialScreen.this.stage.addAction(new OrbitAction(
                     shipPhysicsComponent,
-                    planet.physicsComponent,
+                    TutorialScreen.this.planet.physicsComponent,
                     numberOfOrbits)
                 {
                     @Override
@@ -405,5 +413,13 @@ public class TutorialScreen extends Screen
             SettingsManager.getSettings().setInputType(this.originalInputType);
         }
         this.stage.dispose();
+        Constants.General.EVENT_BUS.unregister(this);
+    }
+
+    @Subscribe
+    public void shipPlanetCollision(ShipPlanetCollisionEvent shipPlanetCollisionEvent)
+    {
+        GameEntityManager.removeGameEntity(this.planet);
+        planet(true);
     }
 }
