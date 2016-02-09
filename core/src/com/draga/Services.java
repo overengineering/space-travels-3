@@ -17,12 +17,15 @@ public abstract class Services
 
     public void setupPurchaseManager()
     {
+        PurchaseSystem.onAppRestarted();
         if (PurchaseSystem.hasManager())
         {
             PurchaseManagerConfig purchaseManagerConfig = getPurchaseManagerConfig();
             PurchaseSystem.install(new PurchaseObserver(), purchaseManagerConfig, false);
         }
     }
+
+    protected abstract PurchaseManagerConfig getPurchaseManagerConfig();
 
     public void purchaseSku(String sku)
     {
@@ -31,8 +34,6 @@ public abstract class Services
             PurchaseSystem.purchase(sku);
         }
     }
-
-    protected abstract PurchaseManagerConfig getPurchaseManagerConfig();
 
     public abstract void share();
 
