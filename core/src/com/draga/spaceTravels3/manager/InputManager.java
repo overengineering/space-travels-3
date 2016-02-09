@@ -71,7 +71,7 @@ public abstract class InputManager
                 break;
             default:
                 ErrorHandlerProvider.handle(
-                    LOGGING_TAG, "Device type " + Gdx.input.getRotation() + " not implemented.");
+                    LOGGING_TAG, "Device type " + Gdx.app.getType() + " not implemented.");
                 input = PooledVector2.newVector2(0f, 0f);
                 break;
         }

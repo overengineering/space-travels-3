@@ -95,6 +95,11 @@ public class HudScreen extends Screen
             .bottom()
             .right();
 
+        this.joystickOverlayContainer = new Container<>();
+        this.joystickOverlayContainer.setFillParent(true);
+        this.joystickOverlayContainer.center();
+        this.stage.addActor(this.joystickOverlayContainer);
+
         if (SettingsManager.getSettings().getInputType() == InputType.TOUCH
             || Gdx.app.getType() == Application.ApplicationType.Desktop)
         {
@@ -161,19 +166,12 @@ public class HudScreen extends Screen
 
     private void addJoystickOverlay()
     {
-        if (this.joystickOverlayContainer == null)
-        {
-            Joystick joystickTexture =
-                AssMan.getGameAssMan().get(Constants.Visual.HUD.JOYSTICK_ASSET_DESCRIPTOR);
-            Image joystickOverlayImage = new Image(joystickTexture);
-            joystickOverlayImage.setScaling(Scaling.fit);
+        Joystick joystickTexture =
+            AssMan.getGameAssMan().get(Constants.Visual.HUD.JOYSTICK_ASSET_DESCRIPTOR);
+        Image joystickOverlayImage = new Image(joystickTexture);
+        joystickOverlayImage.setScaling(Scaling.fit);
 
-            this.joystickOverlayContainer = new Container<>(joystickOverlayImage);
-            this.joystickOverlayContainer.setFillParent(true);
-            this.joystickOverlayContainer.center();
-        }
-
-        this.stage.addActor(this.joystickOverlayContainer);
+        this.joystickOverlayContainer.setActor(joystickOverlayImage);
     }
 
     private void setScoreLabel(int score)
@@ -296,9 +294,13 @@ public class HudScreen extends Screen
     @Subscribe
     public void pickupCollected(PickupCollectedEvent pickupCollectedEvent)
     {
-        Image firstPickup = this.grayPickups.pop();
+        // During the tutorial the hud doesn't show the pickups.
+        if (!this.grayPickups.empty())
+        {
+            Image firstPickup = this.grayPickups.pop();
 
-        firstPickup.setDrawable(this.collectedPickupDrawable);
+            firstPickup.setDrawable(this.collectedPickupDrawable);
+        }
     }
 
     @Subscribe
@@ -311,7 +313,7 @@ public class HudScreen extends Screen
         }
         else
         {
-            this.joystickOverlayContainer.remove();
+            this.joystickOverlayContainer.setActor(null);
         }
     }
 }

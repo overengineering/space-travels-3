@@ -3,20 +3,28 @@ package com.draga.spaceTravels3.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.InputType;
 import com.draga.spaceTravels3.SpaceTravels3;
+import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
+import com.draga.spaceTravels3.gameEntity.Pickup;
 import com.draga.spaceTravels3.level.Level;
+import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
+import com.draga.spaceTravels3.manager.asset.AssMan;
+import com.draga.spaceTravels3.physic.PhysicsEngine;
 import com.draga.spaceTravels3.tutorial.PhysicsComponentMovementAction;
 import com.draga.spaceTravels3.tutorial.PhysicsComponentVelocityAction;
+import com.draga.spaceTravels3.tutorial.PickupCollectedAction;
 import com.draga.spaceTravels3.ui.BeepingTextButton;
 import com.draga.spaceTravels3.ui.Screen;
 
@@ -62,6 +70,7 @@ public class TutorialScreen extends Screen
         this.dialogMessage.setWrap(true);
         table.row();
 
+        // TODO: next button skin
         this.dialogNextTextButton = new BeepingTextButton("Next", UIManager.skin);
         table
             .add(this.dialogNextTextButton)
@@ -193,7 +202,13 @@ public class TutorialScreen extends Screen
                     @Override
                     protected void onTriggered()
                     {
-                        /*moveTouch();*/
+                        if (TutorialScreen.this.originalInputType != null)
+                        {
+                            SettingsManager.getSettings()
+                                .setInputType(TutorialScreen.this.originalInputType);
+                            TutorialScreen.this.originalInputType = null;
+                        }
+                        pickup();
                     }
                 });
                 TutorialScreen.this.level.endTutorial();
@@ -203,21 +218,74 @@ public class TutorialScreen extends Screen
         this.dialog.show(this.stage);
     }
 
-    //    private void moveTouch()
-    //    {
-    //        PhysicsComponent shipPhysicsComponent = this.level.getShip().physicsComponent;
-    //        shipPhysicsComponent.getVelocity().setZero();
-    //        SettingsManager.getSettings().setInputType(this.originalInputType);
-    ///*
-    //        Pickup pickup = new Pickup(shipPhysicsComponent.getPosition().x + Constants.Visual.VIEWPORT_WIDTH * 0.4f, shipPhysicsComponent.getPosition().y,
-    //            AssMan.getAssList().pickupTexture);
-    //        GameEntityManager.addGameEntity(pickup);*/
-    //
-    //        this.dialogHeader.setText("Pickup");
-    //
-    //        this.dialogMessage.setText("Provides " + Constants.Game.PICKUP_POINTS + " points.\r\n"
-    //            + "Collect the pickup!");
-    //    }
+    private void pickup()
+    {
+        this.level.startTutorial();
+
+        PhysicsComponent shipPhysicsComponent = this.level.getShip().physicsComponent;
+        shipPhysicsComponent.getVelocity().setZero();
+
+        final Pickup pickup = new Pickup(
+            shipPhysicsComponent.getPosition().x
+                + Constants.Visual.VIEWPORT_WIDTH * 0.4f,
+            shipPhysicsComponent.getPosition().y,
+            AssMan.getGameAssMan().get(AssMan.getAssList().pickupTexture, Texture.class));
+        GameEntityManager.addGameEntity(pickup);
+        GameEntityManager.update();
+
+        PhysicsEngine.recacheCollisions(shipPhysicsComponent);
+        this.level.calculateBounds();
+
+        this.dialogHeader.setText("Pickup");
+
+        this.dialogMessage.setText("Provides " + Constants.Game.PICKUP_POINTS + " points.\r\n"
+            + "Collect the pickup!");
+
+        this.dialogNextTextButton.removeListener(this.nextTextButtonListener);
+        this.nextTextButtonListener = new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                TutorialScreen.this.dialog.hide();
+                TutorialScreen.this.stage.addAction(new PickupCollectedAction(pickup)
+                {
+                    @Override
+                    protected void onTriggered()
+                    {
+                        end();
+                    }
+                });
+                TutorialScreen.this.level.endTutorial();
+            }
+        };
+        this.dialogNextTextButton.addListener(this.nextTextButtonListener);
+        this.dialog.show(this.stage);
+    }
+
+    private void end()
+    {
+        this.level.startTutorial();
+
+        this.dialogHeader.setText("Done");
+
+        this.dialogMessage.setText("Good job! You have completed the tutorial!");
+
+        this.dialogNextTextButton.removeListener(this.nextTextButtonListener);
+        this.nextTextButtonListener = new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                ScreenManager.removeScreen(TutorialScreen.this);
+                ScreenManager.removeScreen(TutorialScreen.this.gameScreen);
+            }
+        };
+        this.dialogNextTextButton.addListener(this.nextTextButtonListener);
+
+        this.dialogNextTextButton.setText("Exit");
+        this.dialog.show(this.stage);
+    }
 
     @Override
     public void show()
@@ -264,7 +332,10 @@ public class TutorialScreen extends Screen
     @Override
     public void dispose()
     {
-        SettingsManager.getSettings().setInputType(this.originalInputType);
+        if (this.originalInputType != null)
+        {
+            SettingsManager.getSettings().setInputType(this.originalInputType);
+        }
         this.stage.dispose();
     }
 }

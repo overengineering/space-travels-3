@@ -38,10 +38,9 @@ public class Level
     private final Ship              ship;
     private final Thruster          thruster;
     private final Planet            destinationPlanet;
-
-    private final Rectangle bounds;
-    private final String    difficulty;
-    private       int       pickupsCollected;
+    private final String            difficulty;
+    private       Rectangle         bounds;
+    private       int               pickupsCollected;
 
     private GameState gameState;
     private Stopwatch elapsedPlayTime;
@@ -99,7 +98,7 @@ public class Level
         }
         GameEntityManager.update();
 
-        this.bounds = calculateBounds();
+        calculateBounds();
 
         Constants.General.EVENT_BUS.register(this);
 
@@ -109,9 +108,9 @@ public class Level
     /**
      * Return a rectangle that includes all the physic components and a little buffer.
      */
-    private Rectangle calculateBounds()
+    public void calculateBounds()
     {
-        Rectangle bounds = null;
+        this.bounds = null;
 
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
@@ -123,34 +122,32 @@ public class Level
                     physicsComponent.getPosition().y - physicsComponent.getBoundsCircle().radius,
                     physicsComponent.getBoundsCircle().radius * 2f,
                     physicsComponent.getBoundsCircle().radius * 2f);
-                if (bounds == null)
+                if (this.bounds == null)
                 {
-                    bounds = gameEntityBounds;
+                    this.bounds = gameEntityBounds;
                 }
                 else
                 {
-                    bounds.merge(gameEntityBounds);
+                    this.bounds.merge(gameEntityBounds);
                 }
             }
         }
 
         // If we have found no static phyComp avoid leaving bounds null.
-        if (bounds == null)
+        if (this.bounds == null)
         {
             PhysicsComponent physicsComponent = this.ship.physicsComponent;
-            bounds = new Rectangle(
+            this.bounds = new Rectangle(
                 physicsComponent.getPosition().x - physicsComponent.getBoundsCircle().radius,
                 physicsComponent.getPosition().y - physicsComponent.getBoundsCircle().radius,
                 physicsComponent.getBoundsCircle().radius * 2f,
                 physicsComponent.getBoundsCircle().radius * 2f);
         }
 
-        bounds.x -= Constants.Game.LEVEL_BOUNDS_BUFFER;
-        bounds.y -= Constants.Game.LEVEL_BOUNDS_BUFFER;
-        bounds.height += Constants.Game.LEVEL_BOUNDS_BUFFER * 2f;
-        bounds.width += Constants.Game.LEVEL_BOUNDS_BUFFER * 2f;
-
-        return bounds;
+        this.bounds.x -= Constants.Game.LEVEL_BOUNDS_BUFFER;
+        this.bounds.y -= Constants.Game.LEVEL_BOUNDS_BUFFER;
+        this.bounds.height += Constants.Game.LEVEL_BOUNDS_BUFFER * 2f;
+        this.bounds.width += Constants.Game.LEVEL_BOUNDS_BUFFER * 2f;
     }
 
     public Rectangle getBounds()
@@ -256,7 +253,10 @@ public class Level
         if (this.gameState == GameState.COUNTDOWN)
         {
             this.gameState = GameState.PLAY;
-            this.elapsedPlayTime.start();
+            if (!this.elapsedPlayTime.isRunning())
+            {
+                this.elapsedPlayTime.start();
+            }
             SoundManager.resumeGameSound();
         }
     }

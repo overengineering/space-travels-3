@@ -1,6 +1,6 @@
 {
   "class": "SerialisableLevel",
-  "name": "Aquarius",
+  "name": "Tutorial",
   "serialisedDifficulties": {
     "Tutorial": {
       "trajectorySeconds": 5,
