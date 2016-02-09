@@ -15,13 +15,19 @@ import com.draga.spaceTravels3.InputType;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 import com.draga.spaceTravels3.gameEntity.Pickup;
+import com.draga.spaceTravels3.gameEntity.Planet;
 import com.draga.spaceTravels3.level.Level;
 import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
+import com.draga.spaceTravels3.manager.level.LevelManager;
+import com.draga.spaceTravels3.manager.level.LevelPack;
+import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
+import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisablePlanet;
 import com.draga.spaceTravels3.physic.PhysicsEngine;
+import com.draga.spaceTravels3.tutorial.OrbitAction;
 import com.draga.spaceTravels3.tutorial.PhysicsComponentMovementAction;
 import com.draga.spaceTravels3.tutorial.PhysicsComponentVelocityAction;
 import com.draga.spaceTravels3.tutorial.PickupCollectedAction;
@@ -35,7 +41,7 @@ public class TutorialScreen extends Screen
     private final Dialog            dialog;
     private final Label             dialogHeader;
     private final Label             dialogMessage;
-    private final BeepingTextButton dialogNextTextButton;
+    private final BeepingTextButton dialogButton;
     private final float             labelsWidth;
     private       Stage             stage;
     private       InputType         originalInputType;
@@ -71,9 +77,9 @@ public class TutorialScreen extends Screen
         table.row();
 
         // TODO: next button skin
-        this.dialogNextTextButton = new BeepingTextButton("Next", UIManager.skin);
+        this.dialogButton = new BeepingTextButton("Next", UIManager.skin);
         table
-            .add(this.dialogNextTextButton)
+            .add(this.dialogButton)
             .right();
 
         moveTilt();
@@ -114,7 +120,7 @@ public class TutorialScreen extends Screen
                 TutorialScreen.this.level.endTutorial();
             }
         };
-        this.dialogNextTextButton.addListener(this.nextTextButtonListener);
+        this.dialogButton.addListener(this.nextTextButtonListener);
 
         this.dialog.show(this.stage);
     }
@@ -123,7 +129,7 @@ public class TutorialScreen extends Screen
     {
         this.level.startTutorial();
         this.dialogMessage.setText("Now try to slow down the ship!");
-        this.dialogNextTextButton.removeListener(this.nextTextButtonListener);
+        this.dialogButton.removeListener(this.nextTextButtonListener);
         this.nextTextButtonListener = new ClickListener()
         {
             @Override
@@ -144,7 +150,7 @@ public class TutorialScreen extends Screen
                 TutorialScreen.this.level.endTutorial();
             }
         };
-        this.dialogNextTextButton.addListener(this.nextTextButtonListener);
+        this.dialogButton.addListener(this.nextTextButtonListener);
         this.dialog.show(this.stage);
     }
 
@@ -159,7 +165,7 @@ public class TutorialScreen extends Screen
             + "The further away you touch from the ship the the faster the ship will accelerate "
             + "(and consume fuel).\r\n"
             + "Move away using the touch screen.");
-        this.dialogNextTextButton.removeListener(this.nextTextButtonListener);
+        this.dialogButton.removeListener(this.nextTextButtonListener);
         this.nextTextButtonListener = new ClickListener()
         {
             @Override
@@ -179,7 +185,7 @@ public class TutorialScreen extends Screen
                 TutorialScreen.this.level.endTutorial();
             }
         };
-        this.dialogNextTextButton.addListener(this.nextTextButtonListener);
+        this.dialogButton.addListener(this.nextTextButtonListener);
         this.dialog.show(this.stage);
     }
 
@@ -187,7 +193,7 @@ public class TutorialScreen extends Screen
     {
         this.level.startTutorial();
         this.dialogMessage.setText("Now try to slow down the ship!");
-        this.dialogNextTextButton.removeListener(this.nextTextButtonListener);
+        this.dialogButton.removeListener(this.nextTextButtonListener);
         this.nextTextButtonListener = new ClickListener()
         {
             @Override
@@ -214,7 +220,7 @@ public class TutorialScreen extends Screen
                 TutorialScreen.this.level.endTutorial();
             }
         };
-        this.dialogNextTextButton.addListener(this.nextTextButtonListener);
+        this.dialogButton.addListener(this.nextTextButtonListener);
         this.dialog.show(this.stage);
     }
 
@@ -241,7 +247,7 @@ public class TutorialScreen extends Screen
         this.dialogMessage.setText("Provides " + Constants.Game.PICKUP_POINTS + " points.\r\n"
             + "Collect the pickup!");
 
-        this.dialogNextTextButton.removeListener(this.nextTextButtonListener);
+        this.dialogButton.removeListener(this.nextTextButtonListener);
         this.nextTextButtonListener = new ClickListener()
         {
             @Override
@@ -253,13 +259,75 @@ public class TutorialScreen extends Screen
                     @Override
                     protected void onTriggered()
                     {
+                        planet();
+                    }
+                });
+                TutorialScreen.this.level.endTutorial();
+            }
+        };
+        this.dialogButton.addListener(this.nextTextButtonListener);
+        this.dialog.show(this.stage);
+    }
+
+    private void planet()
+    {
+        this.level.startTutorial();
+
+        final PhysicsComponent shipPhysicsComponent = this.level.getShip().physicsComponent;
+        shipPhysicsComponent.getVelocity().setZero();
+
+        LevelPack firstLevelPack = LevelManager.getLevelPacks()
+            .get(0);
+        SerialisableLevel firstSerialisableLevel = firstLevelPack
+            .getSerialisableLevels()
+            .get(0);
+        SerialisablePlanet firstSerialisablePlanet =
+            firstSerialisableLevel.serialisedPlanets.get(0);
+        // TODO: dispose this texture
+        Texture texture = new Texture(firstSerialisablePlanet.texturePath);
+        final Planet planet = new Planet(
+            10000f,
+            5f,
+            shipPhysicsComponent.getPosition().x
+                + Constants.Visual.VIEWPORT_WIDTH * 0.4f,
+            shipPhysicsComponent.getPosition().y,
+            texture,
+            false);
+        GameEntityManager.addGameEntity(planet);
+        GameEntityManager.update();
+
+        PhysicsEngine.recacheCollisions(shipPhysicsComponent);
+        this.level.calculateBounds();
+
+        this.dialogHeader.setText("Planet");
+
+        final int numberOfOrbits = 3;
+        this.dialogMessage.setText("Planets attracts you with their gravity.\r\n"
+            + "This planet is not your destination and you will lose if you land on it.\r\n"
+            + "Try to make " + numberOfOrbits + " orbits around it!");
+
+        this.dialogButton.removeListener(this.nextTextButtonListener);
+        this.nextTextButtonListener = new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                TutorialScreen.this.dialog.hide();
+                TutorialScreen.this.stage.addAction(new OrbitAction(
+                    shipPhysicsComponent,
+                    planet.physicsComponent,
+                    numberOfOrbits)
+                {
+                    @Override
+                    protected void onTriggered()
+                    {
                         end();
                     }
                 });
                 TutorialScreen.this.level.endTutorial();
             }
         };
-        this.dialogNextTextButton.addListener(this.nextTextButtonListener);
+        this.dialogButton.addListener(this.nextTextButtonListener);
         this.dialog.show(this.stage);
     }
 
@@ -271,7 +339,7 @@ public class TutorialScreen extends Screen
 
         this.dialogMessage.setText("Good job! You have completed the tutorial!");
 
-        this.dialogNextTextButton.removeListener(this.nextTextButtonListener);
+        this.dialogButton.removeListener(this.nextTextButtonListener);
         this.nextTextButtonListener = new ClickListener()
         {
             @Override
@@ -281,9 +349,9 @@ public class TutorialScreen extends Screen
                 ScreenManager.removeScreen(TutorialScreen.this.gameScreen);
             }
         };
-        this.dialogNextTextButton.addListener(this.nextTextButtonListener);
+        this.dialogButton.addListener(this.nextTextButtonListener);
 
-        this.dialogNextTextButton.setText("Exit");
+        this.dialogButton.setText("Exit");
         this.dialog.show(this.stage);
     }
 

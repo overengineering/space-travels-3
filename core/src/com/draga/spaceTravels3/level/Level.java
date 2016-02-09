@@ -388,7 +388,8 @@ public class Level
                 // the color for winning (zero velocity),
                 // to white (max approach speed)
                 // to the color for losing (twice the maximum approach velocity)
-                if (this.destinationPlanet.physicsComponent.equals(nextCollidingPhysicsComponent))
+                if (this.destinationPlanet != null
+                    && this.destinationPlanet.physicsComponent.equals(nextCollidingPhysicsComponent))
                 {
                     return Constants.Visual.HUD.TrajectoryLine.COLOR_PLANET_DESTINATION;
                 }
