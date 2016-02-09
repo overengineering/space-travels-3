@@ -70,7 +70,7 @@ project(":android") {
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-armeabi-v7a"
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86"
         compile "com.badlogicgames.gdxpay:gdx-pay-android:$gdxPayVersion"
-        compile "com.badlogicgames.gdxpay:gdx-pay-android-googleplay:$gdxPayVersion"
+        compile "com.badlogicgames.gdxpay:gdx-pay-android-googleplay:0.9.1-SNAPSHOT"
 
 
         compile('com.crashlytics.sdk.android:crashlytics:2.2.2@aar') {
