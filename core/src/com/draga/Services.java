@@ -21,7 +21,7 @@ public abstract class Services
         if (PurchaseSystem.hasManager())
         {
             PurchaseManagerConfig purchaseManagerConfig = getPurchaseManagerConfig();
-            PurchaseSystem.install(new PurchaseObserver(), purchaseManagerConfig, false);
+            PurchaseSystem.install(new PurchaseObserver(), purchaseManagerConfig);
         }
     }
 
