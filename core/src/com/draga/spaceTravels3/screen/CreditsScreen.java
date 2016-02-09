@@ -144,6 +144,24 @@ public class CreditsScreen extends Screen
             .row();
 
         table
+            .add("Powered by", "large")
+            .row();
+        Label poweredByLabel = new Label(
+            "libGDX & gdx-pay",
+            UIManager.skin);
+        poweredByLabel.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                Gdx.net.openURI("http://libgdx.badlogicgames.com");
+            }
+        });
+        table
+            .add(poweredByLabel)
+            .row();
+
+        table
             .add("Licence links", "large")
             .row();
         Label ccby30Label = new Label(
