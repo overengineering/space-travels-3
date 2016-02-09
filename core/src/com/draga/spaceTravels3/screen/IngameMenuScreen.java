@@ -84,8 +84,9 @@ public abstract class IngameMenuScreen extends Screen
         Label label = new Label(this.level.getName() + " ", UIManager.skin, "large", Color.WHITE);
         table.add(label);
 
-        Image headerImage =
-            new Image(this.level.getDestinationPlanet().graphicComponent.getTexture());
+        Image headerImage = this.level.getDestinationPlanet() != null
+            ? new Image(this.level.getDestinationPlanet().graphicComponent.getTexture())
+            : new Image();
 
         table
             .add(headerImage)
