@@ -41,8 +41,6 @@ public abstract class InputManager
 
     public static void update()
     {
-        inputForce.close();
-
         PooledVector2 input;
         switch (Gdx.app.getType())
         {
@@ -77,7 +75,10 @@ public abstract class InputManager
                 input = PooledVector2.newVector2(0f, 0f);
                 break;
         }
+
+        PooledVector2 oldPooledVector2 = inputForce;
         inputForce = input;
+        oldPooledVector2.close();
     }
 
     public static void dispose()

@@ -85,7 +85,6 @@ public abstract class ScreenManager
                             + " that is not in the list!");
                 }
             }
-            screensToRemove.clear();
 
             screens.peek().show();
         }
@@ -119,7 +118,6 @@ public abstract class ScreenManager
             screens.add(screenToAdd);
             screenToAdd.onAdded();
         }
-        screensToAdd.clear();
     }
 
     public static void dispose()
@@ -132,11 +130,17 @@ public abstract class ScreenManager
 
     public static void resume()
     {
-        screens.peek().resume();
+        if (!screens.empty())
+        {
+            screens.peek().resume();
+        }
     }
 
     public static void pause()
     {
-        screens.peek().pause();
+        if (!screens.empty())
+        {
+            screens.peek().pause();
+        }
     }
 }

@@ -8,8 +8,8 @@ public class SerialisableLevel
     // TODO: JSON ignore?
     public String                                        id;
     public String                                        name;
-    public String                                        iconPath;
     public SerialisableShip                              serialisedShip;
+    public SerialisablePlanet                            serialisedDestinationPlanet;
     public List<SerialisablePlanet>                      serialisedPlanets;
     public List<SerialisablePickup>                      serialisedPickups;
     public LinkedHashMap<String, SerialisableDifficulty> serialisedDifficulties;

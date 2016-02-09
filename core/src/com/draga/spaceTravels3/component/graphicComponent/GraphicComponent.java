@@ -1,10 +1,12 @@
 package com.draga.spaceTravels3.component.graphicComponent;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 
 public abstract class GraphicComponent
 {
     protected PhysicsComponent physicsComponent;
+
     private   float            width;
     private   float            height;
     private   float            halfWidth;
@@ -17,13 +19,32 @@ public abstract class GraphicComponent
         setWidth(width);
     }
 
+    public static String s(String s)
+    {
+        char[] chars = s.toCharArray();
+        for (int i = 0; i < chars.length; i++)
+        {
+            char c = chars[i];
+            if (Character.isUpperCase(c))
+            {
+                chars[i] = Character.toLowerCase(c);
+            }
+            else if (Character.isLowerCase(c))
+            {
+                chars[i] = Character.toUpperCase(c);
+            }
+        }
+
+        return new String(chars);
+    }
+
     public abstract void draw();
 
     public abstract void dispose();
 
     public float getWidth()
     {
-        return width;
+        return this.width;
     }
 
     public void setWidth(float width)
@@ -35,7 +56,7 @@ public abstract class GraphicComponent
 
     public float getHeight()
     {
-        return height;
+        return this.height;
     }
 
     public void setHeight(float height)
@@ -46,11 +67,13 @@ public abstract class GraphicComponent
 
     public float getHalfWidth()
     {
-        return halfWidth;
+        return this.halfWidth;
     }
 
     public float getHalfHeight()
     {
-        return halfHeight;
+        return this.halfHeight;
     }
+
+    public abstract TextureRegion getTexture();
 }

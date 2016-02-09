@@ -1,36 +1,42 @@
 package com.draga.spaceTravels3.manager.level;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Json;
 import com.draga.errorHandler.ErrorHandlerProvider;
-import com.draga.spaceTravels3.Level;
 import com.draga.spaceTravels3.gameEntity.Pickup;
 import com.draga.spaceTravels3.gameEntity.Planet;
 import com.draga.spaceTravels3.gameEntity.Ship;
 import com.draga.spaceTravels3.gameEntity.Thruster;
+import com.draga.spaceTravels3.level.Level;
 import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
-import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableDifficulty;
-import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
-import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisablePickup;
-import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisablePlanet;
+import com.draga.spaceTravels3.manager.level.serialisableEntities.*;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 public abstract class LevelManager
 {
     private static final String LOGGING_TAG = LevelManager.class.getSimpleName();
 
-    private static ArrayList<SerialisableLevel> serialisableLevels;
-
+    private static ArrayList<LevelPack> levelPacks = loadLevelPacks();
     private static SerialisableLevel tutorialSerialisableLevel;
+
+    public static ArrayList<LevelPack> getLevelPacks()
+    {
+        return levelPacks;
+    }
 
     public static Level getLevel(
         SerialisableLevel serialisableLevel,
         String difficulty, boolean tutorial)
     {
+        AssetManager gameAssMan = AssMan.getGameAssMan();
+        AssetManager assMan = AssMan.getAssMan();
+
         SerialisableDifficulty serialisableDifficulty =
             serialisableLevel.serialisedDifficulties.get(difficulty);
 
@@ -38,28 +44,27 @@ public abstract class LevelManager
             serialisableLevel.serialisedShip.x,
             serialisableLevel.serialisedShip.y,
             serialisableLevel.serialisedShip.mass,
-            AssMan.getAssList().shipTexture,
+            gameAssMan.get(AssMan.getAssList().shipTexture, Texture.class),
             serialisableDifficulty.fuel,
             serialisableDifficulty.infiniteFuel);
 
         ArrayList<Planet> planets = new ArrayList<>(serialisableLevel.serialisedPlanets.size());
+
         Planet destinationPlanet = null;
+        if (serialisableLevel.serialisedDestinationPlanet != null)
+        {
+            destinationPlanet = getPlanetFromSerialisablePlanet(
+                serialisableLevel.serialisedDestinationPlanet,
+                assMan,
+                true);
+            planets.add(destinationPlanet);
+        }
 
         for (SerialisablePlanet serialisablePlanet : serialisableLevel.serialisedPlanets)
         {
-            Planet planet = new Planet(
-                serialisablePlanet.mass,
-                serialisablePlanet.radius,
-                serialisablePlanet.x,
-                serialisablePlanet.y,
-                serialisablePlanet.texturePath,
-                serialisablePlanet.destination);
+            Planet planet = getPlanetFromSerialisablePlanet(serialisablePlanet, gameAssMan, false);
 
             planets.add(planet);
-            if (serialisablePlanet.destination)
-            {
-                destinationPlanet = planet;
-            }
         }
 
         ArrayList<Pickup> pickups = new ArrayList<>(serialisableLevel.serialisedPickups.size());
@@ -69,17 +74,19 @@ public abstract class LevelManager
                 new Pickup(
                     serialisablePickup.x,
                     serialisablePickup.y,
-                    AssMan.getAssList().pickupTexture);
+
+                    gameAssMan.get(AssMan.getAssList().pickupTexture, Texture.class));
             pickups.add(pickup);
         }
 
-        Thruster thruster = new Thruster(ship);
+        Thruster thruster = new Thruster(
+            ship,
+            gameAssMan.get(AssMan.getAssList().thrusterTextureAtlas, TextureAtlas.class));
 
         Level level = new Level(
             serialisableLevel.id,
             serialisableLevel.name,
             difficulty,
-            serialisableLevel.iconPath,
             ship,
             thruster,
             planets,
@@ -87,7 +94,9 @@ public abstract class LevelManager
             destinationPlanet,
             serialisableDifficulty.trajectorySeconds,
             serialisableDifficulty.maxLandingSpeed,
-            tutorial);
+            tutorial,
+            serialisableDifficulty.playCompletionAchievementID,
+            serialisableDifficulty.playLeaderboardID);
 
         // Run one update so everything is in place for the countdown
         GameEntityManager.update();
@@ -95,59 +104,97 @@ public abstract class LevelManager
         return level;
     }
 
+    private static Planet getPlanetFromSerialisablePlanet(
+        SerialisablePlanet serialisablePlanet,
+        AssetManager assMan,
+        boolean isDestination)
+    {
+        return new Planet(
+            serialisablePlanet.mass,
+            serialisablePlanet.radius,
+            serialisablePlanet.x,
+            serialisablePlanet.y,
+            assMan.get(serialisablePlanet.texturePath, Texture.class),
+            isDestination);
+    }
+
     public static SerialisableLevel getSerialisableLevel(String levelId)
     {
-        Iterator<SerialisableLevel> serialisableLevelIterator =
-            LevelManager.getSerialisableLevels().iterator();
-
-        while (serialisableLevelIterator.hasNext())
+        for (LevelPack levelPack : levelPacks)
         {
-            SerialisableLevel serialisableLevel = serialisableLevelIterator.next();
-            if (serialisableLevel.id.equals(levelId))
+            for (SerialisableLevel serialisableLevel : levelPack.getSerialisableLevels())
             {
-                return serialisableLevel;
+                if (serialisableLevel.id.equals(levelId))
+                {
+                    return serialisableLevel;
+                }
             }
         }
 
         ErrorHandlerProvider.handle(
             LOGGING_TAG,
             "Could not find a level with name \"" + levelId + "\"");
+
         return null;
     }
 
-    public static List<SerialisableLevel> getSerialisableLevels()
-    {
-        if (serialisableLevels == null)
-        {
-            loadSerialisableLevels();
-        }
-
-        return serialisableLevels;
-    }
-
-    /**
-     * Load the serialisableLevels from the level pack file in order
-     */
-    private static void loadSerialisableLevels()
+    private static ArrayList<LevelPack> loadLevelPacks()
     {
         Json json = new Json();
-        String levelPackString = Gdx.files.internal("level/levelPack.json").readString();
-        ArrayList<String> levelFileNamesWithExtension = json.fromJson(
+
+        String levelPacksString = Gdx.files.internal("level/levelPacks.json").readString();
+
+        @SuppressWarnings("unchecked")
+        ArrayList<String> serialisableLevelPackPaths = json.fromJson(
             ArrayList.class,
-            levelPackString);
-        serialisableLevels = new ArrayList<>();
-        json.addClassTag("SerialisableLevel", SerialisableLevel.class);
-        for (String levelFileNameWithExtension : levelFileNamesWithExtension)
+            String.class,
+            levelPacksString);
+
+        ArrayList<LevelPack> levelPacks = new ArrayList<>(serialisableLevelPackPaths.size());
+
+        for (String serialisableLevelPackPath : serialisableLevelPackPaths)
         {
-            String levelString =
-                Gdx.files.internal("level/" + levelFileNameWithExtension).readString();
-            SerialisableLevel serialisableLevel =
-                json.fromJson(SerialisableLevel.class, levelString);
-
-            serialisableLevel.id = levelFileNameWithExtension;
-
-            serialisableLevels.add(serialisableLevel);
+            LevelPack levelPack = loadLevelPack(serialisableLevelPackPath);
+            levelPacks.add(levelPack);
         }
+
+        return levelPacks;
+    }
+
+    private static LevelPack loadLevelPack(String serialisableLevelPackPath)
+    {
+        Json json = new Json();
+        json.addClassTag("SerialisableLevel", SerialisableLevel.class);
+
+
+        FileHandle serialisableLevelPackFileHandle =
+            Gdx.files.internal("level/" + serialisableLevelPackPath);
+        FileHandle levelPackRoot = serialisableLevelPackFileHandle.parent();
+
+        String serialisableLevelPackString = serialisableLevelPackFileHandle.readString();
+
+        SerialisableLevelPack serialisableLevelPack = json.fromJson(
+            SerialisableLevelPack.class,
+            serialisableLevelPackString);
+
+        LevelPack levelPack = new LevelPack(
+            serialisableLevelPack.name,
+            serialisableLevelPack.free,
+            serialisableLevelPack.googleSku);
+
+        for (String serialisableLevelPath : serialisableLevelPack.serialisableLevelPaths)
+        {
+            String serialisableLevelString =
+                levelPackRoot.child(serialisableLevelPath).readString();
+            SerialisableLevel serialisableLevel =
+                json.fromJson(SerialisableLevel.class, serialisableLevelString);
+
+            serialisableLevel.id = serialisableLevelPack.name + "/" + serialisableLevelPath;
+
+            levelPack.getSerialisableLevels().add(serialisableLevel);
+        }
+
+        return levelPack;
     }
 
     public static SerialisableLevel getTutorialSerialisableLevel()

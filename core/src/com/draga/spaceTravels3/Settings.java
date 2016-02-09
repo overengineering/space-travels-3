@@ -5,9 +5,10 @@ import com.draga.spaceTravels3.manager.MusicManager;
 
 public class Settings
 {
-    public  float     volumeFX    = 1f;
-    private InputType inputType   = InputType.ACCELEROMETER;
-    private float     volumeMusic = 1f;
+    public  float     volumeFX             = 1f;
+    public  boolean   disableFaceUpWarning = false;
+    private InputType inputType            = InputType.ACCELEROMETER;
+    private float     volumeMusic          = 1f;
 
     public float getVolumeMusic()
     {

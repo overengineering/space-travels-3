@@ -2,76 +2,75 @@ package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.SpaceTravels3;
+import com.draga.spaceTravels3.event.PurchasedEvent;
 import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.manager.level.LevelManager;
+import com.draga.spaceTravels3.manager.level.LevelPack;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.spaceTravels3.ui.BeepingClickListener;
+import com.draga.spaceTravels3.ui.BeepingImageTextButton;
 import com.draga.spaceTravels3.ui.BeepingTextButton;
 import com.draga.spaceTravels3.ui.Screen;
+import com.google.common.eventbus.Subscribe;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class MenuScreen extends Screen
 {
-    private Stage                             stage;
-    private HashMap<SerialisableLevel, Image> asyncLevelIcons;
+    private final Cell  levelPackListCell;
+    private       Stage stage;
 
     public MenuScreen()
     {
         super(true, true);
-
-        this.asyncLevelIcons = new HashMap<>();
+        Constants.General.EVENT_BUS.register(this);
 
         this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
         // Header label.
-        Label headerLabel = getHeaderLabel();
         table
-            .add(headerLabel)
+            .add("Space Travels 3", "large")
             .top();
 
         // Level list.
         table.row();
-        table
-            .add(getLevelList())
+
+        // Firstly create the cell so that if the event comes through it will generate the level
+        // pack list again.
+        this.levelPackListCell = table
+            .add()
             .expand()
             .center();
+        this.levelPackListCell.setActor(getLevelPackList());
 
-        // Setting button.
+        // Buttons.
         table.row();
-        table
-            .add(getSettingsTextButton())
-            .bottom();
-
-        // Guide button.
-        table.row();
-        table
-            .add(getGuideButton());
+        Table buttonsTable = UIManager.getDefaultTable();
 
         // Tutorial button.
-        table.row();
-        table
-            .add(getTutorialButton())
-            .bottom();
+        buttonsTable.add(getGuideButton());
+        buttonsTable.add(getSettingsTextButton(false));
+        buttonsTable.add(getTutorialButton());
+        buttonsTable.add(getCreditsButton());
+        buttonsTable.add(getShareButton());
+        buttonsTable.add(getRateButton());
+        buttonsTable.add(getAchievementsButton());
+        buttonsTable.add(getLeaderboardsButton());
 
-        // Debug button.
+        table.add(buttonsTable);
+
         if (Constants.General.IS_DEBUGGING)
         {
             this.stage.addActor(getDebugButton());
@@ -80,42 +79,63 @@ public class MenuScreen extends Screen
         this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
-    public Label getHeaderLabel()
+    private ScrollPane getLevelPackList()
     {
-        Label headerLabel = new Label("Space Travels 3", UIManager.skin, "large", Color.WHITE);
+        java.util.List<LevelPack> levelPacks =
+            LevelManager.getLevelPacks();
 
-        return headerLabel;
-    }
-
-    private ScrollPane getLevelList()
-    {
-        java.util.List<SerialisableLevel> serialisableLevels = LevelManager.getSerialisableLevels();
 
         final Table outerTable = UIManager.getDefaultTable();
 
-        for (final SerialisableLevel serialisableLevel : serialisableLevels)
+        for (final LevelPack levelPack : levelPacks)
         {
             Table innerTable = UIManager.getDefaultTable();
 
-            // If the level icon is not loaded in the ass man then add to an map to load them async.
-            Image image;
-            if (AssMan.getMenuAssMan().isLoaded(serialisableLevel.iconPath))
+            ArrayList<Image> levelImages = new ArrayList<>();
+
+            // Overlaps the images of the destination planets leaving a 1/3 offset from each other.
+            // Starts from right and the last planet because the last drawn will be on top.
+            WidgetGroup imageGroup = new WidgetGroup();
+            ArrayList<SerialisableLevel> serialisableLevels = levelPack.getSerialisableLevels();
+            for (int i = serialisableLevels.size() - 1; i >= 0; i--)
             {
-                Texture texture = AssMan.getMenuAssMan().get(serialisableLevel.iconPath);
-                image = new Image(new TextureRegionDrawable(new TextureRegion(texture)));
+                SerialisableLevel serialisableLevel = serialisableLevels.get(i);
+                Image image = loadTextureAsync(
+                    serialisableLevel.serialisedDestinationPlanet.texturePath,
+                    AssMan.getAssMan());
+                image.sizeBy(Constants.Visual.LEVEL_ICON_SIZE);
+                image.setX(i * (Constants.Visual.LEVEL_ICON_OVERLAP_DISTANCE));
+                imageGroup.addActor(image);
+                levelImages.add(image);
             }
-            else
+
+            float imageGroupWidth = Constants.Visual.LEVEL_ICON_SIZE
+                + (
+                (levelPack.getSerialisableLevels().size() - 1)
+                    * Constants.Visual.LEVEL_ICON_OVERLAP_DISTANCE);
+
+            if (!levelPack.isFree()
+                && !SpaceTravels3.services.hasPurchasedSku(levelPack.getGoogleSku()))
             {
-                image = new Image();
-                this.asyncLevelIcons.put(serialisableLevel, image);
+                for (Image levelImage : levelImages)
+                {
+                    levelImage.setColor(Constants.Visual.FADE_TINT_COLOUR);
+                }
+
+                Image unlockImage = new Image(UIManager.skin, "unlockOverlay");
+                unlockImage.setX(imageGroupWidth / 2f - unlockImage.getWidth() / 2f);
+                unlockImage.setY(Constants.Visual.LEVEL_ICON_SIZE / 2f
+                    - unlockImage.getHeight() / 2f);
+                imageGroup.addActor(unlockImage);
             }
 
             innerTable
-                .add(image)
-                .size(this.stage.getWidth() / 10f);
+                .add(imageGroup)
+                .height(Constants.Visual.LEVEL_ICON_SIZE)
+                .width(imageGroupWidth);
             innerTable.row();
 
-            innerTable.add(serialisableLevel.name);
+            innerTable.add(levelPack.getName());
             innerTable.row();
 
             innerTable.addListener(BeepingClickListener.BEEPING_CLICK_LISTENER);
@@ -124,8 +144,16 @@ public class MenuScreen extends Screen
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    LevelScreen levelScreen = new LevelScreen(serialisableLevel);
-                    ScreenManager.addScreen(levelScreen);
+                    if (levelPack.isFree()
+                        || SpaceTravels3.services.hasPurchasedSku(levelPack.getGoogleSku()))
+                    {
+                        LevelPackScreen levelPackScreen = new LevelPackScreen(levelPack);
+                        ScreenManager.addScreen(levelPackScreen);
+                    }
+                    else
+                    {
+                        SpaceTravels3.services.purchaseSku(levelPack.getGoogleSku());
+                    }
                 }
             });
 
@@ -138,24 +166,7 @@ public class MenuScreen extends Screen
 
         return scrollPane;
     }
-    
-    private TextButton getSettingsTextButton()
-    {
-        TextButton settingsTextButton = new BeepingTextButton("Settings", UIManager.skin);
 
-        settingsTextButton.addListener(
-            new ClickListener()
-            {
-                @Override
-                public void clicked(InputEvent event, float x, float y)
-                {
-                    ScreenManager.addScreen(new SettingsScreen());
-                }
-            });
-
-        return settingsTextButton;
-    }
-    
     private Actor getGuideButton()
     {
         TextButton guideTextButton = new BeepingTextButton("Guide", UIManager.skin);
@@ -172,12 +183,31 @@ public class MenuScreen extends Screen
 
         return guideTextButton;
     }
+    
+    private Button getSettingsTextButton(boolean useText)
+    {
+        BeepingImageTextButton button =
+            new BeepingImageTextButton(useText ? "Settings" : "", UIManager.skin, "settings");
+
+        button.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    ScreenManager.addScreen(new SettingsScreen());
+                }
+            });
+
+        return button;
+    }
 
     private Actor getTutorialButton()
     {
-        TextButton tutorialTextButton = new BeepingTextButton("Tutorial", UIManager.skin);
+        BeepingImageTextButton button =
+            new BeepingImageTextButton("", UIManager.skin, "tutorial");
 
-        tutorialTextButton.addListener(
+        button.addListener(
             new ClickListener()
             {
                 @Override
@@ -192,9 +222,97 @@ public class MenuScreen extends Screen
                 }
             });
 
-        return tutorialTextButton;
+        return button;
     }
 
+    private Actor getCreditsButton()
+    {
+        BeepingImageTextButton button =
+            new BeepingImageTextButton("", UIManager.skin, "credits");
+
+        button.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    ScreenManager.addScreen(new CreditsScreen());
+                }
+            });
+
+        return button;
+    }
+
+    private Actor getShareButton()
+    {
+        BeepingImageTextButton button =
+            new BeepingImageTextButton("", UIManager.skin, "share");
+        button.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                SpaceTravels3.services.share();
+            }
+        });
+
+        return button;
+    }
+
+    private Actor getRateButton()
+    {
+        BeepingImageTextButton
+            button = new BeepingImageTextButton("", UIManager.skin, "rate");
+
+        button.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    SpaceTravels3.services.rateApp();
+                }
+            });
+
+        return button;
+    }
+
+    private Actor getAchievementsButton()
+    {
+        BeepingImageTextButton
+            button = new BeepingImageTextButton("", UIManager.skin, "achievement");
+
+        button.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    SpaceTravels3.services.googleShowAchievements();
+                }
+            });
+
+        return button;
+    }
+
+    private Actor getLeaderboardsButton()
+    {
+        BeepingImageTextButton
+            button = new BeepingImageTextButton("", UIManager.skin, "leaderboard");
+
+        button.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    SpaceTravels3.services.googleShowLeaderboards();
+                }
+            });
+
+        return button;
+    }
+    
     public Actor getDebugButton()
     {
         TextButton debugButton = new BeepingTextButton("Debug", UIManager.skin);
@@ -211,6 +329,24 @@ public class MenuScreen extends Screen
         return debugButton;
     }
 
+    public static String s(String s, int j)
+    {
+        char[] chars = s.toCharArray();
+        for (int i = 0; i < chars.length; i++)
+        {
+            char c = chars[i];
+            if (Character.isDigit(c))
+            {
+                int newValue = Integer.parseInt(String.valueOf(c)) + j;
+                newValue += 10;
+                char[] charArray = String.valueOf(newValue).toCharArray();
+                chars[i] = charArray[charArray.length - 1];
+            }
+        }
+
+        return new String(chars);
+    }
+
     @Override
     public void show()
     {
@@ -220,25 +356,7 @@ public class MenuScreen extends Screen
     @Override
     public void render(float deltaTime)
     {
-        // Check if we need to load level icons and if they are loaded show them.
-        if (!this.asyncLevelIcons.isEmpty())
-        {
-            ArrayList<SerialisableLevel> serialisableLevels =
-                new ArrayList<>(this.asyncLevelIcons.keySet());
-            for (SerialisableLevel serialisableLevel : serialisableLevels)
-            {
-                if (AssMan.getMenuAssMan().update()
-                    || AssMan.getMenuAssMan().isLoaded(serialisableLevel.iconPath))
-                {
-                    Texture texture = AssMan.getMenuAssMan().get(serialisableLevel.iconPath);
-                    this.asyncLevelIcons.get(serialisableLevel)
-                        .setDrawable(new TextureRegionDrawable(new TextureRegion(texture)));
-
-                    this.asyncLevelIcons.remove(serialisableLevel);
-                }
-            }
-        }
-
+        loadAsyncImages(AssMan.getAssMan());
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
             || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
@@ -280,5 +398,17 @@ public class MenuScreen extends Screen
     public void dispose()
     {
         this.stage.dispose();
+        Constants.General.EVENT_BUS.unregister(this);
+    }
+
+    @Subscribe
+    public void purchased(PurchasedEvent purchasedEvent)
+    {
+        // If it doesn't exists it means it has not been created yet and it will taken care of.
+        if (this.levelPackListCell != null)
+        {
+            this.levelPackListCell.clearActor();
+            this.levelPackListCell.setActor(getLevelPackList());
+        }
     }
 }

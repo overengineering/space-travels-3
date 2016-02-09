@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
-import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.google.common.base.Stopwatch;
 
 import java.util.concurrent.TimeUnit;
@@ -18,7 +17,7 @@ public class AnimatedGraphicComponent extends GraphicComponent
     private TextureAtlas textureAtlas;
 
     public AnimatedGraphicComponent(
-        String textureAtlasPath,
+        TextureAtlas textureAtlas,
         float animationTotalTime,
         float width,
         float height,
@@ -28,7 +27,7 @@ public class AnimatedGraphicComponent extends GraphicComponent
         super(physicsComponent, width, height);
 
         this.animationTime = Stopwatch.createStarted();
-        this.textureAtlas = AssMan.getGameAssMan().get(textureAtlasPath);
+        this.textureAtlas = textureAtlas;
         this.animation = new Animation(
             animationTotalTime / this.textureAtlas.getRegions().size,
             this.textureAtlas.getRegions(),
@@ -39,8 +38,7 @@ public class AnimatedGraphicComponent extends GraphicComponent
     public void draw()
     {
         TextureRegion textureRegion =
-            this.animation.getKeyFrame(this.animationTime.elapsed(TimeUnit.NANOSECONDS)
-                * MathUtils.nanoToSec);
+            this.animation.getKeyFrame(getAnimationTimeSeconds());
 
         SpaceTravels3.spriteBatch.draw(
             textureRegion,
@@ -55,15 +53,26 @@ public class AnimatedGraphicComponent extends GraphicComponent
             this.physicsComponent.getAngle());
     }
 
+    private float getAnimationTimeSeconds()
+    {
+        return this.animationTime.elapsed(TimeUnit.NANOSECONDS)
+            * MathUtils.nanoToSec;
+    }
+
     @Override
     public void dispose()
     {
         this.animationTime.stop();
     }
 
+    @Override
+    public TextureRegion getTexture()
+    {
+        return this.animation.getKeyFrame(getAnimationTimeSeconds());
+    }
+
     public boolean isFinished()
     {
-        return this.animation.isAnimationFinished(this.animationTime.elapsed(TimeUnit.NANOSECONDS)
-            * MathUtils.nanoToSec);
+        return this.animation.isAnimationFinished(getAnimationTimeSeconds());
     }
 }

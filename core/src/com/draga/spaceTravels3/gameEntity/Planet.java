@@ -1,10 +1,11 @@
 package com.draga.spaceTravels3.gameEntity;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.draga.spaceTravels3.Constants;
-import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 import com.draga.spaceTravels3.component.graphicComponent.StaticGraphicComponent;
 import com.draga.spaceTravels3.component.miniMapGraphicComponent.CircleMiniMapGraphicsComponent;
+import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponentType;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class Planet extends GameEntity
         float radius,
         float x,
         float y,
-        String texturePath,
+        Texture texture,
         boolean isDestination)
     {
         List<Class<? extends GameEntity>> collidesWith = new ArrayList<>();
@@ -33,7 +34,7 @@ public class Planet extends GameEntity
             PhysicsComponentType.STATIC);
 
         this.graphicComponent = new StaticGraphicComponent(
-            texturePath,
+            texture,
             radius * 2f,
             radius * 2f,
             this.physicsComponent);

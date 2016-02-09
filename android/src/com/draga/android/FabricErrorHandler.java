@@ -8,13 +8,16 @@ public class FabricErrorHandler implements ErrorHandler
     @Override
     public void handle(String tag, Throwable throwable, String message)
     {
-        Crashlytics.logException(throwable);
-        Crashlytics.log(tag + " : " + message);
+        // Wraps the parameters in a new exception because logging messages doesn't seems to work.
+        RuntimeException runtimeException = new RuntimeException(tag + " : " + message, throwable);
+        Crashlytics.logException(runtimeException);
     }
 
     @Override
     public void handle(String tag, String message)
     {
-        Crashlytics.log(tag + " : " + message);
+        // Wraps the parameters in an exception because logging messages doesn't seems to work.
+        RuntimeException runtimeException = new RuntimeException(tag + " : " + message);
+        Crashlytics.logException(runtimeException);
     }
 }

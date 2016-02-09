@@ -1,8 +1,8 @@
 package com.draga.spaceTravels3.input.inputProvider;
 
 import com.badlogic.gdx.Gdx;
-import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.PooledVector2;
+import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.input.inputModifier.DeadZoneInputModifier;
 import com.draga.spaceTravels3.input.inputModifier.RangeInputModifier;
@@ -14,20 +14,24 @@ import com.draga.spaceTravels3.input.inputModifier.RangeInputModifier;
 public class AccelerometerInputProvider extends InputProvider
 {
     private static final String LOGGING_TAG = AccelerometerInputProvider.class.getSimpleName();
+    private int rotation;
 
     public AccelerometerInputProvider()
     {
         addInputModifier(new RangeInputModifier(Constants.General.EARTH_GRAVITY));
         addInputModifier(new DeadZoneInputModifier(Constants.Game.DEAD_ZONE));
+
+        this.rotation = Gdx.input.getRotation();
     }
 
     @Override
     protected PooledVector2 getRawInput()
     {
+        //
         PooledVector2 input;
         // Rotate the vector "manually" instead of using input.rotate(Gdx.input.getRotation())
         // because it doesn't need expensive operations.
-        switch (Gdx.input.getRotation())
+        switch (this.rotation)
         {
             case 0:
                 input = PooledVector2.newVector2(

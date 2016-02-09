@@ -3,46 +3,49 @@ package com.draga.spaceTravels3.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.SpaceTravels3;
+import com.draga.spaceTravels3.event.PurchasedEvent;
 import com.draga.spaceTravels3.event.ScoreUpdatedEvent;
 import com.draga.spaceTravels3.manager.ScoreManager;
 import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
+import com.draga.spaceTravels3.manager.level.LevelPack;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableDifficulty;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
-import com.draga.spaceTravels3.ui.BeepingTextButton;
+import com.draga.spaceTravels3.ui.BeepingImageTextButton;
 import com.draga.spaceTravels3.ui.Screen;
 import com.google.common.eventbus.Subscribe;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 public class LevelScreen extends Screen
 {
-    private final SerialisableLevel      serialisableLevel;
-    private       Actor                  difficultiesList;
-    private       Stage                  stage;
-    private       HashMap<String, Label> difficultyHighScoreLabels;
-    private       Image                  headerImage;
+    private final LevelPack                  levelPack;
+    private final SerialisableLevel          serialisableLevel;
+    private       Actor                      difficultiesList;
+    private       Stage                      stage;
+    private       HashMap<String, Label>     difficultyHighScoreLabels;
+    private       ArrayList<ImageTextButton> playButtons;
 
-    public LevelScreen(SerialisableLevel serialisableLevel)
+    public LevelScreen(LevelPack levelPack, SerialisableLevel serialisableLevel)
     {
         super(true, true);
 
+        this.levelPack = levelPack;
         this.serialisableLevel = serialisableLevel;
 
         this.difficultyHighScoreLabels = new HashMap<>();
+        this.playButtons = new ArrayList<>();
 
         this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
 
@@ -60,10 +63,9 @@ public class LevelScreen extends Screen
             .center();
 
         // Back button.
-        TextButton backTextButton = getBackTextButton();
         table.row();
         table
-            .add(backTextButton)
+            .add(getBackButton())
             .bottom();
 
         this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
@@ -79,20 +81,14 @@ public class LevelScreen extends Screen
             new Label(this.serialisableLevel.name + " ", UIManager.skin, "large", Color.WHITE);
         table.add(label);
 
-        if (AssMan.getMenuAssMan().update()
-            || AssMan.getMenuAssMan().isLoaded(this.serialisableLevel.iconPath))
-        {
-            Texture texture =
-                AssMan.getMenuAssMan().get(this.serialisableLevel.iconPath, Texture.class);
-            this.headerImage = new Image(texture);
-        }
-        else
-        {
-            this.headerImage = new Image();
-        }
+
+        Image headerImage =
+            loadTextureAsync(
+                this.serialisableLevel.serialisedDestinationPlanet.texturePath,
+                AssMan.getAssMan());
 
         table
-            .add(this.headerImage)
+            .add(headerImage)
             .size(label.getHeight());
 
         return table;
@@ -106,7 +102,8 @@ public class LevelScreen extends Screen
 
         for (final String difficulty : serialisedDifficulties.keySet())
         {
-            SerialisableDifficulty serialisableDifficulty = serialisedDifficulties.get(difficulty);
+            final SerialisableDifficulty serialisableDifficulty =
+                serialisedDifficulties.get(difficulty);
 
             Table difficultyTable = new Table(UIManager.skin);
 
@@ -123,9 +120,6 @@ public class LevelScreen extends Screen
             this.difficultyHighScoreLabels.put(difficulty, difficultyHighScoreLabel);
 
             difficultyTable.add(difficultyHighScoreLabel);
-            difficultyTable.row();
-
-            difficultyTable.add("");
             difficultyTable.row();
 
             // Difficulty details.
@@ -154,27 +148,52 @@ public class LevelScreen extends Screen
                     ? "infinite"
                     : String.valueOf(serialisableDifficulty.fuel))
                 .right();
+            innerDifficultyTable.row();
 
-            difficultyTable.add(innerDifficultyTable);
-            difficultyTable.row();
-
-            // Play button.
-            BeepingTextButton beepingTextButton = new BeepingTextButton("Play", UIManager.skin);
-            beepingTextButton.addListener(new ClickListener()
+            // Leaderboard button.
+            BeepingImageTextButton leaderboardButton =
+                new BeepingImageTextButton("Leaderboard", UIManager.skin, "leaderboard");
+            leaderboardButton.addListener(new ClickListener()
             {
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    LoadingScreen loadingScreen = new LoadingScreen(
-                        serialisableLevel,
-                        difficulty,
-                        false);
-                    ScreenManager.addScreen(loadingScreen);
-                    super.clicked(event, x, y);
+                    SpaceTravels3.services.googleShowLeaderboard(serialisableDifficulty.playLeaderboardID);
+                }
+            });
+            innerDifficultyTable.add(leaderboardButton);
+
+            // Play button.
+            BeepingImageTextButton playButton =
+                new BeepingImageTextButton("Play", UIManager.skin, "play");
+            this.playButtons.add(playButton);
+            playButton.setVisible(this.levelPack.isFree()
+                || SpaceTravels3.services.hasPurchasedSku(this.levelPack.getGoogleSku()));
+            playButton.addListener(new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    if (LevelScreen.this.levelPack.isFree()
+                        || SpaceTravels3.services.hasPurchasedSku(LevelScreen.this.levelPack.getGoogleSku()))
+                    {
+                        LoadingScreen loadingScreen = new LoadingScreen(
+                            serialisableLevel,
+                            difficulty,
+                            false);
+                        ScreenManager.addScreen(loadingScreen);
+                        super.clicked(event, x, y);
+                    }
+                    else
+                    {
+                        SpaceTravels3.services.purchaseSku(LevelScreen.this.levelPack.getGoogleSku());
+                    }
                 }
             });
 
-            difficultyTable.add(beepingTextButton);
+            innerDifficultyTable.add(playButton);
+
+            difficultyTable.add(innerDifficultyTable);
 
             table.add(difficultyTable);
         }
@@ -184,21 +203,6 @@ public class LevelScreen extends Screen
         scrollPane.setScrollingDisabled(false, true);
 
         return scrollPane;
-    }
-
-    private TextButton getBackTextButton()
-    {
-        TextButton backTextButton = new BeepingTextButton("Back", UIManager.skin);
-        backTextButton.addListener(new ClickListener()
-        {
-            @Override
-            public void clicked(InputEvent event, float x, float y)
-            {
-                ScreenManager.removeScreen(LevelScreen.this);
-            }
-        });
-
-        return backTextButton;
     }
 
     private String getHighScoreText(Integer score)
@@ -222,23 +226,13 @@ public class LevelScreen extends Screen
     @Override
     public void render(float delta)
     {
-        // If the image still needs showing.
-        if (this.headerImage.getDrawable() == null
-            && (
-            AssMan.getMenuAssMan().update()
-                || AssMan.getMenuAssMan().isLoaded(this.serialisableLevel.iconPath)))
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
+            || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
         {
-            Texture texture = AssMan.getMenuAssMan().get(this.serialisableLevel.iconPath);
-            this.headerImage.setDrawable(new TextureRegionDrawable(new TextureRegion(texture)));
+            ScreenManager.removeScreen(this);
         }
 
-        {
-            if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
-                || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
-            {
-                ScreenManager.removeScreen(LevelScreen.this);
-            }
-        }
+        loadAsyncImages(AssMan.getAssMan());
 
         this.stage.getViewport().apply();
         this.stage.act(delta);
@@ -275,12 +269,25 @@ public class LevelScreen extends Screen
     }
 
     @Subscribe
-    public void ScoreUpdated(ScoreUpdatedEvent scoreUpdatedEvent)
+    public void scoreUpdated(ScoreUpdatedEvent scoreUpdatedEvent)
     {
         if (scoreUpdatedEvent.levelID.equals(this.serialisableLevel.id))
         {
             this.difficultyHighScoreLabels.get(scoreUpdatedEvent.difficulty)
                 .setText(getHighScoreText(scoreUpdatedEvent.score));
+        }
+    }
+
+    @Subscribe
+    public void purchased(PurchasedEvent purchasedEvent)
+    {
+        if (!this.levelPack.isFree()
+            && this.levelPack.getGoogleSku().equals(purchasedEvent.sku))
+        {
+            for (ImageTextButton playButton : this.playButtons)
+            {
+                playButton.setVisible(true);
+            }
         }
     }
 }

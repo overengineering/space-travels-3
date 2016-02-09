@@ -3,40 +3,41 @@ package com.draga.spaceTravels3.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.draga.spaceTravels3.Constants;
-import com.draga.spaceTravels3.Level;
 import com.draga.spaceTravels3.SpaceTravels3;
+import com.draga.spaceTravels3.level.Level;
 import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
-import com.draga.spaceTravels3.manager.asset.AssMan;
-import com.draga.spaceTravels3.ui.BeepingTextButton;
+import com.draga.spaceTravels3.ui.BeepingImageTextButton;
 import com.draga.spaceTravels3.ui.Screen;
 
 public abstract class IngameMenuScreen extends Screen
 {
+    public static String s =
+        "gTAKsCqx0NeZVO9igYzMNjolg61Y6KLwLQaulfOZzuI2WLhPNr*mAmEy3T%VP08ZzWILHaHhKDHXeGP";
+
     protected final Level  level;
     protected final Cell   centreCell;
     private final   Stage  stage;
     protected       Screen gameScreen;
-    private         Image  headerImage;
 
     public IngameMenuScreen(Screen gameScreen, Level level)
     {
         super(true, false);
         this.gameScreen = gameScreen;
         this.level = level;
-        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.overlaySpriteBath);
+        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
@@ -60,13 +61,11 @@ public abstract class IngameMenuScreen extends Screen
         table.row();
 
         // Retry button.
-        TextButton retryButton = getRetryButton();
-        table.add(retryButton);
+        table.add(getRetryButton());
         table.row();
 
         // Main menu button.
-        TextButton mainMenuTextButton = getMainMenuTextButton();
-        table.add(mainMenuTextButton);
+        table.add(getMainMenuTextButton());
         table.row();
 
         // Gap between the centre and the end of the screen.
@@ -85,20 +84,11 @@ public abstract class IngameMenuScreen extends Screen
         Label label = new Label(this.level.getName() + " ", UIManager.skin, "large", Color.WHITE);
         table.add(label);
 
-        if (AssMan.getMenuAssMan().update()
-            || AssMan.getMenuAssMan().isLoaded(this.level.getIconPath()))
-        {
-            Texture texture =
-                AssMan.getMenuAssMan().get(this.level.getIconPath(), Texture.class);
-            this.headerImage = new Image(texture);
-        }
-        else
-        {
-            this.headerImage = new Image();
-        }
+        Image headerImage =
+            new Image(this.level.getDestinationPlanet().graphicComponent.getTexture());
 
         table
-            .add(this.headerImage)
+            .add(headerImage)
             .size(label.getHeight());
 
         table.add(new Label(" " + this.level.getDifficulty(), UIManager.skin));
@@ -106,11 +96,12 @@ public abstract class IngameMenuScreen extends Screen
         return table;
     }
 
-    public TextButton getRetryButton()
+    public Actor getRetryButton()
     {
-        TextButton retryButton = new BeepingTextButton("Try Again?", UIManager.skin);
+        BeepingImageTextButton button =
+            new BeepingImageTextButton("Try Again?", UIManager.skin, "retry");
 
-        retryButton.addListener(
+        button.addListener(
             new ClickListener()
             {
                 @Override
@@ -120,13 +111,14 @@ public abstract class IngameMenuScreen extends Screen
                 }
             });
 
-        return retryButton;
+        return button;
     }
 
-    protected TextButton getMainMenuTextButton()
+    protected Actor getMainMenuTextButton()
     {
-        TextButton mainMenuTextButton = new BeepingTextButton("Main menu", UIManager.skin);
-        mainMenuTextButton.addListener(new ClickListener()
+        BeepingImageTextButton
+            button = new BeepingImageTextButton("Main menu", UIManager.skin, "exit");
+        button.addListener(new ClickListener()
         {
             @Override
             public void clicked(InputEvent event, float x, float y)
@@ -136,7 +128,7 @@ public abstract class IngameMenuScreen extends Screen
             }
         });
 
-        return mainMenuTextButton;
+        return button;
     }
 
     private void Retry()
@@ -158,16 +150,6 @@ public abstract class IngameMenuScreen extends Screen
     @Override
     public void render(float delta)
     {
-        // If the image still needs showing.
-        if (this.headerImage.getDrawable() == null
-            && (
-            AssMan.getMenuAssMan().update()
-                || AssMan.getMenuAssMan().isLoaded(this.level.getIconPath())))
-        {
-            Texture texture = AssMan.getMenuAssMan().get(this.level.getIconPath());
-            this.headerImage.setDrawable(new TextureRegionDrawable(new TextureRegion(texture)));
-        }
-
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
             || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
         {

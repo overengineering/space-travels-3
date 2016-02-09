@@ -37,10 +37,9 @@ public class DebugScreen extends Screen
             .center();
 
         // Back button
-        TextButton backTextButton = getBackTextButton();
         table.row();
         table
-            .add(backTextButton)
+            .add(getBackButton())
             .bottom();
 
         this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
@@ -59,25 +58,12 @@ public class DebugScreen extends Screen
         table.add(getForceCrashButton());
         table.row();
         table.add(getErrorButton());
+        table.row();
+        table.add(getSignOutButton());
 
         ScrollPane scrollPane = new ScrollPane(table);
 
         return scrollPane;
-    }
-
-    private TextButton getBackTextButton()
-    {
-        TextButton backTextButton = new BeepingTextButton("Back", UIManager.skin);
-        backTextButton.addListener(new ClickListener()
-        {
-            @Override
-            public void clicked(InputEvent event, float x, float y)
-            {
-                ScreenManager.removeScreen(DebugScreen.this);
-            }
-        });
-
-        return backTextButton;
     }
 
     private TextButton getDebugDrawTextButton()
@@ -183,6 +169,23 @@ public class DebugScreen extends Screen
         return errorTextButton;
     }
 
+    private Actor getSignOutButton()
+    {
+        final TextButton textButton = new BeepingTextButton("Sign out play", UIManager.skin);
+
+        textButton.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    SpaceTravels3.services.googleSignOut();
+                }
+            });
+
+        return textButton;
+    }
+
     @Override
     public void show()
     {
@@ -195,7 +198,7 @@ public class DebugScreen extends Screen
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
             || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
         {
-            ScreenManager.removeScreen(DebugScreen.this);
+            ScreenManager.removeScreen(this);
         }
 
         this.stage.getViewport().apply();

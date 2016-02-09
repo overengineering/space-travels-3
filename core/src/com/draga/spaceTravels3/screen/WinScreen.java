@@ -3,8 +3,8 @@ package com.draga.spaceTravels3.screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.draga.spaceTravels3.Level;
 import com.draga.spaceTravels3.Score;
+import com.draga.spaceTravels3.level.Level;
 import com.draga.spaceTravels3.manager.ScoreManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
@@ -26,7 +26,7 @@ public class WinScreen extends IngameMenuScreen
 
         Table table = new Table(UIManager.skin);
 
-        table.add("You won!");
+        table.add("WIN", "large");
         table.row();
 
         // Best score.

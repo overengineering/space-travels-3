@@ -8,6 +8,8 @@ import com.draga.background.BackgroundParameters;
 import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.joystick.Joystick;
 import com.draga.joystick.JoystickParameters;
+import com.draga.spaceTravels3.level.Level;
+import com.draga.spaceTravels3.physic.collisionCache.CollisionCache;
 import com.google.common.eventbus.EventBus;
 
 import java.text.DecimalFormat;
@@ -41,11 +43,15 @@ public abstract class Constants
         // Screen.
         public static final float SCREEN_FADE_DURATION = 1f;
         public static final Color SCREEN_FADE_COLOUR   = new Color(0, 0, 0, 0.7f);
+        public static final Color FADE_TINT_COLOUR     = new Color(0.3f, 0.3f, 0.3f, 1f);
 
         // Delimited progress bar.
         public static final Color DELIMITED_PROGRESSBAR_BACKGROUND  = Color.DARK_GRAY;
         public static final Color DELIMITED_PROGRESSBAR_DELIMITER   = Color.WHITE;
         public static final Color DELIMITED_PROGRESSBAR_KNOB_BEFORE = Color.LIGHT_GRAY;
+
+        public static final float LEVEL_ICON_SIZE             = Gdx.graphics.getHeight() / 5f;
+        public static final float LEVEL_ICON_OVERLAP_DISTANCE = LEVEL_ICON_SIZE / 3f;
 
 
         public abstract static class Background
@@ -140,14 +146,12 @@ public abstract class Constants
             public abstract static class TrajectoryLine
             {
                 public static final float POINTS_TIME              = 0.05f;
-                public static final float STEP_TIME                = 1f / 100f;
                 public static final Color COLOR_NEUTRAL            = new Color(0.5f, 0.5f, 0.5f, 1);
                 public static final Color COLOR_PLANET_LOSE        = new Color(0.8f, 0.2f, 0.2f, 1);
                 public static final Color COLOR_PICKUP             = Color.GREEN;
                 public static final Color COLOR_PLANET_DESTINATION =
                     Minimap.PLANET_DESTINATION_COLOUR;
             }
-
         }
     }
 
@@ -172,19 +176,20 @@ public abstract class Constants
         public static final float ACCELEROMETER_RANGE   = 0.5f;
         public static final float DEAD_ZONE             = 0.15f;
 
-        public static final float PICKUP_RADIUS       =
+        public static final float  PICKUP_RADIUS                  =
             (Visual.PICKUP_WIDTH + Visual.PICKUP_HEIGHT) / 2f * 1.3f;
-        public static final float LEVEL_BOUNDS_BUFFER = 10;
-
-        public static float SHIP_ACCELERATION_PER_SECOND = 40f;
-
-        public static int PHYSICS_STEPS = 10;
+        public static final float  LEVEL_BOUNDS_BUFFER            = 10;
+        public static final String LEVEL_ASSET_FILENAME           = Level.class.getSimpleName();
+        public static final String COLLISION_CACHE_ASSET_FILENAME =
+            CollisionCache.class.getSimpleName();
+        public static       float  SHIP_ACCELERATION_PER_SECOND   = 40f;
+        public static       int    PHYSICS_STEPS                  = 10;
     }
 
 
     public static class General
     {
-        public static final boolean       IS_DEBUGGING                        = true;
+        public static final boolean       IS_DEBUGGING                        = false;
         public static final float         EARTH_GRAVITY                       = 9.80665f;
         public static final DecimalFormat COMMA_SEPARATED_THOUSANDS_FORMATTER =
             new DecimalFormat("#,###");
