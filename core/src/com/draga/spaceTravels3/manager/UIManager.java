@@ -94,6 +94,7 @@ public abstract class UIManager
         skin.add("guide", getImageTextButtonStyle(AssMan.getAssList().iconGuide));
         skin.add("play", getImageTextButtonStyle(AssMan.getAssList().iconPlay));
         skin.add("exit", getImageTextButtonStyle(AssMan.getAssList().iconExit));
+        skin.add("next", getImageTextButtonStyle(AssMan.getAssList().iconNext));
         skin.add("share", getImageTextButtonStyle(AssMan.getAssList().iconShare));
         skin.add("unlock", getImageTextButtonStyle(AssMan.getAssList().iconUnlock));
         skin.add(

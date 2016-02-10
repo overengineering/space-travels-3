@@ -278,7 +278,10 @@ public class GameScreen extends Screen
     @Subscribe
     public void Win(WinEvent winEvent)
     {
-        ScreenManager.addScreen(new WinScreen(this.level, this));
-
+        ScreenManager.addScreen(new WinScreen(
+            this.level,
+            this,
+            winEvent.score,
+            winEvent.previousBestScore));
     }
 }

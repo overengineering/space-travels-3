@@ -60,8 +60,8 @@ public class MenuScreen extends Screen
         Table buttonsTable = UIManager.getDefaultTable();
 
         // Tutorial button.
-        buttonsTable.add(getGuideButton());
         buttonsTable.add(getSettingsTextButton(false));
+        buttonsTable.add(getGuideButton());
         buttonsTable.add(getTutorialButton());
         buttonsTable.add(getCreditsButton());
         buttonsTable.add(getShareButton());
@@ -167,24 +167,6 @@ public class MenuScreen extends Screen
         return scrollPane;
     }
 
-    private Actor getGuideButton()
-    {
-        BeepingImageTextButton
-            button = new BeepingImageTextButton("", UIManager.skin, "guide");
-
-        button.addListener(
-            new ClickListener()
-            {
-                @Override
-                public void clicked(InputEvent event, float x, float y)
-                {
-                    ScreenManager.addScreen(new GuideScreen());
-                }
-            });
-
-        return button;
-    }
-    
     private Button getSettingsTextButton(boolean useText)
     {
         BeepingImageTextButton button =
@@ -197,6 +179,24 @@ public class MenuScreen extends Screen
                 public void clicked(InputEvent event, float x, float y)
                 {
                     ScreenManager.addScreen(new SettingsScreen());
+                }
+            });
+
+        return button;
+    }
+    
+    private Actor getGuideButton()
+    {
+        BeepingImageTextButton
+            button = new BeepingImageTextButton("", UIManager.skin, "guide");
+
+        button.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    ScreenManager.addScreen(new GuideScreen());
                 }
             });
 

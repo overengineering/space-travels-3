@@ -209,9 +209,10 @@ public class Level
         {
             this.gameState = GameState.WIN;
 
-            Constants.General.EVENT_BUS.post(new WinEvent());
-
             Score score = getScore();
+            Integer previousBestScore = ScoreManager.getScore(this.getId(), this.getDifficulty());
+
+            Constants.General.EVENT_BUS.post(new WinEvent(score, previousBestScore));
 
             SpaceTravels3.services.googleUnlockAchievement(this.playCompletionAchievementID);
             SpaceTravels3.services.googleUpdateLeaderboard(
