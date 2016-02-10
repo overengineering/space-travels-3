@@ -445,6 +445,7 @@ public class Level
     public void startTutorial()
     {
         this.gameState = GameState.TUTORIAL;
+        SoundManager.pauseGameSound();
     }
 
     public void endTutorial()
