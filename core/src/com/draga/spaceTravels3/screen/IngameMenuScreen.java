@@ -66,8 +66,18 @@ public abstract class IngameMenuScreen extends Screen
             LevelManager.getNextSerialisableLevel(this.level.getId());
         if (nextSerialisableLevel != null)
         {
-            table.add(getNextButton(nextSerialisableLevel));
-            table.row();
+            table
+                .add(getNextLevelButton(nextSerialisableLevel))
+                .row();
+        }
+
+        String nextDifficulty =
+            LevelManager.getNextDifficulty(this.level.getId(), this.level.getDifficulty());
+        if (nextDifficulty != null)
+        {
+            table
+                .add(getNextDifficultyButton(nextDifficulty))
+                .row();
         }
 
         table.add(getRetryButton());
@@ -105,7 +115,7 @@ public abstract class IngameMenuScreen extends Screen
         return table;
     }
 
-    private Actor getNextButton(final SerialisableLevel nextSerialisableLevel)
+    private Actor getNextLevelButton(final SerialisableLevel nextSerialisableLevel)
     {
         BeepingImageTextButton button =
             new BeepingImageTextButton("Next level", UIManager.skin, "next");
@@ -119,6 +129,26 @@ public abstract class IngameMenuScreen extends Screen
                     play(
                         nextSerialisableLevel.id,
                         nextSerialisableLevel.serialisedDifficulties.keySet().iterator().next());
+                }
+            });
+
+        return button;
+    }
+
+    private Actor getNextDifficultyButton(final String difficulty)
+    {
+        BeepingImageTextButton button =
+            new BeepingImageTextButton(difficulty + " difficulty", UIManager.skin, "next");
+
+        button.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    play(
+                        IngameMenuScreen.this.level.getId(),
+                        difficulty);
                 }
             });
 
