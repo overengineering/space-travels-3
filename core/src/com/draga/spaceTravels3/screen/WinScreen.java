@@ -5,7 +5,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.draga.spaceTravels3.Score;
 import com.draga.spaceTravels3.level.Level;
-import com.draga.spaceTravels3.manager.ScoreManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
@@ -15,11 +14,9 @@ public class WinScreen extends IngameMenuScreen
 {
     protected final Sound sound;
 
-    public WinScreen(Level level, Screen gameScreen)
+    public WinScreen(Level level, Screen gameScreen, Score score, Integer previousBestScore)
     {
         super(gameScreen, level);
-
-        Score score = level.getScore();
 
         this.sound = AssMan.getGameAssMan().get(AssMan.getAssList().winSound);
         this.sound.play(SettingsManager.getSettings().volumeFX);
@@ -31,7 +28,7 @@ public class WinScreen extends IngameMenuScreen
 
         // Best score.
         table.row();
-        Label newBestScoreLabel = getBestScoreLabel(score.getTotalScore());
+        Label newBestScoreLabel = getBestScoreLabel(score.getTotalScore(), previousBestScore);
         table.add(newBestScoreLabel);
 
         // Current score.
@@ -42,11 +39,8 @@ public class WinScreen extends IngameMenuScreen
         this.centreCell.setActor(table);
     }
 
-    private Label getBestScoreLabel(int score)
+    private Label getBestScoreLabel(int score, Integer previousBestScore)
     {
-        Integer previousBestScore =
-            ScoreManager.getScore(this.level.getId(), this.level.getDifficulty());
-
         Label.LabelStyle labelStyle = UIManager.skin.get(Label.LabelStyle.class);
 
         String text;

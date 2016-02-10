@@ -17,6 +17,7 @@ import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.*;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public abstract class LevelManager
 {
@@ -118,15 +119,19 @@ public abstract class LevelManager
             isDestination);
     }
 
-    public static SerialisableLevel getSerialisableLevel(String levelId)
+    public static SerialisableLevel getNextSerialisableLevel(String levelId)
     {
         for (LevelPack levelPack : levelPacks)
         {
-            for (SerialisableLevel serialisableLevel : levelPack.getSerialisableLevels())
+            for (Iterator<SerialisableLevel> iterator =
+                 levelPack.getSerialisableLevels().iterator(); iterator.hasNext(); )
             {
+                SerialisableLevel serialisableLevel = iterator.next();
                 if (serialisableLevel.id.equals(levelId))
                 {
-                    return serialisableLevel;
+                    return iterator.hasNext()
+                        ? iterator.next()
+                        : null;
                 }
             }
         }
@@ -211,5 +216,46 @@ public abstract class LevelManager
         }
 
         return tutorialSerialisableLevel;
+    }
+
+    public static String getNextDifficulty(String levelID, String difficulty)
+    {
+        SerialisableLevel serialisableLevel = getSerialisableLevel(levelID);
+        if (serialisableLevel != null)
+        {
+            for (Iterator<String> iterator =
+                 serialisableLevel.serialisedDifficulties.keySet().iterator(); iterator.hasNext(); )
+            {
+                String difficultyKey = iterator.next();
+                if (difficultyKey.equals(difficulty))
+                {
+                    return iterator.hasNext()
+                        ? iterator.next()
+                        : null;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public static SerialisableLevel getSerialisableLevel(String levelId)
+    {
+        for (LevelPack levelPack : levelPacks)
+        {
+            for (SerialisableLevel serialisableLevel : levelPack.getSerialisableLevels())
+            {
+                if (serialisableLevel.id.equals(levelId))
+                {
+                    return serialisableLevel;
+                }
+            }
+        }
+
+        ErrorHandlerProvider.handle(
+            LOGGING_TAG,
+            "Could not find a level with name \"" + levelId + "\"");
+
+        return null;
     }
 }
