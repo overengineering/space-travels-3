@@ -33,6 +33,7 @@ public class AssList
     public String iconAchievement;
     public String iconCredits;
     public String iconRate;
+    public String iconGuide;
     public String iconTutorial;
     public String iconExit;
     public String iconShare;

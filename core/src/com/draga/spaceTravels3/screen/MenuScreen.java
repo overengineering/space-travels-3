@@ -169,9 +169,10 @@ public class MenuScreen extends Screen
 
     private Actor getGuideButton()
     {
-        TextButton guideTextButton = new BeepingTextButton("Guide", UIManager.skin);
+        BeepingImageTextButton
+            button = new BeepingImageTextButton("", UIManager.skin, "guide");
 
-        guideTextButton.addListener(
+        button.addListener(
             new ClickListener()
             {
                 @Override
@@ -181,7 +182,7 @@ public class MenuScreen extends Screen
                 }
             });
 
-        return guideTextButton;
+        return button;
     }
     
     private Button getSettingsTextButton(boolean useText)
