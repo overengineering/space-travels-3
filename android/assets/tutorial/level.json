@@ -4,7 +4,7 @@
   "serialisedDifficulties": {
     "Tutorial": {
       "trajectorySeconds": 5,
-      "maxLandingSpeed": 120,
+      "maxLandingSpeed": 20,
       "fuel": 0,
       "infiniteFuel": true
     }

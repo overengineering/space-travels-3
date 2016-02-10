@@ -37,8 +37,8 @@ public class Level
     private final ArrayList<Pickup> pickups;
     private final Ship              ship;
     private final Thruster          thruster;
-    private final Planet            destinationPlanet;
     private final String            difficulty;
+    private       Planet            destinationPlanet;
     private       Rectangle         bounds;
     private       int               pickupsCollected;
 
@@ -421,6 +421,11 @@ public class Level
         return this.destinationPlanet;
     }
 
+    public void setDestinationPlanet(Planet destinationPlanet)
+    {
+        this.destinationPlanet = destinationPlanet;
+    }
+
     public float getTrajectorySeconds()
     {
         return this.trajectorySeconds;
@@ -430,7 +435,6 @@ public class Level
     {
         return this.name;
     }
-
 
     public boolean isTutorial()
     {

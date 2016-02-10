@@ -49,6 +49,10 @@ public class TutorialScreen extends Screen
     private       InputType         originalInputType;
     private       ClickListener     nextTextButtonListener;
     private       Planet            planet;
+    private       Texture           planetTexture;
+    private       OrbitAction       orbitAction;
+    private       Texture           destinationPlanetTexture;
+    private       Planet            destinationPlanet;
 
     public TutorialScreen(Level level, GameScreen gameScreen)
     {
@@ -281,22 +285,26 @@ public class TutorialScreen extends Screen
         final PhysicsComponent shipPhysicsComponent = this.level.getShip().physicsComponent;
         shipPhysicsComponent.getVelocity().setZero();
 
-        LevelPack firstLevelPack = LevelManager.getLevelPacks()
-            .get(0);
-        SerialisableLevel firstSerialisableLevel = firstLevelPack
-            .getSerialisableLevels()
-            .get(0);
-        SerialisablePlanet firstSerialisablePlanet =
-            firstSerialisableLevel.serialisedPlanets.get(0);
-        // TODO: dispose this texture
-        Texture texture = new Texture(firstSerialisablePlanet.texturePath);
+        if (this.planetTexture == null)
+        {
+            LevelPack firstLevelPack = LevelManager.getLevelPacks()
+                .get(0);
+            SerialisableLevel firstSerialisableLevel = firstLevelPack
+                .getSerialisableLevels()
+                .get(0);
+            SerialisablePlanet firstSerialisablePlanet =
+                firstSerialisableLevel.serialisedPlanets.get(0);
+            // TODO: dispose this texture
+            this.planetTexture = new Texture(firstSerialisablePlanet.texturePath);
+        }
+
         this.planet = new Planet(
             10000f,
             5f,
             shipPhysicsComponent.getPosition().x
-                + Constants.Visual.VIEWPORT_WIDTH * 0.4f,
+                + SpaceTravels3.gameViewport.getWorldWidth() * 0.4f,
             shipPhysicsComponent.getPosition().y,
-            texture,
+            this.planetTexture,
             false);
         GameEntityManager.addGameEntity(this.planet);
         GameEntityManager.update();
@@ -308,7 +316,7 @@ public class TutorialScreen extends Screen
 
         final int numberOfOrbits = 3;
         String text = retry
-            ? "You crashed in the planet, try again!\r\n"
+            ? "You crashed on the planet, try again!\r\n"
             : "Planets attracts you with their gravity.\r\n"
                 + "This planet is not your destination and you will lose if you land on it.\r\n";
         text += "Try to make " + numberOfOrbits + " orbits around it!";
@@ -321,7 +329,7 @@ public class TutorialScreen extends Screen
             public void clicked(InputEvent event, float x, float y)
             {
                 TutorialScreen.this.dialog.hide();
-                TutorialScreen.this.stage.addAction(new OrbitAction(
+                TutorialScreen.this.orbitAction = new OrbitAction(
                     shipPhysicsComponent,
                     TutorialScreen.this.planet.physicsComponent,
                     numberOfOrbits)
@@ -329,9 +337,13 @@ public class TutorialScreen extends Screen
                     @Override
                     protected void onTriggered()
                     {
-                        end();
+                        TutorialScreen.this.stage.getRoot()
+                            .removeAction(TutorialScreen.this.orbitAction);
+                        GameEntityManager.removeGameEntity(TutorialScreen.this.planet);
+                        destinationPlanet(false);
                     }
-                });
+                };
+                TutorialScreen.this.stage.addAction(TutorialScreen.this.orbitAction);
                 TutorialScreen.this.level.endTutorial();
             }
         };
@@ -339,13 +351,47 @@ public class TutorialScreen extends Screen
         this.dialog.show(this.stage);
     }
 
-    private void end()
+    private void destinationPlanet(boolean retry)
     {
         this.level.startTutorial();
 
-        this.dialogHeader.setText("Done");
+        final PhysicsComponent shipPhysicsComponent = this.level.getShip().physicsComponent;
+        shipPhysicsComponent.getVelocity().setZero();
 
-        this.dialogMessage.setText("Good job! You have completed the tutorial!");
+        if (this.destinationPlanetTexture == null)
+        {
+            LevelPack firstLevelPack = LevelManager.getLevelPacks()
+                .get(0);
+            SerialisableLevel firstSerialisableLevel = firstLevelPack
+                .getSerialisableLevels()
+                .get(0);
+            this.destinationPlanetTexture =
+                new Texture(firstSerialisableLevel.serialisedDestinationPlanet.texturePath);
+        }
+
+        this.destinationPlanet = new Planet(
+            3000f,
+            5f,
+            shipPhysicsComponent.getPosition().x
+                + SpaceTravels3.gameViewport.getWorldWidth() * 0.4f,
+            shipPhysicsComponent.getPosition().y,
+            this.destinationPlanetTexture,
+            true);
+        GameEntityManager.addGameEntity(this.destinationPlanet);
+        GameEntityManager.update();
+
+        PhysicsEngine.recacheCollisions(shipPhysicsComponent);
+        this.level.calculateBounds();
+        this.level.setDestinationPlanet(this.destinationPlanet);
+
+        this.dialogHeader.setText("Destination planet");
+
+        String text = retry
+            ? "You were too fast, try again!\r\n"
+            + "Remember that the force of gravity increases the closest you get to a planet."
+            : "This planet is your destination,\r\n"
+                + "Try to land on it, an indicator on the planet will show you if you are going too fast!";
+        this.dialogMessage.setText(text);
 
         this.dialogButton.removeListener(this.nextTextButtonListener);
         this.nextTextButtonListener = new ClickListener()
@@ -353,13 +399,11 @@ public class TutorialScreen extends Screen
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                ScreenManager.removeScreen(TutorialScreen.this);
-                ScreenManager.removeScreen(TutorialScreen.this.gameScreen);
+                TutorialScreen.this.dialog.hide();
+                TutorialScreen.this.level.endTutorial();
             }
         };
         this.dialogButton.addListener(this.nextTextButtonListener);
-
-        this.dialogButton.setText("Exit");
         this.dialog.show(this.stage);
     }
 
@@ -412,6 +456,17 @@ public class TutorialScreen extends Screen
         {
             SettingsManager.getSettings().setInputType(this.originalInputType);
         }
+
+        if (this.planetTexture != null)
+        {
+            this.planetTexture.dispose();
+        }
+
+        if (this.destinationPlanetTexture != null)
+        {
+            this.destinationPlanetTexture.dispose();
+        }
+
         this.stage.dispose();
         Constants.General.EVENT_BUS.unregister(this);
     }
@@ -419,7 +474,48 @@ public class TutorialScreen extends Screen
     @Subscribe
     public void shipPlanetCollision(ShipPlanetCollisionEvent shipPlanetCollisionEvent)
     {
-        GameEntityManager.removeGameEntity(this.planet);
-        planet(true);
+        if (shipPlanetCollisionEvent.planet.equals(this.level.getDestinationPlanet()))
+        {
+            if (shipPlanetCollisionEvent.ship.physicsComponent.getVelocity().len()
+                <= this.level.getMaxLandingSpeed())
+            {
+                end();
+            }
+            else
+            {
+                GameEntityManager.removeGameEntity(this.destinationPlanet);
+                destinationPlanet(true);
+            }
+        }
+        else
+        {
+            this.stage.getRoot().removeAction(this.orbitAction);
+            GameEntityManager.removeGameEntity(this.planet);
+            planet(true);
+        }
+    }
+
+    private void end()
+    {
+        this.level.startTutorial();
+
+        this.dialogHeader.setText("Done");
+
+        this.dialogMessage.setText("Good job! You have completed the tutorial!");
+
+        this.dialogButton.removeListener(this.nextTextButtonListener);
+        this.nextTextButtonListener = new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                ScreenManager.removeScreen(TutorialScreen.this);
+                ScreenManager.removeScreen(TutorialScreen.this.gameScreen);
+            }
+        };
+        this.dialogButton.addListener(this.nextTextButtonListener);
+
+        this.dialogButton.setText("Exit");
+        this.dialog.show(this.stage);
     }
 }

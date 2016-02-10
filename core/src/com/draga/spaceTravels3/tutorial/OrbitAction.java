@@ -23,7 +23,7 @@ public abstract class OrbitAction extends TutorialAction
         this.lastAngle = getAngle();
     }
 
-    public float getAngle()
+    private float getAngle()
     {
         try (PooledVector2 distance = PooledVector2.newVector2(this.staticPhysicsComponent.getPosition()))
         {
