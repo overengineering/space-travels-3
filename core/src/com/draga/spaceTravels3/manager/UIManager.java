@@ -271,7 +271,8 @@ public abstract class UIManager
         Window.WindowStyle windowStyle = new Window.WindowStyle();
         windowStyle.titleFont = skin.getFont("large");
         windowStyle.titleFontColor = Color.WHITE;
-        windowStyle.stageBackground = getTiledDrawable(Constants.Visual.SCREEN_FADE_COLOUR);
+        windowStyle.stageBackground = getTiledDrawable(Constants.Visual.LIGHT_DARK);
+        windowStyle.background = getTiledDrawable(Constants.Visual.DEEP_DARK);
 
         return windowStyle;
     }
@@ -297,16 +298,6 @@ public abstract class UIManager
         TiledDrawable tiledDrawable = skin.get(name, TiledDrawable.class);
 
         return new TiledDrawable(tiledDrawable);
-    }
-
-    private static Window.WindowStyle getWindowStyle(Skin skin)
-    {
-        Window.WindowStyle windowStyle = new Window.WindowStyle();
-        windowStyle.titleFont = skin.getFont("large");
-        windowStyle.titleFontColor = Color.WHITE;
-        windowStyle.background = getTiledDrawable(Constants.Visual.SCREEN_FADE_COLOUR);
-
-        return windowStyle;
     }
 
     public static ProgressBar getDelimitedProgressBar(float max, float width)

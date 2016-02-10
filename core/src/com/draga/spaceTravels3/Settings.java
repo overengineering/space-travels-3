@@ -7,6 +7,7 @@ public class Settings
 {
     public  float     volumeFX             = 1f;
     public  boolean   disableFaceUpWarning = false;
+    public  boolean   tutorialPlayed       = false;
     private InputType inputType            = InputType.ACCELEROMETER;
     private float     volumeMusic          = 1f;
 

@@ -242,7 +242,7 @@ public class TutorialScreen extends Screen
 
         final Pickup pickup = new Pickup(
             shipPhysicsComponent.getPosition().x
-                + Constants.Visual.VIEWPORT_WIDTH * 0.4f,
+                + SpaceTravels3.gameViewport.getWorldWidth() * 0.4f,
             shipPhysicsComponent.getPosition().y,
             AssMan.getGameAssMan().get(AssMan.getAssList().pickupTexture, Texture.class));
         GameEntityManager.addGameEntity(pickup);
@@ -420,6 +420,7 @@ public class TutorialScreen extends Screen
             || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
         {
             ScreenManager.removeScreen(this);
+            ScreenManager.removeScreen(this.gameScreen);
         }
 
         this.stage.getViewport().apply();
@@ -517,5 +518,7 @@ public class TutorialScreen extends Screen
 
         this.dialogButton.setText("Exit");
         this.dialog.show(this.stage);
+
+        SettingsManager.getSettings().tutorialPlayed = true;
     }
 }

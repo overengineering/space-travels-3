@@ -42,7 +42,8 @@ public abstract class Constants
 
         // Screen.
         public static final float SCREEN_FADE_DURATION = 1f;
-        public static final Color SCREEN_FADE_COLOUR   = new Color(0, 0, 0, 0.7f);
+        public static final Color LIGHT_DARK           = new Color(0, 0, 0, 0.7f);
+        public static final Color DEEP_DARK            = new Color(0, 0, 0, 0.8f);
         public static final Color FADE_TINT_COLOUR     = new Color(0.3f, 0.3f, 0.3f, 1f);
 
         // Delimited progress bar.

@@ -17,6 +17,7 @@ import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
+import com.draga.spaceTravels3.manager.level.LevelManager;
 import com.draga.spaceTravels3.manager.level.LevelPack;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableDifficulty;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
@@ -177,12 +178,14 @@ public class LevelScreen extends Screen
                     if (LevelScreen.this.levelPack.isFree()
                         || SpaceTravels3.services.hasPurchasedSku(LevelScreen.this.levelPack.getGoogleSku()))
                     {
-                        LoadingScreen loadingScreen = new LoadingScreen(
-                            serialisableLevel,
-                            difficulty,
-                            false);
-                        ScreenManager.addScreen(loadingScreen);
-                        super.clicked(event, x, y);
+                        if (!SettingsManager.getSettings().tutorialPlayed)
+                        {
+                            offerTutorial(serialisableLevel, difficulty);
+                        }
+                        else
+                        {
+                            launchLevel(serialisableLevel, difficulty);
+                        }
                     }
                     else
                     {
@@ -215,6 +218,81 @@ public class LevelScreen extends Screen
         {
             return "";
         }
+    }
+
+    public void offerTutorial(final SerialisableLevel serialisableLevel, final String difficulty)
+    {
+        final Dialog dialog = new Dialog("", UIManager.skin);
+
+        Table table = UIManager.getDefaultTable();
+
+        dialog.add(table);
+
+        table
+            .add("Tutorial", "large")
+            .center()
+            .row();
+
+        table
+            .add("Space Travels 3 can be very challenging,\r\n"
+                + "would you like to play a tutorial?")
+            .center()
+            .row();
+
+        Table buttonsTable = UIManager.getDefaultTable();
+
+        BeepingImageTextButton tutorialButton =
+            new BeepingImageTextButton("Tutorial", UIManager.skin, "tutorial");
+
+        tutorialButton.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                SerialisableLevel tutorialSerialisableLevel =
+                    LevelManager.getTutorialSerialisableLevel();
+                ScreenManager.addScreen(new LoadingScreen(
+                    tutorialSerialisableLevel,
+                    "Tutorial",
+                    true));
+                dialog.hide();
+            }
+        });
+
+        buttonsTable
+            .add(tutorialButton)
+            .left();
+
+        BeepingImageTextButton dismissButton =
+            new BeepingImageTextButton("Dismiss", UIManager.skin, "play");
+
+        dismissButton.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                launchLevel(serialisableLevel, difficulty);
+                SettingsManager.getSettings().tutorialPlayed = true;
+                dialog.hide();
+            }
+        });
+
+        buttonsTable
+            .add(dismissButton)
+            .right();
+
+        table.add(buttonsTable);
+
+        dialog.show(this.stage);
+    }
+
+    private void launchLevel(SerialisableLevel serialisableLevel, String difficulty)
+    {
+        LoadingScreen loadingScreen = new LoadingScreen(
+            serialisableLevel,
+            difficulty,
+            false);
+        ScreenManager.addScreen(loadingScreen);
     }
 
     @Override
