@@ -19,6 +19,8 @@ import com.draga.spaceTravels3.level.Level;
 import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
+import com.draga.spaceTravels3.manager.level.LevelManager;
+import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.spaceTravels3.ui.BeepingImageTextButton;
 import com.draga.spaceTravels3.ui.Screen;
 
@@ -60,11 +62,17 @@ public abstract class IngameMenuScreen extends Screen
         this.centreCell = table.add();
         table.row();
 
-        // Retry button.
+        SerialisableLevel nextSerialisableLevel =
+            LevelManager.getNextSerialisableLevel(this.level.getId());
+        if (nextSerialisableLevel != null)
+        {
+            table.add(getNextButton(nextSerialisableLevel));
+            table.row();
+        }
+
         table.add(getRetryButton());
         table.row();
 
-        // Main menu button.
         table.add(getMainMenuTextButton());
         table.row();
 
@@ -97,6 +105,26 @@ public abstract class IngameMenuScreen extends Screen
         return table;
     }
 
+    private Actor getNextButton(final SerialisableLevel nextSerialisableLevel)
+    {
+        BeepingImageTextButton button =
+            new BeepingImageTextButton("Next level", UIManager.skin, "next");
+
+        button.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    play(
+                        nextSerialisableLevel.id,
+                        nextSerialisableLevel.serialisedDifficulties.keySet().iterator().next());
+                }
+            });
+
+        return button;
+    }
+
     public Actor getRetryButton()
     {
         BeepingImageTextButton button =
@@ -108,7 +136,9 @@ public abstract class IngameMenuScreen extends Screen
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    Retry();
+                    play(
+                        IngameMenuScreen.this.level.getId(),
+                        IngameMenuScreen.this.level.getDifficulty());
                 }
             });
 
@@ -132,13 +162,13 @@ public abstract class IngameMenuScreen extends Screen
         return button;
     }
 
-    private void Retry()
+    private void play(String levelId, String difficulty)
     {
         ScreenManager.removeScreen(this);
         ScreenManager.removeScreen(this.gameScreen);
         ScreenManager.addScreen(new LoadingScreen(
-            this.level.getId(),
-            this.level.getDifficulty(),
+            levelId,
+            difficulty,
             false));
     }
 
@@ -161,7 +191,7 @@ public abstract class IngameMenuScreen extends Screen
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER))
         {
-            Retry();
+            play(this.level.getId(), this.level.getDifficulty());
             return;
         }
 

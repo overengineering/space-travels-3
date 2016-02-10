@@ -17,6 +17,7 @@ import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.*;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public abstract class LevelManager
 {
@@ -127,6 +128,30 @@ public abstract class LevelManager
                 if (serialisableLevel.id.equals(levelId))
                 {
                     return serialisableLevel;
+                }
+            }
+        }
+
+        ErrorHandlerProvider.handle(
+            LOGGING_TAG,
+            "Could not find a level with name \"" + levelId + "\"");
+
+        return null;
+    }
+
+    public static SerialisableLevel getNextSerialisableLevel(String levelId)
+    {
+        for (LevelPack levelPack : levelPacks)
+        {
+            for (Iterator<SerialisableLevel> iterator =
+                 levelPack.getSerialisableLevels().iterator(); iterator.hasNext(); )
+            {
+                SerialisableLevel serialisableLevel = iterator.next();
+                if (serialisableLevel.id.equals(levelId))
+                {
+                    return iterator.hasNext()
+                        ? iterator.next()
+                        : null;
                 }
             }
         }

@@ -36,6 +36,7 @@ public class AssList
     public String iconGuide;
     public String iconTutorial;
     public String iconExit;
+    public String iconNext;
     public String iconShare;
     public String iconRetry;
     public String iconTouch;
