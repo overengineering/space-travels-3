@@ -23,16 +23,17 @@ public class AssList
 
     public ArrayList<String> musics;
 
-    public String tutorialMinimapTexture;
-    public String tutorialBelowLandingSpeedTexture;
-    public String tutorialAboveLandingSpeedTexture;
-    public String tutorialPickupTexture;
+    public String guideMinimapTexture;
+    public String guideBelowLandingSpeedTexture;
+    public String guideAboveLandingSpeedTexture;
+    public String guidePickupTexture;
 
     public String iconSettings;
     public String iconLeaderboard;
     public String iconAchievement;
     public String iconCredits;
     public String iconRate;
+    public String iconGuide;
     public String iconTutorial;
     public String iconExit;
     public String iconShare;

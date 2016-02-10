@@ -42,7 +42,8 @@ public abstract class Constants
 
         // Screen.
         public static final float SCREEN_FADE_DURATION = 1f;
-        public static final Color SCREEN_FADE_COLOUR   = new Color(0, 0, 0, 0.7f);
+        public static final Color LIGHT_DARK           = new Color(0, 0, 0, 0.7f);
+        public static final Color DEEP_DARK            = new Color(0, 0, 0, 0.8f);
         public static final Color FADE_TINT_COLOUR     = new Color(0.3f, 0.3f, 0.3f, 1f);
 
         // Delimited progress bar.
@@ -176,14 +177,14 @@ public abstract class Constants
         public static final float ACCELEROMETER_RANGE   = 0.5f;
         public static final float DEAD_ZONE             = 0.15f;
 
-        public static final float PICKUP_RADIUS       =
+        public static final float  PICKUP_RADIUS                  =
             (Visual.PICKUP_WIDTH + Visual.PICKUP_HEIGHT) / 2f * 1.3f;
-        public static final float LEVEL_BOUNDS_BUFFER = 10;
+        public static final float  LEVEL_BOUNDS_BUFFER            = 10;
         public static final String LEVEL_ASSET_FILENAME           = Level.class.getSimpleName();
         public static final String COLLISION_CACHE_ASSET_FILENAME =
             CollisionCache.class.getSimpleName();
-        public static float SHIP_ACCELERATION_PER_SECOND = 40f;
-        public static int PHYSICS_STEPS = 10;
+        public static       float  SHIP_ACCELERATION_PER_SECOND   = 40f;
+        public static       int    PHYSICS_STEPS                  = 10;
     }
 
 

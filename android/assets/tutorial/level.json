@@ -1,0 +1,21 @@
+{
+  "class": "SerialisableLevel",
+  "name": "Tutorial",
+  "serialisedDifficulties": {
+    "Tutorial": {
+      "trajectorySeconds": 5,
+      "maxLandingSpeed": 20,
+      "fuel": 0,
+      "infiniteFuel": true
+    }
+  },
+  "serialisedShip": {
+    "x": 5,
+    "y": 15,
+    "mass": 1
+  },
+  "serialisedPlanets": [
+  ],
+  "serialisedPickups": [
+  ]
+}

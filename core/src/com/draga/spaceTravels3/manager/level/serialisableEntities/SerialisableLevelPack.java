@@ -6,6 +6,6 @@ public class SerialisableLevelPack
 {
     public String            name;
     public ArrayList<String> serialisableLevelPaths;
-    public boolean free;
-    public String googleSku;
+    public boolean           free;
+    public String            googleSku;
 }

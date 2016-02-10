@@ -45,6 +45,11 @@ public class SpaceTravels3 implements ApplicationListener
         SpaceTravels3.services = new NullServices();
     }
 
+    public static PerformanceCounter getPerformanceCounter()
+    {
+        return PERFORMANCE_COUNTER;
+    }
+
     @Override
     public void create()
     {
@@ -106,11 +111,6 @@ public class SpaceTravels3 implements ApplicationListener
         {
             this.debugOverlay.resize(width, height);
         }
-    }
-
-    public static PerformanceCounter getPerformanceCounter()
-    {
-        return PERFORMANCE_COUNTER;
     }
 
     @Override

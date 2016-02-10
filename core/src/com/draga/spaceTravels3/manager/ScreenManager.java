@@ -116,6 +116,7 @@ public abstract class ScreenManager
             }
 
             screens.add(screenToAdd);
+            screenToAdd.onAdded();
         }
     }
 

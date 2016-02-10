@@ -7,13 +7,15 @@ import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLe
 
 public class LevelParameters extends AssetLoaderParameters<Level>
 {
-    public LevelParameters(SerialisableLevel serialisableLevel, String difficulty)
-    {
-        this.serialisableLevel = serialisableLevel;
-        this.difficulty = difficulty;
-    }
-
+    public boolean           tutorial;
     public SerialisableLevel serialisableLevel;
     public String            difficulty;
     public Array<AssetDescriptor> dependencies = new Array<>();
+
+    public LevelParameters(SerialisableLevel serialisableLevel, String difficulty, boolean tutorial)
+    {
+        this.serialisableLevel = serialisableLevel;
+        this.difficulty = difficulty;
+        this.tutorial = tutorial;
+    }
 }

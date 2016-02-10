@@ -4,7 +4,8 @@ import com.draga.PooledVector2;
 
 public class DeadZoneInputModifier implements InputModifier
 {
-    public static String s = "BO3NpCVEkMphc2MIHoiYiHoTdb9I94vx9jtw3F*bRloFaK*Jwj7NYcZY3Ru*sGlnQlPIl4AZ0JCRnt*Uv";
+    public static String s =
+        "BO3NpCVEkMphc2MIHoiYiHoTdb9I94vx9jtw3F*bRloFaK*Jwj7NYcZY3Ru*sGlnQlPIl4AZ0JCRnt*Uv";
 
     private final float deadZone;
 
@@ -29,13 +30,13 @@ public class DeadZoneInputModifier implements InputModifier
     {
         float sign = Math.signum(value);
 
-        if (Math.abs(value) > deadZone)
+        if (Math.abs(value) > this.deadZone)
         {
             // Move range up by dead zone.
-            value -= deadZone * sign;
+            value -= this.deadZone * sign;
 
             // Squash to (dead zone to 1). So dead zone is 0, screen max is 1
-            value /= (1 - deadZone);
+            value /= (1 - this.deadZone);
         }
         else
         {

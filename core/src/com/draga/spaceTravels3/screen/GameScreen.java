@@ -31,7 +31,7 @@ public class GameScreen extends Screen
 
     private final PhysicsComponentBackgroundPositionController shipBackgroundPositionController;
 
-    private Hud hud;
+    private HudScreen hudScreen;
 
     private Level level;
 
@@ -57,7 +57,7 @@ public class GameScreen extends Screen
 
         Constants.General.EVENT_BUS.register(this);
 
-        this.hud = new Hud(this.level);
+        this.hudScreen = new HudScreen(this.level, this);
 
         // Run a frame to do things like generate a Projection.
         update(0);
@@ -75,7 +75,7 @@ public class GameScreen extends Screen
         }
 
         updateShipProjection();
-        this.hud.getMiniMap().setShipProjection(this.shipProjection);
+        this.hudScreen.getMiniMap().setShipProjection(this.shipProjection);
     }
 
     private void updateShipProjection()
@@ -100,6 +100,17 @@ public class GameScreen extends Screen
         else
         {
             this.shipProjection = null;
+        }
+    }
+
+    @Override
+    public void onAdded()
+    {
+        ScreenManager.addScreen(this.hudScreen);
+
+        if (this.level.isTutorial())
+        {
+            ScreenManager.addScreen(new TutorialScreen(this.level, this));
         }
     }
 
@@ -137,15 +148,14 @@ public class GameScreen extends Screen
             checkDebugKeys();
         }
 
-        if (this.level.getGameState() != GameState.PAUSE
-            && this.level.getGameState() != GameState.COUNTDOWN)
+        if (this.level.getGameState() == GameState.PLAY
+            || this.level.getGameState() == GameState.WIN
+            || this.level.getGameState() == GameState.LOSE)
         {
             update(deltaTime);
         }
 
         draw();
-
-        this.hud.render(deltaTime);
     }
 
     private void checkDebugKeys()
@@ -245,7 +255,7 @@ public class GameScreen extends Screen
         BackgroundPositionManager.setBackgroundPositionController(new RandomBackgroundPositionController());
         GameEntityManager.dispose();
         Constants.General.EVENT_BUS.unregister(this);
-        this.hud.dispose();
+        ScreenManager.removeScreen(this.hudScreen);
 
         this.level.dispose();
 

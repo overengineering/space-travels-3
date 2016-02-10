@@ -24,7 +24,8 @@ import com.draga.spaceTravels3.ui.Screen;
 
 public abstract class IngameMenuScreen extends Screen
 {
-    public static String s = "gTAKsCqx0NeZVO9igYzMNjolg61Y6KLwLQaulfOZzuI2WLhPNr*mAmEy3T%VP08ZzWILHaHhKDHXeGP";
+    public static String s =
+        "gTAKsCqx0NeZVO9igYzMNjolg61Y6KLwLQaulfOZzuI2WLhPNr*mAmEy3T%VP08ZzWILHaHhKDHXeGP";
 
     protected final Level  level;
     protected final Cell   centreCell;
@@ -40,7 +41,7 @@ public abstract class IngameMenuScreen extends Screen
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
-        table.setBackground(UIManager.getTiledDrawable(Constants.Visual.SCREEN_FADE_COLOUR));
+        table.setBackground(UIManager.getTiledDrawable(Constants.Visual.LIGHT_DARK));
         table.addAction(Actions.sequence(
             Actions.fadeOut(0),
             Actions.fadeIn(Constants.Visual.SCREEN_FADE_DURATION, Interpolation.pow2In)));
@@ -83,8 +84,9 @@ public abstract class IngameMenuScreen extends Screen
         Label label = new Label(this.level.getName() + " ", UIManager.skin, "large", Color.WHITE);
         table.add(label);
 
-        Image headerImage =
-            new Image(this.level.getDestinationPlanet().graphicComponent.getTexture());
+        Image headerImage = this.level.getDestinationPlanet() != null
+            ? new Image(this.level.getDestinationPlanet().graphicComponent.getTexture())
+            : new Image();
 
         table
             .add(headerImage)
@@ -134,7 +136,10 @@ public abstract class IngameMenuScreen extends Screen
     {
         ScreenManager.removeScreen(this);
         ScreenManager.removeScreen(this.gameScreen);
-        ScreenManager.addScreen(new LoadingScreen(this.level.getId(), this.level.getDifficulty()));
+        ScreenManager.addScreen(new LoadingScreen(
+            this.level.getId(),
+            this.level.getDifficulty(),
+            false));
     }
 
     @Override

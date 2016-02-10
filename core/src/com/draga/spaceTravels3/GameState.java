@@ -6,5 +6,5 @@ public enum GameState
     PLAY,
     PAUSE,
     LOSE,
-    WIN
+    TUTORIAL, WIN
 }

@@ -2,310 +2,409 @@ package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.spaceTravels3.Constants;
+import com.draga.spaceTravels3.InputType;
 import com.draga.spaceTravels3.SpaceTravels3;
+import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
+import com.draga.spaceTravels3.event.ShipPlanetCollisionEvent;
+import com.draga.spaceTravels3.gameEntity.Pickup;
+import com.draga.spaceTravels3.gameEntity.Planet;
+import com.draga.spaceTravels3.level.Level;
+import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
+import com.draga.spaceTravels3.manager.level.LevelManager;
+import com.draga.spaceTravels3.manager.level.LevelPack;
+import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
+import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisablePlanet;
+import com.draga.spaceTravels3.physic.PhysicsEngine;
+import com.draga.spaceTravels3.tutorial.OrbitAction;
+import com.draga.spaceTravels3.tutorial.PhysicsComponentMovementAction;
+import com.draga.spaceTravels3.tutorial.PhysicsComponentVelocityAction;
+import com.draga.spaceTravels3.tutorial.PickupCollectedAction;
+import com.draga.spaceTravels3.ui.BeepingTextButton;
 import com.draga.spaceTravels3.ui.Screen;
-
-import java.util.HashMap;
+import com.google.common.eventbus.Subscribe;
 
 public class TutorialScreen extends Screen
 {
-    private final float                  labelsWidth;
-    private final float                  imageSize;
-    private final AssetManager           assMan;
-    private       Stage                  stage;
-    private       HashMap<String, Image> asyncImages;
+    private final Level             level;
+    private final GameScreen        gameScreen;
+    private final Dialog            dialog;
+    private final Label             dialogHeader;
+    private final Label             dialogMessage;
+    private final BeepingTextButton dialogButton;
+    private final float             labelsWidth;
+    private       Stage             stage;
+    private       InputType         originalInputType;
+    private       ClickListener     nextTextButtonListener;
+    private       Planet            planet;
+    private       Texture           planetTexture;
+    private       OrbitAction       orbitAction;
+    private       Texture           destinationPlanetTexture;
+    private       Planet            destinationPlanet;
 
-    public TutorialScreen()
+    public TutorialScreen(Level level, GameScreen gameScreen)
     {
-        super(true, true);
+        super(false, false);
+        this.level = level;
+        this.gameScreen = gameScreen;
 
         this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
-
         this.labelsWidth = this.stage.getWidth() * 0.8f;
-        this.imageSize = this.stage.getWidth() * 0.1f;
 
-        this.assMan = new AssetManager();
-        this.asyncImages = new HashMap<>();
 
-        Table table = UIManager.addDefaultTableToStage(this.stage);
+        this.dialog = new Dialog("", UIManager.skin);
 
-        // Header label.
-        table.add("Tutorial", "large", Color.WHITE);
-        table.row();
+        Table table = UIManager.getDefaultTable();
+        this.dialog.add(table);
 
-        // Tutorial slides.
+        this.dialogHeader = new Label("", UIManager.skin, "large", Color.WHITE);
         table
-            .add(getTutorial())
-            .expand()
+            .add(this.dialogHeader)
             .center();
         table.row();
 
-        // Back button.
-        table.row();
-        table.add(getBackButton());
-
-        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
-    }
-
-    private Actor getTutorial()
-    {
-        Table table = UIManager.getDefaultTable();
-
-        table.add(getMovementTutorial());
-        table.row();
-        table.add(getGoalTutorial());
-        table.row();
-        table.add(getElementsTutorial());
-
-        ScrollPane scrollPane = new ScrollPane(table, UIManager.skin);
-        scrollPane.setFadeScrollBars(false);
-        scrollPane.setScrollingDisabled(true, false);
-
-        return scrollPane;
-    }
-
-    private Actor getMovementTutorial()
-    {
-        Table table = new Table(UIManager.skin);
-
-        table.add("Movement", "large", Color.WHITE);
-        table.row();
-
-        String movementText =
-            "There are 2 ways of moving your spaceship, these can be changed in the settings.\r\n"
-                + "Using the accelerometer you should keep your device facing up and tilt it "
-                + "slightly where you want to go.\r\n"
-                + "When using the touch screen 2 dashed circles will appear on the screen, touch "
-                + "within them to move the spaceship in that direction. The further away you touch from "
-                + "the Spaceship the greater the thrust produced (and fuel consumed).\r\n"
-                + "Being in space, nothing but the planets' gravity will slow you down! Use the "
-                + "inertia of the spaceship and the gravity of the planets in your favor.";
-
-        Label movementLabel = new Label(movementText, UIManager.skin);
+        this.dialogMessage = new Label("", UIManager.skin);
         table
-            .add(movementLabel)
+            .add(this.dialogMessage)
+            .center()
             .width(this.labelsWidth);
-        movementLabel.setWrap(true);
+        this.dialogMessage.setWrap(true);
+        table.row();
 
-        return table;
+        // TODO: next button skin
+        this.dialogButton = new BeepingTextButton("Next", UIManager.skin);
+        table
+            .add(this.dialogButton)
+            .right();
+
+        Constants.General.EVENT_BUS.register(this);
+
+        moveTilt();
     }
 
-    private Actor getGoalTutorial()
+    private void moveTilt()
     {
-        Table table = new Table(UIManager.skin);
+        this.level.startTutorial();
+        this.originalInputType = SettingsManager.getSettings().getInputType();
 
-        table.add("Goal", "large", Color.WHITE);
-        table.row();
+        SettingsManager.getSettings().setInputType(InputType.ACCELEROMETER);
 
-        String goalText =
-            "The goal is to land safely on the destination planet. This will be shown in blue in "
-                + "the minimap and will have an overlay to indicate how fast are you going. The "
-                + "trajectory line colliding with it will appear blue.";
-        Label goalLabel = new Label(goalText, UIManager.skin);
-        goalLabel.setWrap(true);
-        table
-            .add(goalLabel)
-            .width(this.labelsWidth);
+        this.dialogHeader.setText("Movement");
 
-        return table;
+        this.dialogMessage.setText(
+            "There are 2 ways of moving the spaceship.\r\n"
+                + "Try using the tilt: place the "
+                + "device facing up and tilt it slightly where you want to go.\r\n"
+                + "The more you tilt the faster the ship will accelerate (and consume fuel).\r\n"
+                + "Try to move away using the accelerometer.");
+
+        this.nextTextButtonListener = new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                TutorialScreen.this.dialog.hide();
+                TutorialScreen.this.stage.addAction(new PhysicsComponentMovementAction(
+                    TutorialScreen.this.level.getShip().physicsComponent,
+                    50f)
+                {
+                    @Override
+                    protected void onTriggered()
+                    {
+                        stopTilt();
+                    }
+                });
+                TutorialScreen.this.level.endTutorial();
+            }
+        };
+        this.dialogButton.addListener(this.nextTextButtonListener);
+
+        this.dialog.show(this.stage);
     }
 
-    private Actor getElementsTutorial()
+    private void stopTilt()
     {
-        Table table = new Table();
-
-        table.add(new Label("Elements", UIManager.skin, "large", Color.WHITE));
-        table.row();
-
-        table.add(getShipTutorial());
-        table.row();
-
-        table.add(getTrajectoryLineTutorial());
-        table.row();
-
-        table.add(getLandingSpeedIndicatorTutorial());
-        table.row();
-
-        table.add(getPickupTutorial());
-        table.row();
-
-        table.add(getFuelTutorial());
-        table.row();
-
-        table.add(getMinimapTutorial());
-
-        return table;
+        this.level.startTutorial();
+        this.dialogMessage.setText("Now try to slow down the ship!");
+        this.dialogButton.removeListener(this.nextTextButtonListener);
+        this.nextTextButtonListener = new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                TutorialScreen.this.dialog.hide();
+                TutorialScreen.this.stage.addAction(new PhysicsComponentVelocityAction(
+                    TutorialScreen.this.level.getShip().physicsComponent,
+                    1f,
+                    false)
+                {
+                    @Override
+                    protected void onTriggered()
+                    {
+                        moveTouch();
+                    }
+                });
+                TutorialScreen.this.level.endTutorial();
+            }
+        };
+        this.dialogButton.addListener(this.nextTextButtonListener);
+        this.dialog.show(this.stage);
     }
 
-    private Table getShipTutorial()
+    private void moveTouch()
     {
-        Table table = UIManager.getDefaultTable();
+        this.level.startTutorial();
+        SettingsManager.getSettings().setInputType(InputType.TOUCH);
 
-        table.add("Your ship");
-        table.row();
-
-        Image shipImage = loadTextureAsync(AssMan.getAssList().shipTexture, this.assMan);
-        table
-            .add(shipImage)
-            .size(this.imageSize);
-
-        return table;
+        this.dialogMessage.setText("Try using the touch screen: 2 dashed circles will appear "
+            + "at the center of the screen. touch between them to make the ship accelerate in "
+            + "that direction.\r\n"
+            + "The further away you touch from the ship the the faster the ship will accelerate "
+            + "(and consume fuel).\r\n"
+            + "Move away using the touch screen.");
+        this.dialogButton.removeListener(this.nextTextButtonListener);
+        this.nextTextButtonListener = new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                TutorialScreen.this.dialog.hide();
+                TutorialScreen.this.stage.addAction(new PhysicsComponentMovementAction(
+                    TutorialScreen.this.level.getShip().physicsComponent,
+                    50f)
+                {
+                    @Override
+                    protected void onTriggered()
+                    {
+                        stopTouch();
+                    }
+                });
+                TutorialScreen.this.level.endTutorial();
+            }
+        };
+        this.dialogButton.addListener(this.nextTextButtonListener);
+        this.dialog.show(this.stage);
     }
 
-    private Table getTrajectoryLineTutorial()
+    private void stopTouch()
     {
-        Table table = UIManager.getDefaultTable();
-        table.add("Trajectory line");
-        table.row();
-
-        String trajectoryLineText =
-            "Shows where the ship is heading accounting for the planets gravity. Changes color "
-                + "depending on what it's going to collide with:";
-        Label trajectoryLineLabel = new Label(trajectoryLineText, UIManager.skin);
-        table
-            .add(trajectoryLineLabel)
-            .width(this.labelsWidth);
-        trajectoryLineLabel.setWrap(true);
-        table.row();
-
-        table.add("No collisions", "default", Constants.Visual.HUD.TrajectoryLine.COLOR_NEUTRAL);
-        table.row();
-        table.add(
-            "Destination planet",
-            "default",
-            Constants.Visual.HUD.TrajectoryLine.COLOR_PLANET_DESTINATION);
-        table.row();
-        table.add("Wrong planet", "default", Constants.Visual.HUD.TrajectoryLine.COLOR_PLANET_LOSE);
-        table.row();
-        table.add("Pickup", "default", Constants.Visual.HUD.TrajectoryLine.COLOR_PICKUP);
-
-        return table;
+        this.level.startTutorial();
+        this.dialogMessage.setText("Now try to slow down the ship!");
+        this.dialogButton.removeListener(this.nextTextButtonListener);
+        this.nextTextButtonListener = new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                TutorialScreen.this.dialog.hide();
+                TutorialScreen.this.stage.addAction(new PhysicsComponentVelocityAction(
+                    TutorialScreen.this.level.getShip().physicsComponent,
+                    1f,
+                    false)
+                {
+                    @Override
+                    protected void onTriggered()
+                    {
+                        if (TutorialScreen.this.originalInputType != null)
+                        {
+                            SettingsManager.getSettings()
+                                .setInputType(TutorialScreen.this.originalInputType);
+                            TutorialScreen.this.originalInputType = null;
+                        }
+                        pickup();
+                    }
+                });
+                TutorialScreen.this.level.endTutorial();
+            }
+        };
+        this.dialogButton.addListener(this.nextTextButtonListener);
+        this.dialog.show(this.stage);
     }
 
-    private Table getLandingSpeedIndicatorTutorial()
+    private void pickup()
     {
-        Table table = UIManager.getDefaultTable();
-        table.add("Landing speed indicator");
-        table.row();
+        this.level.startTutorial();
 
-        Image aboveLandingSpeedImage =
-            loadTextureAsync(AssMan.getAssList().tutorialAboveLandingSpeedTexture, this.assMan);
-        Image belowLandingSpeedImage =
-            loadTextureAsync(AssMan.getAssList().tutorialBelowLandingSpeedTexture, this.assMan);
+        PhysicsComponent shipPhysicsComponent = this.level.getShip().physicsComponent;
+        shipPhysicsComponent.getVelocity().setZero();
 
-        Table imageTable = new Table();
-        imageTable
-            .add(belowLandingSpeedImage)
-            .size(this.imageSize);
-        imageTable
-            .add()
-            .size(this.imageSize);
-        imageTable
-            .add(aboveLandingSpeedImage)
-            .size(this.imageSize);
-        table.add(imageTable);
-        table.row();
+        final Pickup pickup = new Pickup(
+            shipPhysicsComponent.getPosition().x
+                + SpaceTravels3.gameViewport.getWorldWidth() * 0.4f,
+            shipPhysicsComponent.getPosition().y,
+            AssMan.getGameAssMan().get(AssMan.getAssList().pickupTexture, Texture.class));
+        GameEntityManager.addGameEntity(pickup);
+        GameEntityManager.update();
 
-        String landingSpeedIndicatorText =
-            "Grows from the center of the planet in color green when your ship speed is within the "
-                + "speed that you can approach the destination planet. Above that speed it starts "
-                + "shrinking and becomes red. Remember that the destination planet's gravity will "
-                + "pull your ship more the closer you are.";
-        Label landingSpeedIndicatorLabel = new Label(landingSpeedIndicatorText, UIManager.skin);
-        table
-            .add(landingSpeedIndicatorLabel)
-            .width(this.labelsWidth);
-        landingSpeedIndicatorLabel.setWrap(true);
+        PhysicsEngine.recacheCollisions(shipPhysicsComponent);
+        this.level.calculateBounds();
 
-        return table;
+        this.dialogHeader.setText("Pickup");
+
+        this.dialogMessage.setText("Provides " + Constants.Game.PICKUP_POINTS + " points.\r\n"
+            + "Collect the pickup!");
+
+        this.dialogButton.removeListener(this.nextTextButtonListener);
+        this.nextTextButtonListener = new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                TutorialScreen.this.dialog.hide();
+                TutorialScreen.this.stage.addAction(new PickupCollectedAction(pickup)
+                {
+                    @Override
+                    protected void onTriggered()
+                    {
+                        planet(false);
+                    }
+                });
+                TutorialScreen.this.level.endTutorial();
+            }
+        };
+        this.dialogButton.addListener(this.nextTextButtonListener);
+        this.dialog.show(this.stage);
     }
 
-    private Table getPickupTutorial()
+    private void planet(boolean retry)
     {
-        Table table = UIManager.getDefaultTable();
-        table.add("Pickup");
-        table.row();
+        this.level.startTutorial();
 
-        Image pickupImage =
-            loadTextureAsync(AssMan.getAssList().tutorialPickupTexture, this.assMan);
-        table
-            .add(pickupImage)
-            .size(this.imageSize);
-        table.row();
+        final PhysicsComponent shipPhysicsComponent = this.level.getShip().physicsComponent;
+        shipPhysicsComponent.getVelocity().setZero();
 
-        String pickupText = "Provides "
-            + Constants.Game.PICKUP_POINTS
-            + " points. Refer to the minimap and the hud to see how many have you collected and how"
-            + " many are in the map.";
-        Label pickupLabel = new Label(pickupText, UIManager.skin);
-        table
-            .add(pickupLabel)
-            .width(this.labelsWidth);
-        pickupLabel.setWrap(true);
+        if (this.planetTexture == null)
+        {
+            LevelPack firstLevelPack = LevelManager.getLevelPacks()
+                .get(0);
+            SerialisableLevel firstSerialisableLevel = firstLevelPack
+                .getSerialisableLevels()
+                .get(0);
+            SerialisablePlanet firstSerialisablePlanet =
+                firstSerialisableLevel.serialisedPlanets.get(0);
+            // TODO: dispose this texture
+            this.planetTexture = new Texture(firstSerialisablePlanet.texturePath);
+        }
 
-        return table;
+        this.planet = new Planet(
+            10000f,
+            5f,
+            shipPhysicsComponent.getPosition().x
+                + SpaceTravels3.gameViewport.getWorldWidth() * 0.4f,
+            shipPhysicsComponent.getPosition().y,
+            this.planetTexture,
+            false);
+        GameEntityManager.addGameEntity(this.planet);
+        GameEntityManager.update();
+
+        PhysicsEngine.recacheCollisions(shipPhysicsComponent);
+        this.level.calculateBounds();
+
+        this.dialogHeader.setText("Planet");
+
+        final int numberOfOrbits = 3;
+        String text = retry
+            ? "You crashed on the planet, try again!\r\n"
+            : "Planets attracts you with their gravity.\r\n"
+                + "This planet is not your destination and you will lose if you land on it.\r\n";
+        text += "Try to make " + numberOfOrbits + " orbits around it!";
+        this.dialogMessage.setText(text);
+
+        this.dialogButton.removeListener(this.nextTextButtonListener);
+        this.nextTextButtonListener = new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                TutorialScreen.this.dialog.hide();
+                TutorialScreen.this.orbitAction = new OrbitAction(
+                    shipPhysicsComponent,
+                    TutorialScreen.this.planet.physicsComponent,
+                    numberOfOrbits)
+                {
+                    @Override
+                    protected void onTriggered()
+                    {
+                        TutorialScreen.this.stage.getRoot()
+                            .removeAction(TutorialScreen.this.orbitAction);
+                        GameEntityManager.removeGameEntity(TutorialScreen.this.planet);
+                        destinationPlanet(false);
+                    }
+                };
+                TutorialScreen.this.stage.addAction(TutorialScreen.this.orbitAction);
+                TutorialScreen.this.level.endTutorial();
+            }
+        };
+        this.dialogButton.addListener(this.nextTextButtonListener);
+        this.dialog.show(this.stage);
     }
 
-    private Table getFuelTutorial()
+    private void destinationPlanet(boolean retry)
     {
-        Table table = UIManager.getDefaultTable();
-        table.add("Fuel");
-        table.row();
+        this.level.startTutorial();
 
-        ProgressBar delimitedProgressBar =
-            UIManager.getDelimitedProgressBar(3f, this.stage.getWidth() * 0.25f);
+        final PhysicsComponent shipPhysicsComponent = this.level.getShip().physicsComponent;
+        shipPhysicsComponent.getVelocity().setZero();
 
-        table
-            .add(delimitedProgressBar)
-            .width(this.stage.getWidth() * 0.25f);
-        table.row();
+        if (this.destinationPlanetTexture == null)
+        {
+            LevelPack firstLevelPack = LevelManager.getLevelPacks()
+                .get(0);
+            SerialisableLevel firstSerialisableLevel = firstLevelPack
+                .getSerialisableLevels()
+                .get(0);
+            this.destinationPlanetTexture =
+                new Texture(firstSerialisableLevel.serialisedDestinationPlanet.texturePath);
+        }
 
-        String fuelText =
-            "Each notch represent a unit of fuel, exhaust it and you will be adrift! Fuel is "
-                + "precious so you will be rewarded for how much you can save, up to "
-                + Constants.Game.FUEL_POINTS + " points. Some maps have infinite fuel.";
-        Label fuelLabel = new Label(fuelText, UIManager.skin);
-        table
-            .add(fuelLabel)
-            .width(this.labelsWidth);
-        fuelLabel.setWrap(true);
+        this.destinationPlanet = new Planet(
+            3000f,
+            5f,
+            shipPhysicsComponent.getPosition().x
+                + SpaceTravels3.gameViewport.getWorldWidth() * 0.4f,
+            shipPhysicsComponent.getPosition().y,
+            this.destinationPlanetTexture,
+            true);
+        GameEntityManager.addGameEntity(this.destinationPlanet);
+        GameEntityManager.update();
 
-        return table;
-    }
+        PhysicsEngine.recacheCollisions(shipPhysicsComponent);
+        this.level.calculateBounds();
+        this.level.setDestinationPlanet(this.destinationPlanet);
 
-    private Table getMinimapTutorial()
-    {
-        Table table = UIManager.getDefaultTable();
-        table.add("Minimap");
-        table.row();
+        this.dialogHeader.setText("Destination planet");
 
-        Image minimapImage =
-            loadTextureAsync(AssMan.getAssList().tutorialMinimapTexture, this.assMan);
-        table
-            .add(minimapImage)
-            .height(this.imageSize);
-        table.row();
+        String text = retry
+            ? "You were too fast, try again!\r\n"
+            + "Remember that the force of gravity increases the closest you get to a planet."
+            : "This planet is your destination,\r\n"
+                + "Try to land on it, an indicator on the planet will show you if you are going too fast!";
+        this.dialogMessage.setText(text);
 
-        String minimapText =
-            "The ship is represented by a triangle. Planets with circles in red or blue if it's "
-                + "your destination. Pickups with stars.";
-        Label minimapLabel = new Label(minimapText, UIManager.skin);
-        table
-            .add(minimapLabel)
-            .width(this.labelsWidth);
-        minimapLabel.setWrap(true);
-
-        return table;
+        this.dialogButton.removeListener(this.nextTextButtonListener);
+        this.nextTextButtonListener = new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                TutorialScreen.this.dialog.hide();
+                TutorialScreen.this.level.endTutorial();
+            }
+        };
+        this.dialogButton.addListener(this.nextTextButtonListener);
+        this.dialog.show(this.stage);
     }
 
     @Override
@@ -317,12 +416,11 @@ public class TutorialScreen extends Screen
     @Override
     public void render(float delta)
     {
-        loadAsyncImages(this.assMan);
-
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
             || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
         {
             ScreenManager.removeScreen(this);
+            ScreenManager.removeScreen(this.gameScreen);
         }
 
         this.stage.getViewport().apply();
@@ -355,7 +453,72 @@ public class TutorialScreen extends Screen
     @Override
     public void dispose()
     {
+        if (this.originalInputType != null)
+        {
+            SettingsManager.getSettings().setInputType(this.originalInputType);
+        }
+
+        if (this.planetTexture != null)
+        {
+            this.planetTexture.dispose();
+        }
+
+        if (this.destinationPlanetTexture != null)
+        {
+            this.destinationPlanetTexture.dispose();
+        }
+
         this.stage.dispose();
-        this.assMan.dispose();
+        Constants.General.EVENT_BUS.unregister(this);
+    }
+
+    @Subscribe
+    public void shipPlanetCollision(ShipPlanetCollisionEvent shipPlanetCollisionEvent)
+    {
+        if (shipPlanetCollisionEvent.planet.equals(this.level.getDestinationPlanet()))
+        {
+            if (shipPlanetCollisionEvent.ship.physicsComponent.getVelocity().len()
+                <= this.level.getMaxLandingSpeed())
+            {
+                end();
+            }
+            else
+            {
+                GameEntityManager.removeGameEntity(this.destinationPlanet);
+                destinationPlanet(true);
+            }
+        }
+        else
+        {
+            this.stage.getRoot().removeAction(this.orbitAction);
+            GameEntityManager.removeGameEntity(this.planet);
+            planet(true);
+        }
+    }
+
+    private void end()
+    {
+        this.level.startTutorial();
+
+        this.dialogHeader.setText("Done");
+
+        this.dialogMessage.setText("Good job! You have completed the tutorial!");
+
+        this.dialogButton.removeListener(this.nextTextButtonListener);
+        this.nextTextButtonListener = new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                ScreenManager.removeScreen(TutorialScreen.this);
+                ScreenManager.removeScreen(TutorialScreen.this.gameScreen);
+            }
+        };
+        this.dialogButton.addListener(this.nextTextButtonListener);
+
+        this.dialogButton.setText("Exit");
+        this.dialog.show(this.stage);
+
+        SettingsManager.getSettings().tutorialPlayed = true;
     }
 }

@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
 import com.draga.spaceTravels3.*;
@@ -38,11 +37,10 @@ public class Level
     private final ArrayList<Pickup> pickups;
     private final Ship              ship;
     private final Thruster          thruster;
-    private final Planet            destinationPlanet;
-
-    private final Rectangle bounds;
-    private final String    difficulty;
-    private       int       pickupsCollected;
+    private final String            difficulty;
+    private       Planet            destinationPlanet;
+    private       Rectangle         bounds;
+    private       int               pickupsCollected;
 
     private GameState gameState;
     private Stopwatch elapsedPlayTime;
@@ -51,6 +49,8 @@ public class Level
 
     private String id;
     private String name;
+
+    private boolean tutorial;
 
     public Level(
         String id,
@@ -63,6 +63,7 @@ public class Level
         Planet destinationPlanet,
         float trajectorySeconds,
         float maxLandingSpeed,
+        boolean tutorial,
         String playCompletionAchievementID,
         String playLeaderboardID)
     {
@@ -76,6 +77,7 @@ public class Level
         this.pickups = pickups;
         this.trajectorySeconds = trajectorySeconds;
         this.maxLandingSpeed = maxLandingSpeed;
+        this.tutorial = tutorial;
         this.playCompletionAchievementID = playCompletionAchievementID;
         this.playLeaderboardID = playLeaderboardID;
 
@@ -96,7 +98,7 @@ public class Level
         }
         GameEntityManager.update();
 
-        this.bounds = calculateBounds();
+        calculateBounds();
 
         Constants.General.EVENT_BUS.register(this);
 
@@ -106,9 +108,9 @@ public class Level
     /**
      * Return a rectangle that includes all the physic components and a little buffer.
      */
-    private Rectangle calculateBounds()
+    public void calculateBounds()
     {
-        Rectangle bounds = null;
+        this.bounds = null;
 
         for (GameEntity gameEntity : GameEntityManager.getGameEntities())
         {
@@ -120,34 +122,32 @@ public class Level
                     physicsComponent.getPosition().y - physicsComponent.getBoundsCircle().radius,
                     physicsComponent.getBoundsCircle().radius * 2f,
                     physicsComponent.getBoundsCircle().radius * 2f);
-                if (bounds == null)
+                if (this.bounds == null)
                 {
-                    bounds = gameEntityBounds;
+                    this.bounds = gameEntityBounds;
                 }
                 else
                 {
-                    bounds.merge(gameEntityBounds);
+                    this.bounds.merge(gameEntityBounds);
                 }
             }
         }
 
         // If we have found no static phyComp avoid leaving bounds null.
-        if (bounds == null)
+        if (this.bounds == null)
         {
             PhysicsComponent physicsComponent = this.ship.physicsComponent;
-            bounds = new Rectangle(
+            this.bounds = new Rectangle(
                 physicsComponent.getPosition().x - physicsComponent.getBoundsCircle().radius,
                 physicsComponent.getPosition().y - physicsComponent.getBoundsCircle().radius,
                 physicsComponent.getBoundsCircle().radius * 2f,
                 physicsComponent.getBoundsCircle().radius * 2f);
         }
 
-        bounds.x -= Constants.Game.LEVEL_BOUNDS_BUFFER;
-        bounds.y -= Constants.Game.LEVEL_BOUNDS_BUFFER;
-        bounds.height += Constants.Game.LEVEL_BOUNDS_BUFFER * 2f;
-        bounds.width += Constants.Game.LEVEL_BOUNDS_BUFFER * 2f;
-
-        return bounds;
+        this.bounds.x -= Constants.Game.LEVEL_BOUNDS_BUFFER;
+        this.bounds.y -= Constants.Game.LEVEL_BOUNDS_BUFFER;
+        this.bounds.height += Constants.Game.LEVEL_BOUNDS_BUFFER * 2f;
+        this.bounds.width += Constants.Game.LEVEL_BOUNDS_BUFFER * 2f;
     }
 
     public Rectangle getBounds()
@@ -166,6 +166,11 @@ public class Level
     @Subscribe
     public void shipPlanetCollision(ShipPlanetCollisionEvent shipPlanetCollisionEvent)
     {
+        if (this.tutorial)
+        {
+            return;
+        }
+
         float shipVelocity = this.ship.physicsComponent.getVelocity().len();
         if (Constants.General.IS_DEBUGGING)
         {
@@ -227,8 +232,7 @@ public class Level
 
     public Score getScore()
     {
-        Score score = Pools.obtain(Score.class);
-        score.set(
+        Score score = new Score(
             this.pickupsCollected,
             this.elapsedPlayTime.elapsed(TimeUnit.NANOSECONDS) * MathUtils.nanoToSec,
             this.ship.isInfiniteFuel()
@@ -254,7 +258,10 @@ public class Level
         if (this.gameState == GameState.COUNTDOWN)
         {
             this.gameState = GameState.PLAY;
-            this.elapsedPlayTime.start();
+            if (!this.elapsedPlayTime.isRunning())
+            {
+                this.elapsedPlayTime.start();
+            }
             SoundManager.resumeGameSound();
         }
     }
@@ -386,7 +393,8 @@ public class Level
                 // the color for winning (zero velocity),
                 // to white (max approach speed)
                 // to the color for losing (twice the maximum approach velocity)
-                if (this.destinationPlanet.physicsComponent.equals(nextCollidingPhysicsComponent))
+                if (this.destinationPlanet != null
+                    && this.destinationPlanet.physicsComponent.equals(nextCollidingPhysicsComponent))
                 {
                     return Constants.Visual.HUD.TrajectoryLine.COLOR_PLANET_DESTINATION;
                 }
@@ -413,6 +421,11 @@ public class Level
         return this.destinationPlanet;
     }
 
+    public void setDestinationPlanet(Planet destinationPlanet)
+    {
+        this.destinationPlanet = destinationPlanet;
+    }
+
     public float getTrajectorySeconds()
     {
         return this.trajectorySeconds;
@@ -421,5 +434,21 @@ public class Level
     public String getName()
     {
         return this.name;
+    }
+
+    public boolean isTutorial()
+    {
+        return this.tutorial;
+    }
+
+    public void startTutorial()
+    {
+        this.gameState = GameState.TUTORIAL;
+    }
+
+    public void endTutorial()
+    {
+        ScreenManager.addScreen(new CountdownScreen());
+        this.gameState = GameState.COUNTDOWN;
     }
 }

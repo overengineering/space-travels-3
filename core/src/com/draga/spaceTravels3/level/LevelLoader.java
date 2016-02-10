@@ -37,7 +37,10 @@ public class LevelLoader
         Stopwatch stopwatch = Stopwatch.createStarted();
 
         Level level =
-            LevelManager.getLevel(levelParameters.serialisableLevel, levelParameters.difficulty);
+            LevelManager.getLevel(
+                levelParameters.serialisableLevel,
+                levelParameters.difficulty,
+                levelParameters.tutorial);
 
         Gdx.app.debug(LOGGING_TAG, +stopwatch.elapsed(
             TimeUnit.NANOSECONDS) * MathUtils.nanoToSec + "s");

@@ -1,8 +1,8 @@
 package com.draga.spaceTravels3.input.inputProvider;
 
 import com.badlogic.gdx.Gdx;
-import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.PooledVector2;
+import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.input.inputModifier.DeadZoneInputModifier;
 import com.draga.spaceTravels3.input.inputModifier.RangeInputModifier;

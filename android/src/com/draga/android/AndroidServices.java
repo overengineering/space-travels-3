@@ -12,12 +12,12 @@ import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.joystick.Joystick;
 import com.draga.shape.Circle;
 import com.draga.spaceTravels3.Constants;
-import com.draga.spaceTravels3.Hud;
 import com.draga.spaceTravels3.component.graphicComponent.GraphicComponent;
 import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 import com.draga.spaceTravels3.input.inputModifier.DeadZoneInputModifier;
 import com.draga.spaceTravels3.manager.level.LevelManager;
 import com.draga.spaceTravels3.manager.level.LevelPack;
+import com.draga.spaceTravels3.screen.HudScreen;
 import com.draga.spaceTravels3.screen.IngameMenuScreen;
 import com.draga.spaceTravels3.screen.MenuScreen;
 import com.google.android.gms.games.Games;
@@ -98,7 +98,7 @@ public class AndroidServices extends Services
         String key = PhysicsComponent.s(com.draga.shape.Circle.s(
             GraphicComponent.s(Circle.s)
                 + MenuScreen.s(IngameMenuScreen.s, -3)
-                + GraphicComponent.s(Hud.s)
+                + GraphicComponent.s(HudScreen.s)
                 + MenuScreen.s(DeadZoneInputModifier.s, 4)
                 + GraphicComponent.s(Joystick.s)));
         purchaseManagerConfig.addStoreParam(

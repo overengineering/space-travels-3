@@ -59,6 +59,8 @@ public class MenuScreen extends Screen
         table.row();
         Table buttonsTable = UIManager.getDefaultTable();
 
+        // Tutorial button.
+        buttonsTable.add(getGuideButton());
         buttonsTable.add(getSettingsTextButton(false));
         buttonsTable.add(getTutorialButton());
         buttonsTable.add(getCreditsButton());
@@ -81,6 +83,7 @@ public class MenuScreen extends Screen
     {
         java.util.List<LevelPack> levelPacks =
             LevelManager.getLevelPacks();
+
 
         final Table outerTable = UIManager.getDefaultTable();
 
@@ -164,6 +167,24 @@ public class MenuScreen extends Screen
         return scrollPane;
     }
 
+    private Actor getGuideButton()
+    {
+        BeepingImageTextButton
+            button = new BeepingImageTextButton("", UIManager.skin, "guide");
+
+        button.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    ScreenManager.addScreen(new GuideScreen());
+                }
+            });
+
+        return button;
+    }
+    
     private Button getSettingsTextButton(boolean useText)
     {
         BeepingImageTextButton button =
@@ -193,7 +214,12 @@ public class MenuScreen extends Screen
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    ScreenManager.addScreen(new TutorialScreen());
+                    SerialisableLevel tutorialSerialisableLevel =
+                        LevelManager.getTutorialSerialisableLevel();
+                    ScreenManager.addScreen(new LoadingScreen(
+                        tutorialSerialisableLevel,
+                        "Tutorial",
+                        true));
                 }
             });
 

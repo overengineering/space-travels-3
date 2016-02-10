@@ -2,7 +2,6 @@ package com.draga.spaceTravels3;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.draga.PooledVector2;
 import com.draga.background.Background;
 
 public class RandomBackgroundPositionController extends BackgroundPositionController

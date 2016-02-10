@@ -1,8 +1,8 @@
 package com.draga.spaceTravels3.manager;
 
 import com.badlogic.gdx.Gdx;
-import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.PooledVector2;
+import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.spaceTravels3.input.inputProvider.AccelerometerInputProvider;
 import com.draga.spaceTravels3.input.inputProvider.InputProvider;
 import com.draga.spaceTravels3.input.inputProvider.KeyboardInputProvider;
@@ -46,7 +46,7 @@ public abstract class InputManager
         {
             case Android:
             case iOS:
-                switch (SettingsManager.getSettings().inputType)
+                switch (SettingsManager.getSettings().getInputType())
                 {
                     case ACCELEROMETER:
                         input =  accelerometerInputProvider.getInput();
@@ -57,7 +57,7 @@ public abstract class InputManager
                     default:
                         ErrorHandlerProvider.handle(
                             LOGGING_TAG,
-                            SettingsManager.getSettings().inputType
+                            SettingsManager.getSettings().getInputType()
                                 + " input type not implemented.");
                         input = PooledVector2.newVector2(0f, 0f);
                 }
@@ -71,7 +71,7 @@ public abstract class InputManager
                 break;
             default:
                 ErrorHandlerProvider.handle(
-                    LOGGING_TAG, "Device type " + Gdx.input.getRotation() + " not implemented.");
+                    LOGGING_TAG, "Device type " + Gdx.app.getType() + " not implemented.");
                 input = PooledVector2.newVector2(0f, 0f);
                 break;
         }

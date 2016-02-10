@@ -3,7 +3,6 @@ package com.draga.spaceTravels3.screen;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -149,13 +148,13 @@ public class SettingsScreen extends Screen
 
         BeepingImageTextButton
             touchButton = new BeepingImageTextButton("Touch", UIManager.skin, "touch");
-        touchButton.setChecked(SettingsManager.getSettings().inputType == InputType.TOUCH);
+        touchButton.setChecked(SettingsManager.getSettings().getInputType() == InputType.TOUCH);
         touchButton.addListener(new ClickListener()
         {
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                SettingsManager.getSettings().inputType = InputType.TOUCH;
+                SettingsManager.getSettings().setInputType(InputType.TOUCH);
             }
         });
 
@@ -165,13 +164,13 @@ public class SettingsScreen extends Screen
         BeepingImageTextButton accelerometerButton =
             new BeepingImageTextButton("Tilt", UIManager.skin, "accelerometer");
         accelerometerButton.setChecked(
-            SettingsManager.getSettings().inputType == InputType.ACCELEROMETER);
+            SettingsManager.getSettings().getInputType() == InputType.ACCELEROMETER);
         accelerometerButton.addListener(new ClickListener()
         {
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
-                SettingsManager.getSettings().inputType = InputType.ACCELEROMETER;
+                SettingsManager.getSettings().setInputType(InputType.ACCELEROMETER);
             }
         });
 

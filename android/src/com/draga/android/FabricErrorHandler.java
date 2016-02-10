@@ -1,6 +1,5 @@
 package com.draga.android;
 
-import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.crashlytics.android.Crashlytics;
 import com.draga.errorHandler.ErrorHandler;
 

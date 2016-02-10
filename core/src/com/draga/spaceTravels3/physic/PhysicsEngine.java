@@ -404,4 +404,10 @@ public class PhysicsEngine
 
         return gravityForce;
     }
+
+    public static void recacheCollisions(PhysicsComponent physicsComponent)
+    {
+        CollisionCache collisionCache = new CollisionCache(physicsComponent);
+        physicsComponentCollisionCache.put(physicsComponent, collisionCache);
+    }
 }

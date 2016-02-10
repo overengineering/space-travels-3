@@ -38,7 +38,6 @@ public class Ship extends GameEntity
         this.currentFuel = maxFuel;
         this.infiniteFuel = infiniteFuel;
 
-
         List<Class<? extends GameEntity>> collidesWith = new ArrayList<>();
         collidesWith.add(Planet.class);
         collidesWith.add(Pickup.class);

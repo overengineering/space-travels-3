@@ -6,7 +6,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.SpaceTravels3;
@@ -19,7 +22,6 @@ import com.draga.spaceTravels3.manager.level.LevelPack;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.spaceTravels3.ui.BeepingClickListener;
 import com.draga.spaceTravels3.ui.BeepingImageTextButton;
-import com.draga.spaceTravels3.ui.BeepingTextButton;
 import com.draga.spaceTravels3.ui.Screen;
 import com.google.common.eventbus.Subscribe;
 
@@ -28,8 +30,8 @@ import java.util.ArrayList;
 public class LevelPackScreen extends Screen
 {
     private final LevelPack levelPack;
-    private final Actor purchaseButton;
-    private       Stage stage;
+    private final Actor     purchaseButton;
+    private       Stage     stage;
 
     public LevelPackScreen(LevelPack levelPack)
     {
@@ -67,7 +69,8 @@ public class LevelPackScreen extends Screen
 
     public Label getHeaderLabel()
     {
-        Label headerLabel = new Label(this.levelPack.getName(), UIManager.skin, "large", Color.WHITE);
+        Label headerLabel =
+            new Label(this.levelPack.getName(), UIManager.skin, "large", Color.WHITE);
 
         return headerLabel;
     }
@@ -102,7 +105,8 @@ public class LevelPackScreen extends Screen
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    LevelScreen levelScreen = new LevelScreen(LevelPackScreen.this.levelPack, serialisableLevel);
+                    LevelScreen levelScreen =
+                        new LevelScreen(LevelPackScreen.this.levelPack, serialisableLevel);
                     ScreenManager.addScreen(levelScreen);
                 }
             });

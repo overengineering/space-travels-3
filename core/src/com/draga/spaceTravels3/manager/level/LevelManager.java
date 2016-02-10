@@ -23,6 +23,7 @@ public abstract class LevelManager
     private static final String LOGGING_TAG = LevelManager.class.getSimpleName();
 
     private static ArrayList<LevelPack> levelPacks = loadLevelPacks();
+    private static SerialisableLevel tutorialSerialisableLevel;
 
     public static ArrayList<LevelPack> getLevelPacks()
     {
@@ -31,7 +32,7 @@ public abstract class LevelManager
 
     public static Level getLevel(
         SerialisableLevel serialisableLevel,
-        String difficulty)
+        String difficulty, boolean tutorial)
     {
         AssetManager gameAssMan = AssMan.getGameAssMan();
         AssetManager assMan = AssMan.getAssMan();
@@ -49,12 +50,15 @@ public abstract class LevelManager
 
         ArrayList<Planet> planets = new ArrayList<>(serialisableLevel.serialisedPlanets.size());
 
-        Planet destinationPlanet =
-            getPlanetFromSerialisablePlanet(
+        Planet destinationPlanet = null;
+        if (serialisableLevel.serialisedDestinationPlanet != null)
+        {
+            destinationPlanet = getPlanetFromSerialisablePlanet(
                 serialisableLevel.serialisedDestinationPlanet,
                 assMan,
                 true);
-        planets.add(destinationPlanet);
+            planets.add(destinationPlanet);
+        }
 
         for (SerialisablePlanet serialisablePlanet : serialisableLevel.serialisedPlanets)
         {
@@ -90,6 +94,7 @@ public abstract class LevelManager
             destinationPlanet,
             serialisableDifficulty.trajectorySeconds,
             serialisableDifficulty.maxLandingSpeed,
+            tutorial,
             serialisableDifficulty.playCompletionAchievementID,
             serialisableDifficulty.playLeaderboardID);
 
@@ -190,5 +195,21 @@ public abstract class LevelManager
         }
 
         return levelPack;
+    }
+
+    public static SerialisableLevel getTutorialSerialisableLevel()
+    {
+        if (tutorialSerialisableLevel == null)
+        {
+            Json json = new Json();
+            json.addClassTag("SerialisableLevel", SerialisableLevel.class);
+            String tutorialSerialisableLevelString =
+                Gdx.files.internal("tutorial/level.json").readString();
+
+            tutorialSerialisableLevel =
+                json.fromJson(SerialisableLevel.class, tutorialSerialisableLevelString);
+        }
+
+        return tutorialSerialisableLevel;
     }
 }

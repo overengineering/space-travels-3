@@ -1,8 +1,7 @@
-package com.draga.spaceTravels3;
+package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -12,10 +11,10 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.Scaling;
-import com.draga.PooledVector2;
 import com.draga.joystick.Joystick;
+import com.draga.spaceTravels3.*;
+import com.draga.spaceTravels3.event.InputTypeChangedEvent;
 import com.draga.spaceTravels3.event.PickupCollectedEvent;
 import com.draga.spaceTravels3.gameEntity.Ship;
 import com.draga.spaceTravels3.level.Level;
@@ -23,18 +22,21 @@ import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
-import com.draga.spaceTravels3.physic.PhysicsEngine;
+import com.draga.spaceTravels3.ui.Screen;
 import com.draga.utils.GraphicsUtils;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.Stack;
 
-public class Hud implements Screen
+public class HudScreen extends Screen
 {
-    public static String s = "*6DIPaZ5ZTA2EeF1s%9v5HtlVuVOkElG8MargXavrc1j94k6u0JR6CDcdWT9FrWC5BX3NRGnGvusdXHMg2";
+    public static String s =
+        "*6DIPaZ5ZTA2EeF1s%9v5HtlVuVOkElG8MargXavrc1j94k6u0JR6CDcdWT9FrWC5BX3NRGnGvusdXHMg2";
 
     private final Label                 scoreLabel;
     private final Level                 level;
+    private final GameScreen            gameScreen;
+    private       Container<Image>      joystickOverlayContainer;
     private       Stage                 stage;
     private       Stack<Image>          grayPickups;
     private       Table                 pickupTable;
@@ -42,9 +44,12 @@ public class Hud implements Screen
     private       MiniMap               miniMap;
     private       TextureRegionDrawable collectedPickupDrawable;
 
-    public Hud(Level level)
+    public HudScreen(Level level, GameScreen gameScreen)
     {
+        super(true, false);
+
         this.level = level;
+        this.gameScreen = gameScreen;
         this.ship = level.getShip();
 
         Constants.General.EVENT_BUS.register(this);
@@ -55,7 +60,7 @@ public class Hud implements Screen
 
         this.miniMap = new MiniMap(level);
 
-        this.stage = new Stage();
+        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
@@ -90,19 +95,15 @@ public class Hud implements Screen
             .bottom()
             .right();
 
-        if (SettingsManager.getSettings().inputType == InputType.TOUCH
+        this.joystickOverlayContainer = new Container<>();
+        this.joystickOverlayContainer.setFillParent(true);
+        this.joystickOverlayContainer.center();
+        this.stage.addActor(this.joystickOverlayContainer);
+
+        if (SettingsManager.getSettings().getInputType() == InputType.TOUCH
             || Gdx.app.getType() == Application.ApplicationType.Desktop)
         {
-            Joystick joystickTexture =
-                AssMan.getGameAssMan().get(Constants.Visual.HUD.JOYSTICK_ASSET_DESCRIPTOR);
-            Image joystickOverlayImage = new Image(joystickTexture);
-            joystickOverlayImage.setScaling(Scaling.fit);
-
-            Container<Image> joystickOverlayContainer = new Container<>(joystickOverlayImage);
-            joystickOverlayContainer.setFillParent(true);
-            joystickOverlayContainer.center();
-
-            this.stage.addActor(joystickOverlayContainer);
+            addJoystickOverlay();
         }
 
         this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
@@ -125,7 +126,7 @@ public class Hud implements Screen
                 @Override
                 public boolean act(float delta)
                 {
-                    fuelProgressBar.setValue(Hud.this.ship.getCurrentFuel());
+                    fuelProgressBar.setValue(HudScreen.this.ship.getCurrentFuel());
                     return false;
                 }
             });
@@ -163,6 +164,16 @@ public class Hud implements Screen
         return this.pickupTable;
     }
 
+    private void addJoystickOverlay()
+    {
+        Joystick joystickTexture =
+            AssMan.getGameAssMan().get(Constants.Visual.HUD.JOYSTICK_ASSET_DESCRIPTOR);
+        Image joystickOverlayImage = new Image(joystickTexture);
+        joystickOverlayImage.setScaling(Scaling.fit);
+
+        this.joystickOverlayContainer.setActor(joystickOverlayImage);
+    }
+
     private void setScoreLabel(int score)
     {
         this.scoreLabel.setText(String.valueOf(score));
@@ -176,7 +187,7 @@ public class Hud implements Screen
     @Override
     public void show()
     {
-
+        this.gameScreen.show();
     }
 
     @Override
@@ -184,7 +195,8 @@ public class Hud implements Screen
     {
         Score score = this.level.getScore();
         setScoreLabel(score.getTotalScore());
-        Pools.free(score);
+
+        this.stage.getViewport().apply();
 
         this.stage.act(delta);
         this.stage.draw();
@@ -207,6 +219,11 @@ public class Hud implements Screen
 
     private void drawApproachSpeedIndicator()
     {
+        if (this.level.getDestinationPlanet() == null)
+        {
+            return;
+        }
+
         float radius = this.level.getDestinationPlanet().physicsComponent.getBoundsCircle().radius;
         float shipSpeed = this.ship.physicsComponent.getVelocity().len();
         // "That is not going to be confusing at all" (cit. Lee)
@@ -277,8 +294,26 @@ public class Hud implements Screen
     @Subscribe
     public void pickupCollected(PickupCollectedEvent pickupCollectedEvent)
     {
-        Image firstPickup = this.grayPickups.pop();
+        // During the tutorial the hud doesn't show the pickups.
+        if (!this.grayPickups.empty())
+        {
+            Image firstPickup = this.grayPickups.pop();
 
-        firstPickup.setDrawable(this.collectedPickupDrawable);
+            firstPickup.setDrawable(this.collectedPickupDrawable);
+        }
+    }
+
+    @Subscribe
+    public void inputTypeChanged(InputTypeChangedEvent inputTypeChangedEvent)
+    {
+        if (SettingsManager.getSettings().getInputType() == InputType.TOUCH
+            || Gdx.app.getType() == Application.ApplicationType.Desktop)
+        {
+            addJoystickOverlay();
+        }
+        else
+        {
+            this.joystickOverlayContainer.setActor(null);
+        }
     }
 }

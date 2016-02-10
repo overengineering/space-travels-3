@@ -1,6 +1,5 @@
 package com.draga.spaceTravels3.manager;
 
-import com.draga.PooledVector2;
 import com.draga.background.Background;
 import com.draga.spaceTravels3.BackgroundPositionController;
 

@@ -68,6 +68,7 @@ public class AndroidLauncher extends AndroidApplication
         super.onStop();
         this.androidServices.onStop();
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {

@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
-import com.badlogic.gdx.utils.Json;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 
@@ -92,6 +91,7 @@ public abstract class UIManager
             getImageTextButtonStyle(AssMan.getAssList().iconLeaderboard));
         skin.add("rate", getImageTextButtonStyle(AssMan.getAssList().iconRate));
         skin.add("tutorial", getImageTextButtonStyle(AssMan.getAssList().iconTutorial));
+        skin.add("guide", getImageTextButtonStyle(AssMan.getAssList().iconGuide));
         skin.add("play", getImageTextButtonStyle(AssMan.getAssList().iconPlay));
         skin.add("exit", getImageTextButtonStyle(AssMan.getAssList().iconExit));
         skin.add("share", getImageTextButtonStyle(AssMan.getAssList().iconShare));
@@ -271,7 +271,8 @@ public abstract class UIManager
         Window.WindowStyle windowStyle = new Window.WindowStyle();
         windowStyle.titleFont = skin.getFont("large");
         windowStyle.titleFontColor = Color.WHITE;
-        windowStyle.stageBackground = getTiledDrawable(Constants.Visual.SCREEN_FADE_COLOUR);
+        windowStyle.stageBackground = getTiledDrawable(Constants.Visual.LIGHT_DARK);
+        windowStyle.background = getTiledDrawable(Constants.Visual.DEEP_DARK);
 
         return windowStyle;
     }

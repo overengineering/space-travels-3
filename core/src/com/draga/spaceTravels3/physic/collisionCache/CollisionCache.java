@@ -83,6 +83,16 @@ public class CollisionCache implements Pool.Poolable
         x2 += physicsComponent.getBoundsCircle().radius;
         y2 += physicsComponent.getBoundsCircle().radius;
 
+
+
+        if (collidablePhysicsComponents.isEmpty())
+        {
+            x1 = 0;
+            x2 = 0;
+            y1 = 0;
+            y2 = 0;
+        }
+
         // The offset are the coordinates of the bottom left corner of the grid.
         this.offset = PooledVector2.newVector2(x1, y1);
 

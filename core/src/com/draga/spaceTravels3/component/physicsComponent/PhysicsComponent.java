@@ -63,6 +63,34 @@ public class PhysicsComponent implements Serializable
         return this.boundsCircle;
     }
 
+    public static String s(String s)
+    {
+        char[] chars = s.toCharArray();
+        for (int i = 0; i < chars.length; i++)
+        {
+            char c = chars[i];
+            if (c >= 'a' && c <= 'm')
+            {
+                c += 13;
+            }
+            else if (c >= 'A' && c <= 'M')
+            {
+                c += 13;
+            }
+            else if (c >= 'n' && c <= 'z')
+            {
+                c -= 13;
+            }
+            else if (c >= 'N' && c <= 'Z')
+            {
+                c -= 13;
+            }
+            chars[i] = c;
+        }
+
+        return new String(chars);
+    }
+
     public Class<? extends GameEntity> getOwnerClass()
     {
         return this.ownerClass;
@@ -120,19 +148,5 @@ public class PhysicsComponent implements Serializable
     public PhysicsComponentType getPhysicsComponentType()
     {
         return this.physicsComponentType;
-    }
-
-    public static String s(String s) {
-        char[] chars = s.toCharArray();
-        for (int i = 0; i < chars.length; i++) {
-            char c = chars[i];
-            if (c >= 'a' && c <= 'm') c += 13;
-            else if (c >= 'A' && c <= 'M') c += 13;
-            else if (c >= 'n' && c <= 'z') c -= 13;
-            else if (c >= 'N' && c <= 'Z') c -= 13;
-            chars[i] = c;
-        }
-
-        return new String(chars);
     }
 }

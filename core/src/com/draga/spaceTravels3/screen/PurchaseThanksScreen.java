@@ -50,7 +50,7 @@ public class PurchaseThanksScreen extends Screen
             }
         });
 
-        table.setBackground(UIManager.getTiledDrawable(Constants.Visual.SCREEN_FADE_COLOUR));
+        table.setBackground(UIManager.getTiledDrawable(Constants.Visual.LIGHT_DARK));
         table.addAction(Actions.sequence(
             Actions.fadeOut(0),
             Actions.fadeIn(Constants.Visual.SCREEN_FADE_DURATION, Interpolation.pow2In)));

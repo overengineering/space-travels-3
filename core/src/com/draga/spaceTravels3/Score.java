@@ -1,14 +1,12 @@
 package com.draga.spaceTravels3;
 
-import com.badlogic.gdx.utils.Pool;
-
-public class Score implements Pool.Poolable
+public class Score
 {
     private int pickupPoints;
     private int timePoints;
     private int fuelPoints;
 
-    public void set(int pickupsCollected, float elapsedSeconds, float percentageFuelRemaining)
+    public Score(int pickupsCollected, float elapsedSeconds, float percentageFuelRemaining)
     {
         this.pickupPoints = pickupsCollected * Constants.Game.PICKUP_POINTS;
         this.timePoints = -(int) (elapsedSeconds * Constants.Game.TIME_POINTS);
@@ -33,13 +31,5 @@ public class Score implements Pool.Poolable
     public int getFuelPoints()
     {
         return this.fuelPoints;
-    }
-
-    @Override
-    public void reset()
-    {
-        this.pickupPoints = 0;
-        this.timePoints = 0;
-        this.fuelPoints = 0;
     }
 }

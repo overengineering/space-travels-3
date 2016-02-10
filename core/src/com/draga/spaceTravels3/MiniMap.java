@@ -40,13 +40,13 @@ public class MiniMap
 
         this.backgroundProjectionMatrix = getBackgroundProjectionMatrix();
         this.miniMapAspectRatio =
-            orthographicCamera.viewportWidth / orthographicCamera.viewportHeight;
+            this.orthographicCamera.viewportWidth / this.orthographicCamera.viewportHeight;
     }
 
     private Matrix4 getBackgroundProjectionMatrix()
     {
         OrthographicCamera backgroundCamera =
-            new OrthographicCamera(level.getWidth(), level.getHeight());
+            new OrthographicCamera(this.level.getWidth(), this.level.getHeight());
         backgroundCamera.zoom = 1f / SCALE;
         backgroundCamera.position.set(
             (backgroundCamera.viewportWidth / 2f) * backgroundCamera.zoom,
@@ -60,10 +60,10 @@ public class MiniMap
     public void draw()
     {
         // Draw a background and border.
-        SpaceTravels3.shapeRenderer.setProjectionMatrix(backgroundProjectionMatrix);
+        SpaceTravels3.shapeRenderer.setProjectionMatrix(this.backgroundProjectionMatrix);
         drawBackground();
 
-        SpaceTravels3.shapeRenderer.setProjectionMatrix(orthographicCamera.combined);
+        SpaceTravels3.shapeRenderer.setProjectionMatrix(this.orthographicCamera.combined);
         Gdx.gl20.glEnable(GL20.GL_SCISSOR_TEST);
         // Crop out everything outside of the minimap (note the +1 to include the last pixel)
         HdpiUtils.glScissor(
@@ -95,8 +95,8 @@ public class MiniMap
         SpaceTravels3.shapeRenderer.rect(
             0,
             0,
-            level.getWidth(),
-            level.getHeight());
+            this.level.getWidth(),
+            this.level.getHeight());
 
         Color minimapBorderColor = Constants.Visual.HUD.Minimap.BORDER_COLOR;
         SpaceTravels3.shapeRenderer.setColor(minimapBorderColor);
@@ -104,25 +104,25 @@ public class MiniMap
         SpaceTravels3.shapeRenderer.rect(
             0,
             0,
-            level.getWidth(),
-            level.getHeight());
+            this.level.getWidth(),
+            this.level.getHeight());
 
         GraphicsUtils.disableBlending();
     }
 
     public void update()
     {
-        Circle shipBoundsCircle = level.getShip().physicsComponent.getBoundsCircle();
+        Circle shipBoundsCircle = this.level.getShip().physicsComponent.getBoundsCircle();
 
         Rectangle shipRect = new Rectangle(
-            level.getShip().physicsComponent.getPosition().x
+            this.level.getShip().physicsComponent.getPosition().x
                 - shipBoundsCircle.radius,
-            level.getShip().physicsComponent.getPosition().y
+            this.level.getShip().physicsComponent.getPosition().y
                 - shipBoundsCircle.radius,
             shipBoundsCircle.radius * 2,
             shipBoundsCircle.radius * 2);
 
-        Rectangle worldRect = level.getBounds();
+        Rectangle worldRect = this.level.getBounds();
 
         keepInView(shipRect, worldRect);
     }
@@ -139,37 +139,37 @@ public class MiniMap
 
         // Keep the minimap aspect ratio so that the rectangle will be centered in the minimap.
         float newCameraBoundsAspectRatio = newCameraBounds.getAspectRatio();
-        if (newCameraBoundsAspectRatio < miniMapAspectRatio)
+        if (newCameraBoundsAspectRatio < this.miniMapAspectRatio)
         {
-            float newWidth = newCameraBounds.height * miniMapAspectRatio;
+            float newWidth = newCameraBounds.height * this.miniMapAspectRatio;
             float widthDifference = newWidth - newCameraBounds.width;
             newCameraBounds.x -= widthDifference / 2f;
             newCameraBounds.width = newWidth;
         }
         else
         {
-            float newHeight = newCameraBounds.width / miniMapAspectRatio;
+            float newHeight = newCameraBounds.width / this.miniMapAspectRatio;
             float heightDifference = newHeight - newCameraBounds.height;
             newCameraBounds.y -= heightDifference / 2f;
             newCameraBounds.height = newHeight;
         }
 
         // Zoom out to see the new camera bounds.
-        orthographicCamera.zoom = Math.max(
-            newCameraBounds.width / orthographicCamera.viewportWidth,
-            newCameraBounds.height / orthographicCamera.viewportHeight);
+        this.orthographicCamera.zoom = Math.max(
+            newCameraBounds.width / this.orthographicCamera.viewportWidth,
+            newCameraBounds.height / this.orthographicCamera.viewportHeight);
         // Zoom out to make this world as big as the minimap.
-        orthographicCamera.zoom /= SCALE;
+        this.orthographicCamera.zoom /= SCALE;
 
         // Moves the camera so that the bottom left corner of the screen corresponds to the
         // bottom left corner of the new camera bounds.
-        orthographicCamera.position.x =
+        this.orthographicCamera.position.x =
             newCameraBounds.x
-                + ((orthographicCamera.viewportWidth / 2f) * orthographicCamera.zoom);
-        orthographicCamera.position.y =
+                + ((this.orthographicCamera.viewportWidth / 2f) * this.orthographicCamera.zoom);
+        this.orthographicCamera.position.y =
             newCameraBounds.y
-                + ((orthographicCamera.viewportHeight / 2f) * orthographicCamera.zoom);
-        orthographicCamera.update();
+                + ((this.orthographicCamera.viewportHeight / 2f) * this.orthographicCamera.zoom);
+        this.orthographicCamera.update();
     }
 
     public void setShipProjection(Projection shipProjection)

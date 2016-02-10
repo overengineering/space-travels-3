@@ -49,17 +49,20 @@ public class LoadingScreen extends Screen
 
     private boolean waitingForWarning = false;
 
-    public LoadingScreen(String levelId, String difficulty)
+    private boolean tutorial;
+
+    public LoadingScreen(String levelId, String difficulty, boolean tutorial)
     {
-        this(LevelManager.getSerialisableLevel(levelId), difficulty);
+        this(LevelManager.getSerialisableLevel(levelId), difficulty, tutorial);
     }
 
-    public LoadingScreen(SerialisableLevel serialisableLevel, String difficulty)
+    public LoadingScreen(SerialisableLevel serialisableLevel, String difficulty, boolean tutorial)
     {
         super(true, true);
 
         this.difficulty = difficulty;
         this.serialisableLevel = serialisableLevel;
+        this.tutorial = tutorial;
         this.stopwatch = Stopwatch.createStarted();
 
         this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
@@ -75,13 +78,26 @@ public class LoadingScreen extends Screen
             .width(this.stage.getWidth() * 0.75f);
 
         if (!SettingsManager.getSettings().disableFaceUpWarning
-            && SettingsManager.getSettings().inputType == InputType.ACCELEROMETER)
+            && SettingsManager.getSettings().getInputType() == InputType.ACCELEROMETER)
         {
             showFaceUpWarning();
             this.waitingForWarning = true;
         }
 
         this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
+    }
+
+    private ProgressBar getProgressBar()
+    {
+        ProgressBar progressBar = new ProgressBar(
+            0,
+            1,
+            0.01f,
+            false,
+            UIManager.skin);
+        progressBar.setAnimateDuration(0.05f);
+
+        return progressBar;
     }
 
     public void showFaceUpWarning()
@@ -133,19 +149,6 @@ public class LoadingScreen extends Screen
         dialog.show(this.stage);
     }
 
-    private ProgressBar getProgressBar()
-    {
-        ProgressBar progressBar = new ProgressBar(
-            0,
-            1,
-            0.01f,
-            false,
-            UIManager.skin);
-        progressBar.setAnimateDuration(0.05f);
-
-        return progressBar;
-    }
-
     @Override
     public void show()
     {
@@ -157,9 +160,13 @@ public class LoadingScreen extends Screen
     private void loadAssets(SerialisableLevel serialisableLevel)
     {
         AssetManager assMan = AssMan.getGameAssMan();
-        LevelParameters levelParameters = new LevelParameters(serialisableLevel, this.difficulty);
+        LevelParameters levelParameters =
+            new LevelParameters(serialisableLevel, this.difficulty, this.tutorial);
         this.levelAssetDescriptor =
-            new AssetDescriptor<>(Constants.Game.LEVEL_ASSET_FILENAME, Level.class, levelParameters);
+            new AssetDescriptor<>(
+                Constants.Game.LEVEL_ASSET_FILENAME,
+                Level.class,
+                levelParameters);
 
         // Loads sounds first 'cause of weird quirk of Android not loading them in time.
         loadLevelAsset(assMan, levelParameters, AssMan.getAssList().thrusterSound, Sound.class);
@@ -199,7 +206,8 @@ public class LoadingScreen extends Screen
         CollisionCacheParameters collisionCacheParameters = new CollisionCacheParameters();
         collisionCacheParameters.dependencies.add(this.levelAssetDescriptor);
         AssetDescriptor<CollisionCache> collisionCacheAssetDescriptor =
-            new AssetDescriptor<>(Constants.Game.COLLISION_CACHE_ASSET_FILENAME,
+            new AssetDescriptor<>(
+                Constants.Game.COLLISION_CACHE_ASSET_FILENAME,
                 CollisionCache.class,
                 collisionCacheParameters);
         assMan.load(collisionCacheAssetDescriptor);

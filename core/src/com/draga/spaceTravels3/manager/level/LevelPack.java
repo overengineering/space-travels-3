@@ -9,7 +9,7 @@ public class LevelPack
     private String                       name;
     private ArrayList<SerialisableLevel> serialisableLevels;
     private boolean                      free;
-    private String googleSku;
+    private String                       googleSku;
 
     public LevelPack(String name, boolean free, String googleSku)
     {
