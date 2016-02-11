@@ -5,11 +5,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.UIManager;
+import com.draga.spaceTravels3.screen.SettingsScreen;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -83,6 +85,24 @@ public abstract class Screen implements com.badlogic.gdx.Screen
                 ScreenManager.removeScreen(Screen.this);
             }
         });
+
+        return button;
+    }
+
+    protected Button getSettingsButton(boolean useText)
+    {
+        BeepingImageTextButton button =
+            new BeepingImageTextButton(useText ? "Settings" : "", UIManager.skin, "settings");
+
+        button.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    ScreenManager.addScreen(new SettingsScreen());
+                }
+            });
 
         return button;
     }
