@@ -11,7 +11,7 @@ public class BeepingImageTextButton extends ImageTextButton
     public BeepingImageTextButton(String text, Skin skin, String styleName)
     {
         super(text, skin, styleName);
-        this.addListener(BeepingClickListener.BEEPING_CLICK_LISTENER);
+        init();
     }
 
     public BeepingImageTextButton(
@@ -19,12 +19,18 @@ public class BeepingImageTextButton extends ImageTextButton
         ImageTextButtonStyle style)
     {
         super(text, style);
-        this.addListener(BeepingClickListener.BEEPING_CLICK_LISTENER);
+        init();
     }
 
     public BeepingImageTextButton(String text, Skin skin)
     {
         super(text, skin);
+        init();
+    }
+
+    private void init()
+    {
         this.addListener(BeepingClickListener.BEEPING_CLICK_LISTENER);
+        getImageCell().fill().expand();
     }
 }

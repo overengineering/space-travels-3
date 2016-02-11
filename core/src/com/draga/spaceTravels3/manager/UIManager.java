@@ -81,22 +81,28 @@ public abstract class UIManager
         skin.add("default", getTextButtonStyle());
 
         skin.add("default", getImageTextButtonStyle());
-        skin.add("settings", getImageTextButtonStyle(AssMan.getAssList().iconSettings));
-        skin.add(
-            "achievement",
-            getImageTextButtonStyle(AssMan.getAssList().iconAchievement));
-        skin.add("credits", getImageTextButtonStyle(AssMan.getAssList().iconCredits));
-        skin.add(
-            "leaderboard",
-            getImageTextButtonStyle(AssMan.getAssList().iconLeaderboard));
-        skin.add("rate", getImageTextButtonStyle(AssMan.getAssList().iconRate));
-        skin.add("tutorial", getImageTextButtonStyle(AssMan.getAssList().iconTutorial));
-        skin.add("guide", getImageTextButtonStyle(AssMan.getAssList().iconGuide));
-        skin.add("play", getImageTextButtonStyle(AssMan.getAssList().iconPlay));
-        skin.add("exit", getImageTextButtonStyle(AssMan.getAssList().iconExit));
-        skin.add("next", getImageTextButtonStyle(AssMan.getAssList().iconNext));
-        skin.add("share", getImageTextButtonStyle(AssMan.getAssList().iconShare));
-        skin.add("unlock", getImageTextButtonStyle(AssMan.getAssList().iconUnlock));
+
+        skin.add("default", getDefaultImageButtonStyle());
+
+
+        addButtonStyles("settings", AssMan.getAssList().iconSettings);
+        addButtonStyles("settings", AssMan.getAssList().iconSettings);
+        addButtonStyles("achievement", AssMan.getAssList().iconAchievement);
+        addButtonStyles("credits", AssMan.getAssList().iconCredits);
+        addButtonStyles("leaderboard", AssMan.getAssList().iconLeaderboard);
+        addButtonStyles("rate", AssMan.getAssList().iconRate);
+        addButtonStyles("tutorial", AssMan.getAssList().iconTutorial);
+        addButtonStyles("guide",AssMan.getAssList().iconGuide);
+        addButtonStyles("play", AssMan.getAssList().iconPlay);
+        addButtonStyles("exit", AssMan.getAssList().iconExit);
+        addButtonStyles("next", AssMan.getAssList().iconNext);
+        addButtonStyles("share",AssMan.getAssList().iconShare);
+        addButtonStyles("unlock",AssMan.getAssList().iconUnlock);
+        addButtonStyles("retry", AssMan.getAssList().iconRetry);
+
+        skin.add("unlockOverlay", new Sprite(new Texture(AssMan.getAssList().iconUnlockOverlay)));
+
+
         skin.add(
             "touch",
             getCheckableImageTextButtonStyles(
@@ -107,10 +113,6 @@ public abstract class UIManager
             getCheckableImageTextButtonStyles(
                 AssMan.getAssList().iconAccelerometer,
                 AssMan.getAssList().iconAccelerometerChecked));
-        skin.add("retry", getImageTextButtonStyle(AssMan.getAssList().iconRetry));
-        skin.add(
-            "unlockOverlay",
-            new Sprite(new Texture(AssMan.getAssList().iconUnlockOverlay)));
 
         skin.add("checkable", getCheckableTextButtonStyle());
 
@@ -124,6 +126,14 @@ public abstract class UIManager
         skin.add("default", getScrollPaneStyle());
 
         skin.add("default", getWindowStyle());
+    }
+
+    private static Drawable getDrawable(String path)
+    {
+        Texture texture = new Texture(path);
+        texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+
+        return new SpriteDrawable(new Sprite(texture));
     }
 
     private static BitmapFont getBitmapFont(String path, int size)
@@ -168,29 +178,49 @@ public abstract class UIManager
         return imageTextButtonStyle;
     }
 
-    private static ImageTextButton.ImageTextButtonStyle getImageTextButtonStyle(
-        String imagePath)
+    private static ImageButton.ImageButtonStyle getDefaultImageButtonStyle()
     {
-        ImageTextButton.ImageTextButtonStyle imageTextButtonStyle =
-            new ImageTextButton.ImageTextButtonStyle(skin.get(
-                ImageTextButton.ImageTextButtonStyle.class));
-        Drawable settingsDrawable =
-            new SpriteDrawable(new Sprite(new Texture(imagePath)));
-        imageTextButtonStyle.imageUp = settingsDrawable;
-        imageTextButtonStyle.imageDown = settingsDrawable;
+        ImageButton.ImageButtonStyle imageButtonStyle =
+            new ImageButton.ImageButtonStyle();
+        imageButtonStyle.down = skin.getDrawable("button");
+        imageButtonStyle.up = skin.getDrawable("button");
 
-        return imageTextButtonStyle;
+        return imageButtonStyle;
+    }
+
+    private static ImageButton.ImageButtonStyle getImageButtonStyle(Drawable drawable)
+    {
+        ImageButton.ImageButtonStyle defaultStyle = skin.get(ImageButton.ImageButtonStyle.class);
+        ImageButton.ImageButtonStyle imageButtonStyle =
+            new ImageButton.ImageButtonStyle(defaultStyle);
+
+        imageButtonStyle.down = skin.getDrawable("button");
+        imageButtonStyle.up = skin.getDrawable("button");
+
+        imageButtonStyle.imageUp = drawable;
+        imageButtonStyle.imageDown = drawable;
+
+        return imageButtonStyle;
+    }
+
+    private static void addButtonStyles(String styleName, String iconPath)
+    {
+        Drawable drawable = getDrawable(iconPath);
+
+        skin.add(styleName, getImageTextButtonStyle(drawable));
+        skin.add(styleName, getImageButtonStyle(drawable));
     }
 
     private static ImageTextButton.ImageTextButtonStyle getCheckableImageTextButtonStyles(
-        String imagePath,
-        String checkedImagePath)
+        String drawablePath, String checkedDrawablePath)
     {
+        Drawable drawable = getDrawable(drawablePath);
+        Drawable checkedDrawable = getDrawable(checkedDrawablePath);
+
         ImageTextButton.ImageTextButtonStyle imageTextButtonStyle =
-            getImageTextButtonStyle(imagePath);
+            getImageTextButtonStyle(drawable);
         imageTextButtonStyle.checkedFontColor = CHECKED_COLOR;
-        imageTextButtonStyle.imageChecked =
-            new SpriteDrawable(new Sprite(new Texture(checkedImagePath)));
+        imageTextButtonStyle.imageChecked = checkedDrawable;
 
         return imageTextButtonStyle;
     }
@@ -276,6 +306,18 @@ public abstract class UIManager
         windowStyle.background = getTiledDrawable(Constants.Visual.DEEP_DARK);
 
         return windowStyle;
+    }
+
+    private static ImageTextButton.ImageTextButtonStyle getImageTextButtonStyle(Drawable drawable)
+    {
+        ImageTextButton.ImageTextButtonStyle defaultStyle = skin.get(
+            ImageTextButton.ImageTextButtonStyle.class);
+        ImageTextButton.ImageTextButtonStyle imageTextButtonStyle =
+            new ImageTextButton.ImageTextButtonStyle(defaultStyle);
+        imageTextButtonStyle.imageUp = drawable;
+        imageTextButtonStyle.imageDown = drawable;
+
+        return imageTextButtonStyle;
     }
 
     public static TiledDrawable getTiledDrawable(Color color)

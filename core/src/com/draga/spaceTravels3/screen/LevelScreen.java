@@ -46,8 +46,6 @@ public class LevelScreen extends Screen
         this.difficultyHighScoreLabels = new HashMap<>();
         this.playButtons = new ArrayList<>();
 
-        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
-
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
         // Header label.
@@ -64,10 +62,7 @@ public class LevelScreen extends Screen
         // Back button.
         table.row();
         table
-            .add(getBackButton())
-            .bottom();
-
-        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
+            .add(getBackButton());
 
         Constants.General.EVENT_BUS.register(this);
     }

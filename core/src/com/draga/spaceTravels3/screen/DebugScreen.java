@@ -25,8 +25,6 @@ public class DebugScreen extends Screen
     {
         super(true, true);
 
-        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
-
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
         table.row();
@@ -40,8 +38,6 @@ public class DebugScreen extends Screen
         table
             .add(getBackButton())
             .bottom();
-
-        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
     private ScrollPane getButtonScrollPane()

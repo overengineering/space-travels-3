@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Scaling;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.level.Level;
@@ -40,7 +41,6 @@ public abstract class IngameMenuScreen extends Screen
         super(true, false);
         this.gameScreen = gameScreen;
         this.level = level;
-        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
@@ -54,13 +54,9 @@ public abstract class IngameMenuScreen extends Screen
         table.add(headerLabel);
         table.row();
 
-        // Gap between header and rest.
-        table
+        this.centreCell = table
             .add()
             .expand();
-        table.row();
-
-        this.centreCell = table.add();
         table.row();
 
         SerialisableLevel nextSerialisableLevel =
@@ -81,22 +77,15 @@ public abstract class IngameMenuScreen extends Screen
                 .row();
         }
 
-        table.add(getSettingsButton(true));
-        table.row();
+        table
+            .add(getRetryButton())
+            .row();
 
-        table.add(getRetryButton());
+        table.add(getSettingsButton(true));
         table.row();
 
         table.add(getMainMenuTextButton());
         table.row();
-
-        // Gap between the centre and the end of the screen.
-        table
-            .add()
-            .expand();
-
-        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
-
     }
 
     public Actor getHeaderLabel()
@@ -230,7 +219,6 @@ public abstract class IngameMenuScreen extends Screen
 
         Gdx.input.setInputProcessor(new InputMultiplexer(
             this.stage,
-            getBackInputAdapter(),
             enterInputAdapter));
     }
 }

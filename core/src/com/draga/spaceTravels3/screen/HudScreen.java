@@ -59,8 +59,6 @@ public class HudScreen extends Screen
 
         this.miniMap = new MiniMap(level);
 
-        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
-
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
         // Top row left column
@@ -104,8 +102,6 @@ public class HudScreen extends Screen
         {
             addJoystickOverlay();
         }
-
-        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
     private Actor getFuelIndicator(float width)

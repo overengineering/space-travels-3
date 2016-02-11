@@ -22,8 +22,6 @@ public class GuideScreen extends Screen
     {
         super(true, true);
 
-        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
-
         this.labelsWidth = this.stage.getWidth() * 0.8f;
         this.imageSize = this.stage.getWidth() * 0.1f;
 
@@ -43,8 +41,6 @@ public class GuideScreen extends Screen
         // Back button.
         table.row();
         table.add(getBackButton());
-
-        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
     private Actor getGuide()

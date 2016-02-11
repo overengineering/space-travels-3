@@ -25,8 +25,6 @@ public class SettingsScreen extends Screen
     {
         super(true, true);
 
-        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
-
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
         // Header label.
@@ -45,8 +43,6 @@ public class SettingsScreen extends Screen
         table
             .add(getBackButton())
             .bottom();
-
-        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
     public Label getHeaderLabel()

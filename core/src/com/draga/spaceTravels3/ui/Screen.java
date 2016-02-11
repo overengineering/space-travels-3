@@ -1,5 +1,6 @@
 package com.draga.spaceTravels3.ui;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.assets.AssetManager;
@@ -26,7 +27,6 @@ public abstract class Screen implements com.badlogic.gdx.Screen
     private final boolean blockable;
     private final boolean blockParents;
     protected     Stage   stage;
-
     private HashMap<String, Image> asyncImages;
 
     public Screen(boolean blockable, boolean blockParents)
@@ -35,7 +35,10 @@ public abstract class Screen implements com.badlogic.gdx.Screen
         this.blockParents = blockParents;
 
         this.asyncImages = new HashMap<>();
+
         this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
+        this.stage.setDebugAll(true);
+        //        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
     public boolean isBlockable()
@@ -77,8 +80,9 @@ public abstract class Screen implements com.badlogic.gdx.Screen
 
     protected Button getSettingsButton(boolean useText)
     {
-        BeepingImageTextButton button =
-            new BeepingImageTextButton(useText ? "Settings" : "", UIManager.skin, "settings");
+        Button button = useText
+            ? new BeepingImageTextButton("Settings", UIManager.skin, "settings")
+            : new BeepingImageButton(UIManager.skin, "settings");
 
         button.addListener(
             new ClickListener()
@@ -130,12 +134,9 @@ public abstract class Screen implements com.badlogic.gdx.Screen
     {
         loadAsyncImages();
 
-        if (this.stage != null)
-        {
-            this.stage.getViewport().apply();
-            this.stage.act(delta);
-            this.stage.draw();
-        }
+        this.stage.getViewport().apply();
+        this.stage.act(delta);
+        this.stage.draw();
     }
 
     protected void loadAsyncImages()
@@ -190,9 +191,6 @@ public abstract class Screen implements com.badlogic.gdx.Screen
     @Override
     public void dispose()
     {
-        if (this.stage != null)
-        {
-            this.stage.dispose();
-        }
+        this.stage.dispose();
     }
 }

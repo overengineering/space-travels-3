@@ -21,8 +21,6 @@ public class CreditsScreen extends Screen
     {
         super(true, true);
 
-        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
-
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
         table.add("Credits", "large", Color.WHITE);
@@ -35,8 +33,6 @@ public class CreditsScreen extends Screen
         table.row();
 
         table.add(getBackButton());
-
-        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
     private Actor getCreditsScrollPane()

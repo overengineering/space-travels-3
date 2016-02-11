@@ -5,7 +5,6 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
@@ -15,7 +14,6 @@ import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.event.PurchasedEvent;
 import com.draga.spaceTravels3.manager.ScreenManager;
-import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.level.LevelPack;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
@@ -36,8 +34,6 @@ public class LevelPackScreen extends Screen
         super(true, true);
         this.levelPack = levelPack;
 
-        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
-
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
         // Header label.
@@ -56,12 +52,13 @@ public class LevelPackScreen extends Screen
         // Buttons.
         table.row();
         this.purchaseButton = getPurchaseButton();
-        table.add(this.purchaseButton);
+        table
+            .add(this.purchaseButton);
 
         table.row();
-        table.add(getBackButton());
+        table
+            .add(getBackButton());
 
-        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
         Constants.General.EVENT_BUS.register(this);
     }
 

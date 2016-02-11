@@ -22,8 +22,6 @@ public class CountdownScreen extends Screen
         super(true, false);
         this.secondsRemaining = Constants.Game.COUNTDOWN_SECONDS;
 
-        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
-
         Table table = new Table();
         this.stage.addActor(table);
         table.setFillParent(true);
@@ -32,8 +30,6 @@ public class CountdownScreen extends Screen
         table
             .add(this.timerLabel)
             .center();
-
-        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
     private Label getTimerLabel()

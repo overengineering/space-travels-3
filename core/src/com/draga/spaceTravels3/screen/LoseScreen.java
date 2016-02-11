@@ -41,7 +41,6 @@ public class LoseScreen extends IngameMenuScreen
     public void dispose()
     {
         this.sound.stop();
-        this.sound.dispose();
         super.dispose();
     }
 }

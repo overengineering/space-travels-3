@@ -98,8 +98,6 @@ public class TutorialScreen extends Screen
 
         Constants.General.EVENT_BUS.register(this);
 
-        this.stage.setDebugAll(Constants.General.IS_DEBUGGING);
-
         moveTilt();
     }
 

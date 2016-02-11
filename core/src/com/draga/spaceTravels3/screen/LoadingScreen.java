@@ -64,8 +64,6 @@ public class LoadingScreen extends Screen
         this.tutorial = tutorial;
         this.stopwatch = Stopwatch.createStarted();
 
-        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
-
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
         table.add(new Label("Loading", UIManager.skin, "large", Color.WHITE));
@@ -82,8 +80,6 @@ public class LoadingScreen extends Screen
             showFaceUpWarning();
             this.waitingForWarning = true;
         }
-
-        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
     private ProgressBar getProgressBar()

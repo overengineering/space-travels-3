@@ -6,22 +6,17 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.event.PurchasedEvent;
 import com.draga.spaceTravels3.manager.ScreenManager;
-import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.level.LevelManager;
 import com.draga.spaceTravels3.manager.level.LevelPack;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
-import com.draga.spaceTravels3.ui.BeepingClickListener;
-import com.draga.spaceTravels3.ui.BeepingImageTextButton;
-import com.draga.spaceTravels3.ui.BeepingTextButton;
-import com.draga.spaceTravels3.ui.Screen;
+import com.draga.spaceTravels3.ui.*;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.ArrayList;
@@ -30,12 +25,12 @@ public class MenuScreen extends Screen
 {
     private final Cell levelPackListCell;
 
+    protected final float buttonHeight = Gdx.graphics.getHeight() * 0.12f;
+
     public MenuScreen()
     {
         super(true, true);
         Constants.General.EVENT_BUS.register(this);
-
-        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
@@ -58,16 +53,27 @@ public class MenuScreen extends Screen
         // Buttons.
         table.row();
         Table buttonsTable = UIManager.getDefaultTable();
+        buttonsTable
+            .defaults()
+            .size(this.buttonHeight);
 
         // Tutorial button.
-        buttonsTable.add(getSettingsButton(false));
-        buttonsTable.add(getGuideButton());
-        buttonsTable.add(getTutorialButton());
-        buttonsTable.add(getCreditsButton());
-        buttonsTable.add(getShareButton());
-        buttonsTable.add(getRateButton());
-        buttonsTable.add(getAchievementsButton());
-        buttonsTable.add(getLeaderboardsButton());
+        buttonsTable
+            .add(getSettingsButton(false));
+        buttonsTable
+            .add(getGuideButton());
+        buttonsTable
+            .add(getTutorialButton());
+        buttonsTable
+            .add(getCreditsButton());
+        buttonsTable
+            .add(getShareButton());
+        buttonsTable
+            .add(getRateButton());
+        buttonsTable
+            .add(getAchievementsButton());
+        buttonsTable
+            .add(getLeaderboardsButton());
 
         table.add(buttonsTable);
 
@@ -75,15 +81,12 @@ public class MenuScreen extends Screen
         {
             this.stage.addActor(getDebugButton());
         }
-
-        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
     private ScrollPane getLevelPackList()
     {
         java.util.List<LevelPack> levelPacks =
             LevelManager.getLevelPacks();
-
 
         final Table outerTable = UIManager.getDefaultTable();
 
@@ -169,8 +172,8 @@ public class MenuScreen extends Screen
     
     private Actor getGuideButton()
     {
-        BeepingImageTextButton
-            button = new BeepingImageTextButton("", UIManager.skin, "guide");
+        BeepingImageButton
+            button = new BeepingImageButton(UIManager.skin, "guide");
 
         button.addListener(
             new ClickListener()
@@ -187,8 +190,8 @@ public class MenuScreen extends Screen
 
     private Actor getTutorialButton()
     {
-        BeepingImageTextButton button =
-            new BeepingImageTextButton("", UIManager.skin, "tutorial");
+        BeepingImageButton button =
+            new BeepingImageButton(UIManager.skin, "tutorial");
 
         button.addListener(
             new ClickListener()
@@ -210,8 +213,8 @@ public class MenuScreen extends Screen
 
     private Actor getCreditsButton()
     {
-        BeepingImageTextButton button =
-            new BeepingImageTextButton("", UIManager.skin, "credits");
+        BeepingImageButton button =
+            new BeepingImageButton(UIManager.skin, "credits");
 
         button.addListener(
             new ClickListener()
@@ -228,8 +231,8 @@ public class MenuScreen extends Screen
 
     private Actor getShareButton()
     {
-        BeepingImageTextButton button =
-            new BeepingImageTextButton("", UIManager.skin, "share");
+        BeepingImageButton button =
+            new BeepingImageButton(UIManager.skin, "share");
         button.addListener(new ClickListener()
         {
             @Override
@@ -244,8 +247,8 @@ public class MenuScreen extends Screen
 
     private Actor getRateButton()
     {
-        BeepingImageTextButton
-            button = new BeepingImageTextButton("", UIManager.skin, "rate");
+        BeepingImageButton
+            button = new BeepingImageButton(UIManager.skin, "rate");
 
         button.addListener(
             new ClickListener()
@@ -262,8 +265,8 @@ public class MenuScreen extends Screen
 
     private Actor getAchievementsButton()
     {
-        BeepingImageTextButton
-            button = new BeepingImageTextButton("", UIManager.skin, "achievement");
+        BeepingImageButton
+            button = new BeepingImageButton(UIManager.skin, "achievement");
 
         button.addListener(
             new ClickListener()
@@ -280,8 +283,8 @@ public class MenuScreen extends Screen
 
     private Actor getLeaderboardsButton()
     {
-        BeepingImageTextButton
-            button = new BeepingImageTextButton("", UIManager.skin, "leaderboard");
+        BeepingImageButton
+            button = new BeepingImageButton(UIManager.skin, "leaderboard");
 
         button.addListener(
             new ClickListener()
