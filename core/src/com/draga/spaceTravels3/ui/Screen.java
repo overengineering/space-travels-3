@@ -1,5 +1,7 @@
 package com.draga.spaceTravels3.ui;
 
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -11,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.UIManager;
+import com.draga.spaceTravels3.screen.LevelPackScreen;
 import com.draga.spaceTravels3.screen.SettingsScreen;
 
 import java.util.ArrayList;
@@ -110,5 +113,26 @@ public abstract class Screen implements com.badlogic.gdx.Screen
     public void onAdded()
     {
 
+    }
+
+    protected InputAdapter getBackInputAdapter()
+    {
+        return new InputAdapter()
+        {
+            @Override
+            public boolean keyUp(int keycode)
+            {
+                switch (keycode)
+                {
+                    case Input.Keys.ESCAPE:
+                    case Input.Keys.BACK:
+                    {
+                        ScreenManager.removeScreen(Screen.this);
+                        return true;
+                    }
+                }
+                return false;
+            }
+        };
     }
 }

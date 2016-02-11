@@ -2,6 +2,8 @@ package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -447,19 +449,31 @@ public class TutorialScreen extends Screen
     @Override
     public void show()
     {
-        Gdx.input.setInputProcessor(this.stage);
+        InputAdapter backInputAdapter = new InputAdapter()
+        {
+            @Override
+            public boolean keyUp(int keycode)
+            {
+                switch (keycode)
+                {
+                    case Input.Keys.ESCAPE:
+                    case Input.Keys.BACK:
+                    {
+                    
+                        ScreenManager.removeScreen(TutorialScreen.this);
+                        ScreenManager.removeScreen(TutorialScreen.this.gameScreen);
+                        return true;
+                    }
+                }
+                return false;
+            }
+        };
+        Gdx.input.setInputProcessor(new InputMultiplexer(this.stage, backInputAdapter));
     }
 
     @Override
     public void render(float delta)
     {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
-            || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
-        {
-            ScreenManager.removeScreen(this);
-            ScreenManager.removeScreen(this.gameScreen);
-        }
-
         this.stage.getViewport().apply();
         this.stage.act(delta);
         this.stage.draw();

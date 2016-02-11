@@ -124,17 +124,19 @@ public class GameScreen extends Screen
             @Override
             public boolean keyUp(int keycode)
             {
-                if (keycode == Input.Keys.BACK
-                    || keycode == Input.Keys.MENU
-                    || keycode == Input.Keys.ESCAPE)
+                switch (keycode)
                 {
-                    GameScreen.this.level.pause();
-                    ScreenManager.addScreen(new GamePauseMenuScreen(
-                        GameScreen.this.level,
-                        GameScreen.this));
-                    return true;
+                    case Input.Keys.BACK:
+                    case Input.Keys.MENU:
+                    case Input.Keys.ESCAPE:
+                    {
+                        GameScreen.this.level.pause();
+                        ScreenManager.addScreen(new GamePauseMenuScreen(
+                            GameScreen.this.level,
+                            GameScreen.this));
+                        return true;
+                    }
                 }
-
                 return false;
             }
         });

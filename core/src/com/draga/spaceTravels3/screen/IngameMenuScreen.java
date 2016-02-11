@@ -2,6 +2,8 @@ package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -29,9 +31,9 @@ public abstract class IngameMenuScreen extends Screen
     public static String s =
         "gTAKsCqx0NeZVO9igYzMNjolg61Y6KLwLQaulfOZzuI2WLhPNr*mAmEy3T%VP08ZzWILHaHhKDHXeGP";
 
-    protected final Level  level;
-    protected final Cell   centreCell;
-    private final   Stage  stage;
+    protected final Level level;
+    protected final Cell centreCell;
+    private final   Stage stage;
     protected       Screen gameScreen;
 
     public IngameMenuScreen(Screen gameScreen, Level level)
@@ -79,6 +81,9 @@ public abstract class IngameMenuScreen extends Screen
                 .add(getNextDifficultyButton(nextDifficulty))
                 .row();
         }
+
+        table.add(getSettingsButton(true));
+        table.row();
 
         table.add(getRetryButton());
         table.row();
@@ -205,26 +210,34 @@ public abstract class IngameMenuScreen extends Screen
     @Override
     public void show()
     {
-        Gdx.input.setInputProcessor(this.stage);
+        InputAdapter enterInputAdapter = new InputAdapter()
+        {
+            @Override
+            public boolean keyUp(int keycode)
+            {
+                switch (keycode)
+                {
+                    case Input.Keys.ENTER:
+                    {
+                        play(
+                            IngameMenuScreen.this.level.getId(),
+                            IngameMenuScreen.this.level.getDifficulty());
+                        return true;
+                    }
+                }
+                return false;
+            }
+        };
+
+        Gdx.input.setInputProcessor(new InputMultiplexer(
+            this.stage,
+            getBackInputAdapter(),
+            enterInputAdapter));
     }
 
     @Override
     public void render(float delta)
     {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
-            || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
-        {
-            ScreenManager.removeScreen(IngameMenuScreen.this);
-            ScreenManager.removeScreen(IngameMenuScreen.this.gameScreen);
-            return;
-        }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER))
-        {
-            play(this.level.getId(), this.level.getDifficulty());
-            return;
-        }
-
         this.stage.getViewport().apply();
 
         this.stage.act(delta);

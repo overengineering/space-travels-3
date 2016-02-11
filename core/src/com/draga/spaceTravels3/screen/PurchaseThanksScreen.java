@@ -2,6 +2,7 @@ package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -72,18 +73,12 @@ public class PurchaseThanksScreen extends Screen
     @Override
     public void show()
     {
-        Gdx.input.setInputProcessor(this.stage);
+        Gdx.input.setInputProcessor(new InputMultiplexer(this.stage, getBackInputAdapter()));
     }
 
     @Override
     public void render(float delta)
     {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
-            || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
-        {
-            ScreenManager.removeScreen(this);
-        }
-
         this.stage.getViewport().apply();
 
         this.stage.act(delta);
