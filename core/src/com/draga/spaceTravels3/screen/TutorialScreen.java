@@ -6,9 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.InputType;
@@ -29,67 +27,79 @@ import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLe
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisablePlanet;
 import com.draga.spaceTravels3.physic.PhysicsEngine;
 import com.draga.spaceTravels3.tutorial.OrbitAction;
-import com.draga.spaceTravels3.tutorial.PhysicsComponentMovementAction;
 import com.draga.spaceTravels3.tutorial.PhysicsComponentVelocityAction;
 import com.draga.spaceTravels3.tutorial.PickupCollectedAction;
-import com.draga.spaceTravels3.ui.BeepingTextButton;
+import com.draga.spaceTravels3.ui.BeepingImageTextButton;
 import com.draga.spaceTravels3.ui.Screen;
 import com.google.common.eventbus.Subscribe;
 
 public class TutorialScreen extends Screen
 {
-    private final Level             level;
-    private final GameScreen        gameScreen;
-    private final Dialog            dialog;
-    private final Label             dialogHeader;
-    private final Label             dialogMessage;
-    private final BeepingTextButton dialogButton;
-    private final float             labelsWidth;
-    private       Stage             stage;
-    private       InputType         originalInputType;
-    private       ClickListener     nextTextButtonListener;
-    private       Planet            planet;
-    private       Texture           planetTexture;
-    private       OrbitAction       orbitAction;
-    private       Texture           destinationPlanetTexture;
-    private       Planet            destinationPlanet;
+    private static final float VELOCITY_TO_TRIGGER_MOVEMENT = 50f;
+    private static final float VELOCITY_TO_TRIGGER_STOP     = 3f;
+
+    private final Level                  level;
+    private final GameScreen             gameScreen;
+    private final Dialog                 dialog;
+    private final Label                  dialogHeader;
+    private final Label                  dialogMessage;
+    private final BeepingImageTextButton dialogNextButton;
+    private final float                  labelsWidth;
+    private final Table                  buttonsTable;
+    private final Cell                   leftButtonCell;
+    private       Stage                  stage;
+    private       InputType              originalInputType;
+    private       ClickListener          nextTextButtonListener;
+    private       Planet                 planet;
+    private       Texture                planetTexture;
+    private       OrbitAction            orbitAction;
+    private       Texture                destinationPlanetTexture;
+    private       Planet                 destinationPlanet;
 
     public TutorialScreen(Level level, GameScreen gameScreen)
     {
-        super(false, false);
+        super(true, false);
         this.level = level;
         this.gameScreen = gameScreen;
 
         this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
         this.labelsWidth = this.stage.getWidth() * 0.8f;
 
-
         this.dialog = new Dialog("", UIManager.skin);
 
-        Table table = UIManager.getDefaultTable();
-        this.dialog.add(table);
+        Table table = this.dialog.getContentTable();
 
         this.dialogHeader = new Label("", UIManager.skin, "large", Color.WHITE);
         table
             .add(this.dialogHeader)
-            .center();
-        table.row();
+            .center()
+            .row();
 
         this.dialogMessage = new Label("", UIManager.skin);
         table
             .add(this.dialogMessage)
             .center()
-            .width(this.labelsWidth);
+            .width(this.labelsWidth)
+            .row();
         this.dialogMessage.setWrap(true);
-        table.row();
 
-        // TODO: next button skin
-        this.dialogButton = new BeepingTextButton("Next", UIManager.skin);
-        table
-            .add(this.dialogButton)
+        this.dialogNextButton = new BeepingImageTextButton("Next", UIManager.skin, "next");
+
+        this.buttonsTable = UIManager.getDefaultTable();
+        table.add(this.buttonsTable);
+        this.buttonsTable
+            .row()
+            .expandX();
+        this.leftButtonCell = this.buttonsTable
+            .add()
+            .left();
+        this.buttonsTable
+            .add(this.dialogNextButton)
             .right();
 
         Constants.General.EVENT_BUS.register(this);
+
+        this.stage.setDebugAll(Constants.General.IS_DEBUGGING);
 
         moveTilt();
     }
@@ -108,7 +118,7 @@ public class TutorialScreen extends Screen
                 + "Try using the tilt: place the "
                 + "device facing up and tilt it slightly where you want to go.\r\n"
                 + "The more you tilt the faster the ship will accelerate (and consume fuel).\r\n"
-                + "Try to move away using the accelerometer.");
+                + "Try to move gain some speed using the accelerometer.");
 
         this.nextTextButtonListener = new ClickListener()
         {
@@ -116,9 +126,10 @@ public class TutorialScreen extends Screen
             public void clicked(InputEvent event, float x, float y)
             {
                 TutorialScreen.this.dialog.hide();
-                TutorialScreen.this.stage.addAction(new PhysicsComponentMovementAction(
+                TutorialScreen.this.stage.addAction(new PhysicsComponentVelocityAction(
                     TutorialScreen.this.level.getShip().physicsComponent,
-                    50f)
+                    VELOCITY_TO_TRIGGER_MOVEMENT,
+                    true)
                 {
                     @Override
                     protected void onTriggered()
@@ -129,7 +140,7 @@ public class TutorialScreen extends Screen
                 TutorialScreen.this.level.endTutorial();
             }
         };
-        this.dialogButton.addListener(this.nextTextButtonListener);
+        this.dialogNextButton.addListener(this.nextTextButtonListener);
 
         this.dialog.show(this.stage);
     }
@@ -137,8 +148,8 @@ public class TutorialScreen extends Screen
     private void stopTilt()
     {
         this.level.startTutorial();
-        this.dialogMessage.setText("Now try to slow down the ship!");
-        this.dialogButton.removeListener(this.nextTextButtonListener);
+        this.dialogMessage.setText("Now try to stop the ship!");
+        this.dialogNextButton.removeListener(this.nextTextButtonListener);
         this.nextTextButtonListener = new ClickListener()
         {
             @Override
@@ -147,7 +158,7 @@ public class TutorialScreen extends Screen
                 TutorialScreen.this.dialog.hide();
                 TutorialScreen.this.stage.addAction(new PhysicsComponentVelocityAction(
                     TutorialScreen.this.level.getShip().physicsComponent,
-                    1f,
+                    VELOCITY_TO_TRIGGER_STOP,
                     false)
                 {
                     @Override
@@ -159,7 +170,7 @@ public class TutorialScreen extends Screen
                 TutorialScreen.this.level.endTutorial();
             }
         };
-        this.dialogButton.addListener(this.nextTextButtonListener);
+        this.dialogNextButton.addListener(this.nextTextButtonListener);
         this.dialog.show(this.stage);
     }
 
@@ -173,17 +184,18 @@ public class TutorialScreen extends Screen
             + "that direction.\r\n"
             + "The further away you touch from the ship the the faster the ship will accelerate "
             + "(and consume fuel).\r\n"
-            + "Move away using the touch screen.");
-        this.dialogButton.removeListener(this.nextTextButtonListener);
+            + "Try to gain some speed using the touch screen.");
+        this.dialogNextButton.removeListener(this.nextTextButtonListener);
         this.nextTextButtonListener = new ClickListener()
         {
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
                 TutorialScreen.this.dialog.hide();
-                TutorialScreen.this.stage.addAction(new PhysicsComponentMovementAction(
+                TutorialScreen.this.stage.addAction(new PhysicsComponentVelocityAction(
                     TutorialScreen.this.level.getShip().physicsComponent,
-                    50f)
+                    VELOCITY_TO_TRIGGER_MOVEMENT,
+                    true)
                 {
                     @Override
                     protected void onTriggered()
@@ -194,15 +206,16 @@ public class TutorialScreen extends Screen
                 TutorialScreen.this.level.endTutorial();
             }
         };
-        this.dialogButton.addListener(this.nextTextButtonListener);
+        this.dialogNextButton.addListener(this.nextTextButtonListener);
         this.dialog.show(this.stage);
     }
 
     private void stopTouch()
     {
         this.level.startTutorial();
-        this.dialogMessage.setText("Now try to slow down the ship!");
-        this.dialogButton.removeListener(this.nextTextButtonListener);
+
+        this.dialogMessage.setText("Now try to stop the ship!");
+        this.dialogNextButton.removeListener(this.nextTextButtonListener);
         this.nextTextButtonListener = new ClickListener()
         {
             @Override
@@ -211,7 +224,7 @@ public class TutorialScreen extends Screen
                 TutorialScreen.this.dialog.hide();
                 TutorialScreen.this.stage.addAction(new PhysicsComponentVelocityAction(
                     TutorialScreen.this.level.getShip().physicsComponent,
-                    1f,
+                    VELOCITY_TO_TRIGGER_STOP,
                     false)
                 {
                     @Override
@@ -223,20 +236,44 @@ public class TutorialScreen extends Screen
                                 .setInputType(TutorialScreen.this.originalInputType);
                             TutorialScreen.this.originalInputType = null;
                         }
-                        pickup();
+                        offerSetting();
                     }
                 });
                 TutorialScreen.this.level.endTutorial();
             }
         };
-        this.dialogButton.addListener(this.nextTextButtonListener);
+        this.dialogNextButton.addListener(this.nextTextButtonListener);
+        this.dialog.show(this.stage);
+    }
+
+    private void offerSetting()
+    {
+        this.level.startTutorial();
+        this.dialogHeader.setText("Settings");
+
+        this.dialogMessage.setText("You can chose how to move around in the settings.");
+
+        final Button settingsButton = getSettingsButton(true);
+        this.leftButtonCell.setActor(settingsButton);
+
+        this.dialogNextButton.removeListener(this.nextTextButtonListener);
+        this.nextTextButtonListener = new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                TutorialScreen.this.leftButtonCell.clearActor();
+                TutorialScreen.this.dialog.hide();
+                pickup();
+            }
+        };
+        this.dialogNextButton.addListener(this.nextTextButtonListener);
+
         this.dialog.show(this.stage);
     }
 
     private void pickup()
     {
-        this.level.startTutorial();
-
         PhysicsComponent shipPhysicsComponent = this.level.getShip().physicsComponent;
         shipPhysicsComponent.getVelocity().setZero();
 
@@ -256,7 +293,7 @@ public class TutorialScreen extends Screen
         this.dialogMessage.setText("Provides " + Constants.Game.PICKUP_POINTS + " points.\r\n"
             + "Collect the pickup!");
 
-        this.dialogButton.removeListener(this.nextTextButtonListener);
+        this.dialogNextButton.removeListener(this.nextTextButtonListener);
         this.nextTextButtonListener = new ClickListener()
         {
             @Override
@@ -274,7 +311,7 @@ public class TutorialScreen extends Screen
                 TutorialScreen.this.level.endTutorial();
             }
         };
-        this.dialogButton.addListener(this.nextTextButtonListener);
+        this.dialogNextButton.addListener(this.nextTextButtonListener);
         this.dialog.show(this.stage);
     }
 
@@ -322,7 +359,7 @@ public class TutorialScreen extends Screen
         text += "Try to make " + numberOfOrbits + " orbits around it!";
         this.dialogMessage.setText(text);
 
-        this.dialogButton.removeListener(this.nextTextButtonListener);
+        this.dialogNextButton.removeListener(this.nextTextButtonListener);
         this.nextTextButtonListener = new ClickListener()
         {
             @Override
@@ -347,7 +384,7 @@ public class TutorialScreen extends Screen
                 TutorialScreen.this.level.endTutorial();
             }
         };
-        this.dialogButton.addListener(this.nextTextButtonListener);
+        this.dialogNextButton.addListener(this.nextTextButtonListener);
         this.dialog.show(this.stage);
     }
 
@@ -393,7 +430,7 @@ public class TutorialScreen extends Screen
                 + "Try to land on it, an indicator on the planet will show you if you are going too fast!";
         this.dialogMessage.setText(text);
 
-        this.dialogButton.removeListener(this.nextTextButtonListener);
+        this.dialogNextButton.removeListener(this.nextTextButtonListener);
         this.nextTextButtonListener = new ClickListener()
         {
             @Override
@@ -403,7 +440,7 @@ public class TutorialScreen extends Screen
                 TutorialScreen.this.level.endTutorial();
             }
         };
-        this.dialogButton.addListener(this.nextTextButtonListener);
+        this.dialogNextButton.addListener(this.nextTextButtonListener);
         this.dialog.show(this.stage);
     }
 
@@ -504,7 +541,7 @@ public class TutorialScreen extends Screen
 
         this.dialogMessage.setText("Good job! You have completed the tutorial!");
 
-        this.dialogButton.removeListener(this.nextTextButtonListener);
+        this.dialogNextButton.removeListener(this.nextTextButtonListener);
         this.nextTextButtonListener = new ClickListener()
         {
             @Override
@@ -514,9 +551,9 @@ public class TutorialScreen extends Screen
                 ScreenManager.removeScreen(TutorialScreen.this.gameScreen);
             }
         };
-        this.dialogButton.addListener(this.nextTextButtonListener);
+        this.dialogNextButton.addListener(this.nextTextButtonListener);
 
-        this.dialogButton.setText("Exit");
+        this.dialogNextButton.setText("Exit");
         this.dialog.show(this.stage);
 
         SettingsManager.getSettings().tutorialPlayed = true;
