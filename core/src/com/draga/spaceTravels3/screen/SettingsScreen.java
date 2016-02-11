@@ -1,18 +1,14 @@
 package com.draga.spaceTravels3.screen;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.SliderFixInputListener;
-import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.InputType;
-import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.SoundManager;
 import com.draga.spaceTravels3.manager.UIManager;
@@ -42,7 +38,7 @@ public class SettingsScreen extends Screen
         table.row();
         table
             .add(getBackButton())
-            .bottom();
+            .height(this.buttonHeight);
     }
 
     public Label getHeaderLabel()
@@ -57,14 +53,8 @@ public class SettingsScreen extends Screen
         Table table = UIManager.getDefaultTable();
         ScrollPane scrollPane = new ScrollPane(table);
 
-        //noinspection PointlessBooleanExpression
-        if (Constants.General.IS_DEBUGGING
-            || Gdx.app.getType() == Application.ApplicationType.Android
-            || Gdx.app.getType() == Application.ApplicationType.iOS)
-        {
-            addInputType(table);
-            table.row();
-        }
+        addInputType(table);
+        table.row();
 
         addVolumeFX(table);
 
@@ -152,7 +142,9 @@ public class SettingsScreen extends Screen
         });
 
         buttonGroup.add(touchButton);
-        table.add(touchButton);
+        table
+            .add(touchButton)
+            .height(this.buttonHeight);
 
         BeepingImageTextButton accelerometerButton =
             new BeepingImageTextButton("Tilt", UIManager.skin, "accelerometer");
@@ -168,7 +160,9 @@ public class SettingsScreen extends Screen
         });
 
         buttonGroup.add(accelerometerButton);
-        table.add(accelerometerButton);
+        table
+            .add(accelerometerButton)
+            .height(this.buttonHeight);
 
         return table;
     }

@@ -35,8 +35,8 @@ public class AssList
     public String iconRate;
     public String iconGuide;
     public String iconTutorial;
-    public String iconExit;
-    public String iconNext;
+    public String iconLeft;
+    public String iconRight;
     public String iconShare;
     public String iconRetry;
     public String iconTouch;

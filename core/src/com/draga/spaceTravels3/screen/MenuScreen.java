@@ -25,8 +25,6 @@ public class MenuScreen extends Screen
 {
     private final Cell levelPackListCell;
 
-    protected final float buttonHeight = Gdx.graphics.getHeight() * 0.12f;
-
     public MenuScreen()
     {
         super(true, true);

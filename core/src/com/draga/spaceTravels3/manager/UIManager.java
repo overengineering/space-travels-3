@@ -94,8 +94,8 @@ public abstract class UIManager
         addButtonStyles("tutorial", AssMan.getAssList().iconTutorial);
         addButtonStyles("guide",AssMan.getAssList().iconGuide);
         addButtonStyles("play", AssMan.getAssList().iconPlay);
-        addButtonStyles("exit", AssMan.getAssList().iconExit);
-        addButtonStyles("next", AssMan.getAssList().iconNext);
+        addButtonStyles("exit", AssMan.getAssList().iconLeft);
+        addButtonStyles("next", AssMan.getAssList().iconRight);
         addButtonStyles("share",AssMan.getAssList().iconShare);
         addButtonStyles("unlock",AssMan.getAssList().iconUnlock);
         addButtonStyles("retry", AssMan.getAssList().iconRetry);

@@ -62,7 +62,8 @@ public class LevelScreen extends Screen
         // Back button.
         table.row();
         table
-            .add(getBackButton());
+            .add(getBackButton())
+            .height(this.buttonHeight);
 
         Constants.General.EVENT_BUS.register(this);
     }
@@ -155,7 +156,9 @@ public class LevelScreen extends Screen
                     SpaceTravels3.services.googleShowLeaderboard(serialisableDifficulty.playLeaderboardID);
                 }
             });
-            innerDifficultyTable.add(leaderboardButton);
+            innerDifficultyTable
+                .add(leaderboardButton)
+                .height(this.buttonHeight);
 
             // Play button.
             BeepingImageTextButton playButton =
@@ -187,7 +190,9 @@ public class LevelScreen extends Screen
                 }
             });
 
-            innerDifficultyTable.add(playButton);
+            innerDifficultyTable
+                .add(playButton)
+                .height(this.buttonHeight);
 
             difficultyTable.add(innerDifficultyTable);
 

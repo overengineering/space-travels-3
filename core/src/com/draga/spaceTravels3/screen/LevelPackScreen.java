@@ -53,11 +53,13 @@ public class LevelPackScreen extends Screen
         table.row();
         this.purchaseButton = getPurchaseButton();
         table
-            .add(this.purchaseButton);
+            .add(this.purchaseButton)
+            .height(this.buttonHeight);
 
         table.row();
         table
-            .add(getBackButton());
+            .add(getBackButton())
+            .height(this.buttonHeight);
 
         Constants.General.EVENT_BUS.register(this);
     }

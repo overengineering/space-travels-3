@@ -65,6 +65,7 @@ public abstract class IngameMenuScreen extends Screen
         {
             table
                 .add(getNextLevelButton(nextSerialisableLevel))
+                .height(this.buttonHeight)
                 .row();
         }
 
@@ -74,17 +75,23 @@ public abstract class IngameMenuScreen extends Screen
         {
             table
                 .add(getNextDifficultyButton(nextDifficulty))
+                .height(this.buttonHeight)
                 .row();
         }
 
         table
             .add(getRetryButton())
+            .height(this.buttonHeight)
             .row();
 
-        table.add(getSettingsButton(true));
+        table
+            .add(getSettingsButton(true))
+            .height(this.buttonHeight);
         table.row();
 
-        table.add(getMainMenuTextButton());
+        table
+            .add(getMainMenuTextButton())
+            .height(this.buttonHeight);
         table.row();
     }
 

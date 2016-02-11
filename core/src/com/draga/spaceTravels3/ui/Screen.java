@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.manager.ScreenManager;
+import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.screen.SettingsScreen;
@@ -24,10 +25,11 @@ import java.util.HashMap;
 
 public abstract class Screen implements com.badlogic.gdx.Screen
 {
-    private final boolean blockable;
-    private final boolean blockParents;
-    protected     Stage   stage;
-    private HashMap<String, Image> asyncImages;
+    protected final float buttonHeight = Gdx.graphics.getHeight() * 0.12f;
+    private final boolean                blockable;
+    private final boolean                blockParents;
+    protected     Stage                  stage;
+    private       HashMap<String, Image> asyncImages;
 
     public Screen(boolean blockable, boolean blockParents)
     {
@@ -37,8 +39,7 @@ public abstract class Screen implements com.badlogic.gdx.Screen
         this.asyncImages = new HashMap<>();
 
         this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
-        this.stage.setDebugAll(true);
-        //        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
+        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
     public boolean isBlockable()

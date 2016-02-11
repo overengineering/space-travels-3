@@ -39,8 +39,9 @@ public class GuideScreen extends Screen
         table.row();
 
         // Back button.
-        table.row();
-        table.add(getBackButton());
+        table
+            .add(getBackButton())
+            .height(this.buttonHeight);
     }
 
     private Actor getGuide()

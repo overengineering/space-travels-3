@@ -32,7 +32,9 @@ public class CreditsScreen extends Screen
             .expand();
         table.row();
 
-        table.add(getBackButton());
+        table
+            .add(getBackButton())
+            .height(this.buttonHeight);
     }
 
     private Actor getCreditsScrollPane()

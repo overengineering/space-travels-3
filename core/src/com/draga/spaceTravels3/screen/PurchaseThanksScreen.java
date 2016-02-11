@@ -60,7 +60,7 @@ public class PurchaseThanksScreen extends Screen
             .row();
         table
             .add(getBackButton())
-            .bottom();
+            .height(this.buttonHeight);
     }
 
     @Override
