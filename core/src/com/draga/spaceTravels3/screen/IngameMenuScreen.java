@@ -228,4 +228,26 @@ public abstract class IngameMenuScreen extends Screen
             this.stage,
             enterInputAdapter));
     }
+
+    protected InputAdapter getCloseInputAdapter()
+    {
+        return new InputAdapter()
+        {
+            @Override
+            public boolean keyUp(int keycode)
+            {
+                switch (keycode)
+                {
+                    case Input.Keys.ESCAPE:
+                    case Input.Keys.BACK:
+                    {
+                        ScreenManager.removeScreen(IngameMenuScreen.this);
+                        ScreenManager.removeScreen(IngameMenuScreen.this.gameScreen);
+                        return true;
+                    }
+                }
+                return false;
+            }
+        };
+    }
 }

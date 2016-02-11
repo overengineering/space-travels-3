@@ -1,5 +1,7 @@
 package com.draga.spaceTravels3.screen;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -79,6 +81,15 @@ public class WinScreen extends IngameMenuScreen
         table.add(String.valueOf(score.getTotalScore()));
 
         return table;
+    }
+
+    @Override
+    public void show()
+    {
+        super.show();
+        Gdx.input.setInputProcessor(new InputMultiplexer(
+            Gdx.input.getInputProcessor(),
+            getCloseInputAdapter()));
     }
 
     @Override

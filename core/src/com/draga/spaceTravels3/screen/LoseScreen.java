@@ -1,5 +1,7 @@
 package com.draga.spaceTravels3.screen;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.draga.spaceTravels3.event.LoseEvent;
@@ -35,6 +37,15 @@ public class LoseScreen extends IngameMenuScreen
             .center();
 
         this.centreCell.setActor(table);
+    }
+
+    @Override
+    public void show()
+    {
+        super.show();
+        Gdx.input.setInputProcessor(new InputMultiplexer(
+            Gdx.input.getInputProcessor(),
+            getCloseInputAdapter()));
     }
 
     @Override

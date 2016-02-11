@@ -35,17 +35,13 @@ public class MenuScreen extends Screen
         // Header label.
         table
             .add("Space Travels 3", "large")
-            .top();
-
-        // Level list.
-        table.row();
+            .row();
 
         // Firstly create the cell so that if the event comes through it will generate the level
         // pack list again.
         this.levelPackListCell = table
             .add()
-            .expand()
-            .center();
+            .expand();
         this.levelPackListCell.setActor(getLevelPackList());
 
         // Buttons.
