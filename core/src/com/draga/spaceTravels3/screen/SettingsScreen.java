@@ -2,7 +2,6 @@ package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -14,7 +13,6 @@ import com.draga.SliderFixInputListener;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.InputType;
 import com.draga.spaceTravels3.SpaceTravels3;
-import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.SoundManager;
 import com.draga.spaceTravels3.manager.UIManager;
@@ -23,8 +21,6 @@ import com.draga.spaceTravels3.ui.Screen;
 
 public class SettingsScreen extends Screen
 {
-    private Stage stage;
-
     public SettingsScreen()
     {
         super(true, true);
@@ -185,42 +181,5 @@ public class SettingsScreen extends Screen
     public void show()
     {
         Gdx.input.setInputProcessor(new InputMultiplexer(this.stage, getBackInputAdapter()));
-    }
-
-    @Override
-    public void render(float delta)
-    {
-        this.stage.getViewport().apply();
-
-        this.stage.act(delta);
-        this.stage.draw();
-    }
-
-    @Override
-    public void resize(int width, int height)
-    {
-        this.stage.getViewport().update(width, height);
-    }
-
-    @Override
-    public void pause()
-    {
-    }
-
-    @Override
-    public void resume()
-    {
-    }
-
-    @Override
-    public void hide()
-    {
-
-    }
-
-    @Override
-    public void dispose()
-    {
-        this.stage.dispose();
     }
 }

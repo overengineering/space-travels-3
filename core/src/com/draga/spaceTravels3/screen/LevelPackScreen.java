@@ -1,8 +1,6 @@
 package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -19,7 +17,6 @@ import com.draga.spaceTravels3.event.PurchasedEvent;
 import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
-import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.manager.level.LevelPack;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.spaceTravels3.ui.BeepingClickListener;
@@ -33,7 +30,6 @@ public class LevelPackScreen extends Screen
 {
     private final LevelPack levelPack;
     private final Actor     purchaseButton;
-    private       Stage     stage;
 
     public LevelPackScreen(LevelPack levelPack)
     {
@@ -90,8 +86,8 @@ public class LevelPackScreen extends Screen
 
             // If the level icon is not loaded in the ass man then add to an map to load them async.
             Image image = loadTextureAsync(
-                serialisableLevel.serialisedDestinationPlanet.texturePath,
-                AssMan.getAssMan());
+                serialisableLevel.serialisedDestinationPlanet.texturePath
+            );
 
             innerTable
                 .add(image)
@@ -151,45 +147,10 @@ public class LevelPackScreen extends Screen
     }
 
     @Override
-    public void render(float deltaTime)
-    {
-        loadAsyncImages(AssMan.getAssMan());
-
-        this.stage.getViewport().apply();
-
-        this.stage.act(deltaTime);
-        this.stage.draw();
-    }
-
-    @Override
-    public void resize(int width, int height)
-    {
-        this.stage.getViewport().update(width, height);
-    }
-
-    @Override
-    public void pause()
-    {
-
-    }
-
-    @Override
-    public void resume()
-    {
-
-    }
-
-    @Override
-    public void hide()
-    {
-
-    }
-
-    @Override
     public void dispose()
     {
-        this.stage.dispose();
         Constants.General.EVENT_BUS.unregister(this);
+        super.dispose();
     }
 
     @Subscribe

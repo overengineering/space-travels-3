@@ -33,7 +33,6 @@ public abstract class IngameMenuScreen extends Screen
 
     protected final Level level;
     protected final Cell centreCell;
-    private final   Stage stage;
     protected       Screen gameScreen;
 
     public IngameMenuScreen(Screen gameScreen, Level level)
@@ -233,44 +232,5 @@ public abstract class IngameMenuScreen extends Screen
             this.stage,
             getBackInputAdapter(),
             enterInputAdapter));
-    }
-
-    @Override
-    public void render(float delta)
-    {
-        this.stage.getViewport().apply();
-
-        this.stage.act(delta);
-        this.stage.draw();
-    }
-
-    @Override
-    public void resize(int width, int height)
-    {
-        this.stage.getViewport().update(width, height);
-    }
-
-    @Override
-    public void pause()
-    {
-
-    }
-
-    @Override
-    public void resume()
-    {
-
-    }
-
-    @Override
-    public void hide()
-    {
-
-    }
-
-    @Override
-    public void dispose()
-    {
-        this.stage.dispose();
     }
 }

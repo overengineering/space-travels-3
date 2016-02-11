@@ -15,7 +15,6 @@ import com.draga.spaceTravels3.event.PurchasedEvent;
 import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
-import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.manager.level.LevelManager;
 import com.draga.spaceTravels3.manager.level.LevelPack;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
@@ -29,8 +28,7 @@ import java.util.ArrayList;
 
 public class MenuScreen extends Screen
 {
-    private final Cell  levelPackListCell;
-    private       Stage stage;
+    private final Cell levelPackListCell;
 
     public MenuScreen()
     {
@@ -103,8 +101,8 @@ public class MenuScreen extends Screen
             {
                 SerialisableLevel serialisableLevel = serialisableLevels.get(i);
                 Image image = loadTextureAsync(
-                    serialisableLevel.serialisedDestinationPlanet.texturePath,
-                    AssMan.getAssMan());
+                    serialisableLevel.serialisedDestinationPlanet.texturePath
+                );
                 image.sizeBy(Constants.Visual.LEVEL_ICON_SIZE);
                 image.setX(i * (Constants.Visual.LEVEL_ICON_OVERLAP_DISTANCE));
                 imageGroup.addActor(image);
@@ -355,45 +353,10 @@ public class MenuScreen extends Screen
     }
 
     @Override
-    public void render(float deltaTime)
-    {
-        loadAsyncImages(AssMan.getAssMan());
-
-        this.stage.getViewport().apply();
-
-        this.stage.act(deltaTime);
-        this.stage.draw();
-    }
-
-    @Override
-    public void resize(int width, int height)
-    {
-        this.stage.getViewport().update(width, height);
-    }
-
-    @Override
-    public void pause()
-    {
-
-    }
-
-    @Override
-    public void resume()
-    {
-
-    }
-
-    @Override
-    public void hide()
-    {
-
-    }
-
-    @Override
     public void dispose()
     {
-        this.stage.dispose();
         Constants.General.EVENT_BUS.unregister(this);
+        super.dispose();
     }
 
     @Subscribe

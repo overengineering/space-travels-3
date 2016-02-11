@@ -20,12 +20,6 @@ public class BackgroundScreen extends Screen
     }
 
     @Override
-    public void show()
-    {
-
-    }
-
-    @Override
     public void render(float deltaTime)
     {
         if (this.background == null)
@@ -54,35 +48,5 @@ public class BackgroundScreen extends Screen
             this.background.draw(SpaceTravels3.gameViewport.getCamera(), SpaceTravels3.spriteBatch);
             SpaceTravels3.spriteBatch.end();
         }
-    }
-
-    @Override
-    public void resize(int width, int height)
-    {
-
-    }
-
-    @Override
-    public void pause()
-    {
-
-    }
-
-    @Override
-    public void resume()
-    {
-
-    }
-
-    @Override
-    public void hide()
-    {
-
-    }
-
-    @Override
-    public void dispose()
-    {
-
     }
 }

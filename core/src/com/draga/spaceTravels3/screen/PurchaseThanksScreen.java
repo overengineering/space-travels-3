@@ -1,7 +1,6 @@
 package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -18,8 +17,6 @@ import com.draga.spaceTravels3.ui.Screen;
 
 public class PurchaseThanksScreen extends Screen
 {
-    private Stage stage;
-
     public PurchaseThanksScreen()
     {
         super(true, false);
@@ -74,42 +71,5 @@ public class PurchaseThanksScreen extends Screen
     public void show()
     {
         Gdx.input.setInputProcessor(new InputMultiplexer(this.stage, getBackInputAdapter()));
-    }
-
-    @Override
-    public void render(float delta)
-    {
-        this.stage.getViewport().apply();
-
-        this.stage.act(delta);
-        this.stage.draw();
-    }
-
-    @Override
-    public void resize(int width, int height)
-    {
-        this.stage.getViewport().update(width, height);
-    }
-
-    @Override
-    public void pause()
-    {
-    }
-
-    @Override
-    public void resume()
-    {
-    }
-
-    @Override
-    public void hide()
-    {
-
-    }
-
-    @Override
-    public void dispose()
-    {
-        this.stage.dispose();
     }
 }

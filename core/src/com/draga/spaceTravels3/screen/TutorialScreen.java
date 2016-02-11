@@ -7,7 +7,6 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.spaceTravels3.Constants;
@@ -49,7 +48,6 @@ public class TutorialScreen extends Screen
     private final float                  labelsWidth;
     private final Table                  buttonsTable;
     private final Cell                   leftButtonCell;
-    private       Stage                  stage;
     private       InputType              originalInputType;
     private       ClickListener          nextTextButtonListener;
     private       Planet                 planet;
@@ -64,7 +62,6 @@ public class TutorialScreen extends Screen
         this.level = level;
         this.gameScreen = gameScreen;
 
-        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
         this.labelsWidth = this.stage.getWidth() * 0.8f;
 
         this.dialog = new Dialog("", UIManager.skin);
@@ -472,36 +469,6 @@ public class TutorialScreen extends Screen
     }
 
     @Override
-    public void render(float delta)
-    {
-        this.stage.getViewport().apply();
-        this.stage.act(delta);
-        this.stage.draw();
-    }
-
-    @Override
-    public void resize(int width, int height)
-    {
-        this.stage.getViewport().update(width, height);
-    }
-
-    @Override
-    public void pause()
-    {
-    }
-
-    @Override
-    public void resume()
-    {
-    }
-
-    @Override
-    public void hide()
-    {
-
-    }
-
-    @Override
     public void dispose()
     {
         if (this.originalInputType != null)
@@ -519,8 +486,9 @@ public class TutorialScreen extends Screen
             this.destinationPlanetTexture.dispose();
         }
 
-        this.stage.dispose();
         Constants.General.EVENT_BUS.unregister(this);
+
+        super.dispose();
     }
 
     @Subscribe

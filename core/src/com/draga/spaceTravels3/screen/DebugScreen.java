@@ -20,7 +20,6 @@ import com.draga.spaceTravels3.ui.Screen;
 public class DebugScreen extends Screen
 {
     private static final String LOGGING_TAG = DebugScreen.class.getSimpleName();
-    private Stage stage;
 
     public DebugScreen()
     {
@@ -201,35 +200,6 @@ public class DebugScreen extends Screen
             ScreenManager.removeScreen(this);
         }
 
-        this.stage.getViewport().apply();
-        this.stage.act(delta);
-        this.stage.draw();
-    }
-
-    @Override
-    public void resize(int width, int height)
-    {
-        this.stage.getViewport().update(width, height);
-    }
-
-    @Override
-    public void pause()
-    {
-    }
-
-    @Override
-    public void resume()
-    {
-    }
-
-    @Override
-    public void hide()
-    {
-    }
-
-    @Override
-    public void dispose()
-    {
-        this.stage.dispose();
+        super.render(delta);
     }
 }

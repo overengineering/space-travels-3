@@ -228,29 +228,6 @@ public class GameScreen extends Screen
         SpaceTravels3.spriteBatch.setProjectionMatrix(camera.combined);
     }
 
-    public void resize(int width, int height)
-    {
-        SpaceTravels3.gameViewport.update(width, height);
-    }
-
-    @Override
-    public void pause()
-    {
-        this.level.pause();
-    }
-
-    @Override
-    public void resume()
-    {
-        this.level.resume();
-    }
-
-    @Override
-    public void hide()
-    {
-        this.level.pause();
-    }
-
     @Override
     public void dispose()
     {
