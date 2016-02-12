@@ -16,7 +16,10 @@ import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.level.LevelManager;
 import com.draga.spaceTravels3.manager.level.LevelPack;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
-import com.draga.spaceTravels3.ui.*;
+import com.draga.spaceTravels3.ui.BeepingClickListener;
+import com.draga.spaceTravels3.ui.BeepingImageButton;
+import com.draga.spaceTravels3.ui.BeepingTextButton;
+import com.draga.spaceTravels3.ui.Screen;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.ArrayList;
@@ -46,28 +49,35 @@ public class MenuScreen extends Screen
 
         // Buttons.
         table.row();
-        Table buttonsTable = UIManager.getDefaultTable();
+        Table buttonsTable = UIManager.getDefaultButtonsTable();
         buttonsTable
-            .defaults()
-            .size(this.buttonHeight);
+            .defaults();
 
         // Tutorial button.
         buttonsTable
-            .add(getSettingsButton(false));
+            .add(getSettingsButton(false))
+            .size(this.buttonHeight);
         buttonsTable
-            .add(getGuideButton());
+            .add(getGuideButton())
+            .size(this.buttonHeight);
         buttonsTable
-            .add(getTutorialButton());
+            .add(getTutorialButton())
+            .size(this.buttonHeight);
         buttonsTable
-            .add(getCreditsButton());
+            .add(getCreditsButton())
+            .size(this.buttonHeight);
         buttonsTable
-            .add(getShareButton());
+            .add(getShareButton())
+            .size(this.buttonHeight);
         buttonsTable
-            .add(getRateButton());
+            .add(getRateButton())
+            .size(this.buttonHeight);
         buttonsTable
-            .add(getAchievementsButton());
+            .add(getAchievementsButton())
+            .size(this.buttonHeight);
         buttonsTable
-            .add(getLeaderboardsButton());
+            .add(getLeaderboardsButton())
+            .size(this.buttonHeight);
 
         table.add(buttonsTable);
 

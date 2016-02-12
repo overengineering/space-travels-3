@@ -39,7 +39,7 @@ public abstract class UIManager
     {
         Table table = new Table(skin);
         table.defaults().pad(Constants.Visual.UI.BUTTON_PADDING);
-        table.pad(Constants.Visual.UI.SQRT_PIXELS / 50f);
+        table.pad(Constants.Visual.UI.TABLE_PADDING);
 
         return table;
     }
@@ -128,14 +128,6 @@ public abstract class UIManager
         skin.add("default", getWindowStyle());
     }
 
-    private static Drawable getDrawable(String path)
-    {
-        Texture texture = new Texture(path);
-        texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-
-        return new SpriteDrawable(new Sprite(texture));
-    }
-
     private static BitmapFont getBitmapFont(String path, int size)
     {
         FreeTypeFontGenerator generator =
@@ -184,21 +176,6 @@ public abstract class UIManager
             new ImageButton.ImageButtonStyle();
         imageButtonStyle.down = skin.getDrawable("button");
         imageButtonStyle.up = skin.getDrawable("button");
-
-        return imageButtonStyle;
-    }
-
-    private static ImageButton.ImageButtonStyle getImageButtonStyle(Drawable drawable)
-    {
-        ImageButton.ImageButtonStyle defaultStyle = skin.get(ImageButton.ImageButtonStyle.class);
-        ImageButton.ImageButtonStyle imageButtonStyle =
-            new ImageButton.ImageButtonStyle(defaultStyle);
-
-        imageButtonStyle.down = skin.getDrawable("button");
-        imageButtonStyle.up = skin.getDrawable("button");
-
-        imageButtonStyle.imageUp = drawable;
-        imageButtonStyle.imageDown = drawable;
 
         return imageButtonStyle;
     }
@@ -308,6 +285,14 @@ public abstract class UIManager
         return windowStyle;
     }
 
+    private static Drawable getDrawable(String path)
+    {
+        Texture texture = new Texture(path);
+        texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+
+        return new SpriteDrawable(new Sprite(texture));
+    }
+
     private static ImageTextButton.ImageTextButtonStyle getImageTextButtonStyle(Drawable drawable)
     {
         ImageTextButton.ImageTextButtonStyle defaultStyle = skin.get(
@@ -318,6 +303,21 @@ public abstract class UIManager
         imageTextButtonStyle.imageDown = drawable;
 
         return imageTextButtonStyle;
+    }
+
+    private static ImageButton.ImageButtonStyle getImageButtonStyle(Drawable drawable)
+    {
+        ImageButton.ImageButtonStyle defaultStyle = skin.get(ImageButton.ImageButtonStyle.class);
+        ImageButton.ImageButtonStyle imageButtonStyle =
+            new ImageButton.ImageButtonStyle(defaultStyle);
+
+        imageButtonStyle.down = skin.getDrawable("button");
+        imageButtonStyle.up = skin.getDrawable("button");
+
+        imageButtonStyle.imageUp = drawable;
+        imageButtonStyle.imageDown = drawable;
+
+        return imageButtonStyle;
     }
 
     public static TiledDrawable getTiledDrawable(Color color)
@@ -414,5 +414,19 @@ public abstract class UIManager
         TiledDrawable tiledDrawable = new TiledDrawable(textureRegion);
 
         return tiledDrawable;
+    }
+
+    public static Table getDefaultButtonsTable()
+    {
+        Table table = new Table(skin);
+        table
+            .defaults()
+            .pad(
+                0f,
+                Constants.Visual.UI.BUTTON_PADDING,
+                0f,
+                Constants.Visual.UI.BUTTON_PADDING);
+
+        return table;
     }
 }

@@ -24,8 +24,7 @@ public class SettingsScreen extends Screen
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
         // Header label.
-        Label headerLabel = getHeaderLabel();
-        table.add(headerLabel);
+        table.add("Settings", "large");
 
         // Setting buttons
         table.row();
@@ -39,13 +38,6 @@ public class SettingsScreen extends Screen
         table
             .add(getBackButton())
             .height(this.buttonHeight);
-    }
-
-    public Label getHeaderLabel()
-    {
-        Label headerLabel = new Label("Settings", UIManager.skin);
-
-        return headerLabel;
     }
 
     public ScrollPane GetButtonScrollPane()
@@ -124,7 +116,7 @@ public class SettingsScreen extends Screen
 
     private Table getInputTypeSelector()
     {
-        Table table = UIManager.getDefaultTable();
+        Table table = UIManager.getDefaultButtonsTable();
 
         ButtonGroup<ImageTextButton> buttonGroup = new ButtonGroup<>();
         buttonGroup.setMaxCheckCount(1);

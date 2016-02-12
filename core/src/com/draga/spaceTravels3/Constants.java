@@ -88,6 +88,7 @@ public abstract class Constants
             public static final float FONT_SCALE       = 0.04f;
             public static final float DEBUG_FONT_SCALE = 0.02f;
             public static final float BUTTON_PADDING   = SQRT_PIXELS * 0.01f;
+            public static final float TABLE_PADDING    = Constants.Visual.UI.SQRT_PIXELS / 50f;
         }
 
 

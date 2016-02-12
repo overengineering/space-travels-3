@@ -4,23 +4,18 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Scaling;
 import com.draga.spaceTravels3.Constants;
-import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.level.Level;
 import com.draga.spaceTravels3.manager.ScreenManager;
-import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.level.LevelManager;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
@@ -32,8 +27,8 @@ public abstract class IngameMenuScreen extends Screen
     public static String s =
         "gTAKsCqx0NeZVO9igYzMNjolg61Y6KLwLQaulfOZzuI2WLhPNr*mAmEy3T%VP08ZzWILHaHhKDHXeGP";
 
-    protected final Level level;
-    protected final Cell centreCell;
+    protected final Level  level;
+    protected final Cell   centreCell;
     protected       Screen gameScreen;
 
     public IngameMenuScreen(Screen gameScreen, Level level)
@@ -61,45 +56,51 @@ public abstract class IngameMenuScreen extends Screen
 
         SerialisableLevel nextSerialisableLevel =
             LevelManager.getNextSerialisableLevel(this.level.getId());
-        if (nextSerialisableLevel != null)
-        {
-            table
-                .add(getNextLevelButton(nextSerialisableLevel))
-                .height(this.buttonHeight)
-                .row();
-        }
-
         String nextDifficulty =
             LevelManager.getNextDifficulty(this.level.getId(), this.level.getDifficulty());
-        if (nextDifficulty != null)
+
+        if (nextSerialisableLevel != null
+            || nextDifficulty != null)
         {
+            Table innerTable = UIManager.getDefaultButtonsTable();
+
             table
-                .add(getNextDifficultyButton(nextDifficulty))
-                .height(this.buttonHeight)
+                .add(innerTable)
                 .row();
+            if (nextSerialisableLevel != null)
+            {
+                innerTable
+                    .add(getNextLevelButton(nextSerialisableLevel))
+                    .height(this.buttonHeight);
+            }
+
+            if (nextDifficulty != null)
+            {
+                innerTable
+                    .add(getNextDifficultyButton(nextDifficulty))
+                    .height(this.buttonHeight);
+            }
         }
 
-        table
+        Table innerTable = UIManager.getDefaultButtonsTable();
+        innerTable
             .add(getRetryButton())
-            .height(this.buttonHeight)
-            .row();
-
-        table
+            .height(this.buttonHeight);
+        innerTable
             .add(getSettingsButton(true))
             .height(this.buttonHeight);
-        table.row();
-
-        table
+        innerTable
             .add(getMainMenuTextButton())
             .height(this.buttonHeight);
-        table.row();
+        table
+            .add(innerTable);
     }
 
     public Actor getHeaderLabel()
     {
         Table table = new Table();
 
-        Label label = new Label(this.level.getName() + " ", UIManager.skin, "large", Color.WHITE);
+        Label label = new Label(this.level.getName() + " ", UIManager.skin, "large");
         table.add(label);
 
         Image headerImage = this.level.getDestinationPlanet() != null
