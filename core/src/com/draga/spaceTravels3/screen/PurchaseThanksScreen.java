@@ -4,14 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.spaceTravels3.Constants;
-import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.manager.ScreenManager;
-import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.ui.Screen;
 
@@ -59,8 +56,7 @@ public class PurchaseThanksScreen extends Screen
             .add("Thanks for your purchase, hope you'll enjoy it!")
             .row();
         table
-            .add(getBackButton())
-            .height(this.buttonHeight);
+            .add(getBackButton());
     }
 
     @Override

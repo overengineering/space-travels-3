@@ -61,8 +61,7 @@ public class LevelScreen extends Screen
         // Back button.
         table.row();
         table
-            .add(getBackButton())
-            .height(this.buttonHeight);
+            .add(getBackButton());
 
         Constants.General.EVENT_BUS.register(this);
     }
@@ -156,8 +155,7 @@ public class LevelScreen extends Screen
                 }
             });
             innerDifficultyTable
-                .add(leaderboardButton)
-                .height(this.buttonHeight);
+                .add(leaderboardButton);
 
             // Play button.
             BeepingImageTextButton playButton =
@@ -190,8 +188,7 @@ public class LevelScreen extends Screen
             });
 
             innerDifficultyTable
-                .add(playButton)
-                .height(this.buttonHeight);
+                .add(playButton);
 
             difficultyTable.add(innerDifficultyTable);
 

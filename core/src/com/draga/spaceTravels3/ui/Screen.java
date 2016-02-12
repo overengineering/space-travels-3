@@ -1,6 +1,5 @@
 package com.draga.spaceTravels3.ui;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.assets.AssetManager;
@@ -25,7 +24,6 @@ import java.util.HashMap;
 
 public abstract class Screen implements com.badlogic.gdx.Screen
 {
-    protected final float buttonHeight = Gdx.graphics.getHeight() * 0.12f;
     private final boolean                blockable;
     private final boolean                blockParents;
     protected     Stage                  stage;

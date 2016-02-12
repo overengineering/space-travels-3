@@ -36,8 +36,7 @@ public class SettingsScreen extends Screen
         // Back button.
         table.row();
         table
-            .add(getBackButton())
-            .height(this.buttonHeight);
+            .add(getBackButton());
     }
 
     public ScrollPane GetButtonScrollPane()
@@ -135,8 +134,7 @@ public class SettingsScreen extends Screen
 
         buttonGroup.add(touchButton);
         table
-            .add(touchButton)
-            .height(this.buttonHeight);
+            .add(touchButton);
 
         BeepingImageTextButton accelerometerButton =
             new BeepingImageTextButton("Tilt", UIManager.skin, "accelerometer");
@@ -153,8 +151,7 @@ public class SettingsScreen extends Screen
 
         buttonGroup.add(accelerometerButton);
         table
-            .add(accelerometerButton)
-            .height(this.buttonHeight);
+            .add(accelerometerButton);
 
         return table;
     }

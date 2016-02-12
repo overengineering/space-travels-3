@@ -59,20 +59,17 @@ public abstract class UIManager
         skin = new Skin();
 
         BitmapFont largeFont = getBitmapFont(
-            AssMan.getAssList().font,
-            (int) (Constants.Visual.UI.SQRT_PIXELS * Constants.Visual.UI.LARGE_FONT_SCALE));
+            AssMan.getAssList().font, Constants.Visual.UI.LARGE_FONT_SIZE);
         skin.add("large", largeFont);
 
         BitmapFont defaultFont = getBitmapFont(
-            AssMan.getAssList().font,
-            (int) (Constants.Visual.UI.SQRT_PIXELS * Constants.Visual.UI.FONT_SCALE));
+            AssMan.getAssList().font, Constants.Visual.UI.FONT_SIZE);
         skin.add("default", defaultFont);
 
         if (Constants.General.IS_DEBUGGING)
         {
             BitmapFont debugFont = getBitmapFont(
-                AssMan.getAssList().debugFont,
-                (int) (Constants.Visual.UI.SQRT_PIXELS * Constants.Visual.UI.DEBUG_FONT_SCALE));
+                AssMan.getAssList().debugFont, Constants.Visual.UI.DEBUG_FONT_SIZE);
             skin.add("debug", debugFont);
         }
 

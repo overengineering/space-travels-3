@@ -91,11 +91,9 @@ public class TutorialScreen extends Screen
             .expandX();
         this.leftButtonCell = this.buttonsTable
             .add()
-            .height(this.buttonHeight)
             .left();
         this.buttonsTable
             .add(this.dialogNextButton)
-            .height(this.buttonHeight)
             .right();
 
         Constants.General.EVENT_BUS.register(this);

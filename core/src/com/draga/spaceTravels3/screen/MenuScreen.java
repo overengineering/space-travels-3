@@ -55,29 +55,21 @@ public class MenuScreen extends Screen
 
         // Tutorial button.
         buttonsTable
-            .add(getSettingsButton(false))
-            .size(this.buttonHeight);
+            .add(getSettingsButton(false));
         buttonsTable
-            .add(getGuideButton())
-            .size(this.buttonHeight);
+            .add(getGuideButton());
         buttonsTable
-            .add(getTutorialButton())
-            .size(this.buttonHeight);
+            .add(getTutorialButton());
         buttonsTable
-            .add(getCreditsButton())
-            .size(this.buttonHeight);
+            .add(getCreditsButton());
         buttonsTable
-            .add(getShareButton())
-            .size(this.buttonHeight);
+            .add(getShareButton());
         buttonsTable
-            .add(getRateButton())
-            .size(this.buttonHeight);
+            .add(getRateButton());
         buttonsTable
-            .add(getAchievementsButton())
-            .size(this.buttonHeight);
+            .add(getAchievementsButton());
         buttonsTable
-            .add(getLeaderboardsButton())
-            .size(this.buttonHeight);
+            .add(getLeaderboardsButton());
 
         table.add(buttonsTable);
 

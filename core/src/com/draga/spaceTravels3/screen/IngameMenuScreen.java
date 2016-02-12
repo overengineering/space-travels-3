@@ -70,28 +70,23 @@ public abstract class IngameMenuScreen extends Screen
             if (nextSerialisableLevel != null)
             {
                 innerTable
-                    .add(getNextLevelButton(nextSerialisableLevel))
-                    .height(this.buttonHeight);
+                    .add(getNextLevelButton(nextSerialisableLevel));
             }
 
             if (nextDifficulty != null)
             {
                 innerTable
-                    .add(getNextDifficultyButton(nextDifficulty))
-                    .height(this.buttonHeight);
+                    .add(getNextDifficultyButton(nextDifficulty));
             }
         }
 
         Table innerTable = UIManager.getDefaultButtonsTable();
         innerTable
-            .add(getRetryButton())
-            .height(this.buttonHeight);
+            .add(getRetryButton());
         innerTable
-            .add(getSettingsButton(true))
-            .height(this.buttonHeight);
+            .add(getSettingsButton(true));
         innerTable
-            .add(getMainMenuTextButton())
-            .height(this.buttonHeight);
+            .add(getMainMenuTextButton());
         table
             .add(innerTable);
     }

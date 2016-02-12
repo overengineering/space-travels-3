@@ -26,7 +26,6 @@ public class GamePauseMenuScreen extends IngameMenuScreen
         });
 
         this.centreCell
-            .setActor(button)
-            .height(this.buttonHeight);
+            .setActor(button);
     }
 }

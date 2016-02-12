@@ -4,11 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.draga.spaceTravels3.Constants;
-import com.draga.spaceTravels3.SpaceTravels3;
-import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.ui.Screen;
@@ -40,8 +37,7 @@ public class GuideScreen extends Screen
 
         // Back button.
         table
-            .add(getBackButton())
-            .height(this.buttonHeight);
+            .add(getBackButton());
     }
 
     private Actor getGuide()

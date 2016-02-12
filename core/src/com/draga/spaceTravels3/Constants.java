@@ -82,13 +82,14 @@ public abstract class Constants
 
         public abstract static class UI
         {
-            public static final float SQRT_PIXELS      =
+            public static final float SQRT_PIXELS       =
                 (float) Math.sqrt(Gdx.graphics.getWidth() * Gdx.graphics.getHeight());
-            public static final float LARGE_FONT_SCALE = 0.06f;
-            public static final float FONT_SCALE       = 0.04f;
-            public static final float DEBUG_FONT_SCALE = 0.02f;
-            public static final float BUTTON_PADDING   = SQRT_PIXELS * 0.01f;
-            public static final float TABLE_PADDING    = Constants.Visual.UI.SQRT_PIXELS / 50f;
+            public static final int   LARGE_FONT_SIZE   = Math.round(SQRT_PIXELS * 0.06f);
+            public static final int   FONT_SIZE         = Math.round(SQRT_PIXELS * 0.04f);
+            public static final int   DEBUG_FONT_SIZE   = Math.round(SQRT_PIXELS * 0.02f);
+            public static final float BUTTON_PADDING    = SQRT_PIXELS * 0.01f;
+            public static final float TABLE_PADDING     = Constants.Visual.UI.SQRT_PIXELS / 50f;
+            public static final float BUTTON_IMAGE_SIZE = SQRT_PIXELS * 0.08f;
         }
 
 
