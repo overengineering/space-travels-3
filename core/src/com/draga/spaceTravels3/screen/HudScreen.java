@@ -37,7 +37,6 @@ public class HudScreen extends Screen
     private final Level                 level;
     private final GameScreen            gameScreen;
     private       Container<Image>      joystickOverlayContainer;
-    private       Stage                 stage;
     private       Stack<Image>          grayPickups;
     private       Table                 pickupTable;
     private       Ship                  ship;
@@ -59,8 +58,6 @@ public class HudScreen extends Screen
         this.collectedPickupDrawable = new TextureRegionDrawable(new TextureRegion(pickupTexture));
 
         this.miniMap = new MiniMap(level);
-
-        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
@@ -105,8 +102,6 @@ public class HudScreen extends Screen
         {
             addJoystickOverlay();
         }
-
-        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
     private Actor getFuelIndicator(float width)
@@ -261,34 +256,10 @@ public class HudScreen extends Screen
     }
 
     @Override
-    public void resize(int width, int height)
-    {
-        this.stage.getViewport().update(width, height);
-    }
-
-    @Override
-    public void pause()
-    {
-
-    }
-
-    @Override
-    public void resume()
-    {
-
-    }
-
-    @Override
-    public void hide()
-    {
-
-    }
-
-    @Override
     public void dispose()
     {
         Constants.General.EVENT_BUS.unregister(this);
-        this.stage.dispose();
+        super.dispose();
     }
 
     @Subscribe

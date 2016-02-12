@@ -2,10 +2,11 @@ package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.spaceTravels3.Constants;
@@ -47,7 +48,6 @@ public class TutorialScreen extends Screen
     private final float                  labelsWidth;
     private final Table                  buttonsTable;
     private final Cell                   leftButtonCell;
-    private       Stage                  stage;
     private       InputType              originalInputType;
     private       ClickListener          nextTextButtonListener;
     private       Planet                 planet;
@@ -62,7 +62,6 @@ public class TutorialScreen extends Screen
         this.level = level;
         this.gameScreen = gameScreen;
 
-        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
         this.labelsWidth = this.stage.getWidth() * 0.8f;
 
         this.dialog = new Dialog("", UIManager.skin);
@@ -85,7 +84,7 @@ public class TutorialScreen extends Screen
 
         this.dialogNextButton = new BeepingImageTextButton("Next", UIManager.skin, "next");
 
-        this.buttonsTable = UIManager.getDefaultTable();
+        this.buttonsTable = UIManager.getDefaultButtonsTable();
         table.add(this.buttonsTable);
         this.buttonsTable
             .row()
@@ -98,8 +97,6 @@ public class TutorialScreen extends Screen
             .right();
 
         Constants.General.EVENT_BUS.register(this);
-
-        this.stage.setDebugAll(Constants.General.IS_DEBUGGING);
 
         moveTilt();
     }
@@ -447,44 +444,26 @@ public class TutorialScreen extends Screen
     @Override
     public void show()
     {
-        Gdx.input.setInputProcessor(this.stage);
-    }
-
-    @Override
-    public void render(float delta)
-    {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
-            || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
+        InputAdapter backInputAdapter = new InputAdapter()
         {
-            ScreenManager.removeScreen(this);
-            ScreenManager.removeScreen(this.gameScreen);
-        }
-
-        this.stage.getViewport().apply();
-        this.stage.act(delta);
-        this.stage.draw();
-    }
-
-    @Override
-    public void resize(int width, int height)
-    {
-        this.stage.getViewport().update(width, height);
-    }
-
-    @Override
-    public void pause()
-    {
-    }
-
-    @Override
-    public void resume()
-    {
-    }
-
-    @Override
-    public void hide()
-    {
-
+            @Override
+            public boolean keyUp(int keycode)
+            {
+                switch (keycode)
+                {
+                    case Input.Keys.ESCAPE:
+                    case Input.Keys.BACK:
+                    {
+                    
+                        ScreenManager.removeScreen(TutorialScreen.this);
+                        ScreenManager.removeScreen(TutorialScreen.this.gameScreen);
+                        return true;
+                    }
+                }
+                return false;
+            }
+        };
+        Gdx.input.setInputProcessor(new InputMultiplexer(this.stage, backInputAdapter));
     }
 
     @Override
@@ -505,8 +484,9 @@ public class TutorialScreen extends Screen
             this.destinationPlanetTexture.dispose();
         }
 
-        this.stage.dispose();
         Constants.General.EVENT_BUS.unregister(this);
+
+        super.dispose();
     }
 
     @Subscribe

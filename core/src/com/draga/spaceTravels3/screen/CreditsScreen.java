@@ -1,30 +1,22 @@
 package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.draga.spaceTravels3.SpaceTravels3;
-import com.draga.spaceTravels3.manager.ScreenManager;
-import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.ui.Screen;
 
 public class CreditsScreen extends Screen
 {
-    private final Stage stage;
-
     public CreditsScreen()
     {
         super(true, true);
-
-        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
@@ -37,9 +29,8 @@ public class CreditsScreen extends Screen
             .expand();
         table.row();
 
-        table.add(getBackButton());
-
-        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
+        table
+            .add(getBackButton());
     }
 
     private Actor getCreditsScrollPane()
@@ -191,52 +182,6 @@ public class CreditsScreen extends Screen
     @Override
     public void show()
     {
-        Gdx.input.setInputProcessor(this.stage);
-    }
-
-    @Override
-    public void render(float deltaTime)
-    {
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
-            || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
-        {
-            ScreenManager.removeScreen(this);
-        }
-
-        this.stage.getViewport().apply();
-
-        this.stage.act(deltaTime);
-        this.stage.draw();
-    }
-
-    @Override
-    public void resize(int width, int height)
-    {
-        this.stage.getViewport().update(width, height);
-    }
-
-    @Override
-    public void pause()
-    {
-
-    }
-
-    @Override
-    public void resume()
-    {
-
-    }
-
-    @Override
-    public void hide()
-    {
-
-    }
-
-    @Override
-    public void dispose()
-    {
-        this.stage.dispose();
+        Gdx.input.setInputProcessor(new InputMultiplexer(this.stage, getBackInputAdapter()));
     }
 }

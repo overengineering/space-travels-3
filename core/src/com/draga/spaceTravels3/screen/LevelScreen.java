@@ -1,11 +1,10 @@
 package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.spaceTravels3.Constants;
@@ -16,7 +15,6 @@ import com.draga.spaceTravels3.manager.ScoreManager;
 import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
-import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.manager.level.LevelManager;
 import com.draga.spaceTravels3.manager.level.LevelPack;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableDifficulty;
@@ -34,7 +32,6 @@ public class LevelScreen extends Screen
     private final LevelPack                  levelPack;
     private final SerialisableLevel          serialisableLevel;
     private       Actor                      difficultiesList;
-    private       Stage                      stage;
     private       HashMap<String, Label>     difficultyHighScoreLabels;
     private       ArrayList<ImageTextButton> playButtons;
 
@@ -47,8 +44,6 @@ public class LevelScreen extends Screen
 
         this.difficultyHighScoreLabels = new HashMap<>();
         this.playButtons = new ArrayList<>();
-
-        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
@@ -66,10 +61,7 @@ public class LevelScreen extends Screen
         // Back button.
         table.row();
         table
-            .add(getBackButton())
-            .bottom();
-
-        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
+            .add(getBackButton());
 
         Constants.General.EVENT_BUS.register(this);
     }
@@ -85,8 +77,8 @@ public class LevelScreen extends Screen
 
         Image headerImage =
             loadTextureAsync(
-                this.serialisableLevel.serialisedDestinationPlanet.texturePath,
-                AssMan.getAssMan());
+                this.serialisableLevel.serialisedDestinationPlanet.texturePath
+            );
 
         table
             .add(headerImage)
@@ -162,7 +154,8 @@ public class LevelScreen extends Screen
                     SpaceTravels3.services.googleShowLeaderboard(serialisableDifficulty.playLeaderboardID);
                 }
             });
-            innerDifficultyTable.add(leaderboardButton);
+            innerDifficultyTable
+                .add(leaderboardButton);
 
             // Play button.
             BeepingImageTextButton playButton =
@@ -194,7 +187,8 @@ public class LevelScreen extends Screen
                 }
             });
 
-            innerDifficultyTable.add(playButton);
+            innerDifficultyTable
+                .add(playButton);
 
             difficultyTable.add(innerDifficultyTable);
 
@@ -298,52 +292,14 @@ public class LevelScreen extends Screen
     @Override
     public void show()
     {
-        Gdx.input.setInputProcessor(this.stage);
-    }
-
-    @Override
-    public void render(float delta)
-    {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
-            || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
-        {
-            ScreenManager.removeScreen(this);
-        }
-
-        loadAsyncImages(AssMan.getAssMan());
-
-        this.stage.getViewport().apply();
-        this.stage.act(delta);
-        this.stage.draw();
-    }
-
-    @Override
-    public void resize(int width, int height)
-    {
-        this.stage.getViewport().update(width, height);
-    }
-
-    @Override
-    public void pause()
-    {
-    }
-
-    @Override
-    public void resume()
-    {
-    }
-
-    @Override
-    public void hide()
-    {
-
+        Gdx.input.setInputProcessor(new InputMultiplexer(this.stage, getBackInputAdapter()));
     }
 
     @Override
     public void dispose()
     {
-        this.stage.dispose();
         Constants.General.EVENT_BUS.unregister(this);
+        super.dispose();
     }
 
     @Subscribe

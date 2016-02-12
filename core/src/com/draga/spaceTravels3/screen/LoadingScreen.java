@@ -40,7 +40,6 @@ public class LoadingScreen extends Screen
     private final SerialisableLevel serialisableLevel;
     private final String            difficulty;
 
-    private Stage       stage;
     private ProgressBar progressBar;
 
     private Stopwatch              stopwatch;
@@ -65,8 +64,6 @@ public class LoadingScreen extends Screen
         this.tutorial = tutorial;
         this.stopwatch = Stopwatch.createStarted();
 
-        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
-
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
         table.add(new Label("Loading", UIManager.skin, "large", Color.WHITE));
@@ -83,8 +80,6 @@ public class LoadingScreen extends Screen
             showFaceUpWarning();
             this.waitingForWarning = true;
         }
-
-        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
     private ProgressBar getProgressBar()
@@ -128,7 +123,7 @@ public class LoadingScreen extends Screen
             .center()
             .row();
 
-        Image image = loadTextureAsync(AssMan.getAssList().iconFaceUp, AssMan.getAssMan());
+        Image image = loadTextureAsync(AssMan.getAssList().iconFaceUp);
         float iconSize = this.stage.getHeight() / 5f;
         table
             .add(image)
@@ -223,6 +218,7 @@ public class LoadingScreen extends Screen
         String assetPath,
         Class assetClass)
     {
+        @SuppressWarnings("unchecked")
         AssetDescriptor assetDescriptor =
             new AssetDescriptor(assetPath, assetClass);
         assMan.load(assetDescriptor);
@@ -232,8 +228,6 @@ public class LoadingScreen extends Screen
     @Override
     public void render(float deltaTime)
     {
-        loadAsyncImages(AssMan.getAssMan());
-
         // If GameScreen has been generated on the last step add it to the stack and remove itself.
         if (this.gameScreen != null)
         {
@@ -266,43 +260,11 @@ public class LoadingScreen extends Screen
 
         updateProgressBar();
 
-        this.stage.getViewport().apply();
-
-        this.stage.act(deltaTime);
-        this.stage.draw();
+        super.render(deltaTime);
     }
 
     private void updateProgressBar()
     {
         this.progressBar.setValue(AssMan.getGameAssMan().getProgress());
-    }
-
-    @Override
-    public void resize(int width, int height)
-    {
-        this.stage.getViewport().update(width, height);
-    }
-
-    @Override
-    public void pause()
-    {
-    }
-
-    @Override
-    public void resume()
-    {
-
-    }
-
-    @Override
-    public void hide()
-    {
-
-    }
-
-    @Override
-    public void dispose()
-    {
-        this.stage.dispose();
     }
 }

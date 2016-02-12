@@ -1,19 +1,14 @@
 package com.draga.spaceTravels3.screen;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.SliderFixInputListener;
-import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.InputType;
-import com.draga.spaceTravels3.SpaceTravels3;
-import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.SoundManager;
 import com.draga.spaceTravels3.manager.UIManager;
@@ -22,19 +17,14 @@ import com.draga.spaceTravels3.ui.Screen;
 
 public class SettingsScreen extends Screen
 {
-    private Stage stage;
-
     public SettingsScreen()
     {
         super(true, true);
 
-        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
-
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
         // Header label.
-        Label headerLabel = getHeaderLabel();
-        table.add(headerLabel);
+        table.add("Settings", "large");
 
         // Setting buttons
         table.row();
@@ -46,17 +36,7 @@ public class SettingsScreen extends Screen
         // Back button.
         table.row();
         table
-            .add(getBackButton())
-            .bottom();
-
-        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
-    }
-
-    public Label getHeaderLabel()
-    {
-        Label headerLabel = new Label("Settings", UIManager.skin);
-
-        return headerLabel;
+            .add(getBackButton());
     }
 
     public ScrollPane GetButtonScrollPane()
@@ -64,14 +44,8 @@ public class SettingsScreen extends Screen
         Table table = UIManager.getDefaultTable();
         ScrollPane scrollPane = new ScrollPane(table);
 
-        //noinspection PointlessBooleanExpression
-        if (Constants.General.IS_DEBUGGING
-            || Gdx.app.getType() == Application.ApplicationType.Android
-            || Gdx.app.getType() == Application.ApplicationType.iOS)
-        {
-            addInputType(table);
-            table.row();
-        }
+        addInputType(table);
+        table.row();
 
         addVolumeFX(table);
 
@@ -141,7 +115,7 @@ public class SettingsScreen extends Screen
 
     private Table getInputTypeSelector()
     {
-        Table table = UIManager.getDefaultTable();
+        Table table = UIManager.getDefaultButtonsTable();
 
         ButtonGroup<ImageTextButton> buttonGroup = new ButtonGroup<>();
         buttonGroup.setMaxCheckCount(1);
@@ -159,7 +133,8 @@ public class SettingsScreen extends Screen
         });
 
         buttonGroup.add(touchButton);
-        table.add(touchButton);
+        table
+            .add(touchButton);
 
         BeepingImageTextButton accelerometerButton =
             new BeepingImageTextButton("Tilt", UIManager.skin, "accelerometer");
@@ -175,7 +150,8 @@ public class SettingsScreen extends Screen
         });
 
         buttonGroup.add(accelerometerButton);
-        table.add(accelerometerButton);
+        table
+            .add(accelerometerButton);
 
         return table;
     }
@@ -183,49 +159,6 @@ public class SettingsScreen extends Screen
     @Override
     public void show()
     {
-        Gdx.input.setInputProcessor(this.stage);
-    }
-
-    @Override
-    public void render(float delta)
-    {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
-            || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
-        {
-            ScreenManager.removeScreen(this);
-        }
-
-        this.stage.getViewport().apply();
-
-        this.stage.act(delta);
-        this.stage.draw();
-    }
-
-    @Override
-    public void resize(int width, int height)
-    {
-        this.stage.getViewport().update(width, height);
-    }
-
-    @Override
-    public void pause()
-    {
-    }
-
-    @Override
-    public void resume()
-    {
-    }
-
-    @Override
-    public void hide()
-    {
-
-    }
-
-    @Override
-    public void dispose()
-    {
-        this.stage.dispose();
+        Gdx.input.setInputProcessor(new InputMultiplexer(this.stage, getBackInputAdapter()));
     }
 }

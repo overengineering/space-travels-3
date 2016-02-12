@@ -192,6 +192,7 @@ public class Level
             || !planetIsDestination)
         {
             this.gameState = GameState.LOSE;
+            Gdx.input.vibrate(500);
             GameEntity explosion = new Explosion(
                 shipPlanetCollisionEvent.ship.physicsComponent.getPosition().x,
                 shipPlanetCollisionEvent.ship.physicsComponent.getPosition().y,
