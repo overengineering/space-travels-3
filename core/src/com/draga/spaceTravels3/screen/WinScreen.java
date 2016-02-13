@@ -1,5 +1,7 @@
 package com.draga.spaceTravels3.screen;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -27,13 +29,12 @@ public class WinScreen extends IngameMenuScreen
         table.row();
 
         // Best score.
-        table.row();
         Label newBestScoreLabel = getBestScoreLabel(score.getTotalScore(), previousBestScore);
         table.add(newBestScoreLabel);
+        table.row();
 
         // Current score.
         Table reportTable = getScoreReportTable(score);
-        table.row();
         table.add(reportTable);
 
         this.centreCell.setActor(table);
@@ -65,50 +66,36 @@ public class WinScreen extends IngameMenuScreen
 
     private Table getScoreReportTable(Score score)
     {
-        Table table = new Table();
+        Table table = UIManager.getDefaultTable();
+        table.pad(0);
 
-        table
-            .add(new Label("Pickup points: ", UIManager.skin))
-            .right();
-        table
-            .add(new Label(String.valueOf(score.getPickupPoints()), UIManager.skin))
-            .right();
-
+        table.add("pickup");
+        table.add("fuel");
+        table.add("time");
+        table.add("total");
         table.row();
 
-        table
-            .add(new Label("Fuel points: ", UIManager.skin))
-            .right();
-        table
-            .add(new Label(String.valueOf(score.getFuelPoints()), UIManager.skin))
-            .right();
-
-        table.row();
-
-        table
-            .add(new Label("Time points: ", UIManager.skin))
-            .right();
-        table
-            .add(new Label(String.valueOf(score.getTimePoints()), UIManager.skin))
-            .right();
-
-        table.row();
-
-        table
-            .add(new Label("Total score: ", UIManager.skin))
-            .right();
-        table
-            .add(new Label(String.valueOf(score.getTotalScore()), UIManager.skin))
-            .right();
+        table.add(String.valueOf(score.getPickupPoints()));
+        table.add(String.valueOf(score.getFuelPoints()));
+        table.add(String.valueOf(score.getTimePoints()));
+        table.add(String.valueOf(score.getTotalScore()));
 
         return table;
+    }
+
+    @Override
+    public void show()
+    {
+        super.show();
+        Gdx.input.setInputProcessor(new InputMultiplexer(
+            Gdx.input.getInputProcessor(),
+            getCloseInputAdapter()));
     }
 
     @Override
     public void dispose()
     {
         this.sound.stop();
-        this.sound.dispose();
         super.dispose();
     }
 }

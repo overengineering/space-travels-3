@@ -1,16 +1,11 @@
 package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.draga.spaceTravels3.Constants;
-import com.draga.spaceTravels3.SpaceTravels3;
-import com.draga.spaceTravels3.manager.ScreenManager;
-import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.ui.Screen;
@@ -19,19 +14,13 @@ public class GuideScreen extends Screen
 {
     private final float                  labelsWidth;
     private final float                  imageSize;
-    private final AssetManager           assMan;
-    private       Stage                  stage;
 
     public GuideScreen()
     {
         super(true, true);
 
-        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
-
         this.labelsWidth = this.stage.getWidth() * 0.8f;
         this.imageSize = this.stage.getWidth() * 0.1f;
-
-        this.assMan = new AssetManager();
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
@@ -47,10 +36,8 @@ public class GuideScreen extends Screen
         table.row();
 
         // Back button.
-        table.row();
-        table.add(getBackButton());
-
-        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
+        table
+            .add(getBackButton());
     }
 
     private Actor getGuide()
@@ -150,7 +137,7 @@ public class GuideScreen extends Screen
         table.add("Your ship");
         table.row();
 
-        Image shipImage = loadTextureAsync(AssMan.getAssList().shipTexture, this.assMan);
+        Image shipImage = loadTextureAsync(AssMan.getAssList().shipTexture);
         table
             .add(shipImage)
             .size(this.imageSize);
@@ -195,9 +182,9 @@ public class GuideScreen extends Screen
         table.row();
 
         Image aboveLandingSpeedImage =
-            loadTextureAsync(AssMan.getAssList().guideAboveLandingSpeedTexture, this.assMan);
+            loadTextureAsync(AssMan.getAssList().guideAboveLandingSpeedTexture);
         Image belowLandingSpeedImage =
-            loadTextureAsync(AssMan.getAssList().guideBelowLandingSpeedTexture, this.assMan);
+            loadTextureAsync(AssMan.getAssList().guideBelowLandingSpeedTexture);
 
         Table imageTable = new Table();
         imageTable
@@ -233,7 +220,7 @@ public class GuideScreen extends Screen
         table.row();
 
         Image pickupImage =
-            loadTextureAsync(AssMan.getAssList().guidePickupTexture, this.assMan);
+            loadTextureAsync(AssMan.getAssList().guidePickupTexture);
         table
             .add(pickupImage)
             .size(this.imageSize);
@@ -286,7 +273,7 @@ public class GuideScreen extends Screen
         table.row();
 
         Image minimapImage =
-            loadTextureAsync(AssMan.getAssList().guideMinimapTexture, this.assMan);
+            loadTextureAsync(AssMan.getAssList().guideMinimapTexture);
         table
             .add(minimapImage)
             .height(this.imageSize);
@@ -307,51 +294,6 @@ public class GuideScreen extends Screen
     @Override
     public void show()
     {
-        Gdx.input.setInputProcessor(this.stage);
-    }
-
-    @Override
-    public void render(float delta)
-    {
-        loadAsyncImages(this.assMan);
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
-            || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
-        {
-            ScreenManager.removeScreen(this);
-        }
-
-        this.stage.getViewport().apply();
-        this.stage.act(delta);
-        this.stage.draw();
-    }
-
-    @Override
-    public void resize(int width, int height)
-    {
-        this.stage.getViewport().update(width, height);
-    }
-
-    @Override
-    public void pause()
-    {
-    }
-
-    @Override
-    public void resume()
-    {
-    }
-
-    @Override
-    public void hide()
-    {
-
-    }
-
-    @Override
-    public void dispose()
-    {
-        this.stage.dispose();
-        this.assMan.dispose();
+        Gdx.input.setInputProcessor(new InputMultiplexer(this.stage, getBackInputAdapter()));
     }
 }

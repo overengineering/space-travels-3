@@ -20,13 +20,10 @@ import com.draga.spaceTravels3.ui.Screen;
 public class DebugScreen extends Screen
 {
     private static final String LOGGING_TAG = DebugScreen.class.getSimpleName();
-    private Stage stage;
 
     public DebugScreen()
     {
         super(true, true);
-
-        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
@@ -41,8 +38,6 @@ public class DebugScreen extends Screen
         table
             .add(getBackButton())
             .bottom();
-
-        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
     private ScrollPane getButtonScrollPane()
@@ -201,35 +196,6 @@ public class DebugScreen extends Screen
             ScreenManager.removeScreen(this);
         }
 
-        this.stage.getViewport().apply();
-        this.stage.act(delta);
-        this.stage.draw();
-    }
-
-    @Override
-    public void resize(int width, int height)
-    {
-        this.stage.getViewport().update(width, height);
-    }
-
-    @Override
-    public void pause()
-    {
-    }
-
-    @Override
-    public void resume()
-    {
-    }
-
-    @Override
-    public void hide()
-    {
-    }
-
-    @Override
-    public void dispose()
-    {
-        this.stage.dispose();
+        super.render(delta);
     }
 }

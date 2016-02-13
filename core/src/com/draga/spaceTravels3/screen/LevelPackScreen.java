@@ -1,11 +1,10 @@
 package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
@@ -15,9 +14,7 @@ import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.event.PurchasedEvent;
 import com.draga.spaceTravels3.manager.ScreenManager;
-import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
-import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.manager.level.LevelPack;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.spaceTravels3.ui.BeepingClickListener;
@@ -31,14 +28,11 @@ public class LevelPackScreen extends Screen
 {
     private final LevelPack levelPack;
     private final Actor     purchaseButton;
-    private       Stage     stage;
 
     public LevelPackScreen(LevelPack levelPack)
     {
         super(true, true);
         this.levelPack = levelPack;
-
-        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
@@ -58,12 +52,13 @@ public class LevelPackScreen extends Screen
         // Buttons.
         table.row();
         this.purchaseButton = getPurchaseButton();
-        table.add(this.purchaseButton);
+        table
+            .add(this.purchaseButton);
 
         table.row();
-        table.add(getBackButton());
+        table
+            .add(getBackButton());
 
-        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
         Constants.General.EVENT_BUS.register(this);
     }
 
@@ -88,8 +83,8 @@ public class LevelPackScreen extends Screen
 
             // If the level icon is not loaded in the ass man then add to an map to load them async.
             Image image = loadTextureAsync(
-                serialisableLevel.serialisedDestinationPlanet.texturePath,
-                AssMan.getAssMan());
+                serialisableLevel.serialisedDestinationPlanet.texturePath
+            );
 
             innerTable
                 .add(image)
@@ -145,55 +140,14 @@ public class LevelPackScreen extends Screen
     @Override
     public void show()
     {
-        Gdx.input.setInputProcessor(this.stage);
-    }
-
-    @Override
-    public void render(float deltaTime)
-    {
-        loadAsyncImages(AssMan.getAssMan());
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
-            || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
-        {
-            ScreenManager.removeScreen(this);
-        }
-
-        this.stage.getViewport().apply();
-
-        this.stage.act(deltaTime);
-        this.stage.draw();
-    }
-
-    @Override
-    public void resize(int width, int height)
-    {
-        this.stage.getViewport().update(width, height);
-    }
-
-    @Override
-    public void pause()
-    {
-
-    }
-
-    @Override
-    public void resume()
-    {
-
-    }
-
-    @Override
-    public void hide()
-    {
-
+        Gdx.input.setInputProcessor(new InputMultiplexer(this.stage, getBackInputAdapter()));
     }
 
     @Override
     public void dispose()
     {
-        this.stage.dispose();
         Constants.General.EVENT_BUS.unregister(this);
+        super.dispose();
     }
 
     @Subscribe

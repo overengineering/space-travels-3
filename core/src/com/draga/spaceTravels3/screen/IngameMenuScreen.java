@@ -2,11 +2,11 @@ package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -14,10 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.spaceTravels3.Constants;
-import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.level.Level;
 import com.draga.spaceTravels3.manager.ScreenManager;
-import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.level.LevelManager;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
@@ -31,7 +29,6 @@ public abstract class IngameMenuScreen extends Screen
 
     protected final Level  level;
     protected final Cell   centreCell;
-    private final   Stage  stage;
     protected       Screen gameScreen;
 
     public IngameMenuScreen(Screen gameScreen, Level level)
@@ -39,7 +36,6 @@ public abstract class IngameMenuScreen extends Screen
         super(true, false);
         this.gameScreen = gameScreen;
         this.level = level;
-        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
 
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
@@ -53,53 +49,53 @@ public abstract class IngameMenuScreen extends Screen
         table.add(headerLabel);
         table.row();
 
-        // Gap between header and rest.
-        table
+        this.centreCell = table
             .add()
             .expand();
-        table.row();
-
-        this.centreCell = table.add();
         table.row();
 
         SerialisableLevel nextSerialisableLevel =
             LevelManager.getNextSerialisableLevel(this.level.getId());
-        if (nextSerialisableLevel != null)
-        {
-            table
-                .add(getNextLevelButton(nextSerialisableLevel))
-                .row();
-        }
-
         String nextDifficulty =
             LevelManager.getNextDifficulty(this.level.getId(), this.level.getDifficulty());
-        if (nextDifficulty != null)
+
+        if (nextSerialisableLevel != null
+            || nextDifficulty != null)
         {
+            Table innerTable = UIManager.getDefaultButtonsTable();
+
             table
-                .add(getNextDifficultyButton(nextDifficulty))
+                .add(innerTable)
                 .row();
+            if (nextSerialisableLevel != null)
+            {
+                innerTable
+                    .add(getNextLevelButton(nextSerialisableLevel));
+            }
+
+            if (nextDifficulty != null)
+            {
+                innerTable
+                    .add(getNextDifficultyButton(nextDifficulty));
+            }
         }
 
-        table.add(getRetryButton());
-        table.row();
-
-        table.add(getMainMenuTextButton());
-        table.row();
-
-        // Gap between the centre and the end of the screen.
+        Table innerTable = UIManager.getDefaultButtonsTable();
+        innerTable
+            .add(getRetryButton());
+        innerTable
+            .add(getSettingsButton(true));
+        innerTable
+            .add(getMainMenuTextButton());
         table
-            .add()
-            .expand();
-
-        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
-
+            .add(innerTable);
     }
 
     public Actor getHeaderLabel()
     {
         Table table = new Table();
 
-        Label label = new Label(this.level.getName() + " ", UIManager.skin, "large", Color.WHITE);
+        Label label = new Label(this.level.getName() + " ", UIManager.skin, "large");
         table.add(label);
 
         Image headerImage = this.level.getDestinationPlanet() != null
@@ -205,59 +201,49 @@ public abstract class IngameMenuScreen extends Screen
     @Override
     public void show()
     {
-        Gdx.input.setInputProcessor(this.stage);
-    }
-
-    @Override
-    public void render(float delta)
-    {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
-            || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
+        InputAdapter enterInputAdapter = new InputAdapter()
         {
-            ScreenManager.removeScreen(IngameMenuScreen.this);
-            ScreenManager.removeScreen(IngameMenuScreen.this.gameScreen);
-            return;
-        }
+            @Override
+            public boolean keyUp(int keycode)
+            {
+                switch (keycode)
+                {
+                    case Input.Keys.ENTER:
+                    {
+                        play(
+                            IngameMenuScreen.this.level.getId(),
+                            IngameMenuScreen.this.level.getDifficulty());
+                        return true;
+                    }
+                }
+                return false;
+            }
+        };
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER))
+        Gdx.input.setInputProcessor(new InputMultiplexer(
+            this.stage,
+            enterInputAdapter));
+    }
+
+    protected InputAdapter getCloseInputAdapter()
+    {
+        return new InputAdapter()
         {
-            play(this.level.getId(), this.level.getDifficulty());
-            return;
-        }
-
-        this.stage.getViewport().apply();
-
-        this.stage.act(delta);
-        this.stage.draw();
-    }
-
-    @Override
-    public void resize(int width, int height)
-    {
-        this.stage.getViewport().update(width, height);
-    }
-
-    @Override
-    public void pause()
-    {
-
-    }
-
-    @Override
-    public void resume()
-    {
-
-    }
-
-    @Override
-    public void hide()
-    {
-
-    }
-
-    @Override
-    public void dispose()
-    {
-        this.stage.dispose();
+            @Override
+            public boolean keyUp(int keycode)
+            {
+                switch (keycode)
+                {
+                    case Input.Keys.ESCAPE:
+                    case Input.Keys.BACK:
+                    {
+                        ScreenManager.removeScreen(IngameMenuScreen.this);
+                        ScreenManager.removeScreen(IngameMenuScreen.this.gameScreen);
+                        return true;
+                    }
+                }
+                return false;
+            }
+        };
     }
 }

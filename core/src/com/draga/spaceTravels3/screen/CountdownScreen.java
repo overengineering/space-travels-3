@@ -13,7 +13,6 @@ import com.draga.spaceTravels3.ui.Screen;
 
 public class CountdownScreen extends Screen
 {
-    private Stage stage;
     private Label timerLabel;
     private float secondsRemaining;
     private boolean countdownFinished = false;
@@ -23,8 +22,6 @@ public class CountdownScreen extends Screen
         super(true, false);
         this.secondsRemaining = Constants.Game.COUNTDOWN_SECONDS;
 
-        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
-
         Table table = new Table();
         this.stage.addActor(table);
         table.setFillParent(true);
@@ -33,8 +30,6 @@ public class CountdownScreen extends Screen
         table
             .add(this.timerLabel)
             .center();
-
-        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
     private Label getTimerLabel()
@@ -47,12 +42,6 @@ public class CountdownScreen extends Screen
     private String getLabelText()
     {
         return String.format("%.1f", this.secondsRemaining);
-    }
-
-    @Override
-    public void show()
-    {
-
     }
 
     @Override
@@ -75,36 +64,6 @@ public class CountdownScreen extends Screen
 
         this.timerLabel.setText(getLabelText());
 
-        this.stage.act(delta);
-        this.stage.draw();
-    }
-
-    @Override
-    public void resize(int width, int height)
-    {
-        this.stage.getViewport().update(width, height);
-    }
-
-    @Override
-    public void pause()
-    {
-
-    }
-
-    @Override
-    public void resume()
-    {
-
-    }
-
-    @Override
-    public void hide()
-    {
-    }
-
-    @Override
-    public void dispose()
-    {
-        this.stage.dispose();
+        super.render(delta);
     }
 }

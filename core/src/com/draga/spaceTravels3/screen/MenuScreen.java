@@ -2,23 +2,22 @@ package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.event.PurchasedEvent;
 import com.draga.spaceTravels3.manager.ScreenManager;
-import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
-import com.draga.spaceTravels3.manager.asset.AssMan;
 import com.draga.spaceTravels3.manager.level.LevelManager;
 import com.draga.spaceTravels3.manager.level.LevelPack;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.spaceTravels3.ui.BeepingClickListener;
-import com.draga.spaceTravels3.ui.BeepingImageTextButton;
+import com.draga.spaceTravels3.ui.BeepingImageButton;
 import com.draga.spaceTravels3.ui.BeepingTextButton;
 import com.draga.spaceTravels3.ui.Screen;
 import com.google.common.eventbus.Subscribe;
@@ -27,47 +26,50 @@ import java.util.ArrayList;
 
 public class MenuScreen extends Screen
 {
-    private final Cell  levelPackListCell;
-    private       Stage stage;
+    private final Cell levelPackListCell;
 
     public MenuScreen()
     {
         super(true, true);
         Constants.General.EVENT_BUS.register(this);
 
-        this.stage = new Stage(SpaceTravels3.menuViewport, SpaceTravels3.spriteBatch);
-
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
         // Header label.
         table
             .add("Space Travels 3", "large")
-            .top();
-
-        // Level list.
-        table.row();
+            .row();
 
         // Firstly create the cell so that if the event comes through it will generate the level
         // pack list again.
         this.levelPackListCell = table
             .add()
-            .expand()
-            .center();
+            .expand();
         this.levelPackListCell.setActor(getLevelPackList());
 
         // Buttons.
         table.row();
-        Table buttonsTable = UIManager.getDefaultTable();
+        Table buttonsTable = UIManager.getDefaultButtonsTable();
+        buttonsTable
+            .defaults();
 
         // Tutorial button.
-        buttonsTable.add(getSettingsTextButton(false));
-        buttonsTable.add(getGuideButton());
-        buttonsTable.add(getTutorialButton());
-        buttonsTable.add(getCreditsButton());
-        buttonsTable.add(getShareButton());
-        buttonsTable.add(getRateButton());
-        buttonsTable.add(getAchievementsButton());
-        buttonsTable.add(getLeaderboardsButton());
+        buttonsTable
+            .add(getSettingsButton(false));
+        buttonsTable
+            .add(getGuideButton());
+        buttonsTable
+            .add(getTutorialButton());
+        buttonsTable
+            .add(getCreditsButton());
+        buttonsTable
+            .add(getShareButton());
+        buttonsTable
+            .add(getRateButton());
+        buttonsTable
+            .add(getAchievementsButton());
+        buttonsTable
+            .add(getLeaderboardsButton());
 
         table.add(buttonsTable);
 
@@ -75,15 +77,12 @@ public class MenuScreen extends Screen
         {
             this.stage.addActor(getDebugButton());
         }
-
-        this.stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
     private ScrollPane getLevelPackList()
     {
         java.util.List<LevelPack> levelPacks =
             LevelManager.getLevelPacks();
-
 
         final Table outerTable = UIManager.getDefaultTable();
 
@@ -101,8 +100,8 @@ public class MenuScreen extends Screen
             {
                 SerialisableLevel serialisableLevel = serialisableLevels.get(i);
                 Image image = loadTextureAsync(
-                    serialisableLevel.serialisedDestinationPlanet.texturePath,
-                    AssMan.getAssMan());
+                    serialisableLevel.serialisedDestinationPlanet.texturePath
+                );
                 image.sizeBy(Constants.Visual.LEVEL_ICON_SIZE);
                 image.setX(i * (Constants.Visual.LEVEL_ICON_OVERLAP_DISTANCE));
                 imageGroup.addActor(image);
@@ -166,29 +165,11 @@ public class MenuScreen extends Screen
 
         return scrollPane;
     }
-
-    private Button getSettingsTextButton(boolean useText)
-    {
-        BeepingImageTextButton button =
-            new BeepingImageTextButton(useText ? "Settings" : "", UIManager.skin, "settings");
-
-        button.addListener(
-            new ClickListener()
-            {
-                @Override
-                public void clicked(InputEvent event, float x, float y)
-                {
-                    ScreenManager.addScreen(new SettingsScreen());
-                }
-            });
-
-        return button;
-    }
     
     private Actor getGuideButton()
     {
-        BeepingImageTextButton
-            button = new BeepingImageTextButton("", UIManager.skin, "guide");
+        BeepingImageButton
+            button = new BeepingImageButton(UIManager.skin, "guide");
 
         button.addListener(
             new ClickListener()
@@ -205,8 +186,8 @@ public class MenuScreen extends Screen
 
     private Actor getTutorialButton()
     {
-        BeepingImageTextButton button =
-            new BeepingImageTextButton("", UIManager.skin, "tutorial");
+        BeepingImageButton button =
+            new BeepingImageButton(UIManager.skin, "tutorial");
 
         button.addListener(
             new ClickListener()
@@ -228,8 +209,8 @@ public class MenuScreen extends Screen
 
     private Actor getCreditsButton()
     {
-        BeepingImageTextButton button =
-            new BeepingImageTextButton("", UIManager.skin, "credits");
+        BeepingImageButton button =
+            new BeepingImageButton(UIManager.skin, "credits");
 
         button.addListener(
             new ClickListener()
@@ -246,8 +227,8 @@ public class MenuScreen extends Screen
 
     private Actor getShareButton()
     {
-        BeepingImageTextButton button =
-            new BeepingImageTextButton("", UIManager.skin, "share");
+        BeepingImageButton button =
+            new BeepingImageButton(UIManager.skin, "share");
         button.addListener(new ClickListener()
         {
             @Override
@@ -262,8 +243,8 @@ public class MenuScreen extends Screen
 
     private Actor getRateButton()
     {
-        BeepingImageTextButton
-            button = new BeepingImageTextButton("", UIManager.skin, "rate");
+        BeepingImageButton
+            button = new BeepingImageButton(UIManager.skin, "rate");
 
         button.addListener(
             new ClickListener()
@@ -280,8 +261,8 @@ public class MenuScreen extends Screen
 
     private Actor getAchievementsButton()
     {
-        BeepingImageTextButton
-            button = new BeepingImageTextButton("", UIManager.skin, "achievement");
+        BeepingImageButton
+            button = new BeepingImageButton(UIManager.skin, "achievement");
 
         button.addListener(
             new ClickListener()
@@ -298,8 +279,8 @@ public class MenuScreen extends Screen
 
     private Actor getLeaderboardsButton()
     {
-        BeepingImageTextButton
-            button = new BeepingImageTextButton("", UIManager.skin, "leaderboard");
+        BeepingImageButton
+            button = new BeepingImageButton(UIManager.skin, "leaderboard");
 
         button.addListener(
             new ClickListener()
@@ -351,55 +332,30 @@ public class MenuScreen extends Screen
     @Override
     public void show()
     {
-        Gdx.input.setInputProcessor(this.stage);
-    }
-
-    @Override
-    public void render(float deltaTime)
-    {
-        loadAsyncImages(AssMan.getAssMan());
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
-            || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
+        Gdx.input.setInputProcessor(new InputMultiplexer(this.stage, new InputAdapter()
         {
-            Gdx.app.exit();
-        }
-
-        this.stage.getViewport().apply();
-
-        this.stage.act(deltaTime);
-        this.stage.draw();
-    }
-
-    @Override
-    public void resize(int width, int height)
-    {
-        this.stage.getViewport().update(width, height);
-    }
-
-    @Override
-    public void pause()
-    {
-
-    }
-
-    @Override
-    public void resume()
-    {
-
-    }
-
-    @Override
-    public void hide()
-    {
-
+            @Override
+            public boolean keyUp(int keycode)
+            {
+                switch (keycode)
+                {
+                    case Input.Keys.ESCAPE:
+                    case Input.Keys.BACK:
+                    {
+                        Gdx.app.exit();
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }));
     }
 
     @Override
     public void dispose()
     {
-        this.stage.dispose();
         Constants.General.EVENT_BUS.unregister(this);
+        super.dispose();
     }
 
     @Subscribe

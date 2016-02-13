@@ -124,17 +124,19 @@ public class GameScreen extends Screen
             @Override
             public boolean keyUp(int keycode)
             {
-                if (keycode == Input.Keys.BACK
-                    || keycode == Input.Keys.MENU
-                    || keycode == Input.Keys.ESCAPE)
+                switch (keycode)
                 {
-                    GameScreen.this.level.pause();
-                    ScreenManager.addScreen(new GamePauseMenuScreen(
-                        GameScreen.this.level,
-                        GameScreen.this));
-                    return true;
+                    case Input.Keys.BACK:
+                    case Input.Keys.MENU:
+                    case Input.Keys.ESCAPE:
+                    {
+                        GameScreen.this.level.pause();
+                        ScreenManager.addScreen(new GamePauseMenuScreen(
+                            GameScreen.this.level,
+                            GameScreen.this));
+                        return true;
+                    }
                 }
-
                 return false;
             }
         });
@@ -224,29 +226,6 @@ public class GameScreen extends Screen
         camera.update();
 
         SpaceTravels3.spriteBatch.setProjectionMatrix(camera.combined);
-    }
-
-    public void resize(int width, int height)
-    {
-        SpaceTravels3.gameViewport.update(width, height);
-    }
-
-    @Override
-    public void pause()
-    {
-        this.level.pause();
-    }
-
-    @Override
-    public void resume()
-    {
-        this.level.resume();
-    }
-
-    @Override
-    public void hide()
-    {
-        this.level.pause();
     }
 
     @Override

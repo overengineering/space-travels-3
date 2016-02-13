@@ -67,10 +67,10 @@ public abstract class ScreenManager
                             "Unblocking " + Joiner.on(", ").join(screensToUnblock));
                         for (Screen screenToUnblock : screensToUnblock)
                         {
-                            screenToUnblock.show();
                             ScreenManager.screens.add(screenToUnblock);
                         }
                         screenBlockedScreens.remove(screenToRemove);
+
                     }
                     screens.remove(screenToRemove);
                     screenToRemove.hide();
