@@ -258,4 +258,24 @@ public abstract class LevelManager
 
         return null;
     }
+
+    public static LevelPack getNextLevelPack(String levelID)
+    {
+        for (Iterator<LevelPack> levelPackIterator =
+             levelPacks.iterator(); levelPackIterator.hasNext(); )
+        {
+            LevelPack levelPack = levelPackIterator.next();
+            for (SerialisableLevel serialisableLevel : levelPack.getSerialisableLevels())
+            {
+                if (serialisableLevel.id.equals(levelID))
+                {
+                    return levelPackIterator.hasNext()
+                        ? levelPackIterator.next()
+                        : null;
+                }
+            }
+        }
+
+        return null;
+    }
 }
