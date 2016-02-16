@@ -25,7 +25,7 @@ public class GuideScreen extends Screen
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
         // Header label.
-        table.add("Tutorial", "large", Color.WHITE);
+        table.add("Guide", "large", Color.WHITE);
         table.row();
 
         // Tutorial slides.

@@ -115,7 +115,7 @@ public class TutorialScreen extends Screen
                 + "Try using the tilt: place the "
                 + "device facing up and tilt it slightly where you want to go.\r\n"
                 + "The more you tilt the faster the ship will accelerate (and consume fuel).\r\n"
-                + "Try to move gain some speed using the accelerometer.");
+                + "Gain some speed using the tilt!");
 
         this.nextTextButtonListener = new ClickListener()
         {
@@ -181,7 +181,7 @@ public class TutorialScreen extends Screen
             + "that direction.\r\n"
             + "The further away you touch from the ship the the faster the ship will accelerate "
             + "(and consume fuel).\r\n"
-            + "Try to gain some speed using the touch screen.");
+            + "Gain some speed using the touch screen!");
         this.dialogNextButton.removeListener(this.nextTextButtonListener);
         this.nextTextButtonListener = new ClickListener()
         {
