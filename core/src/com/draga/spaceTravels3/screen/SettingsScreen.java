@@ -115,7 +115,7 @@ public class SettingsScreen extends Screen
 
     private Table getInputTypeSelector()
     {
-        Table table = UIManager.getDefaultButtonsTable();
+        Table table = UIManager.getHorizontalPaddingTable();
 
         ButtonGroup<ImageTextButton> buttonGroup = new ButtonGroup<>();
         buttonGroup.setMaxCheckCount(1);

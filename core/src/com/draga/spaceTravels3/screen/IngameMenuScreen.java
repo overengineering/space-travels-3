@@ -62,7 +62,7 @@ public abstract class IngameMenuScreen extends Screen
         if (nextSerialisableLevel != null
             || nextDifficulty != null)
         {
-            Table innerTable = UIManager.getDefaultButtonsTable();
+            Table innerTable = UIManager.getHorizontalPaddingTable();
 
             table
                 .add(innerTable)
@@ -80,7 +80,7 @@ public abstract class IngameMenuScreen extends Screen
             }
         }
 
-        Table innerTable = UIManager.getDefaultButtonsTable();
+        Table innerTable = UIManager.getHorizontalPaddingTable();
         innerTable
             .add(getRetryButton());
         innerTable
