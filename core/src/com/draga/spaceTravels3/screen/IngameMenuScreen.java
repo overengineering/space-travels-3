@@ -18,6 +18,7 @@ import com.draga.spaceTravels3.level.Level;
 import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.level.LevelManager;
+import com.draga.spaceTravels3.manager.level.LevelPack;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.spaceTravels3.ui.BeepingImageTextButton;
 import com.draga.spaceTravels3.ui.Screen;
@@ -54,12 +55,11 @@ public abstract class IngameMenuScreen extends Screen
             .expand();
         table.row();
 
-        SerialisableLevel nextSerialisableLevel =
-            LevelManager.getNextSerialisableLevel(this.level.getId());
+        Actor nextLevelOrPackButton = getNextLevelOrPackButton();
         String nextDifficulty =
             LevelManager.getNextDifficulty(this.level.getId(), this.level.getDifficulty());
 
-        if (nextSerialisableLevel != null
+        if (nextLevelOrPackButton != null
             || nextDifficulty != null)
         {
             Table innerTable = UIManager.getDefaultButtonsTable();
@@ -67,10 +67,10 @@ public abstract class IngameMenuScreen extends Screen
             table
                 .add(innerTable)
                 .row();
-            if (nextSerialisableLevel != null)
+            if (nextLevelOrPackButton != null)
             {
                 innerTable
-                    .add(getNextLevelButton(nextSerialisableLevel));
+                    .add(nextLevelOrPackButton);
             }
 
             if (nextDifficulty != null)
@@ -111,24 +111,22 @@ public abstract class IngameMenuScreen extends Screen
         return table;
     }
 
-    private Actor getNextLevelButton(final SerialisableLevel nextSerialisableLevel)
+    private Actor getNextLevelOrPackButton()
     {
-        BeepingImageTextButton button =
-            new BeepingImageTextButton("Next level", UIManager.skin, "next");
+        SerialisableLevel nextSerialisableLevel =
+            LevelManager.getNextSerialisableLevel(this.level.getId());
+        if (nextSerialisableLevel != null)
+        {
+            return getNextLevelButton(nextSerialisableLevel);
+        }
 
-        button.addListener(
-            new ClickListener()
-            {
-                @Override
-                public void clicked(InputEvent event, float x, float y)
-                {
-                    play(
-                        nextSerialisableLevel.id,
-                        nextSerialisableLevel.serialisedDifficulties.keySet().iterator().next());
-                }
-            });
+        LevelPack nextLevelPack = LevelManager.getNextLevelPack(this.level.getId());
+        if (nextLevelPack != null)
+        {
+            return getNextLevelPackButton(nextLevelPack);
+        }
 
-        return button;
+        return null;
     }
 
     private Actor getNextDifficultyButton(final String difficulty)
@@ -184,6 +182,46 @@ public abstract class IngameMenuScreen extends Screen
                 ScreenManager.removeScreen(IngameMenuScreen.this.gameScreen);
             }
         });
+
+        return button;
+    }
+
+    private Actor getNextLevelButton(final SerialisableLevel nextSerialisableLevel)
+    {
+        BeepingImageTextButton button =
+            new BeepingImageTextButton("Next level", UIManager.skin, "next");
+
+        button.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    play(
+                        nextSerialisableLevel.id,
+                        nextSerialisableLevel.serialisedDifficulties.keySet().iterator().next());
+                }
+            });
+
+        return button;
+    }
+
+    private Actor getNextLevelPackButton(final LevelPack levelPack)
+    {
+        BeepingImageTextButton button =
+            new BeepingImageTextButton("Next level pack", UIManager.skin, "next");
+
+        button.addListener(
+            new ClickListener()
+            {
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    ScreenManager.removeScreen(IngameMenuScreen.this);
+                    ScreenManager.removeScreen(IngameMenuScreen.this.gameScreen);
+                    ScreenManager.addScreen(new LevelPackScreen(levelPack));
+                }
+            });
 
         return button;
     }
