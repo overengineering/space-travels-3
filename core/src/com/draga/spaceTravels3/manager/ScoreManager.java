@@ -5,7 +5,6 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
 import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.spaceTravels3.Constants;
-import com.draga.spaceTravels3.event.ScoreUpdatedEvent;
 import com.draga.utils.FileUtils;
 
 import java.util.HashMap;
@@ -22,8 +21,7 @@ public abstract class ScoreManager
         getLevelScores();
 
     /**
-     * Saves the score if highest for this level. If a new score is saved fires a
-     * {@link ScoreUpdatedEvent}.
+     * Saves the score if highest for this level.
      */
     public static void saveHighScore(String levelId, String difficulty, int score)
     {
@@ -45,7 +43,6 @@ public abstract class ScoreManager
         {
             difficultyScores.put(difficulty, score);
             saveLevelScores();
-            Constants.General.EVENT_BUS.post(new ScoreUpdatedEvent(levelId, difficulty, score));
         }
     }
 
@@ -74,6 +71,7 @@ public abstract class ScoreManager
                 if (!levelScores.isEmpty()
                     && levelScores.keySet().toArray()[0] instanceof String)
                 {
+                    @SuppressWarnings("unchecked")
                     HashMap<String, Integer> firstValue =
                         (HashMap<String, Integer>) levelScores.values().toArray()[0];
                     if (!firstValue.isEmpty()

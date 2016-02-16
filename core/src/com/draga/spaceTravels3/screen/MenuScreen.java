@@ -49,7 +49,7 @@ public class MenuScreen extends Screen
 
         // Buttons.
         table.row();
-        Table buttonsTable = UIManager.getDefaultButtonsTable();
+        Table buttonsTable = UIManager.getHorizontalPaddingTable();
         buttonsTable
             .defaults();
 

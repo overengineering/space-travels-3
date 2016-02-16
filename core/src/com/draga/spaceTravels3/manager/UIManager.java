@@ -89,12 +89,12 @@ public abstract class UIManager
         addButtonStyles("leaderboard", AssMan.getAssList().iconLeaderboard);
         addButtonStyles("rate", AssMan.getAssList().iconRate);
         addButtonStyles("tutorial", AssMan.getAssList().iconTutorial);
-        addButtonStyles("guide",AssMan.getAssList().iconGuide);
+        addButtonStyles("guide", AssMan.getAssList().iconGuide);
         addButtonStyles("play", AssMan.getAssList().iconPlay);
         addButtonStyles("exit", AssMan.getAssList().iconLeft);
         addButtonStyles("next", AssMan.getAssList().iconRight);
-        addButtonStyles("share",AssMan.getAssList().iconShare);
-        addButtonStyles("unlock",AssMan.getAssList().iconUnlock);
+        addButtonStyles("share", AssMan.getAssList().iconShare);
+        addButtonStyles("unlock", AssMan.getAssList().iconUnlock);
         addButtonStyles("retry", AssMan.getAssList().iconRetry);
 
         skin.add("unlockOverlay", new Sprite(new Texture(AssMan.getAssList().iconUnlockOverlay)));
@@ -413,7 +413,7 @@ public abstract class UIManager
         return tiledDrawable;
     }
 
-    public static Table getDefaultButtonsTable()
+    public static Table getHorizontalPaddingTable()
     {
         Table table = new Table(skin);
         table
@@ -423,6 +423,20 @@ public abstract class UIManager
                 Constants.Visual.UI.BUTTON_PADDING,
                 0f,
                 Constants.Visual.UI.BUTTON_PADDING);
+
+        return table;
+    }
+
+    public static Table getVerticalPaddingTable()
+    {
+        Table table = new Table(skin);
+        table
+            .defaults()
+            .pad(
+                Constants.Visual.UI.BUTTON_PADDING,
+                0f,
+                Constants.Visual.UI.BUTTON_PADDING,
+                0f);
 
         return table;
     }

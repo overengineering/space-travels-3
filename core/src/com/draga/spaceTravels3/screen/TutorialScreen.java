@@ -84,7 +84,7 @@ public class TutorialScreen extends Screen
 
         this.dialogNextButton = new BeepingImageTextButton("Next", UIManager.skin, "next");
 
-        this.buttonsTable = UIManager.getDefaultButtonsTable();
+        this.buttonsTable = UIManager.getHorizontalPaddingTable();
         table.add(this.buttonsTable);
         this.buttonsTable
             .row()

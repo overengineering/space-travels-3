@@ -9,12 +9,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.InputType;
-import com.draga.spaceTravels3.SpaceTravels3;
 import com.draga.spaceTravels3.level.Level;
 import com.draga.spaceTravels3.level.LevelParameters;
 import com.draga.spaceTravels3.manager.ScreenManager;
@@ -26,7 +24,7 @@ import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLe
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisablePlanet;
 import com.draga.spaceTravels3.physic.collisionCache.CollisionCache;
 import com.draga.spaceTravels3.physic.collisionCache.CollisionCacheParameters;
-import com.draga.spaceTravels3.ui.BeepingTextButton;
+import com.draga.spaceTravels3.ui.BeepingImageTextButton;
 import com.draga.spaceTravels3.ui.Screen;
 import com.google.common.base.Joiner;
 import com.google.common.base.Stopwatch;
@@ -99,7 +97,8 @@ public class LoadingScreen extends Screen
     {
         final Dialog dialog = new Dialog("", UIManager.skin);
 
-        TextButton dismissButton = new BeepingTextButton("Dismiss", UIManager.skin);
+        BeepingImageTextButton
+            dismissButton = new BeepingImageTextButton("Dismiss", UIManager.skin, "next");
 
         ClickListener disableWarningListener = new ClickListener()
         {
