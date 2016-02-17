@@ -28,6 +28,7 @@ import com.draga.spaceTravels3.ui.Screen;
 
 public abstract class IngameMenuScreen extends Screen
 {
+    @SuppressWarnings("SpellCheckingInspection")
     public static String s =
         "gTAKsCqx0NeZVO9igYzMNjolg61Y6KLwLQaulfOZzuI2WLhPNr*mAmEy3T%VP08ZzWILHaHhKDHXeGP";
 
@@ -58,29 +59,25 @@ public abstract class IngameMenuScreen extends Screen
             .expand();
         table.row();
 
-        Actor nextLevelOrPackButton = getNextLevelOrPackButton();
         String nextDifficulty =
             LevelManager.getNextDifficulty(this.level.getId(), this.level.getDifficulty());
 
-        if (nextLevelOrPackButton != null
-            || nextDifficulty != null)
+        if (nextDifficulty != null)
         {
-            Table innerTable = UIManager.getHorizontalPaddingTable();
-
             table
-                .add(innerTable)
+                .add(getNextDifficultyButton(nextDifficulty))
                 .row();
+        }
+        else
+        {
+            Actor nextLevelOrPackButton = getNextLevelOrPackButton();
             if (nextLevelOrPackButton != null)
             {
-                innerTable
-                    .add(nextLevelOrPackButton);
+                table
+                    .add(nextLevelOrPackButton)
+                    .row();
             }
 
-            if (nextDifficulty != null)
-            {
-                innerTable
-                    .add(getNextDifficultyButton(nextDifficulty));
-            }
         }
 
         Table innerTable = UIManager.getHorizontalPaddingTable();
@@ -114,24 +111,6 @@ public abstract class IngameMenuScreen extends Screen
         return table;
     }
 
-    private Actor getNextLevelOrPackButton()
-    {
-        SerialisableLevel nextSerialisableLevel =
-            LevelManager.getNextSerialisableLevel(this.level.getId());
-        if (nextSerialisableLevel != null)
-        {
-            return getNextLevelButton(nextSerialisableLevel);
-        }
-
-        LevelPack nextLevelPack = LevelManager.getNextLevelPack(this.level.getId());
-        if (nextLevelPack != null)
-        {
-            return getNextLevelPackButton(nextLevelPack);
-        }
-
-        return null;
-    }
-
     private Actor getNextDifficultyButton(final String difficulty)
     {
         BeepingImageTextButton button =
@@ -153,6 +132,24 @@ public abstract class IngameMenuScreen extends Screen
             });
 
         return button;
+    }
+
+    private Actor getNextLevelOrPackButton()
+    {
+        SerialisableLevel nextSerialisableLevel =
+            LevelManager.getNextSerialisableLevel(this.level.getId());
+        if (nextSerialisableLevel != null)
+        {
+            return getNextLevelButton(nextSerialisableLevel);
+        }
+
+        LevelPack nextLevelPack = LevelManager.getNextLevelPack(this.level.getId());
+        if (nextLevelPack != null)
+        {
+            return getNextLevelPackButton(nextLevelPack);
+        }
+
+        return null;
     }
 
     public Actor getRetryButton()
@@ -190,6 +187,16 @@ public abstract class IngameMenuScreen extends Screen
         });
 
         return button;
+    }
+
+    private void play(String levelId, String difficulty)
+    {
+        ScreenManager.removeScreen(this);
+        ScreenManager.removeScreen(this.gameScreen);
+        ScreenManager.addScreen(new LoadingScreen(
+            levelId,
+            difficulty,
+            false));
     }
 
     private Actor getNextLevelButton(final SerialisableLevel nextSerialisableLevel)
@@ -235,16 +242,6 @@ public abstract class IngameMenuScreen extends Screen
             });
 
         return button;
-    }
-
-    private void play(String levelId, String difficulty)
-    {
-        ScreenManager.removeScreen(this);
-        ScreenManager.removeScreen(this.gameScreen);
-        ScreenManager.addScreen(new LoadingScreen(
-            levelId,
-            difficulty,
-            false));
     }
 
     @Override
