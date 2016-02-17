@@ -1,6 +1,7 @@
 package com.draga.spaceTravels3.manager.asset;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 public class AssList
 {
@@ -47,6 +48,8 @@ public class AssList
     public String iconUnlock;
     public String iconUnlockOverlay;
     public String iconFaceUp;
+
+    public LinkedHashMap<String, String> iconDifficulties;
 
     public AssList()
     {

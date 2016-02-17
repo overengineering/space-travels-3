@@ -21,19 +21,18 @@ import com.draga.spaceTravels3.manager.level.LevelPack;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableDifficulty;
 import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
 import com.draga.spaceTravels3.ui.BeepingImageTextButton;
-import com.draga.spaceTravels3.ui.BeepingTextButton;
 import com.draga.spaceTravels3.ui.Screen;
 import com.google.common.eventbus.Subscribe;
 
 public class LevelScreen extends Screen
 {
-    private final LevelPack                      levelPack;
-    private       SerialisableLevel              serialisableLevel;
-    private       Cell                           difficultyDetailsCell;
-    private       Button                         playButton;
-    private       Button                         leaderboardButton;
-    private       String                         selectedDifficulty;
-    private       ButtonGroup<BeepingTextButton> difficultyButtonGroup;
+    private final LevelPack                           levelPack;
+    private       SerialisableLevel                   serialisableLevel;
+    private       Cell                                difficultyDetailsCell;
+    private       Button                              playButton;
+    private       Button                              leaderboardButton;
+    private       String                              selectedDifficulty;
+    private       ButtonGroup<BeepingImageTextButton> difficultyButtonGroup;
 
     public LevelScreen(LevelPack levelPack, final SerialisableLevel serialisableLevel)
     {
@@ -203,10 +202,11 @@ public class LevelScreen extends Screen
         this.difficultyButtonGroup.setMaxCheckCount(1);
         this.difficultyButtonGroup.setMinCheckCount(1);
 
+        int i = 0;
         for (final String difficulty : this.serialisableLevel.serialisedDifficulties.keySet())
         {
-            BeepingTextButton button =
-                new BeepingTextButton(difficulty, UIManager.skin, "checkable");
+            BeepingImageTextButton button =
+                new BeepingImageTextButton(difficulty, UIManager.skin, "difficulty" + i++);
             button.setName(difficulty);
             button.addListener(new ClickListener()
             {

@@ -10,16 +10,13 @@
   "loseSound": "sound/lose/lowDown.ogg",
   "winSound": "sound/win/zapTwoTone2.ogg",
   "buttonSound": "sound/button/tone1.ogg",
-
   "font": "font/Akashi.ttf",
   "debugFont": "font/DroidSansMono.ttf",
-
   "musics": [
     "music/mars.ogg",
     "music/venus.ogg",
     "music/jupiter.ogg"
   ],
-
   "guideMinimapTexture": "guide/minimap.png",
   "guideBelowLandingSpeedTexture": "guide/belowLandingSpeed.png",
   "guideAboveLandingSpeedTexture": "guide/aboveLandingSpeed.png",
@@ -43,5 +40,10 @@
   "iconShare": "icon/share128.png",
   "iconUnlock": "icon/unlock64.png",
   "iconUnlockOverlay": "icon/unlock100w.png",
-  "iconFaceUp": "icon/faceUp100.png"
+  "iconFaceUp": "icon/faceUp100.png",
+  "iconDifficulties": {
+    "icon/difficulty1-128.png": "icon/difficulty1checked128.png",
+    "icon/difficulty2-128.png": "icon/difficulty2checked128.png",
+    "icon/difficulty3-128.png": "icon/difficulty3checked128.png"
+  }
 }

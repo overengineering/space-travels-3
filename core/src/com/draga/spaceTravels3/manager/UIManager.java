@@ -111,6 +111,16 @@ public abstract class UIManager
                 AssMan.getAssList().iconAccelerometer,
                 AssMan.getAssList().iconAccelerometerChecked));
 
+        int i = 0;
+        for (String iconDifficulty : AssMan.getAssList().iconDifficulties.keySet())
+        {
+            skin.add(
+                "difficulty" + i++,
+                getCheckableImageTextButtonStyles(
+                    iconDifficulty,
+                    AssMan.getAssList().iconDifficulties.get(iconDifficulty)));
+        }
+
         skin.add("checkable", getCheckableTextButtonStyle());
 
         skin.add("default", getLabelStyle("default"), Label.LabelStyle.class);
