@@ -99,9 +99,17 @@ public class LevelPackScreen extends Screen
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    LevelScreen levelScreen =
-                        new LevelScreen(LevelPackScreen.this.levelPack, serialisableLevel);
-                    ScreenManager.addScreen(levelScreen);
+                    if (LevelPackScreen.this.levelPack.isFree()
+                        || SpaceTravels3.services.hasPurchasedSku(LevelPackScreen.this.levelPack.getGoogleSku()))
+                    {
+                        LevelScreen levelScreen =
+                            new LevelScreen(LevelPackScreen.this.levelPack, serialisableLevel);
+                        ScreenManager.addScreen(levelScreen);
+                    }
+                    else
+                    {
+                        SpaceTravels3.services.purchaseSku(LevelPackScreen.this.levelPack.getGoogleSku());
+                    }
                 }
             });
 
@@ -166,5 +174,7 @@ public class LevelPackScreen extends Screen
 
         this.levelListCell.setActor(getLevelList());
         this.headerCell.setActor(getHeaderLabel());
+        this.purchaseButton.setVisible(!this.levelPack.isFree()
+            && !SpaceTravels3.services.hasPurchasedSku(this.levelPack.getGoogleSku()));
     }
 }
