@@ -215,7 +215,11 @@ public class Level
 
             Constants.General.EVENT_BUS.post(new WinEvent(score, previousBestScore));
 
-            SpaceTravels3.services.googleUnlockAchievement(this.playCompletionAchievementID);
+            if (this.pickupsCollected == this.pickups.size())
+            {
+                SpaceTravels3.services.googleUnlockAchievement(this.playCompletionAchievementID);
+            }
+
             SpaceTravels3.services.googleUpdateLeaderboard(
                 this.playLeaderboardID,
                 score.getTotalScore());
