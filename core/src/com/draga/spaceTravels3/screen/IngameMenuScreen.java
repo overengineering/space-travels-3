@@ -14,6 +14,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.spaceTravels3.Constants;
+import com.draga.spaceTravels3.event.ChangeDifficultyEvent;
+import com.draga.spaceTravels3.event.ChangeLevelEvent;
+import com.draga.spaceTravels3.event.ChangeLevelPackEvent;
 import com.draga.spaceTravels3.level.Level;
 import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.UIManager;
@@ -140,6 +143,9 @@ public abstract class IngameMenuScreen extends Screen
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
+                    ChangeDifficultyEvent changeDifficultyEvent =
+                        new ChangeDifficultyEvent(difficulty);
+                    Constants.General.EVENT_BUS.post(changeDifficultyEvent);
                     play(
                         IngameMenuScreen.this.level.getId(),
                         difficulty);
@@ -197,6 +203,9 @@ public abstract class IngameMenuScreen extends Screen
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
+                    ChangeLevelEvent changeLevelEvent =
+                        new ChangeLevelEvent(nextSerialisableLevel);
+                    Constants.General.EVENT_BUS.post(changeLevelEvent);
                     play(
                         nextSerialisableLevel.id,
                         nextSerialisableLevel.serialisedDifficulties.keySet().iterator().next());
@@ -219,7 +228,9 @@ public abstract class IngameMenuScreen extends Screen
                 {
                     ScreenManager.removeScreen(IngameMenuScreen.this);
                     ScreenManager.removeScreen(IngameMenuScreen.this.gameScreen);
-                    ScreenManager.addScreen(new LevelPackScreen(levelPack));
+                    ChangeLevelPackEvent changeLevelPackEvent =
+                        new ChangeLevelPackEvent(levelPack);
+                    Constants.General.EVENT_BUS.post(changeLevelPackEvent);
                 }
             });
 

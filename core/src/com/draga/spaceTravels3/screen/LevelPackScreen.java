@@ -5,13 +5,11 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.SpaceTravels3;
+import com.draga.spaceTravels3.event.ChangeLevelPackEvent;
 import com.draga.spaceTravels3.event.PurchasedEvent;
 import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.UIManager;
@@ -26,8 +24,10 @@ import java.util.ArrayList;
 
 public class LevelPackScreen extends Screen
 {
-    private final LevelPack levelPack;
-    private final Actor     purchaseButton;
+    private final Cell<ScrollPane> levelListCell;
+    private final Cell<Label>      headerCell;
+    private       LevelPack        levelPack;
+    private       Actor            purchaseButton;
 
     public LevelPackScreen(LevelPack levelPack)
     {
@@ -37,14 +37,13 @@ public class LevelPackScreen extends Screen
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
         // Header label.
-        Label headerLabel = getHeaderLabel();
-        table
-            .add(headerLabel)
+        this.headerCell = table
+            .add(getHeaderLabel())
             .top();
 
         // Level list.
         table.row();
-        table
+        this.levelListCell = table
             .add(getLevelList())
             .expand()
             .center();
@@ -158,5 +157,14 @@ public class LevelPackScreen extends Screen
         {
             this.purchaseButton.setVisible(false);
         }
+    }
+
+    @Subscribe
+    public void levelPackChanged(ChangeLevelPackEvent changeLevelPackEvent)
+    {
+        this.levelPack = changeLevelPackEvent.levelPack;
+
+        this.levelListCell.setActor(getLevelList());
+        this.headerCell.setActor(getHeaderLabel());
     }
 }

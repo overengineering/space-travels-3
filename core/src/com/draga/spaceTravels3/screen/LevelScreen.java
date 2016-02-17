@@ -7,7 +7,11 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.SpaceTravels3;
+import com.draga.spaceTravels3.event.ChangeDifficultyEvent;
+import com.draga.spaceTravels3.event.ChangeLevelEvent;
+import com.draga.spaceTravels3.event.ChangeLevelPackEvent;
 import com.draga.spaceTravels3.manager.ScoreManager;
 import com.draga.spaceTravels3.manager.ScreenManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
@@ -19,15 +23,17 @@ import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLe
 import com.draga.spaceTravels3.ui.BeepingImageTextButton;
 import com.draga.spaceTravels3.ui.BeepingTextButton;
 import com.draga.spaceTravels3.ui.Screen;
+import com.google.common.eventbus.Subscribe;
 
 public class LevelScreen extends Screen
 {
-    private final LevelPack         levelPack;
-    private final SerialisableLevel serialisableLevel;
-    private final Cell              difficultyDetailsCell;
-    private final Button            playButton;
-    private final Button            leaderboardButton;
-    private       String            selectedDifficulty;
+    private final LevelPack                      levelPack;
+    private       SerialisableLevel              serialisableLevel;
+    private       Cell                           difficultyDetailsCell;
+    private       Button                         playButton;
+    private       Button                         leaderboardButton;
+    private       String                         selectedDifficulty;
+    private       ButtonGroup<BeepingTextButton> difficultyButtonGroup;
 
     public LevelScreen(LevelPack levelPack, final SerialisableLevel serialisableLevel)
     {
@@ -36,7 +42,93 @@ public class LevelScreen extends Screen
         this.levelPack = levelPack;
         this.serialisableLevel = serialisableLevel;
 
+        addTable();
 
+        Constants.General.EVENT_BUS.register(this);
+    }
+
+    @Override
+    public void show()
+    {
+        Gdx.input.setInputProcessor(new InputMultiplexer(this.stage, getBackInputAdapter()));
+
+        // Refreshes the difficulty list to update score if necessary.
+        if (this.selectedDifficulty != null)
+        {
+            this.difficultyDetailsCell.setActor(getDifficultyDetails(this.selectedDifficulty));
+        }
+    }
+
+    private Actor getDifficultyDetails(String difficulty)
+    {
+        SerialisableDifficulty serialisableDifficulty =
+            this.serialisableLevel.serialisedDifficulties.get(difficulty);
+
+        Table table = UIManager.getDefaultTable();
+
+        Integer score = ScoreManager.getScore(this.serialisableLevel.id, difficulty);
+        if (score != null)
+        {
+            table
+                .add("High score: ")
+                .right();
+            table
+                .add(String.valueOf(score))
+                .right()
+                .row();
+        }
+        else
+        {
+            table
+                .add("")
+                .row();
+        }
+
+        table
+            .add("Projection line: ")
+            .right();
+        table
+            .add(String.valueOf(serialisableDifficulty.trajectorySeconds) + " sec")
+            .right();
+        table.row();
+
+        table
+            .add("Maximum landing speed: ")
+            .right();
+        table
+            .add(String.valueOf(serialisableDifficulty.maxLandingSpeed))
+            .right();
+        table.row();
+
+        table.add("Fuel: ")
+            .right();
+        table
+            .add(serialisableDifficulty.infiniteFuel
+                ? "infinite"
+                : String.valueOf(serialisableDifficulty.fuel))
+            .right();
+
+        return table;
+    }
+
+    @Override
+    public void dispose()
+    {
+        Constants.General.EVENT_BUS.unregister(this);
+        super.dispose();
+    }
+
+    @Subscribe
+    public void levelChanged(ChangeLevelEvent changeLevelEvent)
+    {
+        this.serialisableLevel = changeLevelEvent.serialisableLevel;
+
+        this.stage.clear();
+        addTable();
+    }
+
+    private void addTable()
+    {
         Table table = UIManager.addDefaultTableToStage(this.stage);
 
         // Header label.
@@ -79,6 +171,8 @@ public class LevelScreen extends Screen
         // Back button.
         table
             .add(getBackButton());
+
+        selectDifficulty(this.serialisableLevel.serialisedDifficulties.keySet().iterator().next());
     }
 
     private Actor getHeader()
@@ -105,9 +199,9 @@ public class LevelScreen extends Screen
     private Actor getDifficultySelection()
     {
         Table table = UIManager.getVerticalPaddingTable();
-        ButtonGroup<BeepingTextButton> buttonGroup = new ButtonGroup<>();
-        buttonGroup.setMaxCheckCount(1);
-        buttonGroup.setMinCheckCount(0);
+        this.difficultyButtonGroup = new ButtonGroup<>();
+        this.difficultyButtonGroup.setMaxCheckCount(1);
+        this.difficultyButtonGroup.setMinCheckCount(1);
 
         for (final String difficulty : this.serialisableLevel.serialisedDifficulties.keySet())
         {
@@ -119,14 +213,11 @@ public class LevelScreen extends Screen
                 @Override
                 public void clicked(InputEvent event, float x, float y)
                 {
-                    LevelScreen.this.difficultyDetailsCell.setActor(getDifficultyDetails(difficulty));
-                    LevelScreen.this.playButton.setVisible(true);
-                    LevelScreen.this.leaderboardButton.setVisible(true);
-                    LevelScreen.this.selectedDifficulty = difficulty;
+                    selectDifficulty(difficulty);
                 }
             });
 
-            buttonGroup.add(button);
+            this.difficultyButtonGroup.add(button);
             table
                 .add(button)
                 .row();
@@ -187,58 +278,6 @@ public class LevelScreen extends Screen
         button.setVisible(false);
 
         return button;
-    }
-
-    private Actor getDifficultyDetails(String difficulty)
-    {
-        SerialisableDifficulty serialisableDifficulty =
-            this.serialisableLevel.serialisedDifficulties.get(difficulty);
-
-        Table table = UIManager.getDefaultTable();
-
-        Integer score = ScoreManager.getScore(this.serialisableLevel.id, difficulty);
-        if (score != null)
-        {
-            table
-                .add("High score: ")
-                .right();
-            table
-                .add(String.valueOf(score))
-                .right()
-                .row();
-        }
-        else
-        {
-            table
-                .add("")
-                .row();
-        }
-
-        table
-            .add("Projection line: ")
-            .right();
-        table
-            .add(String.valueOf(serialisableDifficulty.trajectorySeconds) + " sec")
-            .right();
-        table.row();
-
-        table
-            .add("Maximum landing speed: ")
-            .right();
-        table
-            .add(String.valueOf(serialisableDifficulty.maxLandingSpeed))
-            .right();
-        table.row();
-
-        table.add("Fuel: ")
-            .right();
-        table
-            .add(serialisableDifficulty.infiniteFuel
-                ? "infinite"
-                : String.valueOf(serialisableDifficulty.fuel))
-            .right();
-
-        return table;
     }
 
     public void offerTutorial(final SerialisableLevel serialisableLevel, final String difficulty)
@@ -316,15 +355,24 @@ public class LevelScreen extends Screen
         ScreenManager.addScreen(loadingScreen);
     }
 
-    @Override
-    public void show()
+    @Subscribe
+    public void levelPackChanged(ChangeLevelPackEvent changeLevelPackEvent)
     {
-        Gdx.input.setInputProcessor(new InputMultiplexer(this.stage, getBackInputAdapter()));
+        ScreenManager.removeScreen(this);
+    }
 
-        // Refreshes the difficulty list to update score if necessary.
-        if (this.selectedDifficulty != null)
-        {
-            this.difficultyDetailsCell.setActor(getDifficultyDetails(this.selectedDifficulty));
-        }
+    @Subscribe
+    public void levelPackChanged(ChangeDifficultyEvent changeDifficultyEvent)
+    {
+        selectDifficulty(changeDifficultyEvent.difficulty);
+        this.difficultyButtonGroup.setChecked(changeDifficultyEvent.difficulty);
+    }
+
+    private void selectDifficulty(String difficulty)
+    {
+        LevelScreen.this.difficultyDetailsCell.setActor(getDifficultyDetails(difficulty));
+        LevelScreen.this.playButton.setVisible(true);
+        LevelScreen.this.leaderboardButton.setVisible(true);
+        LevelScreen.this.selectedDifficulty = difficulty;
     }
 }
