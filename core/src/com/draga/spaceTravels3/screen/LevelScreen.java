@@ -362,10 +362,18 @@ public class LevelScreen extends Screen
     }
 
     @Subscribe
-    public void levelPackChanged(ChangeDifficultyEvent changeDifficultyEvent)
+    public void difficultyChanged(ChangeDifficultyEvent changeDifficultyEvent)
     {
         selectDifficulty(changeDifficultyEvent.difficulty);
-        this.difficultyButtonGroup.setChecked(changeDifficultyEvent.difficulty);
+        for (BeepingImageTextButton beepingImageTextButton : this.difficultyButtonGroup.getButtons())
+        {
+            if (beepingImageTextButton.getName().equals(changeDifficultyEvent.difficulty))
+            {
+                beepingImageTextButton.setChecked(true);
+                break;
+            }
+        }
+
     }
 
     private void selectDifficulty(String difficulty)
