@@ -38,7 +38,7 @@ public abstract class Constants
         public static final float         THRUSTER_MAX_HEIGHT     = 5;
         public static final float         THRUSTER_ANIMATION_TIME = 1f;
         public static final PooledVector2 THRUSTER_OFFSET         =
-            PooledVector2.newVector2(-SHIP_WIDTH / 3f, 0);
+            PooledVector2.newVector2(-SHIP_WIDTH * 0.48f, 0);
 
         // Screen.
         public static final float SCREEN_FADE_DURATION = 1f;
