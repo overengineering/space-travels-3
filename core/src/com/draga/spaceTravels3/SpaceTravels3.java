@@ -1,50 +1,85 @@
 package com.draga.spaceTravels3;
 
 import com.badlogic.gdx.Application;
-import com.badlogic.gdx.Game;
+import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.draga.spaceTravels3.manager.InputManager;
-import com.draga.spaceTravels3.manager.SettingsManager;
-import com.draga.spaceTravels3.manager.SoundManager;
-import com.draga.spaceTravels3.manager.UIManager;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.PerformanceCounter;
+import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import com.draga.NullServices;
+import com.draga.Services;
+import com.draga.errorHandler.ErrorHandlerProvider;
+import com.draga.errorHandler.GdxErrorHandler;
+import com.draga.spaceTravels3.manager.*;
 import com.draga.spaceTravels3.manager.asset.AssMan;
+import com.draga.spaceTravels3.screen.BackgroundScreen;
 import com.draga.spaceTravels3.screen.MenuScreen;
-import com.draga.spaceTravels3.physic.PhysicsEngine;
 
-public class SpaceTravels3 extends Game
+public class SpaceTravels3 implements ApplicationListener
 {
-    private final static String LOGGING_TAG = SpaceTravels3.class.getSimpleName();
+    private static final String LOGGING_TAG = SpaceTravels3.class.getSimpleName();
 
-    public static SpriteBatch   spriteBatch;
-    public static ShapeRenderer shapeRenderer;
+    private static final PerformanceCounter PERFORMANCE_COUNTER =
+        new PerformanceCounter(LOGGING_TAG, 60);
 
-    private static Game game;
+    public static SpriteBatch     spriteBatch;
+    public static ShapeRenderer   shapeRenderer;
+    public static ScalingViewport menuViewport;
+    public static ExtendViewport  gameViewport;
+    public static Services        services;
+    private       DebugOverlay    debugOverlay;
 
-    private DebugOverlay debugOverlay;
-
-    public static Game getGame()
+    public SpaceTravels3(Services services)
     {
-        return SpaceTravels3.game;
+        SpaceTravels3.services = services;
+    }
+
+    public SpaceTravels3()
+    {
+        SpaceTravels3.services = new NullServices();
+    }
+
+    public static PerformanceCounter getPerformanceCounter()
+    {
+        return PERFORMANCE_COUNTER;
     }
 
     @Override
     public void create()
     {
-        game = this;
-        spriteBatch = new SpriteBatch();
+        services.setupPurchaseManager();
+
+        MathUtils.random.setSeed(System.currentTimeMillis());
+        ErrorHandlerProvider.addErrorHandler(new GdxErrorHandler());
+
+        spriteBatch = new SpriteBatch(200);
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setAutoShapeType(true);
+        menuViewport = new ScalingViewport(
+            Scaling.stretch,
+            Gdx.graphics.getWidth(),
+            Gdx.graphics.getHeight(),
+            new OrthographicCamera());
+        gameViewport =
+            new ExtendViewport(Constants.Visual.VIEWPORT_WIDTH, Constants.Visual.VIEWPORT_HEIGHT);
+        gameViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         Gdx.input.setCatchBackKey(true);
 
         AssMan.create();
+        ScreenManager.create();
         UIManager.create();
         SoundManager.create();
-        PhysicsEngine.create();
         InputManager.create();
+        MusicManager.create();
+
+        MusicManager.playRandomMusic();
 
         if (Constants.General.IS_DEBUGGING)
         {
@@ -57,7 +92,58 @@ public class SpaceTravels3 extends Game
             Gdx.app.setLogLevel(Application.LOG_ERROR);
         }
 
-        this.setScreen(new MenuScreen());
+        BackgroundScreen backgroundScreen = new BackgroundScreen();
+        ScreenManager.addScreen(backgroundScreen);
+
+        MenuScreen menuScreen = new MenuScreen();
+        ScreenManager.addScreen(menuScreen);
+
+        Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
+    }
+
+    @Override
+    public void resize(int width, int height)
+    {
+        String log = String.format("Resize to %4d x %4d height", width, height);
+        Gdx.app.debug(LOGGING_TAG, log);
+
+        if (Constants.General.IS_DEBUGGING)
+        {
+            this.debugOverlay.resize(width, height);
+        }
+    }
+
+    @Override
+    public void render()
+    {
+        PERFORMANCE_COUNTER.start();
+
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+
+        ScreenManager.render(Gdx.graphics.getDeltaTime());
+
+        if (Constants.General.IS_DEBUGGING)
+        {
+            this.debugOverlay.render(Gdx.graphics.getRawDeltaTime());
+        }
+
+        PERFORMANCE_COUNTER.stop();
+        PERFORMANCE_COUNTER.tick();
+    }
+
+    @Override
+    public void pause()
+    {
+        Gdx.app.debug(LOGGING_TAG, "Pause");
+        SettingsManager.saveSettings();
+        ScreenManager.pause();
+    }
+
+    @Override
+    public void resume()
+    {
+        Gdx.app.debug(LOGGING_TAG, "Resume");
+        ScreenManager.resume();
     }
 
     @Override
@@ -69,58 +155,14 @@ public class SpaceTravels3 extends Game
             this.debugOverlay.dispose();
         }
 
+        ScreenManager.dispose();
         UIManager.dispose();
         AssMan.dispose();
         SoundManager.dispose();
-        PhysicsEngine.dispose();
         InputManager.dispose();
+        MusicManager.dispose();
 
         spriteBatch.dispose();
         shapeRenderer.dispose();
-        
-        super.dispose();
-    }
-
-    @Override
-    public void pause()
-    {
-        Gdx.app.debug(LOGGING_TAG, "Pause");
-        SettingsManager.saveSettings();
-        super.pause();
-    }
-
-    @Override
-    public void resume()
-    {
-        Gdx.app.debug(LOGGING_TAG, "Resume");
-        super.resume();
-    }
-
-    @Override
-    public void render()
-    {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-
-        super.render();
-
-        if (Constants.General.IS_DEBUGGING)
-        {
-            this.debugOverlay.render(Gdx.graphics.getDeltaTime());
-        }
-    }
-
-    @Override
-    public void resize(int width, int height)
-    {
-        String log = String.format("Resize to %4d width x %4d height", width, height);
-        Gdx.app.debug(LOGGING_TAG, log);
-
-        super.resize(width, height);
-
-        if (Constants.General.IS_DEBUGGING)
-        {
-            this.debugOverlay.resize(width, height);
-        }
     }
 }

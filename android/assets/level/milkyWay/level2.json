@@ -1,0 +1,106 @@
+{
+  "class": "SerialisableLevel",
+  "name": "Level 2",
+  "serialisedDifficulties": {
+    "Easy": {
+      "trajectorySeconds": 5,
+      "maxLandingSpeed": 70,
+      "fuel": 0,
+      "infiniteFuel": true,
+      "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQAw",
+      "playLeaderboardID": "CgkIxsSO8ZoXEAIQEA"
+    },
+    "Medium": {
+      "trajectorySeconds": 3,
+      "maxLandingSpeed": 70,
+      "fuel": 4,
+      "infiniteFuel": false,
+      "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQDg",
+      "playLeaderboardID": "CgkIxsSO8ZoXEAIQEg"
+    },
+    "Hard": {
+      "trajectorySeconds": 0.5,
+      "maxLandingSpeed": 60,
+      "fuel": 4,
+      "infiniteFuel": false,
+      "playCompletionAchievementID": "CgkIxsSO8ZoXEAIQDw",
+      "playLeaderboardID": "CgkIxsSO8ZoXEAIQEg"
+    }
+  },
+  "serialisedShip": {
+    "x": 5,
+    "y": 150,
+    "mass": 1
+  },
+  "serialisedDestinationPlanet": {
+    "texturePath": "planet/waterless2-256.png",
+    "x": 300,
+    "y": 150,
+    "radius": 10,
+    "mass": 20000
+  },
+  "serialisedPlanets": [
+    {
+      "texturePath": "planet/arid2-64.png",
+      "x": 85,
+      "y": 120,
+      "radius": 5,
+      "mass": 10000
+    },
+    {
+      "texturePath": "planet/wind1-256.png",
+      "x": 150,
+      "y": 60,
+      "radius": 15,
+      "mass": 30000
+    },
+    {
+      "texturePath": "planet/caldonia1-64.png",
+      "x": 150,
+      "y": 105,
+      "radius": 5,
+      "mass": 10000
+    },
+    {
+      "texturePath": "planet/nuEarth2-64.png",
+      "x": 215,
+      "y": 120,
+      "radius": 5,
+      "mass": 10000
+    }
+  ],
+  "serialisedPickups": [
+    {
+      "x": 85,
+      "y": 140
+    },
+    {
+      "x": 130,
+      "y": 105
+    },
+    {
+      "x": 170,
+      "y": 80
+    },
+    {
+      "x": 170,
+      "y": 40
+    },
+    {
+      "x": 130,
+      "y": 40
+    },
+    {
+      "x": 130,
+      "y": 80
+    },
+    {
+      "x": 170,
+      "y": 105
+    },
+    {
+      "x": 215,
+      "y": 140
+    }
+  ]
+}

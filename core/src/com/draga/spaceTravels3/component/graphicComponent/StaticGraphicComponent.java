@@ -1,29 +1,30 @@
 package com.draga.spaceTravels3.component.graphicComponent;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.draga.spaceTravels3.SpaceTravels3;
-import com.draga.spaceTravels3.component.PhysicsComponent;
-import com.draga.spaceTravels3.manager.asset.AssMan;
+import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 
 public class StaticGraphicComponent extends GraphicComponent
 {
     private Texture texture;
 
     public StaticGraphicComponent(
-        String texturePath,
+        Texture texture,
         float width,
         float height,
         PhysicsComponent physicsComponent)
     {
-        super(physicsComponent, height, width);
-        this.texture = AssMan.getAssMan().get(texturePath);
+        super(physicsComponent, width, height);
+        this.texture = texture;
+        this.texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
     }
 
     @Override
     public void draw()
     {
         SpaceTravels3.spriteBatch.draw(
-            texture,
+            this.texture,
             this.physicsComponent.getPosition().x - getHalfWidth(),
             this.physicsComponent.getPosition().y - getHalfHeight(),
             getHalfWidth(),
@@ -35,8 +36,8 @@ public class StaticGraphicComponent extends GraphicComponent
             this.physicsComponent.getAngle(),
             0,
             0,
-            texture.getWidth(),
-            texture.getHeight(),
+            this.texture.getWidth(),
+            this.texture.getHeight(),
             false,
             false);
     }
@@ -45,5 +46,13 @@ public class StaticGraphicComponent extends GraphicComponent
     public void dispose()
     {
         // Doesn't dispose texture.
+    }
+
+    @Override
+    public TextureRegion getTexture()
+    {
+        TextureRegion textureRegion = new TextureRegion(this.texture);
+
+        return textureRegion;
     }
 }

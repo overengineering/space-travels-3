@@ -1,11 +1,12 @@
 package com.draga.spaceTravels3.gameEntity;
 
 import com.badlogic.gdx.graphics.Color;
-import com.draga.shape.Circle;
+import com.badlogic.gdx.graphics.Texture;
 import com.draga.spaceTravels3.Constants;
-import com.draga.spaceTravels3.component.PhysicsComponent;
 import com.draga.spaceTravels3.component.graphicComponent.StaticGraphicComponent;
 import com.draga.spaceTravels3.component.miniMapGraphicComponent.CircleMiniMapGraphicsComponent;
+import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
+import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponentType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,7 @@ public class Planet extends GameEntity
         float radius,
         float x,
         float y,
-        String texturePath,
+        Texture texture,
         boolean isDestination)
     {
         List<Class<? extends GameEntity>> collidesWith = new ArrayList<>();
@@ -26,19 +27,21 @@ public class Planet extends GameEntity
             x,
             y,
             mass,
-            new Circle(radius),
+            radius,
             new GameEntityGroup(collidesWith),
-            false);
+            this.getClass(),
+            false,
+            PhysicsComponentType.STATIC);
 
         this.graphicComponent = new StaticGraphicComponent(
-            texturePath,
+            texture,
             radius * 2f,
             radius * 2f,
             this.physicsComponent);
 
         Color miniMapColour = isDestination
-            ? Constants.Visual.PLANET_MINIMAP_DESTINATION_COLOUR
-            : Constants.Visual.PLANET_MINIMAP_COLOUR;
+            ? Constants.Visual.HUD.Minimap.PLANET_DESTINATION_COLOUR
+            : Constants.Visual.HUD.Minimap.PLANET_COLOUR;
         this.miniMapGraphicComponent = new CircleMiniMapGraphicsComponent(
             this.physicsComponent,
             miniMapColour,

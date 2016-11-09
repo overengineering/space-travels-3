@@ -1,5 +1,6 @@
 android {
-    buildToolsVersion "23.0.1"
+    defaultConfig.applicationId = "com.draga.android"
+    buildToolsVersion "23.0.2"
     compileSdkVersion 23
     sourceSets {
         main {

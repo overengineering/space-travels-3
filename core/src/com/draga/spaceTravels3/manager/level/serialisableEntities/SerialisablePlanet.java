@@ -7,7 +7,6 @@ public class SerialisablePlanet
     public int     y;
     public float   radius;
     public float   mass;
-    public boolean destination;
 
     public SerialisablePlanet()
     {

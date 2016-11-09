@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">SpaceTravels3</string>
+    <string name="app_name">Space Travels 3</string>
+    <string name="app_id">797490520646</string>
+    <string name="facebook_app_id">196432204044639</string>
 
 </resources>

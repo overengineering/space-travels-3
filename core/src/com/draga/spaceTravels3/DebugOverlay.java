@@ -6,56 +6,42 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.draga.spaceTravels3.manager.SettingsManager;
+import com.badlogic.gdx.utils.Align;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.physic.PhysicsEngine;
 
 public class DebugOverlay implements Screen
 {
-    private final Label generalLabel;
-    private final Label physicEngineLabel;
+    private final Label label;
 
     private Stage stage;
 
     public DebugOverlay()
     {
-        stage = new Stage();
+        this.label = getLabel();
+
+        this.stage = new Stage();
 
         Table table = new Table();
         table.setFillParent(true);
-        stage.addActor(table);
+        this.stage.addActor(table);
 
         table
-            .add()
-            .expand();
-
-        physicEngineLabel = getLabel();
-        table.row();
-        table
-            .add(physicEngineLabel)
+            .add(this.label)
+            .expand()
             .bottom()
             .right();
-
-        generalLabel = getLabel();
-        table.row();
-        table
-            .add(generalLabel)
-            .bottom()
-            .right();
-
-        stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
     }
 
     private Label getLabel()
     {
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = UIManager.skin.getFont("debug");
-        labelStyle.background =
-            UIManager.skin.newDrawable("background", new Color(0, 0, 0, 0.3f));
 
-        Label scoreLabel = new Label("", labelStyle);
+        Label label = new Label("", labelStyle);
+        label.setAlignment(Align.right);
 
-        return scoreLabel;
+        return label;
     }
 
     @Override
@@ -67,38 +53,51 @@ public class DebugOverlay implements Screen
     @Override
     public void render(float delta)
     {
-        updateGeneralLabel();
-        updatePhysicEngineLabel();
-        stage.act(delta);
-        stage.draw();
+        updateLabel();
+
+        this.stage.act(delta);
+        this.stage.draw();
     }
 
-    public void updateGeneralLabel()
+    private void updateLabel()
     {
         String formattedJavaHeap = Constants.General.COMMA_SEPARATED_THOUSANDS_FORMATTER.format(
-            Gdx.app.getJavaHeap());
-        String formattedNativeHeap =
-            Constants.General.COMMA_SEPARATED_THOUSANDS_FORMATTER.format(Gdx.app.getNativeHeap());
+            Gdx.app.getJavaHeap() / 1024);
+        String formattedNativeHeap = Constants.General.COMMA_SEPARATED_THOUSANDS_FORMATTER.format(
+            Gdx.app.getNativeHeap() / 1024);
+
         String message = String.format(
-            "FPS : %3d | Java heap : %12s | Java native heap : %12s",
+            "Load:%3f\r\n"
+                + "Engine:%9f\r\n"
+                + "Projection:%9f\r\n"
+                + "FPS:%2d|Heap:%7s|Nat. heap:%7s",
+            SpaceTravels3.getPerformanceCounter().load.latest,
+            PhysicsEngine.getStepPerformanceCounter().time.mean.getMean(),
+            PhysicsEngine.getGravityProjectionPerformanceCounter().time.mean.getMean(),
             Gdx.graphics.getFramesPerSecond(),
             formattedJavaHeap,
             formattedNativeHeap);
-        generalLabel.setText(message);
-    }
 
-    public void updatePhysicEngineLabel()
-    {
-        String message = String.format(
-            "Engine update time: %9f",
-            PhysicsEngine.getUpdateTime());
-        physicEngineLabel.setText(message);
+        this.label.setText(message);
+
+        if (Gdx.graphics.getFramesPerSecond() < 45)
+        {
+            this.label.setColor(Color.RED);
+        }
+        else if (Gdx.graphics.getFramesPerSecond() < 55)
+        {
+            this.label.setColor(Color.YELLOW);
+        }
+        else
+        {
+            this.label.setColor(Color.WHITE);
+        }
     }
 
     @Override
     public void resize(int width, int height)
     {
-        stage.getViewport().update(width, height);
+        this.stage.getViewport().update(width, height);
     }
 
     @Override
@@ -122,6 +121,6 @@ public class DebugOverlay implements Screen
     @Override
     public void dispose()
     {
-        stage.dispose();
+        this.stage.dispose();
     }
 }

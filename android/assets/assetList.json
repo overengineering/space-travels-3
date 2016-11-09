@@ -1,18 +1,49 @@
 {
-  "shipTexture": "spaceship/destroyer128.png",
-  "pickupTexture": "pickup/pickup.png",
-  "pickupGreyTexture": "pickup/pickupGrey.png",
-
-  "thrusterTextureAtlas": "thruster/thrusterSize256Frames75.txt",
-  "explosionTextureAtlas": "explosion/explosion.atlas",
-
-  "explosionSound": "sound/explosion/DeathFlash.mp3",
-  "thrusterSound": "sound/thruster/qubodupFireLoop.mp3",
-  "pickupCollectSound": "sound/star/powerUp6.mp3",
-  "loseSound": "sound/lose/lowDown.mp3",
-  "winSound": "sound/win/zapTwoTone2.mp3",
-  "buttonSound": "sound/button/tone1.mp3",
-
+  "shipTexture": "spaceship/cricket128.png",
+  "pickupTexture": "pickup/star64.png",
+  "pickupGreyTexture": "pickup/starGray64.png",
+  "thrusterTextureAtlas": "thruster/thruster.txt",
+  "explosionTextureAtlas": "explosion/explosion.txt",
+  "explosionSound": "sound/explosion/DeathFlash.ogg",
+  "thrusterSound": "sound/thruster/qubodupFireLoop.ogg",
+  "pickupCollectSound": "sound/pickup/powerUp6.ogg",
+  "loseSound": "sound/lose/lowDown.ogg",
+  "winSound": "sound/win/zapTwoTone2.ogg",
+  "buttonSound": "sound/button/tone1.ogg",
   "font": "font/Akashi.ttf",
-  "debugFont": "font/DroidSansMono.ttf"
+  "debugFont": "font/DroidSansMono.ttf",
+  "musics": [
+    "music/mars.ogg",
+    "music/venus.ogg",
+    "music/jupiter.ogg"
+  ],
+  "guideMinimapTexture": "guide/minimap.png",
+  "guideBelowLandingSpeedTexture": "guide/belowLandingSpeed.png",
+  "guideAboveLandingSpeedTexture": "guide/aboveLandingSpeed.png",
+  "guidePickupTexture": "guide/star128.png",
+
+  "iconSettings": "icon/settings128.png",
+  "iconLeaderboard": "icon/leaderboard128.png",
+  "iconAchievement": "icon/achievement128.png",
+  "iconCredits": "icon/credits128.png",
+  "iconRate": "icon/thumbUp128.png",
+  "iconTutorial": "icon/tutorial128.png",
+  "iconGuide": "icon/guide128.png",
+  "iconLeft": "icon/left128.png",
+  "iconRight": "icon/right128.png",
+  "iconTouch": "icon/touch128.png",
+  "iconAccelerometer": "icon/accelerometer128.png",
+  "iconTouchChecked": "icon/touchChecked128.png",
+  "iconAccelerometerChecked": "icon/accelerometerChecked128.png",
+  "iconRetry": "icon/retry128.png",
+  "iconPlay": "icon/play128.png",
+  "iconShare": "icon/share128.png",
+  "iconUnlock": "icon/unlock64.png",
+  "iconUnlockOverlay": "icon/unlock100w.png",
+  "iconFaceUp": "icon/faceUp100.png",
+  "iconDifficulties": {
+    "icon/difficulty1-128.png": "icon/difficulty1checked128.png",
+    "icon/difficulty2-128.png": "icon/difficulty2checked128.png",
+    "icon/difficulty3-128.png": "icon/difficulty3checked128.png"
+  }
 }

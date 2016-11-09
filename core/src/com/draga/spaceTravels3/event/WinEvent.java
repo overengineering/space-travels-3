@@ -1,12 +1,15 @@
 package com.draga.spaceTravels3.event;
 
-import com.badlogic.gdx.utils.Pool;
+import com.draga.spaceTravels3.Score;
 
-public class WinEvent implements Pool.Poolable
+public class WinEvent
 {
-    @Override
-    public void reset()
-    {
+    public Score   score;
+    public Integer previousBestScore;
 
+    public WinEvent(Score score, Integer previousBestScore)
+    {
+        this.score = score;
+        this.previousBestScore = previousBestScore;
     }
 }

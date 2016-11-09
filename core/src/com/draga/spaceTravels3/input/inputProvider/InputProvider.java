@@ -1,6 +1,6 @@
 package com.draga.spaceTravels3.input.inputProvider;
 
-import com.badlogic.gdx.math.Vector2;
+import com.draga.PooledVector2;
 import com.draga.spaceTravels3.input.inputModifier.InputModifier;
 
 import java.util.ArrayList;
@@ -16,11 +16,11 @@ public abstract class InputProvider
      * Applies all the input modifiers to the raw input and the max the vector to 1.
      * @return a standardised input between 0 and 1.
      */
-    public Vector2 getInput()
+    public PooledVector2 getInput()
     {
-        Vector2 rawInput = getRawInput();
+        PooledVector2 rawInput = getRawInput();
 
-        for (InputModifier inputModifier : inputModifiers)
+        for (InputModifier inputModifier : this.inputModifiers)
         {
             inputModifier.modify(rawInput);
         }
@@ -30,10 +30,10 @@ public abstract class InputProvider
         return rawInput;
     }
 
-    protected abstract Vector2 getRawInput();
+    protected abstract PooledVector2 getRawInput();
 
     protected void addInputModifier(InputModifier inputModifier)
     {
-        inputModifiers.add(inputModifier);
+        this.inputModifiers.add(inputModifier);
     }
 }

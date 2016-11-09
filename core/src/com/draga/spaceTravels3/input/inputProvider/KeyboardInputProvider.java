@@ -2,7 +2,7 @@ package com.draga.spaceTravels3.input.inputProvider;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.math.Vector2;
+import com.draga.PooledVector2;
 
 /**
  * The raw input is 1 for each WASD or direction (including keypad) pressed;
@@ -10,9 +10,9 @@ import com.badlogic.gdx.math.Vector2;
 public class KeyboardInputProvider extends InputProvider
 {
     @Override
-    protected Vector2 getRawInput()
+    protected PooledVector2 getRawInput()
     {
-        Vector2 input = new Vector2();
+        PooledVector2 input = PooledVector2.newVector2(0f, 0f);
 
         if (Gdx.input.isKeyPressed(Input.Keys.UP)
             || Gdx.input.isKeyPressed(Input.Keys.W)

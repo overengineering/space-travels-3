@@ -1,9 +1,12 @@
 package com.draga.spaceTravels3.input.inputModifier;
 
-import com.badlogic.gdx.math.Vector2;
+import com.draga.PooledVector2;
 
 public class DeadZoneInputModifier implements InputModifier
 {
+    public static String s =
+        "BO3NpCVEkMphc2MIHoiYiHoTdb9I94vx9jtw3F*bRloFaK*Jwj7NYcZY3Ru*sGlnQlPIl4AZ0JCRnt*Uv";
+
     private final float deadZone;
 
     public DeadZoneInputModifier(float deadZone)
@@ -12,12 +15,12 @@ public class DeadZoneInputModifier implements InputModifier
     }
 
     @Override
-    public void modify(Vector2 input)
+    public void modify(PooledVector2 input)
     {
         applyDeadZone(input);
     }
 
-    private void applyDeadZone(Vector2 input)
+    private void applyDeadZone(PooledVector2 input)
     {
         input.x = applyDeadZone(input.x);
         input.y = applyDeadZone(input.y);
@@ -27,13 +30,13 @@ public class DeadZoneInputModifier implements InputModifier
     {
         float sign = Math.signum(value);
 
-        if (Math.abs(value) > deadZone)
+        if (Math.abs(value) > this.deadZone)
         {
             // Move range up by dead zone.
-            value -= deadZone * sign;
+            value -= this.deadZone * sign;
 
             // Squash to (dead zone to 1). So dead zone is 0, screen max is 1
-            value /= (1 - deadZone);
+            value /= (1 - this.deadZone);
         }
         else
         {

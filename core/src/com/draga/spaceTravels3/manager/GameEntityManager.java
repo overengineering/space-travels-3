@@ -8,13 +8,16 @@ import com.google.common.base.Joiner;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class GameEntityManager
+public abstract class GameEntityManager
 {
     private static final String LOGGING_TAG = GameEntityManager.class.getSimpleName();
-
     private static final LinkedList<GameEntity> GAME_ENTITIES           = new LinkedList<>();
     private static final Queue<GameEntity>      GAME_ENTITIES_TO_ADD    = new LinkedList<>();
     private static final Queue<GameEntity>      GAME_ENTITIES_TO_REMOVE = new LinkedList<>();
+
+    private GameEntityManager()
+    {
+    }
 
     public static LinkedList<GameEntity> getGameEntities()
     {

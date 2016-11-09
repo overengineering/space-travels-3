@@ -1,7 +1,8 @@
 package com.draga.spaceTravels3.input.inputProvider;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector2;
+import com.draga.PooledVector2;
+import com.draga.errorHandler.ErrorHandlerProvider;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.input.inputModifier.DeadZoneInputModifier;
 import com.draga.spaceTravels3.input.inputModifier.RangeInputModifier;
@@ -13,37 +14,50 @@ import com.draga.spaceTravels3.input.inputModifier.RangeInputModifier;
 public class AccelerometerInputProvider extends InputProvider
 {
     private static final String LOGGING_TAG = AccelerometerInputProvider.class.getSimpleName();
+    private int rotation;
 
     public AccelerometerInputProvider()
     {
         addInputModifier(new RangeInputModifier(Constants.General.EARTH_GRAVITY));
         addInputModifier(new DeadZoneInputModifier(Constants.Game.DEAD_ZONE));
+
+        this.rotation = Gdx.input.getRotation();
     }
 
     @Override
-    protected Vector2 getRawInput()
+    protected PooledVector2 getRawInput()
     {
-        Vector2 input = new Vector2();
+        //
+        PooledVector2 input;
         // Rotate the vector "manually" instead of using input.rotate(Gdx.input.getRotation())
         // because it doesn't need expensive operations.
-        switch (Gdx.input.getRotation())
+        switch (this.rotation)
         {
             case 0:
-                input.set(Gdx.input.getAccelerometerX(), Gdx.input.getAccelerometerY());
+                input = PooledVector2.newVector2(
+                    Gdx.input.getAccelerometerX(),
+                    Gdx.input.getAccelerometerY());
                 break;
             case 90:
-                input.set(Gdx.input.getAccelerometerY(), -Gdx.input.getAccelerometerX());
+                input = PooledVector2.newVector2(
+                    Gdx.input.getAccelerometerY(),
+                    -Gdx.input.getAccelerometerX());
                 break;
             case 180:
-                input.set(-Gdx.input.getAccelerometerX(), -Gdx.input.getAccelerometerY());
+                input = PooledVector2.newVector2(
+                    -Gdx.input.getAccelerometerX(),
+                    -Gdx.input.getAccelerometerY());
                 break;
             case 270:
-                input.set(-Gdx.input.getAccelerometerY(), Gdx.input.getAccelerometerX());
+                input = PooledVector2.newVector2(
+                    -Gdx.input.getAccelerometerY(),
+                    Gdx.input.getAccelerometerX());
                 break;
             default:
-                Gdx.app.error(
+                ErrorHandlerProvider.handle(
                     LOGGING_TAG,
                     "Orientation " + Gdx.input.getRotation() + " not implemented.");
+                input = PooledVector2.newVector2(0f, 0f);
         }
 
         input.scl(1f / Constants.Game.ACCELEROMETER_RANGE);

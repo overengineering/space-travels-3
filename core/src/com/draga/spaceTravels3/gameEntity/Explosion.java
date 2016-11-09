@@ -2,10 +2,11 @@ package com.draga.spaceTravels3.gameEntity;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.draga.shape.Circle;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.draga.spaceTravels3.Constants;
-import com.draga.spaceTravels3.component.PhysicsComponent;
 import com.draga.spaceTravels3.component.graphicComponent.AnimatedGraphicComponent;
+import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
+import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponentType;
 import com.draga.spaceTravels3.manager.GameEntityManager;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
@@ -14,26 +15,28 @@ public class Explosion extends GameEntity
 {
     private Sound sound;
 
-    public Explosion(float x, float y, float width, float height)
+    public Explosion(float x, float y, float width, float height, TextureAtlas textureAtlas)
     {
         this.physicsComponent = new PhysicsComponent(
             x,
             y,
             0f,
-            new Circle((height + width) / 4f),
+            (height + width) / 4f,
             new GameEntityGroup(GameEntityGroup.GroupOverride.NONE),
-            false);
+            this.getClass(),
+            false,
+            PhysicsComponentType.DYNAMIC);
 
         this.graphicComponent = new AnimatedGraphicComponent(
-            AssMan.getAssList().explosionTextureAtlas,
+            textureAtlas,
             Constants.Visual.EXPLOSION_LIFETIME,
             width,
             height,
             this.physicsComponent,
             Animation.PlayMode.NORMAL);
 
-        sound = AssMan.getAssMan().get(AssMan.getAssList().explosionSound);
-        sound.play(SettingsManager.getSettings().volume);
+        this.sound = AssMan.getGameAssMan().get(AssMan.getAssList().explosionSound);
+        this.sound.play(SettingsManager.getSettings().volumeFX);
     }
 
     @Override
@@ -50,8 +53,8 @@ public class Explosion extends GameEntity
     @Override
     public void dispose()
     {
-        sound.stop();
-        sound.dispose();
+        this.sound.stop();
+        this.sound.dispose();
         super.dispose();
     }
 }

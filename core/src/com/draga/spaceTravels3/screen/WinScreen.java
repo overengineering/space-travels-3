@@ -1,106 +1,62 @@
 package com.draga.spaceTravels3.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.draga.spaceTravels3.Constants;
-import com.draga.spaceTravels3.SpaceTravels3;
-import com.draga.spaceTravels3.manager.ScoreManager;
+import com.draga.spaceTravels3.Score;
+import com.draga.spaceTravels3.level.Level;
 import com.draga.spaceTravels3.manager.SettingsManager;
 import com.draga.spaceTravels3.manager.UIManager;
 import com.draga.spaceTravels3.manager.asset.AssMan;
-import com.draga.spaceTravels3.manager.level.LevelManager;
-import com.draga.spaceTravels3.manager.level.serialisableEntities.SerialisableLevel;
-import com.draga.spaceTravels3.ui.BeepingTextButton;
+import com.draga.spaceTravels3.ui.Screen;
 
-public class WinScreen implements Screen
+public class WinScreen extends IngameMenuScreen
 {
-    private final Stage  stage;
-    private final Sound  sound;
-    private final String levelId;
+    protected final Sound sound;
 
-    public WinScreen(String levelId, int score)
+    public WinScreen(Level level, Screen gameScreen, Score score, Integer previousBestScore)
     {
-        sound = AssMan.getAssMan().get(AssMan.getAssList().winSound);
-        sound.play(SettingsManager.getSettings().volume);
+        super(gameScreen, level);
 
-        this.levelId = levelId;
-        this.stage = new Stage();
-        Gdx.input.setInputProcessor(stage);
+        this.sound = AssMan.getGameAssMan().get(AssMan.getAssList().winSound);
+        this.sound.play(SettingsManager.getSettings().volumeFX);
 
-        int previousBestScore = ScoreManager.getScore(levelId);
+        Table table = new Table(UIManager.skin);
 
-        Table table = UIManager.addDefaultTableToStage(stage);
-        table.setBackground(UIManager.skin.newDrawable(
-            "background",
-            Constants.Visual.SCREEN_FADE_COLOUR));
-        table.addAction(Actions.sequence(
-            Actions.fadeOut(0),
-            Actions.fadeIn(Constants.Visual.SCREEN_FADE_DURATION, Interpolation.pow2In)));
-
-        // Header label.
-        Label headerLabel = getHeaderLabel();
-        table.add(headerLabel);
+        table.add("WIN", "large");
+        table.row();
 
         // Best score.
-        ScoreManager.setScore(levelId, score);
-        table.row();
-        Label newBestScoreLabel = getBestScoreLabel(score, previousBestScore);
+        Label newBestScoreLabel = getBestScoreLabel(score.getTotalScore(), previousBestScore);
         table.add(newBestScoreLabel);
+        table.row();
 
         // Current score.
-        Label scoreLabel = getScoreLabel(score);
-        table.row();
-        table.add(scoreLabel);
+        Table reportTable = getScoreReportTable(score);
+        table.add(reportTable);
 
-        // Retry button.
-        table.row();
-        TextButton retryButton = getRetryButton();
-        table.add(retryButton);
+        this.centreCell.setActor(table);
+    }
 
-        // Next level button.
-        SerialisableLevel nextLevel = LevelManager.getNextLevel(levelId);
-        if (nextLevel != null)
+    private Label getBestScoreLabel(int score, Integer previousBestScore)
+    {
+        Label.LabelStyle labelStyle = UIManager.skin.get(Label.LabelStyle.class);
+
+        String text;
+        if (previousBestScore == null)
         {
-            String nextLevelId = nextLevel.id;
-            TextButton nextTextButton = getNextButton(nextLevelId);
-            table.row();
-            table.add(nextTextButton);
+            text = "New score!";
         }
-
-        // Main menu button.
-        TextButton mainMenuTextButton = getMainMenuTextButton();
-        table.row();
-        table.add(mainMenuTextButton);
-
-        stage.setDebugAll(SettingsManager.getDebugSettings().debugDraw);
-    }
-
-    public Label getHeaderLabel()
-    {
-        Label.LabelStyle labelStyle = UIManager.skin.get(Label.LabelStyle.class);
-
-        Label headerLabel = new Label("You won!", labelStyle);
-
-        return headerLabel;
-    }
-
-    private Label getBestScoreLabel(int score, int previousBestScore)
-    {
-        Label.LabelStyle labelStyle = UIManager.skin.get(Label.LabelStyle.class);
-
-        String text = score > previousBestScore
-            ? "New best score! It was: " + previousBestScore
-            : "Best score: " + previousBestScore;
+        else if (score > previousBestScore)
+        {
+            text = "New best score! It was: " + previousBestScore;
+        }
+        else
+        {
+            text = "Best score: " + previousBestScore;
+        }
 
         Label newBestScoreLabel =
             new Label(text, labelStyle);
@@ -108,125 +64,38 @@ public class WinScreen implements Screen
         return newBestScoreLabel;
     }
 
-    private Label getScoreLabel(int score)
+    private Table getScoreReportTable(Score score)
     {
-        Label.LabelStyle labelStyle = UIManager.skin.get(Label.LabelStyle.class);
+        Table table = UIManager.getDefaultTable();
+        table.pad(0);
 
-        Label scoreLabel = new Label("Score: " + score, labelStyle);
+        table.add("pickup");
+        table.add("fuel");
+        table.add("time");
+        table.add("total");
+        table.row();
 
-        return scoreLabel;
-    }
+        table.add(String.valueOf(score.getPickupPoints()));
+        table.add(String.valueOf(score.getFuelPoints()));
+        table.add(String.valueOf(score.getTimePoints()));
+        table.add(String.valueOf(score.getTotalScore()));
 
-    public TextButton getRetryButton()
-    {
-        TextButton retryButton = new BeepingTextButton("Try Again?", UIManager.skin);
-
-        retryButton.addListener(
-            new ClickListener()
-            {
-                @Override
-                public void clicked(InputEvent event, float x, float y)
-                {
-                    Retry();
-                }
-            });
-
-        return retryButton;
-    }
-
-    public TextButton getNextButton(final String levelId)
-    {
-        TextButton retryButton = new BeepingTextButton("Next level", UIManager.skin);
-
-        retryButton.addListener(
-            new ClickListener()
-            {
-                @Override
-                public void clicked(InputEvent event, float x, float y)
-                {
-                    SpaceTravels3.getGame().setScreen(new LoadingScreen(levelId));
-                }
-            });
-
-        return retryButton;
-    }
-
-    private TextButton getMainMenuTextButton()
-    {
-        TextButton mainMenuTextButton = new BeepingTextButton("Main menu", UIManager.skin);
-        mainMenuTextButton.addListener(new ClickListener()
-        {
-            @Override
-            public void clicked(InputEvent event, float x, float y)
-            {
-                SpaceTravels3.getGame().setScreen(new MenuScreen());
-            }
-        });
-
-        return mainMenuTextButton;
-    }
-
-    private void Retry()
-    {
-        SpaceTravels3.getGame().setScreen(new LoadingScreen(levelId));
+        return table;
     }
 
     @Override
     public void show()
     {
-
-    }
-
-    @Override
-    public void render(float delta)
-    {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
-            || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
-        {
-            SpaceTravels3.getGame().setScreen(new MenuScreen());
-            return;
-        }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER))
-        {
-            Retry();
-            return;
-        }
-
-        stage.act(delta);
-        stage.draw();
-    }
-
-    @Override
-    public void resize(int width, int height)
-    {
-        stage.getViewport().update(width, height);
-    }
-
-    @Override
-    public void pause()
-    {
-
-
-    }
-
-    @Override
-    public void resume()
-    {
-
-    }
-
-    @Override
-    public void hide()
-    {
-        this.dispose();
+        super.show();
+        Gdx.input.setInputProcessor(new InputMultiplexer(
+            Gdx.input.getInputProcessor(),
+            getCloseInputAdapter()));
     }
 
     @Override
     public void dispose()
     {
-        sound.stop();
-        sound.dispose();
-        stage.dispose();
+        this.sound.stop();
+        super.dispose();
     }
 }

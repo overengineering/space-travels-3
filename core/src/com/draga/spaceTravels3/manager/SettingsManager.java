@@ -2,10 +2,10 @@ package com.draga.spaceTravels3.manager;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
-import com.draga.FileUtils;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.DebugSettings;
 import com.draga.spaceTravels3.Settings;
+import com.draga.utils.FileUtils;
 
 public abstract class SettingsManager
 {
@@ -28,6 +28,8 @@ public abstract class SettingsManager
     {
         if (settingsFileHandle.exists())
         {
+            // Set to ignore unknown fields so that if a setting is removed it won't throw.
+            JSON.setIgnoreUnknownFields(true);
             Settings settings =
                 JSON.fromJson(Settings.class, settingsFileHandle.readString());
             return settings;
@@ -45,6 +47,8 @@ public abstract class SettingsManager
     {
         if (debugSettingsFileHandle.exists())
         {
+            // Set to ignore unknown fields so that if a setting is removed it won't throw.
+            JSON.setIgnoreUnknownFields(true);
             DebugSettings settings =
                 JSON.fromJson(DebugSettings.class, debugSettingsFileHandle.readString());
             return settings;

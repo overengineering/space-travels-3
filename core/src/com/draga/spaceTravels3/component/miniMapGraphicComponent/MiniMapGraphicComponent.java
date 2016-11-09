@@ -1,7 +1,7 @@
 package com.draga.spaceTravels3.component.miniMapGraphicComponent;
 
 import com.badlogic.gdx.graphics.Color;
-import com.draga.spaceTravels3.component.PhysicsComponent;
+import com.draga.spaceTravels3.component.physicsComponent.PhysicsComponent;
 
 public abstract class MiniMapGraphicComponent
 {
@@ -10,6 +10,12 @@ public abstract class MiniMapGraphicComponent
         {
             @Override
             public void draw()
+            {
+
+            }
+
+            @Override
+            public void dispose()
             {
 
             }
@@ -27,8 +33,5 @@ public abstract class MiniMapGraphicComponent
 
     public abstract void draw();
 
-    public void dispose()
-    {
-
-    }
+    public abstract void dispose();
 }

@@ -1,12 +1,24 @@
 package com.draga.spaceTravels3.event;
 
-import com.badlogic.gdx.utils.Pool;
-
-public class LoseEvent implements Pool.Poolable
+public class LoseEvent
 {
-    @Override
-    public void reset()
-    {
+    private final boolean planetIsDestination;
+    private final boolean shipIsTooFast;
 
+    public LoseEvent(boolean planetIsDestination, boolean shipIsTooFast)
+    {
+        this.planetIsDestination = planetIsDestination;
+        this.shipIsTooFast = shipIsTooFast;
+
+    }
+
+    public boolean isPlanetIsDestination()
+    {
+        return this.planetIsDestination;
+    }
+
+    public boolean isShipIsTooFast()
+    {
+        return this.shipIsTooFast;
     }
 }

@@ -2,7 +2,7 @@ package com.draga.spaceTravels3.input.inputProvider;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.math.Vector2;
+import com.draga.PooledVector2;
 import com.draga.spaceTravels3.Constants;
 import com.draga.spaceTravels3.input.inputModifier.DeadZoneInputModifier;
 import com.draga.spaceTravels3.input.inputModifier.RangeInputModifier;
@@ -24,21 +24,23 @@ public class TouchInputProvider extends InputProvider
     }
 
     @Override
-    protected Vector2 getRawInput()
+    protected PooledVector2 getRawInput()
     {
-        Vector2 input = new Vector2();
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT))
         {
             // Height flipped because 0,0 of input is top left, unlike to rest of the API.
-            input.set(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+            PooledVector2 input =
+                PooledVector2.newVector2(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
 
             // This was my idea but before I could put it down Lee totally sneakily
             // solved just a tiny bit of it. (Stefano)
 
             // Distance between the click and the center of the screen.
             input.sub(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f);
+
+            return input;
         }
 
-        return input;
+        return PooledVector2.newVector2(0f, 0f);
     }
 }
